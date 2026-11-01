@@ -148,6 +148,8 @@ Existing saves and backups keep the `deepwell-prototype-v1` storage key. Former 
 
 ## Development and validation
 
+Completed builds are delivered on GitHub with a playable ZIP in `downloads/`. Before pushing, review staged files for private data and credentials; exclude personal saves, local configuration and diagnostics. Verify that the downloadable ZIP contains the current standalone game. [AGENTS.md](AGENTS.md) records the delivery workflow.
+
 Player-facing layouts and short labels live in `src/presentation.js` and `src/presentation.css`; readable reference pages and return navigation in `src/codex.js`; the appearance editor in `src/character-creator.js`. Core skill and resource definitions live in `src/game-data.json`; tier rules and render hooks in `src/zone-progression.js`; the articulated character rig in `src/avatar-rig.js`. Skills, HUD / XP and bosses remain in `src/systems.js`, `src/arena.js` and `src/dungeoneering.js`. Run `npm run build` to compile the source, styles and embedded art into the standalone HTML. The original combat engine remains in `index.html`.
 
 ```sh

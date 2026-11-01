@@ -1,2 +1,42 @@
 node_modules/
 test-results/
+
+# Credentials and private configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+.ssh/
+.aws/
+.azure/
+credentials.json
+service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+id_rsa
+id_ecdsa
+id_ed25519
+
+# Personal game saves and backups
+saves/
+save-backups/
+Idle_or_Dungeoneer_Save*.json
+DEEPWELL_Save*.json
+DUNGEONEER_Save*.json
+deepwell-prototype-v1*.json
+
+# Local diagnostics, notes and editor state
+logs/
+diagnostics/
+*.log
+private/
+internal-notes/
+chat-exports/
+.local/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
