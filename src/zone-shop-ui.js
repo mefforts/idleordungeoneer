@@ -57,6 +57,6 @@ function refreshProgressionHud(){
 function refreshDungeoneeringUI(){
  if(!dungeoneeringInstalled)return;const points=masteryFor().points,button=$('hudEssence');$('quickEssence').textContent=formatCompact(points);button.setAttribute('aria-label',format(points)+' Dungeoneering Mastery points');button.dataset.hint='Dungeoneering Mastery · '+format(points);button.removeAttribute('title');
  const image=button.querySelector('img'),uri=iconAsset('mastery-points');if(image.getAttribute('src')!==uri)image.src=uri;
- const hint=$('bossMechanicHint');if(hint){hint.textContent=game.boss?.cast?.label||'';hint.style.color=DUNGEON_THEMES[biomeIndex()].hot;}
+ const hint=$('bossMechanicHint');if(hint){hint.textContent=bossMechanicHint();hint.style.color=DUNGEON_THEMES[biomeIndex()].hot;}
  $('speedControl').classList.toggle('hidden',!speedControlVisible());refreshProgressionHud();
 }

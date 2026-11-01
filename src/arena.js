@@ -98,19 +98,19 @@ function resetRun(){
  game.phase=-1;game.phaseKills=0;game.phaseSpawned=0;game.runLevel=data.zone.level;game.runXp=data.zone.xp;
  game.requiredXp=data.zone.required;game.pendingLevels=Math.max(0,Math.floor(Number(data.zone.pending)||0));game.upgrades={...data.zone.upgrades};
  game.enemies=[];game.shots=[];game.swings=[];game.hostileShots=[];game.xpOwner=data;game.xpZoneIndex=zoneNumber();game.gems=(data.xpCaches?.[game.xpZoneIndex]||[]).map(g=>({...g}));
- game.hazards=[];game.movementTap=null;game.waveEliteSpawned=false;game.arcs=[];game.particles=[];game.floaters=[];game.runKills=0;game.spawnTimer=0;
+ game.hazards=[];clearEncounterState();game.eliteCount=0;game.eliteSchedule=[];game.eliteKinds=[];game.movementTap=null;game.waveEliteSpawned=false;game.arcs=[];game.particles=[];game.floaters=[];game.runKills=0;game.spawnTimer=0;
  game.attackTimer=0;game.phaseTime=0;game.runSeconds=0;game.transition=0;
  game.camX=game.camY=0;game.boss=null;
 }
 
 function save(){if(game.restoringSave)return;checkpointGroundXp();try{data.goldHighWater=Math.max(data.goldHighWater||0,data.gold);data.savedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}catch(err){if(!saveWarningShown&&$('toastStack')){saveWarningShown=true;toast('Progress could not be saved','Allow browser storage, or back up your save in Settings.')}}}
 
-function finishPhase(){game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
+function finishPhase(){clearEncounterState();game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
 
 function nextPhase(){
-  game.phase++;game.enemies=[];game.shots=[];game.hostileShots=[];game.boss=null;game.phaseKills=0;game.phaseSpawned=0;game.phaseTime=0;game.spawnTimer=.25;game.transition=0;
+  clearEncounterState();game.phase++;game.enemies=[];game.shots=[];game.hostileShots=[];game.boss=null;game.phaseKills=0;game.phaseSpawned=0;game.phaseTime=0;game.spawnTimer=.25;game.transition=0;
   if(game.phase>=6){clearFloor();return;}
-  game.phaseTarget=zoneBalance().targets[game.phase];game.waveEliteSpawned=false;game.eliteAt=Math.max(7,Math.floor(game.phaseTarget*rand(.42,.68)));game.hazards=[];
+  game.phaseTarget=zoneBalance().targets[game.phase];prepareEliteWave();game.hazards=[];
   const phase=game.phase;
   if(phase%2===1){const b=biome();const bossIndex=Math.floor(phase/2);let hp=zoneEnemyHp(true,bossIndex);const enemy=spawnEnemy(true,bossIndex);enemy.hp=enemy.maxHp=hp;enemy.name=b.boss[bossIndex];game.boss=enemy;data.seenElites[biomeIndex()][bossIndex]=true;codexDiscover('boss_'+biomeIndex()+'_'+bossIndex);announce(bossIndex===2?'OVERLORD APPROACHES':b.boss[bossIndex],2.1)}
   else announce(PHASES[phase],1.7);

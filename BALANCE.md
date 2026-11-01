@@ -42,14 +42,20 @@ Clear Zone 1, reach refinement 10 and the matching crafting level 10, then pay a
 
 References use a sword and base proficiency. Forecasts budget enemy health against sustained single-target attacking and spawn timing. Movement, incoming damage, menus, preparation and missed attacks change the result. Cleave, elemental effects, spawn pressure and Delve speed can shorten a run. Future equipment progression remains unauthored; later Zones use the existing Steel reference and approach a 30–40-minute target.
 
-- Live Zone 1 simulation: **10.8 min**, 369 defeats, 79.8 reference DPS.
-- Live Zone 2 simulation: **21.9 min**, 549 defeats, 159.8 reference DPS.
-- Live Zone 3 simulation: **30.8 min**, 729 defeats, 188.6 reference DPS.
-- Live Zone 4 simulation: **35.7 min**, 909 defeats, 188.6 reference DPS.
-- Live Zone 9 simulation: **40.8 min**, 909 defeats, 188.6 reference DPS.
-- Live Zone 15 simulation: **41.2 min**, 909 defeats, 188.6 reference DPS.
+- Live Zone 1 simulation: **10.9 min**, 369 defeats, 79.8 reference DPS.
+- Live Zone 2 simulation: **22.1 min**, 549 defeats, 159.8 reference DPS.
+- Live Zone 3 simulation: **31.6 min**, 729 defeats, 188.6 reference DPS.
+- Live Zone 4 simulation: **36.4 min**, 909 defeats, 188.6 reference DPS.
+- Live Zone 9 simulation: **42.2 min**, 909 defeats, 188.6 reference DPS.
+- Live Zone 15 simulation: **42.0 min**, 909 defeats, 188.6 reference DPS.
 
 The live tests run actual spawn, hit, critical, movement, boss and transition code at 40 ms steps; incoming damage and XP progression are suppressed only in the isolated fixture. Timing includes that step size’s attack-cadence rounding.
+
+## Guardian counterplay
+
+Floor overlords now use four patterns and final Zone overlords six. Known elite substitutions are capped at one / two / three per wave on Floors 1 / 2 / 3. They add health within the existing wave totals. Reflecting a ward returns 12% of its caster’s maximum HP and staggers for 1.6 seconds. A six-second healing stream restores 0.8% guardian HP per second, or 2% player HP when intercepted. Power streams add 12% guardian attack damage, or 10% conditional player hit damage for five seconds when intercepted. Stream bonuses do not stack. Totems require about 1.4 seconds of reference DPS to destroy (0.9 for elites), give no loot or XP, and never count toward waves. These encounter rewards do not change permanent DPS budgets.
+
+Pacing simulations keep a stationary, invulnerable player with real automatic attacks. They include live elite replacements and guardian mechanics, but do not deliberately intercept streams or move into reflect wards. Successful counters can shorten fights; dodging and healing can lengthen them.
 
 ## Seals and gold
 
@@ -95,4 +101,4 @@ All ten advanced activities require clearing Zone 1, including idle/offline work
 
 Existing earned power ranks transfer into the saved exact Zone. Pending selections convert to three seals each. Earned legacy XP becomes global XP; ground XP stays separate until collected. Legacy biome Mastery balances and spent allocations are pooled, the highest rank in each branch is retained and duplicated allocations are refunded. The original Zone/Mastery data is archived in the save. Migration runs once, preserving equipment, materials, gold and XP caches.
 
-The thirteen browser suites cover actual damage across six weapons, both tiers, shop costs/caps, exact-Zone isolation, migration/reload, no automatic upgrade modals, Mastery configuration, rewards, all 20 activities, touch controls, direct Idle navigation, boss mechanics and 108 unique painted collection icons. Run npm run report:balance to regenerate this file and balance-report.json. The JSON includes every shop price/effect, resource chain, armor recipe and live weapon ceiling.
+The fourteen browser suites cover actual damage across six weapons, both tiers, shop costs/caps, exact-Zone isolation, migration/reload, no automatic upgrade modals, Mastery configuration, rewards, all 20 activities, touch controls, direct Idle navigation, boss mechanics and 108 unique painted collection icons. Run npm run report:balance to regenerate this file and balance-report.json. The JSON includes every shop price/effect, resource chain, armor recipe and live weapon ceiling.

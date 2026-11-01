@@ -194,7 +194,7 @@ function showDeathAgain(){
  showOverlay('<div class="floor-result"><div class="overlay-sigil"></div><h2>Defeated</h2><p>Equipment, loot and training kept.</p><button type="button" class="primary-cta" id="repeatFloor">Retry Floor '+zoneStage()+uiIcon('arrow')+'</button></div>');$('repeatFloor').onclick=startFloor;
 }
 function die(){
- game.status='dead';syncZone();save();showDeathAgain();$('repeatFloor').id='retryFloor';refreshUI();
+ game.status='dead';clearEncounterState();syncZone();save();showDeathAgain();$('repeatFloor').id='retryFloor';refreshUI();
 }
 function showClearAgain(){
  showOverlay('<div class="floor-result"><h2>Floor cleared</h2><p>Zone '+(zoneNumber()+1)+' · Floor '+zoneStage()+'</p>'+(idleSlotsUnlocked()>data.idleNoticeSlots?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task'+uiIcon('arrow')+'</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+'Zone Shop</button><button type="button" class="primary-cta" id="continueFloor">Continue'+uiIcon('arrow')+'</button></div>');$('continueFloor').onclick=startFloor;$('clearZoneShop').onclick=()=>openZoneShop(game.lastClearedZone??zoneNumber());if($('selectIdleTask'))$('selectIdleTask').onclick=openIdleHub;
@@ -255,7 +255,7 @@ function refreshPresentationUI(){
  const progress=parseFloat($('activeProgress').style.width)||0;hold.style.setProperty('--work-progress',progress+'%');
  const count=hold.querySelector('.hold-yield');if(count&&sk)count.textContent='+'+skillYield(game.scene);
  if($('loadoutWeaponName')){$('loadoutWeaponName').textContent=weaponDisplayName();$('loadoutArmorName').textContent=armorLoadout()?.name||'Travel clothes';}
- const hint=$('bossMechanicHint');if(hint)hint.textContent=game.boss?.cast?.label||'';
+ const hint=$('bossMechanicHint');if(hint)hint.textContent=bossMechanicHint();
  const nudge=$('skillsNudge');if(nudge){nudge.querySelector('strong').textContent='Forge a weapon';nudge.querySelector('p').textContent='';$('skillsNudgeOpen').textContent='Skills '+String.fromCharCode(8250);}
  const idleNudge=$('idleUnlockNudge');if(idleNudge){idleNudge.querySelector('strong').textContent='Idle unlocked';idleNudge.querySelector('p').textContent='';$('idleNudgeOpen').textContent='Select idle task '+String.fromCharCode(8250);}
  $('hudWeapon').title=weaponDps(data.weaponType,{run:true}).toFixed(1)+' DPS';$('hudWeapon').dataset.hint='Equipment · '+weaponDps(data.weaponType,{run:true}).toFixed(1)+' DPS';

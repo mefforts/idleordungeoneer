@@ -148,7 +148,7 @@ function powerIncrement(id,rank=0){return powerSummary(id,Math.min(UPGRADE_CAPS[
 function powerGain(id){return powerIncrement(id,zoneUpgradeRank(id));}
 
 function onKill(e){
- if(!game.enemies.includes(e))return;flushBurnDamage(e);game.enemies.splice(game.enemies.indexOf(e),1);earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;
+ if(!game.enemies.includes(e))return;clearOwnerMechanics(e);flushBurnDamage(e);game.enemies.splice(game.enemies.indexOf(e),1);earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;
  const b=biome();burst(e.x,e.y,e.boss?18:game.enemies.length>65?2:8,b.accent);game.shake=e.boss?7:1.5;
  const seals=e.boss?[8,12,20][e.bossIndex]:e.elite?3:Math.random()<currencyDropChance()?1:0;grantZoneCurrency(seals);
  if(e.boss){

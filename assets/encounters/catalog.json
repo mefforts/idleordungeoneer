@@ -1,0 +1,134 @@
+{
+  "overgrowth-mend": {
+    "source": [
+      63,
+      35,
+      325,
+      358
+    ],
+    "width": 274,
+    "height": 335,
+    "bytes": 45214
+  },
+  "embervault-mend": {
+    "source": [
+      433,
+      17,
+      676,
+      349
+    ],
+    "width": 255,
+    "height": 344,
+    "bytes": 40130
+  },
+  "crypt-mend": {
+    "source": [
+      770,
+      11,
+      1038,
+      350
+    ],
+    "width": 280,
+    "height": 351,
+    "bytes": 40372
+  },
+  "rift-mend": {
+    "source": [
+      1132,
+      42,
+      1389,
+      357
+    ],
+    "width": 269,
+    "height": 327,
+    "bytes": 48070
+  },
+  "overgrowth-fury": {
+    "source": [
+      64,
+      374,
+      323,
+      697
+    ],
+    "width": 271,
+    "height": 335,
+    "bytes": 51610
+  },
+  "embervault-fury": {
+    "source": [
+      444,
+      364,
+      664,
+      691
+    ],
+    "width": 232,
+    "height": 339,
+    "bytes": 38180
+  },
+  "crypt-fury": {
+    "source": [
+      780,
+      383,
+      1038,
+      692
+    ],
+    "width": 270,
+    "height": 321,
+    "bytes": 41380
+  },
+  "rift-fury": {
+    "source": [
+      1144,
+      372,
+      1386,
+      694
+    ],
+    "width": 254,
+    "height": 334,
+    "bytes": 42558
+  },
+  "overgrowth-reflect": {
+    "source": [
+      23,
+      708,
+      359,
+      1039
+    ],
+    "width": 348,
+    "height": 343,
+    "bytes": 67104
+  },
+  "embervault-reflect": {
+    "source": [
+      383,
+      708,
+      711,
+      1034
+    ],
+    "width": 340,
+    "height": 338,
+    "bytes": 60110
+  },
+  "crypt-reflect": {
+    "source": [
+      736,
+      708,
+      1077,
+      1037
+    ],
+    "width": 353,
+    "height": 341,
+    "bytes": 63716
+  },
+  "rift-reflect": {
+    "source": [
+      1093,
+      714,
+      1433,
+      1039
+    ],
+    "width": 352,
+    "height": 337,
+    "bytes": 66874
+  }
+}

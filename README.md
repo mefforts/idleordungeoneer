@@ -4,9 +4,9 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. Playing needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
-![Expanded zone scenery](preview-environments.png)
+![Guardian counterplay](preview-counterplay.png)
 
-[Floor progression](preview-floor-progression.png) · [Phone environment](preview-environments-mobile.png) · [Zone Shop](polish-shop.png) · [Phone shop](polish-mobile-shop.png) · [Skills](polish-mobile-gather.png) · [Equipment](polish-equipment.png) · [Codex](polish-reading.png)
+[Counterplay themes](preview-encounter-themes.png) · [Healing stream](preview-totems.png) · [Phone elite group](preview-encounters-mobile.png) · [Floor progression](preview-floor-progression.png) · [Phone environment](preview-environments-mobile.png) · [Zone Shop](polish-shop.png) · [Phone shop](polish-mobile-shop.png) · [Skills](polish-mobile-gather.png) · [Equipment](polish-equipment.png) · [Codex](polish-reading.png)
 
 ## Persistent Zone training
 
@@ -53,7 +53,7 @@ Ordinary monsters drop **no gold**. Baseline clears pay **191 gold in Zone 1 / 2
 
 ## Zone scenery and creatures
 
-The four authored Zones now have **27 visual assets each, up from 9**: **108 total**, including **72 new illustrations**. Gear, loot, combat values and encounters retain their previous definitions.
+The four authored Zones now have **27 visual assets each, up from 9**: **108 total**, including **72 new illustrations**. This scenery expansion leaves gear, loot and regular-monster combat values unchanged. Guardian mechanics are described below.
 
 | Per Zone | Before | Now |
 | --- | ---: | ---: |
@@ -108,9 +108,19 @@ Armor equips independently of the weapon. Warrior, Ranger and Mage each have two
 
 ## Guardians and elites
 
-The first two floor overlords use **two telegraphed mechanics**; a Zone’s final overlord adds a **third**, has more health and attacks faster below 40% health. Warnings lock before damage and can be dodged. Overgrowth uses green thorns/roots, Embervault cinders/magma, Hollow Crypt violet souls/grave marks, and Astral Rift cyan stars/rifts.
+Guardians combine area-themed projectiles, ground strikes and beams with three kinds of counterplay:
 
-Known bosses can return as smaller elite echoes, at most one per wave. They count toward completion and grant seals/gold without duplicate Mastery or Essence. Burn has visible flames and orange damage numbers; shop ranks improve its damage and duration.
+- **Reflect wards:** enter the pale shield at the center before its ring completes. Return **12% of the caster’s maximum HP** and stagger it for **1.6 seconds**. The surrounding ring is dangerous; escaping the whole mark is also safe. The core absorbs hostile projectiles during the warning.
+- **Healing totems:** stand in the stream between totem and guardian to divert **2% of your maximum HP per second**. Left alone, it restores **0.8% of the guardian’s maximum HP per second** for six seconds.
+- **Power totems:** an uninterrupted stream gives its guardian **12% stronger attacks**. Intercept it for **10% more hit damage**, refreshed for five seconds. This conditional bonus never changes permanent equipment or Zone training.
+
+Totems can be destroyed with any weapon. Move close to focus attacks on one, including when a bow or staff is already tracking a guardian. Totems give no loot, XP or wave credit; streams and intercepted bonuses do not stack. Encounter objects clear on defeat, retry and floor transitions. Menus and skilling pause their combat clock.
+
+The first guardian uses three distinct patterns, the second four. Floor overlords use four; the Zone’s final overlord uses all six and attacks faster below 40% health. Up to two attacks can wind up together. A reflect mark reserves a clear cast window and waits for existing ground hazards to expire. Marks avoid scenery and occupied enemy positions when placed.
+
+Known guardians return as smaller elite echoes: **up to one per wave on Floor 1, two on Floor 2 and three on Floor 3**. Different known guardians are favored before repeats. Echoes replace ordinary wave enemies, retain reduced pattern sets and grant seals/gold without duplicate Mastery or Essence.
+
+Each area has its own painted reflect ward, healing totem and power totem, alongside its themed attack effects: green briars and spring blossoms, amber basalt and furnaces, violet soul fonts and grave idols, or cyan starwells and prisms. Source art and export metrics are in `assets/encounters/`; `npm run art:encounters` rebuilds embedded sprites, and `npm run review:encounters` captures all twelve mechanics in combat. Full descriptions stay in guardian Codex entries. Burn retains visible flames and orange damage numbers.
 
 ## Controls and saves
 
@@ -144,8 +154,8 @@ npm run report:balance
 npm run review:ui
 ```
 
-Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. The original engine and compiled standalone output are in `index.html`.
+Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. Guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. The original engine and compiled standalone output are in `index.html`.
 
-Thirteen browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 108 distinct painted collection icons. Full combat simulations verify the first four Zones and later pacing. Static encounters, biome and jewelry definitions remain guarded by a manifest.
+Fourteen browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 108 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Full combat simulations verify the first four Zones and later pacing. Static encounters, biome and jewelry definitions remain guarded by a manifest.
 
 Generated icon sheets, calibrated regions and alignment metrics live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without altering source art; `npm run art:icons` exports embedded WebP badges. `scripts/export-equipment.py` packs rig textures using Pillow, NumPy and SciPy. Use `CHROMIUM_PATH` for a custom browser. Local test output stays in ignored `test-results/`.

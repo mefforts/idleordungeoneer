@@ -7,7 +7,7 @@ let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)],main=scripts.at(-1);
 let source=main[1].replace(/\/\* BEGIN LIVING SKILLS \*\/[\s\S]*?\/\* END LIVING SKILLS \*\/\n?/,'');
 const ast=parse(source,{ecmaVersion:'latest'}),functions=new Map();walk(ast,n=>{if(n.type==='FunctionDeclaration')functions.set(n.id.name,n)});
-const incoming=['systems','arena','equipment-regions','equipment','economy','dungeoneering','zone-progression','testing','presentation','codex','zone-shop','zone-shop-ui','environment-art','environments'].map(name=>fs.readFileSync(path.join(root,'src/'+name+'.js'),'utf8')).join('\n'),incomingAst=parse(incoming,{ecmaVersion:'latest'}),patches=[],helpers=[],overrides=new Map();
+const incoming=['systems','arena','equipment-regions','equipment','economy','dungeoneering','zone-progression','testing','presentation','codex','zone-shop','zone-shop-ui','environment-art','environments','encounter-art','encounters'].map(name=>fs.readFileSync(path.join(root,'src/'+name+'.js'),'utf8')).join('\n'),incomingAst=parse(incoming,{ecmaVersion:'latest'}),patches=[],helpers=[],overrides=new Map();
 for(const n of incomingAst.body){const code=incoming.slice(n.start,n.end);if(n.type==='FunctionDeclaration')overrides.set(n.id.name,{node:n,code});else helpers.push(code)}
 for(const [name,{code}] of overrides){if(functions.has(name)){const old=functions.get(name);patches.push({start:old.start,end:old.end,code});}else helpers.push(code)}
 const artFile=path.join(root,'src/equipment-art.json');

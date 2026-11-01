@@ -1,17 +1,19 @@
 {
   "name": "idle-or-dungeoneer",
-  "version": "9.1.0",
+  "version": "9.2.0",
   "private": true,
   "description": "A standalone fantasy RPG with a minimal runestone HUD, linked crafting and a readable Codex.",
   "scripts": {
     "start": "python3 -m http.server 8000 --bind 0.0.0.0",
-    "test": "node tests/smoke.cjs && node tests/combat.cjs && node tests/quality.cjs && node tests/systems.cjs && node tests/gestures.cjs && node tests/arena.cjs && node tests/dungeoneering.cjs && node tests/tiers.cjs && node tests/presentation.cjs && node tests/revision.cjs && node tests/zone-shop.cjs && node tests/testing-speed.cjs && node tests/environments.cjs",
+    "test": "node tests/smoke.cjs && node tests/combat.cjs && node tests/quality.cjs && node tests/systems.cjs && node tests/gestures.cjs && node tests/arena.cjs && node tests/dungeoneering.cjs && node tests/tiers.cjs && node tests/presentation.cjs && node tests/revision.cjs && node tests/zone-shop.cjs && node tests/testing-speed.cjs && node tests/environments.cjs && node tests/encounters.cjs",
     "build": "node scripts/sync-systems.cjs",
     "report:balance": "node scripts/report-tier-balance.cjs",
     "review:ui": "node scripts/presentation-review.cjs",
     "art:icons": "node scripts/export-icons.cjs",
     "art:environments": "python3 scripts/export-environments.py",
-    "review:environments": "node scripts/review-environments.cjs"
+    "review:environments": "node scripts/review-environments.cjs",
+    "art:encounters": "python3 scripts/export-encounters.py",
+    "review:encounters": "node scripts/review-encounters.cjs"
   },
   "devDependencies": {
     "acorn": "8.19.0",

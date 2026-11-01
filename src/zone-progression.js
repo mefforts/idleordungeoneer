@@ -234,13 +234,13 @@ function setScene(scene,force=true){clearSkillBonuses();if(!$('skillQuickPicker'
 }
 
 function attack(){
- if(!game.enemies.length)return false;
- const p=game.player,style=weaponInfo(),reach=attackReach(),targets=game.enemies.map(e=>({e,d:Math.hypot(e.x-p.x,e.y-p.y)})).filter(o=>o.d<reach+o.e.rad).sort((a,b)=>a.d-b.d);
+ if(!combatTargets().length)return false;
+ const p=game.player,style=weaponInfo(),reach=attackReach(),targets=combatTargets().map(e=>({e,d:Math.hypot(e.x-p.x,e.y-p.y)})).filter(o=>o.d<reach+o.e.rad).sort((a,b)=>a.d-b.d);
  if(!targets.length)return false;
  if(isRanged()&&p.aimTarget){const index=targets.findIndex(o=>o.e===p.aimTarget);if(index>0)targets.unshift(targets.splice(index,1)[0]);}
  const first=targets[0].e,angle=Math.atan2(first.y-p.y,first.x-p.x);
  p.facing=Math.cos(angle)<0?-1:1;p.aimFacing=p.facing;p.aimAngle=angle;p.aimTarget=first;p.attackPose=.38;
- let damage=attackDamage();
+ let damage=attackDamage()*(p.rallyTime>0?1.1:1);
  if(data.weaponType==='greatsword'&&p.hp<p.maxHp*.5)damage*=1.65;
  if(isRanged()){
   const ammo=data.weaponType==='bow'?'arrows':'runes';if((data[ammo]||0)<1){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1')}return false;}data[ammo]--;
@@ -273,8 +273,9 @@ function drawPlayer(p){
 function localAimAngle(angle=0){return Math.max(-.8,Math.min(.8,Math.atan2(Math.sin(angle),Math.abs(Math.cos(angle)))));}
 function updateCombatAim(){
  const p=game.player;if(!isRanged()){p.aimTarget=null;return;}
- const reach=attackReach(),inRange=e=>game.enemies.includes(e)&&e.hp>0&&Math.hypot(e.x-p.x,e.y-p.y)<reach+e.rad;
- const target=p.aimTarget&&inRange(p.aimTarget)?p.aimTarget:game.enemies.filter(inRange).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
+ const reach=attackReach(),available=combatTargets(),inRange=e=>available.includes(e)&&e.hp>0&&Math.hypot(e.x-p.x,e.y-p.y)<reach+e.rad;
+ const closeTotem=available.filter(e=>e.totem&&inRange(e)&&Math.hypot(e.x-p.x,e.y-p.y)<65).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
+ const target=closeTotem||(p.aimTarget&&inRange(p.aimTarget)?p.aimTarget:available.filter(inRange).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0]);
  if(target){p.aimTarget=target;p.aimAngle=Math.atan2(target.y-p.y,target.x-p.x);if(Math.abs(target.x-p.x)>3)p.aimFacing=target.x<p.x?-1:1;p.facing=p.aimFacing||p.facing;}
  else{p.aimTarget=null;p.aimAngle=p.facing<0?Math.PI:0;}
 }
