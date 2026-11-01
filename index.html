@@ -1878,7 +1878,7 @@ const ARENA_PINS = [
   {id:'codex',element:'quickCodex',name:'Codex'},
   {id:'settings',element:'quickSettings',name:'Settings'},
   {id:'pause',element:'quickPause',name:'Pause / resume'},
-  {id:'speed',element:'speedControl',name:'Delve speed'}
+  {id:'speed',element:'speedControl',name:'Speed'}
 ];
 
 const ZONE_BALANCE_CACHE = new Map();
@@ -2200,7 +2200,7 @@ function moveHudPin(id,direction){
 
 function setArenaSpeed(value){
   const allowed=data.devSpeedUnlocked?[1,2,5,10,25,50,100,500]:masteryUnlocked()?[1,2]:[1];
-  if(!allowed.includes(value))return;game.devSpeed=value;
+  if(!allowed.includes(value))return;if(game.scene==='combat')game.devSpeed=value;else if(data.devSpeedUnlocked)game.skillSpeed=value;else return;
   $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');refreshArenaUI();
 }
 
@@ -2222,15 +2222,15 @@ function installArenaUI(){installZoneShopPin();
 }
 
 function renderLegacySettingsDrawer(){
- $('settingsView').innerHTML=`<div class="settings-item"><div><strong>Quick-resume last skill</strong><small>Return to your last skill after closing menus.</small></div><button type="button" id="settingLastSkill" class="setting-toggle ${data.skillAutoReturn?'is-on':''}">${data.skillAutoReturn?'ON':'OFF'}</button></div><div class="settings-item"><div><strong>Character</strong><small>Appearance and cosmetics</small></div><button id="settingsCustomize" type="button" class="setting-action">✦ EDIT</button></div><button class="drawer-wide" id="settingsMastery" type="button" ${masteryUnlocked()?'':'disabled'}>◆ DUNGEONEERING MASTERY ${masteryUnlocked()?'· TRAIN':'· LOCKED UNTIL FIRST GUARDIAN'}</button><button class="drawer-wide codes-entry" id="settingsCodes" type="button">⌘ CODES ${data.devSpeedUnlocked?'· TEST MODE UNLOCKED':''}</button><div id="codeEntry" class="code-entry hidden"><label for="codeInput">REDEEM CODE</label><div><input type="text" id="codeInput" autocapitalize="off" spellcheck="false" placeholder="Enter code" maxlength="32"><button id="codeRedeem" type="button">REDEEM</button></div><small id="codeFeedback">mefforts: speed · max: resources + mastery</small></div><button class="drawer-wide" id="settingsTour" type="button">✧ REPLAY SHORTCUT TOUR</button><button class="drawer-wide" id="settingsHelp" type="button">? HOW TO PLAY</button><button class="drawer-wide" id="settingsExport" type="button">↓ BACK UP SAVE</button><button class="drawer-wide" id="settingsImport" type="button">↑ RESTORE SAVE</button><input type="file" accept=".json,application/json" id="settingsImportFile" class="hidden"><button class="drawer-wide" id="settingsReset" type="button">↺ RESET PROGRESS</button><div class="settings-tips">⚔ DELVE · ✋ ACTIVE · ◷ IDLE<br>Idle slots: Floor 2 / Zone 10.<br>Double tap a movement direction to dash.<br>Delve speed affects combat only. Skills keep their own clock.</div>`;
+ $('settingsView').innerHTML=`<div class="settings-item"><div><strong>Quick-resume last skill</strong><small>Return to your last skill after closing menus.</small></div><button type="button" id="settingLastSkill" class="setting-toggle ${data.skillAutoReturn?'is-on':''}">${data.skillAutoReturn?'ON':'OFF'}</button></div><div class="settings-item"><div><strong>Character</strong><small>Appearance and cosmetics</small></div><button id="settingsCustomize" type="button" class="setting-action">✦ EDIT</button></div><button class="drawer-wide" id="settingsMastery" type="button" ${masteryUnlocked()?'':'disabled'}>◆ DUNGEONEERING MASTERY ${masteryUnlocked()?'· TRAIN':'· LOCKED UNTIL FIRST GUARDIAN'}</button><button class="drawer-wide codes-entry" id="settingsCodes" type="button">⌘ CODES ${data.devSpeedUnlocked?'· TEST MODE UNLOCKED':''}</button><div id="codeEntry" class="code-entry hidden"><label for="codeInput">REDEEM CODE</label><div><input type="text" id="codeInput" autocapitalize="off" spellcheck="false" placeholder="Enter code" maxlength="32"><button id="codeRedeem" type="button">REDEEM</button></div><small id="codeFeedback">mefforts: speed · max: resources + mastery</small></div><button class="drawer-wide" id="settingsTour" type="button">✧ REPLAY SHORTCUT TOUR</button><button class="drawer-wide" id="settingsHelp" type="button">? HOW TO PLAY</button><button class="drawer-wide" id="settingsExport" type="button">↓ BACK UP SAVE</button><button class="drawer-wide" id="settingsImport" type="button">↑ RESTORE SAVE</button><input type="file" accept=".json,application/json" id="settingsImportFile" class="hidden"><button class="drawer-wide" id="settingsReset" type="button">↺ RESET PROGRESS</button><div class="settings-tips">⚔ DELVE · ✋ ACTIVE · ◷ IDLE<br>Idle slots: Floor 2 / Zone 10.<br>Double tap a movement direction to dash.<br>Mastery speed affects combat. Testing skilling speed has its own control.</div>`;
  $('settingsView').insertAdjacentHTML('afterbegin',`<div class="settings-item"><div><strong>Reduced motion</strong><small>Reduce camera shake and decorative animation. Your device preference also applies.</small></div><button type="button" id="settingReducedMotion" class="setting-toggle ${data.reducedMotion?'is-on':''}" aria-pressed="${!!data.reducedMotion}">${data.reducedMotion?'ON':'OFF'}</button></div>`);$('settingReducedMotion').onclick=()=>{data.reducedMotion=!data.reducedMotion;save();renderSettingsDrawer()};
  $('settingsCodes').onclick=()=>{$('codeEntry').classList.toggle('hidden');if(!$('codeEntry').classList.contains('hidden'))$('codeInput').focus()};
  $('codeRedeem').onclick=()=>{
   const value=$('codeInput').value.trim().toLowerCase();const feedback=$('codeFeedback');feedback.classList.remove('code-success');
   if(value==='mefforts'){
-   data.devSpeedUnlocked=true;save();feedback.textContent='✓ Delve speed unlocked';feedback.classList.add('code-success');$('speedControl').classList.remove('hidden');toast('Testing Delve speed unlocked','1×–500× · resets at launch');
+   if(!data.devSpeedUnlocked)game.skillSpeed=1;data.devSpeedUnlocked=true;save();feedback.textContent='✓ Delve & skilling speeds unlocked';feedback.classList.add('code-success');$('speedControl').classList.remove('hidden');toast('Testing speeds unlocked','Delve & skilling · 1×–500×');
   }else if(value==='max'){
-   fillTestingResources();feedback.textContent='✓ Resources, travel and speed unlocked';feedback.classList.add('code-success');toast('Testing unlocked','Travel · Delve speed · resources');
+   fillTestingResources();feedback.textContent='✓ Resources, travel and speed unlocked';feedback.classList.add('code-success');toast('Testing unlocked','Travel · game speed · resources');
   }else feedback.textContent='Code not found';
   $('codeInput').value='';
  };$('codeInput').onkeydown=e=>{if(e.key==='Enter')$('codeRedeem').click()};
@@ -2688,6 +2688,29 @@ function updateCombatAim(){
  else{p.aimTarget=null;p.aimAngle=p.facing<0?Math.PI:0;}
 }
 
+function skillingTimeMultiplier(){return data.devSpeedUnlocked?(game.skillSpeed||1):1;}
+
+function speedControlVisible(){return !!data.devSpeedUnlocked||game.scene==='combat'&&masteryUnlocked();}
+
+function speedControlName(){return game.scene==='combat'?'Delve speed':'Skilling speed';}
+
+function selectedSceneSpeed(){return game.scene==='combat'?(game.devSpeed||1):(game.skillSpeed||1);}
+
+function advanceActiveWork(seconds){
+ if(!game.holdSkill){game.activeClockMs+=seconds*1000;return;}
+ const before=game.activeHits||0;let left=seconds;
+ // Step the work clock so fast cycles still consume every recipe's ingredients.
+ while(left>1e-9){
+  const step=Math.min(.1-(game.holdAccum||0),left);left-=step;game.activeClockMs+=step*1000;
+  game.holdAccum=(game.holdAccum||0)+step;
+  if(game.holdAccum>=.1-1e-9){
+   game.holdAccum=Math.max(0,game.holdAccum-.1);
+   if(!$('app').classList.contains('drawer-open')&&$('overlay').classList.contains('hidden')&&$('resourcePicker').classList.contains('hidden'))activeSkill(game.holdSkill,true);
+  }
+ }
+ if((game.activeHits||0)>before){refreshUI();if(Math.ceil(game.activeHits/9)>Math.ceil(before/9))save();}
+}
+
 function refreshTestTravel(){
  const root=$('settingsView');if(!root||drawerKind!=='settings')return;
  let host=$('testTravel');if(!data.devTravelUnlocked){host?.remove();return;}
@@ -2777,8 +2800,8 @@ function equipmentUIState(){return JSON.stringify([data.weaponType,data.unlocked
 function refreshArenaUI(){
  if(!arenaInstalled)return;const dps=weaponDps(data.weaponType,{run:true});$('quickDamage').textContent=Math.round(dps);$('hudWeapon').querySelector('small').textContent='DPS';$('hudWeapon').title=dps.toFixed(1)+' DPS';$('hudWeapon').setAttribute('aria-label','Equipment · '+dps.toFixed(1)+' damage per second');
  const side=data.hudLayout?.side||'right';if($('stageWrap').dataset.hudSide!==side||document.querySelector('.hud-actions').dataset.order!==data.hudLayout.order.join(','))applyHudLayout();
- $('speedControl').classList.toggle('hidden',!(data.devSpeedUnlocked||masteryUnlocked())||game.scene!=='combat');$('speedOptions').querySelectorAll('[data-speed]').forEach(b=>{b.classList.toggle('hidden',!data.devSpeedUnlocked&&Number(b.dataset.speed)>2);b.classList.toggle('active',Number(b.dataset.speed)===game.devSpeed);});
- const speed=$('speedToggle');speed.dataset.tooltip='Delve speed · '+game.devSpeed+'×';speed.setAttribute('aria-label','Delve speed '+game.devSpeed+' times');speed.querySelector('.speed-badge').textContent=game.devSpeed+'×';$('quickPause').dataset.tooltip=game.manualPaused?'Resume':'Pause';
+ $('speedControl').classList.toggle('hidden',!speedControlVisible());$('speedOptions').querySelectorAll('[data-speed]').forEach(b=>{b.classList.toggle('hidden',!data.devSpeedUnlocked&&Number(b.dataset.speed)>2);b.classList.toggle('active',Number(b.dataset.speed)===selectedSceneSpeed());});
+ const speed=$('speedToggle');speed.dataset.tooltip=speedControlName()+' · '+selectedSceneSpeed()+'×';speed.setAttribute('aria-label',speedControlName()+' '+selectedSceneSpeed()+' times');speed.querySelector('.speed-badge').textContent=selectedSceneSpeed()+'×';$('quickPause').dataset.tooltip=game.manualPaused?'Resume':'Pause';
  refreshEquipmentUI();refreshDungeoneeringUI();const host=$('combatReadiness'),signature=equipmentUIState();if(host&&drawerKind==='gear'&&host.dataset.signature!==signature){host.innerHTML=pacingReadinessHtml();host.dataset.signature=signature;}
 }
 
@@ -3179,7 +3202,7 @@ function refreshDungeoneeringUI(){
  if(!dungeoneeringInstalled)return;const points=masteryFor().points,button=$('hudEssence');$('quickEssence').textContent=formatCompact(points);button.setAttribute('aria-label',format(points)+' Dungeoneering Mastery points');button.dataset.hint='Dungeoneering Mastery · '+format(points);button.removeAttribute('title');
  const image=button.querySelector('img'),uri=iconAsset('mastery-points');if(image.getAttribute('src')!==uri)image.src=uri;
  const hint=$('bossMechanicHint');if(hint){hint.textContent=game.boss?.cast?.label||'';hint.style.color=DUNGEON_THEMES[biomeIndex()].hot;}
- $('speedControl').classList.toggle('hidden',game.scene!=='combat'||!data.devSpeedUnlocked&&!masteryUnlocked());refreshProgressionHud();
+ $('speedControl').classList.toggle('hidden',!speedControlVisible());refreshProgressionHud();
 }
 /* END LIVING SKILLS */
 const ACTIVE_INTERVAL={"mine":2.4,"forge":2.8,"wood":2.4,"fletch":2.8,"ward":2.4,"rune":2.8,"scavenge":3.5,"silverMine":3.1,"silverSmelt":3.4,"polish":3.8,"coal":3.2,"steelSmelt":3.6,"willow":3,"steelFletch":3.4,"ancientScavenge":4,"cleanAncient":3.6,"aetherWeave":3,"greaterRune":3.6,"garnetSearch":4.5,"garnetCut":4};
@@ -3206,13 +3229,13 @@ function produce(key,active=false){
  const xp=active?Math.max(5,Math.floor(skill.gain*.65)):skill.gain;data[skill.xp]=(data[skill.xp]||0)+xp;const group=disciplineOf(key);data[group.xp]=(data[group.xp]||0)+xp;
  codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
 }
-function activeSkill(key){
+function activeSkill(key,batch=false){
   if(!SKILLS[key]||!canUseSkill(key))return false;noteSkillEngagement(key);
   const now=game.activeClockMs;if(!game.lastActiveAt)game.lastActiveAt={};
-  if(game.lastActiveAt[key]!==undefined&&now-game.lastActiveAt[key]<skillInterval(key)*1000)return false;
+  if(game.lastActiveAt[key]!==undefined&&now-game.lastActiveAt[key]<skillInterval(key)*1000-1e-6)return false;
   const result=produce(key,true);if(!result)return false;
   game.lastActiveAt[key]=now;game.workAction=.48;game.workPulse=(game.workPulse||0)+1;game.activeHits=(game.activeHits||0)+1;game.lastActiveSkill=key;
-  refreshUI();if(game.activeHits%9===1)save();return result;
+  if(!batch){refreshUI();if(game.activeHits%9===1)save();}return result;
 }
 function setIdleJob(slot,key){
   ensureJobs();if(!Number.isInteger(slot)||slot<0||slot>=idleSlotsUnlocked()||key&&(!SKILLS[key]||!canUseSkill(key)))return false;
@@ -3526,7 +3549,25 @@ function tickCombat(dt){const p=game.player;game.frame+=dt;game.phaseTime+=dt;ga
  game.shake=Math.max(0,game.shake-dt*19);
 }
 function animateEffects(dt){if(game.menuPaused||!$('overlay').classList.contains('hidden'))return;game.frame+=game.status==='running'?0:dt;for(let i=game.particles.length-1;i>=0;i--){const o=game.particles[i];o.x+=o.vx*dt;o.y+=o.vy*dt;o.life-=dt;if(o.life<=0)game.particles.splice(i,1)}for(let i=game.floaters.length-1;i>=0;i--){const o=game.floaters[i];o.y-=32*dt;o.life-=dt;if(o.life<=0)game.floaters.splice(i,1)}for(let i=game.arcs.length-1;i>=0;i--){game.arcs[i].life-=dt;if(game.arcs[i].life<=0)game.arcs.splice(i,1)}if(game.announcementTime>0){game.announcementTime-=dt;if(game.announcementTime<=0)$('announcement').classList.add('hidden')}}
-function update(dt){const simDt=dt*(game.devSpeed||1);game.activeClockMs+=dt*1000;game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);if(game.holdSkill){game.holdAccum=(game.holdAccum||0)+dt;while(game.holdAccum>=.1){game.holdAccum-=.1;if(!$('app').classList.contains('drawer-open')&&$('overlay').classList.contains('hidden')&&$('resourcePicker').classList.contains('hidden'))activeSkill(game.holdSkill);}}game.frame+=game.status==='running'?0:dt;const realNow=Date.now(),jobsDelta=Math.min(8*3600,(realNow-game.lastJobsAt)/1000);game.lastJobsAt=realNow;if(jobsDelta>0&&jobsDelta<=8*3600)advanceProduction(jobsDelta);if(!game.customizing&&!game.menuPaused&&$('overlay').classList.contains('hidden')&&game.scene==='combat'&&game.status==='running'){let left=simDt,steps=0;while(left>0&&steps<175&&game.status==='running'&&!game.menuPaused&&$('overlay').classList.contains('hidden')){const step=Math.min(.09,left);tickCombat(step);animateEffects(step);left-=step;steps++;}}else animateEffects(dt);game.saveTimer+=dt;game.uiTimer+=dt;if(game.uiTimer>.14){refreshUI();game.uiTimer=0}if(game.saveTimer>=4){save();game.saveTimer=0}tickSkillBonuses(dt);}
+function update(dt){
+ const simDt=dt*(game.devSpeed||1),skillSpeed=skillingTimeMultiplier();
+ game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);
+ advanceActiveWork(dt*skillSpeed);
+ game.frame+=game.status==='running'?0:dt;
+ const realNow=Date.now(),jobsDelta=Math.min(8*3600,Math.max(0,(realNow-game.lastJobsAt)/1000));game.lastJobsAt=realNow;
+ if(jobsDelta>0)advanceProduction(jobsDelta*skillSpeed);
+ if(!game.customizing&&!game.menuPaused&&$('overlay').classList.contains('hidden')&&game.scene==='combat'&&game.status==='running'){
+  let left=simDt,steps=0;
+  while(left>0&&steps<175&&game.status==='running'&&!game.menuPaused&&$('overlay').classList.contains('hidden')){
+   const step=Math.min(.09,left);tickCombat(step);animateEffects(step);left-=step;steps++;
+  }
+ }else animateEffects(dt);
+ game.saveTimer+=dt;game.uiTimer+=dt;
+ if(game.uiTimer>.14){refreshUI();game.uiTimer=0;}
+ if(game.saveTimer>=4){save();game.saveTimer=0;}
+ // Bonus targets and interface timing remain readable at testing speeds.
+ tickSkillBonuses(dt);
+}
 function resize(){const r=canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.max(1,Math.floor(r.width*dpr));canvas.height=Math.max(1,Math.floor(r.height*dpr));game.scale=r.width<550?r.width/490:clamp(r.height/850,.85,1.2);game.viewWidth=r.width/game.scale;game.viewHeight=r.height/game.scale;ctx.setTransform(canvas.width/game.viewWidth,0,0,canvas.width/game.viewWidth,0,0);}
 function ellipse(x,y,rx,ry,color){ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill()}
 function disc(x,y,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}
@@ -4051,7 +4092,7 @@ function fillTestingResources(){
  const keys=new Set(['gold','essence','ore','bars','logs','arrows','cloth','runes','scraps','silverOre','silverBars','opals','cutOpals']);
  for(const skill of Object.values(SKILLS))keys.add(skill.resource);
  for(const key of keys)data[key]=Math.max(SANDBOX_RESOURCE_CAP,Number(data[key])||0);
- data.devSpeedUnlocked=true;data.devTravelUnlocked=true;
+ if(!data.devSpeedUnlocked)game.skillSpeed=1;data.devSpeedUnlocked=true;data.devTravelUnlocked=true;
  data.cleared=Math.max(data.cleared,BIOMES.length*3);
  if(!data.biomeLoot||typeof data.biomeLoot!=='object')data.biomeLoot={};
  for(let i=0;i<BIOMES.length;i++){

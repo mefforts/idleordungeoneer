@@ -67,7 +67,7 @@ function instrumentation(){
     passed.push('Dungeoneering Mastery is named consistently; HUD shows spendable dungeon points, and spending leaves Essence unchanged');
     const trials=await p.evaluate(()=>({normal:__dungeonTest.trial(1,'mine'),mastery:__dungeonTest.trial(2,'mine'),code:__dungeonTest.trial(500,'mine'),combat:__dungeonTest.trial(2)}));
     assert.equal(trials.normal.ore,trials.mastery.ore);assert.equal(trials.normal.ore,trials.code.ore);assert.ok(Math.abs(trials.normal.clock-10000)<.1);assert.ok(Math.abs(trials.code.clock-10000)<.1);assert.ok(Math.abs(trials.combat.combat-20)<.01);
-    passed.push('1×, 2× and 500× Delve speed give identical active skilling progress; combat alone advances faster');
+    passed.push('Delve speed alone, including 2× Mastery, leaves skilling unchanged; combat advances faster');
     const bossResults=[];
     for(let theme=0;theme<4;theme++){
       const floorPlan=await p.evaluate(theme=>__dungeonTest.boss(theme,1,2),theme);assert.deepEqual(floorPlan,['volley','ground']);

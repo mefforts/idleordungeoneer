@@ -264,6 +264,24 @@ function dealDamage(enemy,base,fromX,fromY,sourceStyle=combatStyle()){
  }
 }
 
-function update(dt){const simDt=dt*(game.devSpeed||1);game.activeClockMs+=dt*1000;game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);if(game.holdSkill){game.holdAccum=(game.holdAccum||0)+dt;while(game.holdAccum>=.1){game.holdAccum-=.1;if(!$('app').classList.contains('drawer-open')&&$('overlay').classList.contains('hidden')&&$('resourcePicker').classList.contains('hidden'))activeSkill(game.holdSkill);}}game.frame+=game.status==='running'?0:dt;const realNow=Date.now(),jobsDelta=Math.min(8*3600,(realNow-game.lastJobsAt)/1000);game.lastJobsAt=realNow;if(jobsDelta>0&&jobsDelta<=8*3600)advanceProduction(jobsDelta);if(!game.customizing&&!game.menuPaused&&$('overlay').classList.contains('hidden')&&game.scene==='combat'&&game.status==='running'){let left=simDt,steps=0;while(left>0&&steps<175&&game.status==='running'&&!game.menuPaused&&$('overlay').classList.contains('hidden')){const step=Math.min(.09,left);tickCombat(step);animateEffects(step);left-=step;steps++;}}else animateEffects(dt);game.saveTimer+=dt;game.uiTimer+=dt;if(game.uiTimer>.14){refreshUI();game.uiTimer=0}if(game.saveTimer>=4){save();game.saveTimer=0}tickSkillBonuses(dt);}
+function update(dt){
+ const simDt=dt*(game.devSpeed||1),skillSpeed=skillingTimeMultiplier();
+ game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);
+ advanceActiveWork(dt*skillSpeed);
+ game.frame+=game.status==='running'?0:dt;
+ const realNow=Date.now(),jobsDelta=Math.min(8*3600,Math.max(0,(realNow-game.lastJobsAt)/1000));game.lastJobsAt=realNow;
+ if(jobsDelta>0)advanceProduction(jobsDelta*skillSpeed);
+ if(!game.customizing&&!game.menuPaused&&$('overlay').classList.contains('hidden')&&game.scene==='combat'&&game.status==='running'){
+  let left=simDt,steps=0;
+  while(left>0&&steps<175&&game.status==='running'&&!game.menuPaused&&$('overlay').classList.contains('hidden')){
+   const step=Math.min(.09,left);tickCombat(step);animateEffects(step);left-=step;steps++;
+  }
+ }else animateEffects(dt);
+ game.saveTimer+=dt;game.uiTimer+=dt;
+ if(game.uiTimer>.14){refreshUI();game.uiTimer=0;}
+ if(game.saveTimer>=4){save();game.saveTimer=0;}
+ // Bonus targets and interface timing remain readable at testing speeds.
+ tickSkillBonuses(dt);
+}
 
 function spawnBaseEnemy(boss=false,bossIndex=0){const a=rand(0,Math.PI*2),r=rand(205,320),d=zoneEnemyHp(false,0,rand(.9,1.1))/Math.max(1,30+game.phase*4);const e={x:game.player.x+Math.cos(a)*r,y:game.player.y+Math.sin(a)*r,rad:boss?(bossIndex===2?36:29):rand(12,17),hp:boss?100:((30+game.phase*4)*d),maxHp:boss?100:((30+game.phase*4)*d),speed:(boss?(bossIndex===2?77:86):rand(77,108)*(1+Math.min(1,data.floor*.05)))*((data.floor-1)%3===1?1.12:1),boss,bossIndex,contact:0,attack:boss?2.5:0,telegraph:0,wobble:rand(0,7),name:''};game.enemies.push(e);return e;}

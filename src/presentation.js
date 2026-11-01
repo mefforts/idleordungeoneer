@@ -101,8 +101,8 @@ function equipmentUIState(){return JSON.stringify([data.weaponType,data.unlocked
 function refreshArenaUI(){
  if(!arenaInstalled)return;const dps=weaponDps(data.weaponType,{run:true});$('quickDamage').textContent=Math.round(dps);$('hudWeapon').querySelector('small').textContent='DPS';$('hudWeapon').title=dps.toFixed(1)+' DPS';$('hudWeapon').setAttribute('aria-label','Equipment · '+dps.toFixed(1)+' damage per second');
  const side=data.hudLayout?.side||'right';if($('stageWrap').dataset.hudSide!==side||document.querySelector('.hud-actions').dataset.order!==data.hudLayout.order.join(','))applyHudLayout();
- $('speedControl').classList.toggle('hidden',!(data.devSpeedUnlocked||masteryUnlocked())||game.scene!=='combat');$('speedOptions').querySelectorAll('[data-speed]').forEach(b=>{b.classList.toggle('hidden',!data.devSpeedUnlocked&&Number(b.dataset.speed)>2);b.classList.toggle('active',Number(b.dataset.speed)===game.devSpeed);});
- const speed=$('speedToggle');speed.dataset.tooltip='Delve speed · '+game.devSpeed+'×';speed.setAttribute('aria-label','Delve speed '+game.devSpeed+' times');speed.querySelector('.speed-badge').textContent=game.devSpeed+'×';$('quickPause').dataset.tooltip=game.manualPaused?'Resume':'Pause';
+ $('speedControl').classList.toggle('hidden',!speedControlVisible());$('speedOptions').querySelectorAll('[data-speed]').forEach(b=>{b.classList.toggle('hidden',!data.devSpeedUnlocked&&Number(b.dataset.speed)>2);b.classList.toggle('active',Number(b.dataset.speed)===selectedSceneSpeed());});
+ const speed=$('speedToggle');speed.dataset.tooltip=speedControlName()+' · '+selectedSceneSpeed()+'×';speed.setAttribute('aria-label',speedControlName()+' '+selectedSceneSpeed()+' times');speed.querySelector('.speed-badge').textContent=selectedSceneSpeed()+'×';$('quickPause').dataset.tooltip=game.manualPaused?'Resume':'Pause';
  refreshEquipmentUI();refreshDungeoneeringUI();const host=$('combatReadiness'),signature=equipmentUIState();if(host&&drawerKind==='gear'&&host.dataset.signature!==signature){host.innerHTML=pacingReadinessHtml();host.dataset.signature=signature;}
 }
 function pacingReadinessHtml(){

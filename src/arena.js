@@ -7,7 +7,7 @@ const ARENA_PINS = [
   {id:'codex',element:'quickCodex',name:'Codex'},
   {id:'settings',element:'quickSettings',name:'Settings'},
   {id:'pause',element:'quickPause',name:'Pause / resume'},
-  {id:'speed',element:'speedControl',name:'Delve speed'}
+  {id:'speed',element:'speedControl',name:'Speed'}
 ];
 const ZONE_BALANCE_CACHE = new Map();
 let arenaInstalled=false, noticeSequence=0, pinDrag=null;
@@ -70,7 +70,7 @@ function moveHudPin(id,direction){
 
 function setArenaSpeed(value){
   const allowed=data.devSpeedUnlocked?[1,2,5,10,25,50,100,500]:masteryUnlocked()?[1,2]:[1];
-  if(!allowed.includes(value))return;game.devSpeed=value;
+  if(!allowed.includes(value))return;if(game.scene==='combat')game.devSpeed=value;else if(data.devSpeedUnlocked)game.skillSpeed=value;else return;
   $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');refreshArenaUI();
 }
 
@@ -120,15 +120,15 @@ function nextPhase(){
 function message(msg){rememberNotice(msg);}
 
 function renderLegacySettingsDrawer(){
- $('settingsView').innerHTML=`<div class="settings-item"><div><strong>Quick-resume last skill</strong><small>Return to your last skill after closing menus.</small></div><button type="button" id="settingLastSkill" class="setting-toggle ${data.skillAutoReturn?'is-on':''}">${data.skillAutoReturn?'ON':'OFF'}</button></div><div class="settings-item"><div><strong>Character</strong><small>Appearance and cosmetics</small></div><button id="settingsCustomize" type="button" class="setting-action">✦ EDIT</button></div><button class="drawer-wide" id="settingsMastery" type="button" ${masteryUnlocked()?'':'disabled'}>◆ DUNGEONEERING MASTERY ${masteryUnlocked()?'· TRAIN':'· LOCKED UNTIL FIRST GUARDIAN'}</button><button class="drawer-wide codes-entry" id="settingsCodes" type="button">⌘ CODES ${data.devSpeedUnlocked?'· TEST MODE UNLOCKED':''}</button><div id="codeEntry" class="code-entry hidden"><label for="codeInput">REDEEM CODE</label><div><input type="text" id="codeInput" autocapitalize="off" spellcheck="false" placeholder="Enter code" maxlength="32"><button id="codeRedeem" type="button">REDEEM</button></div><small id="codeFeedback">mefforts: speed · max: resources + mastery</small></div><button class="drawer-wide" id="settingsTour" type="button">✧ REPLAY SHORTCUT TOUR</button><button class="drawer-wide" id="settingsHelp" type="button">? HOW TO PLAY</button><button class="drawer-wide" id="settingsExport" type="button">↓ BACK UP SAVE</button><button class="drawer-wide" id="settingsImport" type="button">↑ RESTORE SAVE</button><input type="file" accept=".json,application/json" id="settingsImportFile" class="hidden"><button class="drawer-wide" id="settingsReset" type="button">↺ RESET PROGRESS</button><div class="settings-tips">⚔ DELVE · ✋ ACTIVE · ◷ IDLE<br>Idle slots: Floor 2 / Zone 10.<br>Double tap a movement direction to dash.<br>Delve speed affects combat only. Skills keep their own clock.</div>`;
+ $('settingsView').innerHTML=`<div class="settings-item"><div><strong>Quick-resume last skill</strong><small>Return to your last skill after closing menus.</small></div><button type="button" id="settingLastSkill" class="setting-toggle ${data.skillAutoReturn?'is-on':''}">${data.skillAutoReturn?'ON':'OFF'}</button></div><div class="settings-item"><div><strong>Character</strong><small>Appearance and cosmetics</small></div><button id="settingsCustomize" type="button" class="setting-action">✦ EDIT</button></div><button class="drawer-wide" id="settingsMastery" type="button" ${masteryUnlocked()?'':'disabled'}>◆ DUNGEONEERING MASTERY ${masteryUnlocked()?'· TRAIN':'· LOCKED UNTIL FIRST GUARDIAN'}</button><button class="drawer-wide codes-entry" id="settingsCodes" type="button">⌘ CODES ${data.devSpeedUnlocked?'· TEST MODE UNLOCKED':''}</button><div id="codeEntry" class="code-entry hidden"><label for="codeInput">REDEEM CODE</label><div><input type="text" id="codeInput" autocapitalize="off" spellcheck="false" placeholder="Enter code" maxlength="32"><button id="codeRedeem" type="button">REDEEM</button></div><small id="codeFeedback">mefforts: speed · max: resources + mastery</small></div><button class="drawer-wide" id="settingsTour" type="button">✧ REPLAY SHORTCUT TOUR</button><button class="drawer-wide" id="settingsHelp" type="button">? HOW TO PLAY</button><button class="drawer-wide" id="settingsExport" type="button">↓ BACK UP SAVE</button><button class="drawer-wide" id="settingsImport" type="button">↑ RESTORE SAVE</button><input type="file" accept=".json,application/json" id="settingsImportFile" class="hidden"><button class="drawer-wide" id="settingsReset" type="button">↺ RESET PROGRESS</button><div class="settings-tips">⚔ DELVE · ✋ ACTIVE · ◷ IDLE<br>Idle slots: Floor 2 / Zone 10.<br>Double tap a movement direction to dash.<br>Mastery speed affects combat. Testing skilling speed has its own control.</div>`;
  $('settingsView').insertAdjacentHTML('afterbegin',`<div class="settings-item"><div><strong>Reduced motion</strong><small>Reduce camera shake and decorative animation. Your device preference also applies.</small></div><button type="button" id="settingReducedMotion" class="setting-toggle ${data.reducedMotion?'is-on':''}" aria-pressed="${!!data.reducedMotion}">${data.reducedMotion?'ON':'OFF'}</button></div>`);$('settingReducedMotion').onclick=()=>{data.reducedMotion=!data.reducedMotion;save();renderSettingsDrawer()};
  $('settingsCodes').onclick=()=>{$('codeEntry').classList.toggle('hidden');if(!$('codeEntry').classList.contains('hidden'))$('codeInput').focus()};
  $('codeRedeem').onclick=()=>{
   const value=$('codeInput').value.trim().toLowerCase();const feedback=$('codeFeedback');feedback.classList.remove('code-success');
   if(value==='mefforts'){
-   data.devSpeedUnlocked=true;save();feedback.textContent='✓ Delve speed unlocked';feedback.classList.add('code-success');$('speedControl').classList.remove('hidden');toast('Testing Delve speed unlocked','1×–500× · resets at launch');
+   if(!data.devSpeedUnlocked)game.skillSpeed=1;data.devSpeedUnlocked=true;save();feedback.textContent='✓ Delve & skilling speeds unlocked';feedback.classList.add('code-success');$('speedControl').classList.remove('hidden');toast('Testing speeds unlocked','Delve & skilling · 1×–500×');
   }else if(value==='max'){
-   fillTestingResources();feedback.textContent='✓ Resources, travel and speed unlocked';feedback.classList.add('code-success');toast('Testing unlocked','Travel · Delve speed · resources');
+   fillTestingResources();feedback.textContent='✓ Resources, travel and speed unlocked';feedback.classList.add('code-success');toast('Testing unlocked','Travel · game speed · resources');
   }else feedback.textContent='Code not found';
   $('codeInput').value='';
  };$('codeInput').onkeydown=e=>{if(e.key==='Enter')$('codeRedeem').click()};

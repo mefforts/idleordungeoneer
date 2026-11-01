@@ -1,9 +1,29 @@
+/* Independent testing speed for online skilling; Mastery remains combat-only. */
+function skillingTimeMultiplier(){return data.devSpeedUnlocked?(game.skillSpeed||1):1;}
+function speedControlVisible(){return !!data.devSpeedUnlocked||game.scene==='combat'&&masteryUnlocked();}
+function speedControlName(){return game.scene==='combat'?'Delve speed':'Skilling speed';}
+function selectedSceneSpeed(){return game.scene==='combat'?(game.devSpeed||1):(game.skillSpeed||1);}
+function advanceActiveWork(seconds){
+ if(!game.holdSkill){game.activeClockMs+=seconds*1000;return;}
+ const before=game.activeHits||0;let left=seconds;
+ // Step the work clock so fast cycles still consume every recipe's ingredients.
+ while(left>1e-9){
+  const step=Math.min(.1-(game.holdAccum||0),left);left-=step;game.activeClockMs+=step*1000;
+  game.holdAccum=(game.holdAccum||0)+step;
+  if(game.holdAccum>=.1-1e-9){
+   game.holdAccum=Math.max(0,game.holdAccum-.1);
+   if(!$('app').classList.contains('drawer-open')&&$('overlay').classList.contains('hidden')&&$('resourcePicker').classList.contains('hidden'))activeSkill(game.holdSkill,true);
+  }
+ }
+ if((game.activeHits||0)>before){refreshUI();if(Math.ceil(game.activeHits/9)>Math.ceil(before/9))save();}
+}
+
 /* Explicitly unlocked test travel; normal progression retains its gates. */
 function fillTestingResources(){
  const keys=new Set(['gold','essence','ore','bars','logs','arrows','cloth','runes','scraps','silverOre','silverBars','opals','cutOpals']);
  for(const skill of Object.values(SKILLS))keys.add(skill.resource);
  for(const key of keys)data[key]=Math.max(SANDBOX_RESOURCE_CAP,Number(data[key])||0);
- data.devSpeedUnlocked=true;data.devTravelUnlocked=true;
+ if(!data.devSpeedUnlocked)game.skillSpeed=1;data.devSpeedUnlocked=true;data.devTravelUnlocked=true;
  data.cleared=Math.max(data.cleared,BIOMES.length*3);
  if(!data.biomeLoot||typeof data.biomeLoot!=='object')data.biomeLoot={};
  for(let i=0;i<BIOMES.length;i++){

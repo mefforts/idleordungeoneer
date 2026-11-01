@@ -81,13 +81,13 @@ function upgradeSkill(key){
   save();refreshUI();renderDisciplineDrawer();return true;
 }
 
-function activeSkill(key){
+function activeSkill(key,batch=false){
   if(!SKILLS[key]||!canUseSkill(key))return false;noteSkillEngagement(key);
   const now=game.activeClockMs;if(!game.lastActiveAt)game.lastActiveAt={};
-  if(game.lastActiveAt[key]!==undefined&&now-game.lastActiveAt[key]<skillInterval(key)*1000)return false;
+  if(game.lastActiveAt[key]!==undefined&&now-game.lastActiveAt[key]<skillInterval(key)*1000-1e-6)return false;
   const result=produce(key,true);if(!result)return false;
   game.lastActiveAt[key]=now;game.workAction=.48;game.workPulse=(game.workPulse||0)+1;game.activeHits=(game.activeHits||0)+1;game.lastActiveSkill=key;
-  refreshUI();if(game.activeHits%9===1)save();return result;
+  if(!batch){refreshUI();if(game.activeHits%9===1)save();}return result;
 }
 function advanceProduction(seconds){
   ensureJobs();const jobs=data.idleJobs.filter(Boolean);if(!jobs.length)return {mined:0,smelted:0};
