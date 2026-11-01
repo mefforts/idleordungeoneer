@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. Playing needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+For iPhone and iPad, enable **Settings → Pages → Deploy from a branch → main → /(root)**, then open **https://mefforts.github.io/idleordungeoneer/** in Safari. Use **Share → Add to Home Screen** for a game icon. The root `.nojekyll` marker serves the standalone game without Jekyll processing. The first Pages deployment must finish before the URL works; its result appears under **Actions → pages build and deployment**. Use the in-game save backup/restore when moving between downloaded files and the website.
+
 ![Guardian counterplay](preview-counterplay.png)
 
 [Counterplay themes](preview-encounter-themes.png) · [Healing stream](preview-totems.png) · [Phone elite group](preview-encounters-mobile.png) · [Floor progression](preview-floor-progression.png) · [Phone environment](preview-environments-mobile.png) · [Zone Shop](polish-shop.png) · [Phone shop](polish-mobile-shop.png) · [Skills](polish-mobile-gather.png) · [Equipment](polish-equipment.png) · [Codex](polish-reading.png)
