@@ -1,24 +1,147 @@
 {
-  "version": 8,
+  "version": 9,
   "economy": [
     {
       "zone": 1,
-      "monsters": 90,
+      "monsters": 0,
       "guardians": 126,
-      "clears": 130,
-      "total": 346,
-      "perMinute": 34.6
+      "clears": 65,
+      "total": 191,
+      "perMinute": 19.1
     },
     {
       "zone": 2,
-      "monsters": 189,
+      "monsters": 0,
       "guardians": 189,
-      "clears": 208,
-      "total": 586,
-      "perMinute": 29.3
+      "clears": 104,
+      "total": 293,
+      "perMinute": 14.65
     }
   ],
-  "refinementHasFiniteCap": true,
+  "currencies": [
+    {
+      "zone": 1,
+      "name": "Verdant Seals",
+      "art": "currency-overgrowth",
+      "monsterChance": 0.4,
+      "masteredChance": 0.56,
+      "elite": 3,
+      "guardians": [
+        8,
+        12,
+        20
+      ],
+      "baselinePerClear": 264
+    },
+    {
+      "zone": 2,
+      "name": "Ember Seals",
+      "art": "currency-embervault",
+      "monsterChance": 0.4,
+      "masteredChance": 0.56,
+      "elite": 3,
+      "guardians": [
+        8,
+        12,
+        20
+      ],
+      "baselinePerClear": 336
+    }
+  ],
+  "dungeoneeringLevels": [
+    {
+      "level": 1,
+      "totalXp": 0
+    },
+    {
+      "level": 2,
+      "totalXp": 1600
+    },
+    {
+      "level": 3,
+      "totalXp": 6400
+    },
+    {
+      "level": 4,
+      "totalXp": 14400
+    },
+    {
+      "level": 5,
+      "totalXp": 25600
+    },
+    {
+      "level": 6,
+      "totalXp": 40000
+    },
+    {
+      "level": 7,
+      "totalXp": 57600
+    },
+    {
+      "level": 8,
+      "totalXp": 78400
+    }
+  ],
+  "builds": [
+    {
+      "zone": 1,
+      "kind": "gear",
+      "dps": 80,
+      "budget": 100,
+      "ranks": {}
+    },
+    {
+      "zone": 1,
+      "kind": "shop",
+      "dps": 87.18285714285713,
+      "budget": 100,
+      "ranks": {
+        "might": 7,
+        "haste": 3,
+        "crit": 3
+      }
+    },
+    {
+      "zone": 1,
+      "kind": "combined",
+      "dps": 97.52962946428572,
+      "budget": 100,
+      "ranks": {
+        "might": 7,
+        "haste": 3,
+        "crit": 3
+      }
+    },
+    {
+      "zone": 2,
+      "kind": "gear",
+      "dps": 160,
+      "budget": 200,
+      "ranks": {}
+    },
+    {
+      "zone": 2,
+      "kind": "shop",
+      "dps": 174.36571428571426,
+      "budget": 200,
+      "ranks": {
+        "might": 7,
+        "haste": 3,
+        "crit": 3
+      }
+    },
+    {
+      "zone": 2,
+      "kind": "combined",
+      "dps": 197.78991517857142,
+      "budget": 200,
+      "ranks": {
+        "might": 7,
+        "haste": 3,
+        "crit": 3
+      }
+    }
+  ],
   "limits": {
     "1": {
       "name": "Iron",
@@ -67,13 +190,19 @@
       "index": 0,
       "minutes": 10,
       "seconds": 600,
-      "weaponRank": 8,
+      "weaponRank": 6,
       "speedRank": 3,
       "proficiency": 1,
       "gearTier": 1,
-      "hit": 63.75238095238093,
-      "cooldown": 0.830188679245283,
-      "dps": 80.63227272727272,
+      "shopRanks": {
+        "might": 5,
+        "haste": 2,
+        "crit": 2
+      },
+      "crit": 0.08,
+      "hit": 59.589865229110494,
+      "cooldown": 0.806008426451731,
+      "dps": 79.84662732467532,
       "targets": [
         24,
         0,
@@ -84,20 +213,26 @@
       ],
       "swarmCount": 360,
       "spawnSeconds": 0.9166666666666666,
-      "hpScale": 1.517176919216154,
-      "forecastSeconds": 600.8295351489713
+      "hpScale": 1.4934803330511106,
+      "forecastSeconds": 600.6081492902142
     },
     {
       "index": 1,
       "minutes": 20,
       "seconds": 1200,
-      "weaponRank": 16,
-      "speedRank": 9,
+      "weaponRank": 14,
+      "speedRank": 6,
       "proficiency": 1,
       "gearTier": 2,
-      "hit": 114.28571428571428,
-      "cooldown": 0.7457627118644068,
-      "dps": 160.9090909090909,
+      "shopRanks": {
+        "might": 5,
+        "haste": 2,
+        "crit": 2
+      },
+      "crit": 0.08,
+      "hit": 112.88690476190474,
+      "cooldown": 0.7628294036061026,
+      "dps": 159.82322727272725,
       "targets": [
         36,
         0,
@@ -108,8 +243,68 @@
       ],
       "swarmCount": 540,
       "spawnSeconds": 1.2222222222222223,
-      "hpScale": 5.3429506471510155,
-      "forecastSeconds": 1197.7478102156101
+      "hpScale": 5.264412584680397,
+      "forecastSeconds": 1198.2552361715111
+    },
+    {
+      "index": 2,
+      "minutes": 30,
+      "seconds": 1800,
+      "weaponRank": 20,
+      "speedRank": 10,
+      "proficiency": 1,
+      "gearTier": 2,
+      "shopRanks": {
+        "might": 5,
+        "haste": 2,
+        "crit": 2
+      },
+      "crit": 0.08,
+      "hit": 124.35603174603176,
+      "cooldown": 0.7119741100323626,
+      "dps": 188.6367950649351,
+      "targets": [
+        48,
+        0,
+        80,
+        0,
+        112,
+        0
+      ],
+      "swarmCount": 720,
+      "spawnSeconds": 1.3750000000000002,
+      "hpScale": 7.630616302216012,
+      "forecastSeconds": 1799.8572521873984
+    },
+    {
+      "index": 3,
+      "minutes": 35,
+      "seconds": 2100,
+      "weaponRank": 20,
+      "speedRank": 10,
+      "proficiency": 1,
+      "gearTier": 2,
+      "shopRanks": {
+        "might": 5,
+        "haste": 2,
+        "crit": 2
+      },
+      "crit": 0.08,
+      "hit": 124.35603174603176,
+      "cooldown": 0.7119741100323626,
+      "dps": 188.6367950649351,
+      "targets": [
+        60,
+        0,
+        100,
+        0,
+        140,
+        0
+      ],
+      "swarmCount": 900,
+      "spawnSeconds": 1.2833333333333334,
+      "hpScale": 7.129688786168231,
+      "forecastSeconds": 2100.834763135334
     }
   ],
   "weapons": [
@@ -121,19 +316,19 @@
           "tier": 1,
           "rank": 10,
           "speedRank": 5,
-          "damage": 76.19047619047619,
+          "damage": 60.95238095238094,
           "cooldown": 0.7999999999999999,
-          "normal": 100,
-          "dedicated": 108.00000000000001
+          "normal": 79.99999999999999,
+          "dedicated": 86.4
         },
         {
           "tier": 2,
           "rank": 20,
           "speedRank": 10,
-          "damage": 139.6825396825397,
+          "damage": 111.74603174603175,
           "cooldown": 0.7333333333333334,
-          "normal": 200,
-          "dedicated": 216.00000000000006
+          "normal": 160,
+          "dedicated": 172.8
         }
       ]
     },
@@ -145,19 +340,19 @@
           "tier": 1,
           "rank": 10,
           "speedRank": 5,
-          "damage": 86.58008658008657,
+          "damage": 69.26406926406925,
           "cooldown": 0.9090909090909091,
-          "normal": 100,
-          "dedicated": 108.00000000000001
+          "normal": 79.99999999999999,
+          "dedicated": 86.39999999999999
         },
         {
           "tier": 2,
           "rank": 20,
           "speedRank": 10,
-          "damage": 158.73015873015873,
+          "damage": 126.984126984127,
           "cooldown": 0.8333333333333334,
-          "normal": 200,
-          "dedicated": 216.00000000000003
+          "normal": 160.00000000000003,
+          "dedicated": 172.8
         }
       ]
     },
@@ -169,19 +364,19 @@
           "tier": 1,
           "rank": 10,
           "speedRank": 5,
-          "damage": 99.56709956709955,
+          "damage": 79.65367965367962,
           "cooldown": 1.0454545454545452,
-          "normal": 99.99999999999999,
-          "dedicated": 108.00000000000001
+          "normal": 79.99999999999999,
+          "dedicated": 86.39999999999999
         },
         {
           "tier": 2,
           "rank": 20,
           "speedRank": 10,
-          "damage": 182.5396825396826,
+          "damage": 146.03174603174602,
           "cooldown": 0.9583333333333333,
-          "normal": 200.00000000000006,
-          "dedicated": 216.00000000000006
+          "normal": 160,
+          "dedicated": 172.8
         }
       ]
     },
@@ -193,19 +388,19 @@
           "tier": 1,
           "rank": 10,
           "speedRank": 5,
-          "damage": 110.82251082251081,
+          "damage": 88.65800865800865,
           "cooldown": 1.1636363636363636,
-          "normal": 99.99999999999999,
-          "dedicated": 108.00000000000001
+          "normal": 80,
+          "dedicated": 86.4
         },
         {
           "tier": 2,
           "rank": 20,
           "speedRank": 10,
-          "damage": 203.1746031746032,
+          "damage": 162.53968253968256,
           "cooldown": 1.0666666666666667,
-          "normal": 200,
-          "dedicated": 216.00000000000006
+          "normal": 160,
+          "dedicated": 172.8
         }
       ]
     },
@@ -217,19 +412,19 @@
           "tier": 1,
           "rank": 10,
           "speedRank": 5,
-          "damage": 95.23809523809524,
+          "damage": 76.19047619047618,
           "cooldown": 1,
-          "normal": 100,
-          "dedicated": 108.00000000000001
+          "normal": 79.99999999999999,
+          "dedicated": 86.39999999999999
         },
         {
           "tier": 2,
           "rank": 20,
           "speedRank": 10,
-          "damage": 174.60317460317466,
+          "damage": 139.68253968253973,
           "cooldown": 0.9166666666666667,
-          "normal": 200.00000000000009,
-          "dedicated": 216.00000000000009
+          "normal": 160.00000000000003,
+          "dedicated": 172.80000000000004
         }
       ]
     },
@@ -241,19 +436,19 @@
           "tier": 1,
           "rank": 10,
           "speedRank": 5,
-          "damage": 117.74891774891773,
+          "damage": 94.19913419913416,
           "cooldown": 1.2363636363636363,
-          "normal": 99.99999999999999,
-          "dedicated": 107.69230769230771
+          "normal": 79.99999999999997,
+          "dedicated": 86.15384615384613
         },
         {
           "tier": 2,
           "rank": 20,
           "speedRank": 10,
-          "damage": 215.8730158730159,
+          "damage": 172.69841269841277,
           "cooldown": 1.1333333333333335,
-          "normal": 200,
-          "dedicated": 214.8148148148148
+          "normal": 160.00000000000006,
+          "dedicated": 171.85185185185188
         }
       ]
     }
@@ -608,132 +803,1159 @@
       "group": "artisan"
     }
   ],
-  "powerRanks": [
+  "shopUpgrades": [
     {
       "id": "might",
-      "max": 6,
-      "first": "+10% weapon damage",
-      "last": "+60% weapon damage"
+      "max": 20,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 3,
+          "effect": "33 training DPS"
+        },
+        {
+          "rank": 2,
+          "price": 5,
+          "effect": "44 training DPS"
+        },
+        {
+          "rank": 3,
+          "price": 8,
+          "effect": "53 training DPS"
+        },
+        {
+          "rank": 4,
+          "price": 13,
+          "effect": "62 training DPS"
+        },
+        {
+          "rank": 5,
+          "price": 21,
+          "effect": "70 training DPS"
+        },
+        {
+          "rank": 6,
+          "price": 34,
+          "effect": "76 training DPS"
+        },
+        {
+          "rank": 7,
+          "price": 55,
+          "effect": "80 training DPS"
+        },
+        {
+          "rank": 8,
+          "price": 120,
+          "effect": "82 training DPS"
+        },
+        {
+          "rank": 9,
+          "price": 240,
+          "effect": "85 training DPS"
+        },
+        {
+          "rank": 10,
+          "price": 480,
+          "effect": "89 training DPS"
+        },
+        {
+          "rank": 11,
+          "price": 1008,
+          "effect": "94 training DPS"
+        },
+        {
+          "rank": 12,
+          "price": 2117,
+          "effect": "100 training DPS"
+        },
+        {
+          "rank": 13,
+          "price": 4446,
+          "effect": "108 training DPS"
+        },
+        {
+          "rank": 14,
+          "price": 9336,
+          "effect": "118 training DPS"
+        },
+        {
+          "rank": 15,
+          "price": 19604,
+          "effect": "131 training DPS"
+        },
+        {
+          "rank": 16,
+          "price": 41168,
+          "effect": "146 training DPS"
+        },
+        {
+          "rank": 17,
+          "price": 86453,
+          "effect": "165 training DPS"
+        },
+        {
+          "rank": 18,
+          "price": 181550,
+          "effect": "188 training DPS"
+        },
+        {
+          "rank": 19,
+          "price": 381255,
+          "effect": "213 training DPS"
+        },
+        {
+          "rank": 20,
+          "price": 800635,
+          "effect": "245 training DPS"
+        }
+      ]
     },
     {
       "id": "haste",
-      "max": 6,
-      "first": "+8% attack speed",
-      "last": "+48% attack speed"
+      "max": 20,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 8,
+          "effect": "+1.5% attack speed"
+        },
+        {
+          "rank": 2,
+          "price": 14,
+          "effect": "+3.0% attack speed"
+        },
+        {
+          "rank": 3,
+          "price": 22,
+          "effect": "+4.5% attack speed"
+        },
+        {
+          "rank": 4,
+          "price": 36,
+          "effect": "+6.0% attack speed"
+        },
+        {
+          "rank": 5,
+          "price": 60,
+          "effect": "+7.5% attack speed"
+        },
+        {
+          "rank": 6,
+          "price": 140,
+          "effect": "+9.0% attack speed"
+        },
+        {
+          "rank": 7,
+          "price": 328,
+          "effect": "+10.5% attack speed"
+        },
+        {
+          "rank": 8,
+          "price": 770,
+          "effect": "+12.0% attack speed"
+        },
+        {
+          "rank": 9,
+          "price": 1809,
+          "effect": "+13.5% attack speed"
+        },
+        {
+          "rank": 10,
+          "price": 4250,
+          "effect": "+15.0% attack speed"
+        },
+        {
+          "rank": 11,
+          "price": 9987,
+          "effect": "+16.5% attack speed"
+        },
+        {
+          "rank": 12,
+          "price": 23470,
+          "effect": "+18.0% attack speed"
+        },
+        {
+          "rank": 13,
+          "price": 55153,
+          "effect": "+19.5% attack speed"
+        },
+        {
+          "rank": 14,
+          "price": 129610,
+          "effect": "+21.0% attack speed"
+        },
+        {
+          "rank": 15,
+          "price": 304583,
+          "effect": "+22.5% attack speed"
+        },
+        {
+          "rank": 16,
+          "price": 715768,
+          "effect": "+24.0% attack speed"
+        },
+        {
+          "rank": 17,
+          "price": 1682055,
+          "effect": "+25.5% attack speed"
+        },
+        {
+          "rank": 18,
+          "price": 3952829,
+          "effect": "+27.0% attack speed"
+        },
+        {
+          "rank": 19,
+          "price": 9289148,
+          "effect": "+28.5% attack speed"
+        },
+        {
+          "rank": 20,
+          "price": 21829496,
+          "effect": "+30.0% attack speed"
+        }
+      ]
     },
     {
       "id": "cleave",
-      "max": 4,
-      "first": "+1 nearby targets per swing",
-      "last": "+4 nearby targets per swing"
+      "max": 3,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 24,
+          "effect": "+1 melee targets"
+        },
+        {
+          "rank": 2,
+          "price": 144,
+          "effect": "+2 melee targets"
+        },
+        {
+          "rank": 3,
+          "price": 864,
+          "effect": "+3 melee targets"
+        }
+      ]
     },
     {
       "id": "reach",
-      "max": 4,
-      "first": "+12% melee reach",
-      "last": "+48% melee reach"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 5,
+          "effect": "+3% melee reach"
+        },
+        {
+          "rank": 2,
+          "price": 9,
+          "effect": "+6% melee reach"
+        },
+        {
+          "rank": 3,
+          "price": 14,
+          "effect": "+9% melee reach"
+        },
+        {
+          "rank": 4,
+          "price": 23,
+          "effect": "+12% melee reach"
+        },
+        {
+          "rank": 5,
+          "price": 38,
+          "effect": "+15% melee reach"
+        },
+        {
+          "rank": 6,
+          "price": 88,
+          "effect": "+18% melee reach"
+        },
+        {
+          "rank": 7,
+          "price": 205,
+          "effect": "+21% melee reach"
+        },
+        {
+          "rank": 8,
+          "price": 481,
+          "effect": "+24% melee reach"
+        },
+        {
+          "rank": 9,
+          "price": 1131,
+          "effect": "+27% melee reach"
+        },
+        {
+          "rank": 10,
+          "price": 2657,
+          "effect": "+30% melee reach"
+        }
+      ]
     },
     {
       "id": "ward",
-      "max": 4,
-      "first": "10% less incoming damage",
-      "last": "40% less incoming damage"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 6,
+          "effect": "2% protection"
+        },
+        {
+          "rank": 2,
+          "price": 10,
+          "effect": "4% protection"
+        },
+        {
+          "rank": 3,
+          "price": 17,
+          "effect": "6% protection"
+        },
+        {
+          "rank": 4,
+          "price": 27,
+          "effect": "8% protection"
+        },
+        {
+          "rank": 5,
+          "price": 45,
+          "effect": "10% protection"
+        },
+        {
+          "rank": 6,
+          "price": 105,
+          "effect": "12% protection"
+        },
+        {
+          "rank": 7,
+          "price": 246,
+          "effect": "14% protection"
+        },
+        {
+          "rank": 8,
+          "price": 578,
+          "effect": "16% protection"
+        },
+        {
+          "rank": 9,
+          "price": 1357,
+          "effect": "18% protection"
+        },
+        {
+          "rank": 10,
+          "price": 3188,
+          "effect": "20% protection"
+        }
+      ]
     },
     {
       "id": "vitality",
-      "max": 5,
-      "first": "+18 maximum HP",
-      "last": "+90 maximum HP"
+      "max": 20,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 5,
+          "effect": "+5 HP"
+        },
+        {
+          "rank": 2,
+          "price": 9,
+          "effect": "+10 HP"
+        },
+        {
+          "rank": 3,
+          "price": 14,
+          "effect": "+15 HP"
+        },
+        {
+          "rank": 4,
+          "price": 23,
+          "effect": "+20 HP"
+        },
+        {
+          "rank": 5,
+          "price": 38,
+          "effect": "+25 HP"
+        },
+        {
+          "rank": 6,
+          "price": 88,
+          "effect": "+30 HP"
+        },
+        {
+          "rank": 7,
+          "price": 205,
+          "effect": "+35 HP"
+        },
+        {
+          "rank": 8,
+          "price": 481,
+          "effect": "+40 HP"
+        },
+        {
+          "rank": 9,
+          "price": 1131,
+          "effect": "+45 HP"
+        },
+        {
+          "rank": 10,
+          "price": 2657,
+          "effect": "+50 HP"
+        },
+        {
+          "rank": 11,
+          "price": 6242,
+          "effect": "+55 HP"
+        },
+        {
+          "rank": 12,
+          "price": 14669,
+          "effect": "+60 HP"
+        },
+        {
+          "rank": 13,
+          "price": 34471,
+          "effect": "+65 HP"
+        },
+        {
+          "rank": 14,
+          "price": 81006,
+          "effect": "+70 HP"
+        },
+        {
+          "rank": 15,
+          "price": 190364,
+          "effect": "+75 HP"
+        },
+        {
+          "rank": 16,
+          "price": 447355,
+          "effect": "+80 HP"
+        },
+        {
+          "rank": 17,
+          "price": 1051285,
+          "effect": "+85 HP"
+        },
+        {
+          "rank": 18,
+          "price": 2470518,
+          "effect": "+90 HP"
+        },
+        {
+          "rank": 19,
+          "price": 5805717,
+          "effect": "+95 HP"
+        },
+        {
+          "rank": 20,
+          "price": 13643435,
+          "effect": "+100 HP"
+        }
+      ]
     },
     {
       "id": "crit",
-      "max": 5,
-      "first": "13% critical chance",
-      "last": "45% critical chance"
+      "max": 20,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 12,
+          "effect": "6.5% critical chance"
+        },
+        {
+          "rank": 2,
+          "price": 20,
+          "effect": "8.0% critical chance"
+        },
+        {
+          "rank": 3,
+          "price": 33,
+          "effect": "9.5% critical chance"
+        },
+        {
+          "rank": 4,
+          "price": 54,
+          "effect": "11.0% critical chance"
+        },
+        {
+          "rank": 5,
+          "price": 89,
+          "effect": "12.5% critical chance"
+        },
+        {
+          "rank": 6,
+          "price": 210,
+          "effect": "14.0% critical chance"
+        },
+        {
+          "rank": 7,
+          "price": 492,
+          "effect": "15.5% critical chance"
+        },
+        {
+          "rank": 8,
+          "price": 1155,
+          "effect": "17.0% critical chance"
+        },
+        {
+          "rank": 9,
+          "price": 2713,
+          "effect": "18.5% critical chance"
+        },
+        {
+          "rank": 10,
+          "price": 6375,
+          "effect": "20.0% critical chance"
+        },
+        {
+          "rank": 11,
+          "price": 14981,
+          "effect": "21.5% critical chance"
+        },
+        {
+          "rank": 12,
+          "price": 35205,
+          "effect": "23.0% critical chance"
+        },
+        {
+          "rank": 13,
+          "price": 82730,
+          "effect": "24.5% critical chance"
+        },
+        {
+          "rank": 14,
+          "price": 194415,
+          "effect": "26.0% critical chance"
+        },
+        {
+          "rank": 15,
+          "price": 456874,
+          "effect": "27.5% critical chance"
+        },
+        {
+          "rank": 16,
+          "price": 1073652,
+          "effect": "29.0% critical chance"
+        },
+        {
+          "rank": 17,
+          "price": 2523083,
+          "effect": "30.5% critical chance"
+        },
+        {
+          "rank": 18,
+          "price": 5929243,
+          "effect": "32.0% critical chance"
+        },
+        {
+          "rank": 19,
+          "price": 13933721,
+          "effect": "33.5% critical chance"
+        },
+        {
+          "rank": 20,
+          "price": 32744244,
+          "effect": "35.0% critical chance"
+        }
+      ]
     },
     {
       "id": "multishot",
-      "max": 4,
-      "first": "2 projectiles; each extra bolt deals 35% damage",
-      "last": "5 projectiles; each extra bolt deals 35% damage"
+      "max": 3,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 30,
+          "effect": "1 extra projectiles · 15% damage each"
+        },
+        {
+          "rank": 2,
+          "price": 180,
+          "effect": "2 extra projectiles · 15% damage each"
+        },
+        {
+          "rank": 3,
+          "price": 1080,
+          "effect": "3 extra projectiles · 15% damage each"
+        }
+      ]
     },
     {
       "id": "pierce",
-      "max": 4,
-      "first": "1 extra pierces; 84% damage retained per pierce",
-      "last": "4 extra pierces; 84% damage retained per pierce"
+      "max": 3,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 24,
+          "effect": "1 pierces · 84% damage retained"
+        },
+        {
+          "rank": 2,
+          "price": 144,
+          "effect": "2 pierces · 84% damage retained"
+        },
+        {
+          "rank": 3,
+          "price": 864,
+          "effect": "3 pierces · 84% damage retained"
+        }
+      ]
     },
     {
       "id": "storm",
-      "max": 4,
-      "first": "13% chain chance; 35% hit damage to a nearby foe",
-      "last": "52% chain chance; 140% hit damage to a nearby foe"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 18,
+          "effect": "4% chain chance · 23% chain damage"
+        },
+        {
+          "rank": 2,
+          "price": 30,
+          "effect": "8% chain chance · 26% chain damage"
+        },
+        {
+          "rank": 3,
+          "price": 50,
+          "effect": "12% chain chance · 29% chain damage"
+        },
+        {
+          "rank": 4,
+          "price": 81,
+          "effect": "16% chain chance · 32% chain damage"
+        },
+        {
+          "rank": 5,
+          "price": 134,
+          "effect": "20% chain chance · 35% chain damage"
+        },
+        {
+          "rank": 6,
+          "price": 314,
+          "effect": "24% chain chance · 38% chain damage"
+        },
+        {
+          "rank": 7,
+          "price": 737,
+          "effect": "28% chain chance · 41% chain damage"
+        },
+        {
+          "rank": 8,
+          "price": 1732,
+          "effect": "32% chain chance · 44% chain damage"
+        },
+        {
+          "rank": 9,
+          "price": 4069,
+          "effect": "36% chain chance · 47% chain damage"
+        },
+        {
+          "rank": 10,
+          "price": 9562,
+          "effect": "40% chain chance · 50% chain damage"
+        }
+      ]
     },
     {
       "id": "fire",
-      "max": 4,
-      "first": "10% hit damage / second for 2.7s",
-      "last": "40% hit damage / second for 4.8s"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 16,
+          "effect": "2% hit damage / s · 2.6s"
+        },
+        {
+          "rank": 2,
+          "price": 27,
+          "effect": "4% hit damage / s · 2.7s"
+        },
+        {
+          "rank": 3,
+          "price": 44,
+          "effect": "6% hit damage / s · 2.8s"
+        },
+        {
+          "rank": 4,
+          "price": 72,
+          "effect": "8% hit damage / s · 2.9s"
+        },
+        {
+          "rank": 5,
+          "price": 119,
+          "effect": "10% hit damage / s · 3.0s"
+        },
+        {
+          "rank": 6,
+          "price": 279,
+          "effect": "12% hit damage / s · 3.1s"
+        },
+        {
+          "rank": 7,
+          "price": 655,
+          "effect": "14% hit damage / s · 3.2s"
+        },
+        {
+          "rank": 8,
+          "price": 1540,
+          "effect": "16% hit damage / s · 3.3s"
+        },
+        {
+          "rank": 9,
+          "price": 3617,
+          "effect": "18% hit damage / s · 3.4s"
+        },
+        {
+          "rank": 10,
+          "price": 8500,
+          "effect": "20% hit damage / s · 3.5s"
+        }
+      ]
     },
     {
       "id": "frost",
-      "max": 4,
-      "first": "22% slow for 1.65s",
-      "last": "46% slow for 2.70s"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 10,
+          "effect": "7% slow · 1.1s"
+        },
+        {
+          "rank": 2,
+          "price": 17,
+          "effect": "9% slow · 1.2s"
+        },
+        {
+          "rank": 3,
+          "price": 28,
+          "effect": "11% slow · 1.3s"
+        },
+        {
+          "rank": 4,
+          "price": 45,
+          "effect": "13% slow · 1.4s"
+        },
+        {
+          "rank": 5,
+          "price": 75,
+          "effect": "15% slow · 1.5s"
+        },
+        {
+          "rank": 6,
+          "price": 175,
+          "effect": "17% slow · 1.6s"
+        },
+        {
+          "rank": 7,
+          "price": 410,
+          "effect": "19% slow · 1.7s"
+        },
+        {
+          "rank": 8,
+          "price": 962,
+          "effect": "21% slow · 1.8s"
+        },
+        {
+          "rank": 9,
+          "price": 2261,
+          "effect": "23% slow · 1.9s"
+        },
+        {
+          "rank": 10,
+          "price": 5313,
+          "effect": "25% slow · 2.0s"
+        }
+      ]
     },
     {
       "id": "nova",
-      "max": 4,
-      "first": "2 nearby targets at 25% critical-hit damage",
-      "last": "8 nearby targets at 40% critical-hit damage"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 24,
+          "effect": "1 targets · 8% critical splash"
+        },
+        {
+          "rank": 2,
+          "price": 40,
+          "effect": "1 targets · 10% critical splash"
+        },
+        {
+          "rank": 3,
+          "price": 66,
+          "effect": "2 targets · 12% critical splash"
+        },
+        {
+          "rank": 4,
+          "price": 108,
+          "effect": "2 targets · 14% critical splash"
+        },
+        {
+          "rank": 5,
+          "price": 178,
+          "effect": "2 targets · 16% critical splash"
+        },
+        {
+          "rank": 6,
+          "price": 419,
+          "effect": "3 targets · 18% critical splash"
+        },
+        {
+          "rank": 7,
+          "price": 983,
+          "effect": "3 targets · 20% critical splash"
+        },
+        {
+          "rank": 8,
+          "price": 2309,
+          "effect": "3 targets · 22% critical splash"
+        },
+        {
+          "rank": 9,
+          "price": 5426,
+          "effect": "4 targets · 24% critical splash"
+        },
+        {
+          "rank": 10,
+          "price": 12750,
+          "effect": "4 targets · 26% critical splash"
+        }
+      ]
     },
     {
       "id": "swift",
-      "max": 4,
-      "first": "+12% movement speed",
-      "last": "+48% movement speed"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 6,
+          "effect": "+2% movement"
+        },
+        {
+          "rank": 2,
+          "price": 10,
+          "effect": "+4% movement"
+        },
+        {
+          "rank": 3,
+          "price": 17,
+          "effect": "+6% movement"
+        },
+        {
+          "rank": 4,
+          "price": 27,
+          "effect": "+8% movement"
+        },
+        {
+          "rank": 5,
+          "price": 45,
+          "effect": "+10% movement"
+        },
+        {
+          "rank": 6,
+          "price": 105,
+          "effect": "+12% movement"
+        },
+        {
+          "rank": 7,
+          "price": 246,
+          "effect": "+14% movement"
+        },
+        {
+          "rank": 8,
+          "price": 578,
+          "effect": "+16% movement"
+        },
+        {
+          "rank": 9,
+          "price": 1357,
+          "effect": "+18% movement"
+        },
+        {
+          "rank": 10,
+          "price": 3188,
+          "effect": "+20% movement"
+        }
+      ]
     },
     {
       "id": "magnet",
-      "max": 5,
-      "first": "+55 XP pickup radius",
-      "last": "+275 XP pickup radius"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 4,
+          "effect": "+12 pickup range"
+        },
+        {
+          "rank": 2,
+          "price": 7,
+          "effect": "+24 pickup range"
+        },
+        {
+          "rank": 3,
+          "price": 11,
+          "effect": "+36 pickup range"
+        },
+        {
+          "rank": 4,
+          "price": 18,
+          "effect": "+48 pickup range"
+        },
+        {
+          "rank": 5,
+          "price": 30,
+          "effect": "+60 pickup range"
+        },
+        {
+          "rank": 6,
+          "price": 70,
+          "effect": "+72 pickup range"
+        },
+        {
+          "rank": 7,
+          "price": 164,
+          "effect": "+84 pickup range"
+        },
+        {
+          "rank": 8,
+          "price": 385,
+          "effect": "+96 pickup range"
+        },
+        {
+          "rank": 9,
+          "price": 905,
+          "effect": "+108 pickup range"
+        },
+        {
+          "rank": 10,
+          "price": 2125,
+          "effect": "+120 pickup range"
+        }
+      ]
     },
     {
       "id": "regen",
-      "max": 4,
-      "first": "0.7 HP regenerated / second",
-      "last": "2.8 HP regenerated / second"
+      "max": 15,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 8,
+          "effect": "0.08 HP / s"
+        },
+        {
+          "rank": 2,
+          "price": 14,
+          "effect": "0.16 HP / s"
+        },
+        {
+          "rank": 3,
+          "price": 22,
+          "effect": "0.24 HP / s"
+        },
+        {
+          "rank": 4,
+          "price": 36,
+          "effect": "0.32 HP / s"
+        },
+        {
+          "rank": 5,
+          "price": 60,
+          "effect": "0.40 HP / s"
+        },
+        {
+          "rank": 6,
+          "price": 140,
+          "effect": "0.48 HP / s"
+        },
+        {
+          "rank": 7,
+          "price": 328,
+          "effect": "0.56 HP / s"
+        },
+        {
+          "rank": 8,
+          "price": 770,
+          "effect": "0.64 HP / s"
+        },
+        {
+          "rank": 9,
+          "price": 1809,
+          "effect": "0.72 HP / s"
+        },
+        {
+          "rank": 10,
+          "price": 4250,
+          "effect": "0.80 HP / s"
+        },
+        {
+          "rank": 11,
+          "price": 9987,
+          "effect": "0.88 HP / s"
+        },
+        {
+          "rank": 12,
+          "price": 23470,
+          "effect": "0.96 HP / s"
+        },
+        {
+          "rank": 13,
+          "price": 55153,
+          "effect": "1.04 HP / s"
+        },
+        {
+          "rank": 14,
+          "price": 129610,
+          "effect": "1.12 HP / s"
+        },
+        {
+          "rank": 15,
+          "price": 304583,
+          "effect": "1.20 HP / s"
+        }
+      ]
     },
     {
       "id": "wisdom",
-      "max": 5,
-      "first": "+15% delve XP",
-      "last": "+75% delve XP"
+      "max": 10,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 6,
+          "effect": "+3% Dungeoneering XP"
+        },
+        {
+          "rank": 2,
+          "price": 10,
+          "effect": "+6% Dungeoneering XP"
+        },
+        {
+          "rank": 3,
+          "price": 17,
+          "effect": "+9% Dungeoneering XP"
+        },
+        {
+          "rank": 4,
+          "price": 27,
+          "effect": "+12% Dungeoneering XP"
+        },
+        {
+          "rank": 5,
+          "price": 45,
+          "effect": "+15% Dungeoneering XP"
+        },
+        {
+          "rank": 6,
+          "price": 105,
+          "effect": "+18% Dungeoneering XP"
+        },
+        {
+          "rank": 7,
+          "price": 246,
+          "effect": "+21% Dungeoneering XP"
+        },
+        {
+          "rank": 8,
+          "price": 578,
+          "effect": "+24% Dungeoneering XP"
+        },
+        {
+          "rank": 9,
+          "price": 1357,
+          "effect": "+27% Dungeoneering XP"
+        },
+        {
+          "rank": 10,
+          "price": 3188,
+          "effect": "+30% Dungeoneering XP"
+        }
+      ]
     },
     {
       "id": "forage",
       "max": 5,
-      "first": "+10% gold from monsters",
-      "last": "+50% gold from monsters"
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 12,
+          "effect": "+4% guardian / elite gold"
+        },
+        {
+          "rank": 2,
+          "price": 20,
+          "effect": "+8% guardian / elite gold"
+        },
+        {
+          "rank": 3,
+          "price": 33,
+          "effect": "+12% guardian / elite gold"
+        },
+        {
+          "rank": 4,
+          "price": 54,
+          "effect": "+16% guardian / elite gold"
+        },
+        {
+          "rank": 5,
+          "price": 89,
+          "effect": "+20% guardian / elite gold"
+        }
+      ]
     }
   ],
   "simulated": [
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 626.5999999999781,
+      "seconds": 646.6799999999741,
       "kills": 369,
-      "referenceDps": 80.63227272727272,
+      "referenceDps": 79.84662732467532,
       "targetSeconds": 600
     },
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1266.8400000002052,
+      "seconds": 1312.4000000002286,
       "kills": 549,
-      "referenceDps": 160.9090909090909,
+      "referenceDps": 159.82322727272725,
       "targetSeconds": 1200
+    },
+    {
+      "zone": 3,
+      "weapon": "sword",
+      "seconds": 1848.0000000000591,
+      "kills": 729,
+      "referenceDps": 188.6367950649351,
+      "targetSeconds": 1800
+    },
+    {
+      "zone": 4,
+      "weapon": "sword",
+      "seconds": 2139.7599999997938,
+      "kills": 909,
+      "referenceDps": 188.6367950649351,
+      "targetSeconds": 2100
+    },
+    {
+      "zone": 9,
+      "weapon": "sword",
+      "seconds": 2448.0799999995133,
+      "kills": 909,
+      "referenceDps": 188.6367950649351,
+      "targetSeconds": 2400
+    },
+    {
+      "zone": 15,
+      "weapon": "sword",
+      "seconds": 2469.9599999994934,
+      "kills": 909,
+      "referenceDps": 188.6367950649351,
+      "targetSeconds": 2400
     }
   ]
 }

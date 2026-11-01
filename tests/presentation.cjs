@@ -22,11 +22,8 @@ function instrumentation() {
     },
     patch(values) { Object.assign(data,values);projectCombatStyle();refreshUI(); },
     track(goal) { data.craftGoal=goal;refreshUI(); },
-    offers() {
-      closeDrawer();game.status='upgrade';game.pendingLevels=2;game.runLevel=4;
-      game.upgrades={fire:1};Math.random=()=>.24;showUpgrade();
-    },
-    snapshot() { return {pending:game.pendingLevels,upgrades:{...game.upgrades},choices:game.levelChoices.map(u=>u.id),draft:masteryDraft?{...masteryDraft}:null}; },
+    offers() {closeDrawer();zoneShopFor().ranks={fire:1};grantZoneCurrency(100);syncZone();openZoneShop();},
+    snapshot() { return {pending:game.pendingLevels,upgrades:{...game.upgrades},draft:masteryDraft?{...masteryDraft}:null}; },
     mastery() { closeDrawer();game.status='ready';showMastery(); },
     read(id) { showCodex(id); },
     levelOnly(xp) {data.wardingSkillXp=xp;refreshUI();},
@@ -79,18 +76,16 @@ function instrumentation() {
     passed.push('Equipment DPS refreshes after armor changes and crafting levels, without an unrelated gear change');
 
     await p.evaluate(()=>__presentationTest.offers());const offers=await p.evaluate(()=>__presentationTest.snapshot());
-    await p.locator('.power-offer [data-codex-entry]').first().click();await p.keyboard.press('Digit1');
-    assert.deepEqual(await p.evaluate(()=>__presentationTest.snapshot()),offers,'Reading a power never selects the hidden card');
-    await p.click('#codexClose');assert.equal(await p.locator('[data-pick]').count(),3);
-    assert.deepEqual(await p.evaluate(()=>__presentationTest.snapshot()),offers,'Same power offers and rank values return');
-    await p.locator('[data-pick="0"]').click();assert.equal((await p.evaluate(()=>__presentationTest.snapshot())).pending,1);
-    passed.push('Codex reading preserves queued power cards and blocks hidden number-key selection');
+    await p.locator('.zone-upgrade [data-codex-entry]').first().click();await p.keyboard.press('Digit1');
+    assert.deepEqual(await p.evaluate(()=>__presentationTest.snapshot()),offers,'Reading an upgrade never buys it');
+    await p.click('#codexClose');assert.equal(await p.locator('#zoneShopView').isVisible(),true);assert.deepEqual(await p.evaluate(()=>__presentationTest.snapshot()),offers);
+    passed.push('Codex reading restores the Zone Shop and never purchases through hidden keyboard controls');
 
     await p.evaluate(()=>__presentationTest.fresh());await p.evaluate(()=>__presentationTest.mastery());await p.click('[data-invest="onslaught"]');
     const draft=await p.evaluate(()=>__presentationTest.snapshot());await p.click('[data-codex-entry="permanent_mastery"]');
     await p.click('#codexClose');assert.deepEqual(await p.evaluate(()=>__presentationTest.snapshot()),draft);
-    assert.equal((await p.evaluate(()=>__deepwell.getState().data.mastery[1].points)),8,'Reading does not apply Mastery');
-    await p.click('#applyMastery');await p.click('#masteryDecisionConfirm');assert.equal((await p.evaluate(()=>__deepwell.getState().data.mastery[1].points)),7);
+    assert.equal((await p.evaluate(()=>__deepwell.getState().data.dungeonMastery.points)),16,'Reading does not apply Mastery');
+    await p.click('#applyMastery');await p.click('#masteryDecisionConfirm');assert.equal((await p.evaluate(()=>__deepwell.getState().data.dungeonMastery.points)),15);
     passed.push('Mastery edits survive reading a guide and spend points only after Apply');
 
     await p.evaluate(()=>__presentationTest.fresh());await p.evaluate(()=>__presentationTest.read());await p.fill('#codexSearch','Halberd');
@@ -100,7 +95,7 @@ function instrumentation() {
     const entries=await p.evaluate(()=>__presentationTest.inspectAll());
     for(const id of entries){await p.evaluate(id=>__presentationTest.read(id),id);assert.doesNotMatch(await p.locator('#codexReading').innerText(),/undefined|NaN|\[object Object\]/);}
     await p.evaluate(()=>__presentationTest.read('controls'));assert.equal(await p.locator('#codexReading img').count(),0,'The controls guide uses a real vector glyph');await p.locator('#overlayCard').evaluate(e=>e.scrollTop=e.scrollHeight);assert.ok(await p.locator('#codexClose').isVisible());assert.ok((await p.locator('#codexClose').boundingBox()).y>=0,'Close stays reachable through long entries');await p.click('#codexClose');
-    passed.push('All 104 Codex entries open readable details; Back preserves search and keyboard focus');
+    passed.push('All 108 Codex entries open readable details; Back preserves search and keyboard focus');
 
     for(const viewport of [{width:320,height:844},{width:390,height:844},{width:844,height:390},{width:1440,height:1000}]){
       await p.setViewportSize(viewport);await p.evaluate(()=>__presentationTest.fresh());

@@ -501,5 +501,175 @@
     "garnets": "garnetSearch",
     "cutGarnets": "garnetCut",
     "runicCloth": "aetherWeave"
-  }
+  },
+  "TALENTS": {
+    "onslaught": {
+      "name": "Onslaught",
+      "icon": "⚔",
+      "max": 5,
+      "cost": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "description": "Unlock faster spawns and larger simultaneous swarms. Adjustable before delving."
+    },
+    "fortune": {
+      "name": "Fortune",
+      "icon": "◆",
+      "max": 4,
+      "cost": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "description": "Increase Zone currency drop chance by 10% per rank."
+    },
+    "adaptation": {
+      "name": "Discovery",
+      "icon": "⬡",
+      "max": 3,
+      "cost": [
+        1,
+        2,
+        3
+      ],
+      "description": "Increase rare material drop chance by 25% per rank."
+    }
+  },
+  "UPGRADES": [
+    {
+      "id": "might",
+      "group": "A",
+      "icon": "⚔",
+      "name": "Heavy Strikes",
+      "description": "Train weapon damage in this Zone."
+    },
+    {
+      "id": "haste",
+      "group": "A",
+      "icon": "⌁",
+      "name": "Quick Hands",
+      "description": "+1.5% attack speed per rank"
+    },
+    {
+      "id": "cleave",
+      "group": "A",
+      "icon": "◈",
+      "name": "Sweeping Edge",
+      "description": "+1 melee target per rank",
+      "melee": true
+    },
+    {
+      "id": "reach",
+      "group": "A",
+      "icon": "➶",
+      "name": "Extended Reach",
+      "description": "+3% melee reach per rank",
+      "melee": true
+    },
+    {
+      "id": "ward",
+      "group": "A",
+      "icon": "⬡",
+      "name": "Arcane Ward",
+      "description": "2% less damage taken per rank"
+    },
+    {
+      "id": "vitality",
+      "group": "A",
+      "icon": "♥",
+      "name": "Lasting Vitality",
+      "description": "+5 maximum health per rank"
+    },
+    {
+      "id": "crit",
+      "group": "A",
+      "icon": "✺",
+      "name": "Keen Edge",
+      "description": "+1.5 percentage points of critical chance per rank"
+    },
+    {
+      "id": "multishot",
+      "group": "A",
+      "icon": "❖",
+      "name": "Twin Shot",
+      "description": "+1 projectile per rank · extras deal 15% damage",
+      "ranged": true
+    },
+    {
+      "id": "pierce",
+      "group": "A",
+      "icon": "➳",
+      "name": "Piercing Bolts",
+      "description": "+1 enemy pierced per rank · 84% damage retained",
+      "ranged": true
+    },
+    {
+      "id": "storm",
+      "group": "B",
+      "icon": "ϟ",
+      "name": "Storm Echo",
+      "description": "4% chain chance per rank · works with any weapon"
+    },
+    {
+      "id": "fire",
+      "group": "B",
+      "icon": "♨",
+      "name": "Ember Brand",
+      "description": "Burn for 2% of hit damage per second per rank"
+    },
+    {
+      "id": "frost",
+      "group": "B",
+      "icon": "❄",
+      "name": "Winter Grasp",
+      "description": "Slow enemies on hit · stronger and longer each rank"
+    },
+    {
+      "id": "nova",
+      "group": "B",
+      "icon": "☼",
+      "name": "Arcane Nova",
+      "description": "Critical hits splash nearby enemies"
+    },
+    {
+      "id": "swift",
+      "group": "C",
+      "icon": "➤",
+      "name": "Fleetfoot",
+      "description": "+2% movement speed per rank"
+    },
+    {
+      "id": "magnet",
+      "group": "C",
+      "icon": "✧",
+      "name": "Gathering Aura",
+      "description": "+12 experience pickup range per rank"
+    },
+    {
+      "id": "regen",
+      "group": "C",
+      "icon": "☘",
+      "name": "Restoration",
+      "description": "Restore 0.08 health per second per rank"
+    },
+    {
+      "id": "wisdom",
+      "group": "C",
+      "icon": "✺",
+      "name": "Quick Study",
+      "description": "+3% Dungeoneering experience per rank"
+    },
+    {
+      "id": "forage",
+      "group": "C",
+      "icon": "♣",
+      "name": "Guardian’s Bounty",
+      "description": "+4% guardian and elite gold per rank"
+    }
+  ]
 }

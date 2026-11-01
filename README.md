@@ -1,184 +1,132 @@
 # Idle or Dungeoneer
 
-**[Download the latest game (ZIP)](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)** — extract the ZIP and open `index.html` in your browser.
+**[Download the latest game (ZIP)](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)** — extract it and open `index.html` in a modern browser.
 
-Open **index.html** in a modern browser. The entire game, illustrations, creature sprites and icons are embedded in that file; playing needs no package installation or internet connection. `npm start` serves it locally with Python 3 if you prefer a consistent browser save origin.
+The game, environments, creatures, equipment and icons are embedded in one HTML file. Playing needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
-![Open Arena](preview.png)
+![Open gameplay](polish-combat.png)
 
-[Minimal gameplay](polish-mobile-activity.png) · [Skills](polish-mobile-gather.png) · [Equipment](polish-equipment.png) · [Codex reading](polish-reading.png)
+[Zone Shop](polish-shop.png) · [Phone shop](polish-mobile-shop.png) · [Skills](polish-mobile-gather.png) · [Equipment](polish-equipment.png) · [Codex](polish-reading.png)
 
-[Rig and weapon poses](preview-rig.png) · [Zone 2 gathering](preview-zone2.png) · [Tiered Skills](preview-tier-menu.png) · [Runestone UI](preview-runestones.png) · [Boss telegraph preview](preview-boss.png)
+## Persistent Zone training
 
-## Minimal presentation
+Combat no longer offers temporary power cards. Ordinary monsters have a **40% chance to drop one Zone seal**; elites guarantee **3**, and guardians **8 / 12 / 20**. Open the **Zone Shop** using its rail pin, your seal counter or **B**. Each Zone has a separate wallet and section, with illustrated currency, upgrade ranks, current/next effects, prices and actual DPS previews.
 
-Gameplay keeps the scene open: a circular work control shows progress, stock uses resource icons, and the rail carries the main actions. Skills rows show yield, cycle and stock without repeating instructions. Costs are source shortcuts, and a recipe bookmark follows you between activities. A missing skill or zone requirement takes precedence over a “Ready” message.
+| Zone | Currency |
+| --- | --- |
+| The Overgrowth | Verdant Seals |
+| Embervault | Ember Seals |
+| Hollow Crypt | Soul Seals |
+| Astral Rift | Rift Seals |
 
-Books open readable Codex pages for skills, items, resources, recipes, permanent upgrades and power ranks. Closing a page returns to the same menu, search, recipe or unfinished power / Mastery choice. Item and recipe guides can be read before crafting; exploration discoveries still count separately. Detailed controls and save instructions are also in the Codex.
+Purchased ranks persist through defeat, travel, replay and reload. They apply only in their exact Zone; even later Zones that repeat an environment have separate wallets and ranks. Future shops can be previewed before unlocking them. Books open detailed upgrade rules without making a purchase.
 
-The first Delve begins with a short, non-blocking movement hint. Settings retains an optional tips tour. Defeat, floor-clear and unlock prompts state only the result and next action. Native buttons, keyboard focus, icon labels and short tooltips keep the compact controls usable. `npm run review:ui` captures the main desktop and mobile screens and records visible text / overflow checks in `presentation-audit.json`.
+**Dungeoneering level and XP are global and persistent.** Level 2 needs 1,600 total XP; level 3 needs 6,400. Progress slows at higher levels, with one Mastery point per level. Leveling and the first Mastery unlock leave combat running. XP orbs never expire: positions and values survive activity changes, retries and returning to a Zone. Encounter completion collects the remaining XP exactly once.
 
-## Open gameplay HUD
+**Dungeoneering Mastery** is a separate shared, refundable bank. Guardians grant 1 / 1 / 2 points. Onslaught unlocks spawn settings, Fortune improves seal drops, and Discovery improves rare-material drops. These change dungeon configuration and rewards rather than attack damage or protection. Its HUD shortcut shows unspent Mastery points; Essence remains an enchanting material.
 
-The arena uses floating, outlined text and small isolated controls. Delve, Equipment, Skills, Codex, Settings, Pause and unlocked Game Speed use a vertical rail of circular icons; labels appear on hover or keyboard focus. In **Settings → Navigation**, choose the left or right side and reorder pins with touch-friendly arrows or by dragging a row. The layout is saved with your character.
+The first guardian unlocks **1× / 2× Delve speed**. The testing code retains higher speeds. Combat speed never changes active gathering, crafting, bonus timing or idle production. Speed starts at 1× each launch.
 
-The title and location sit at the top center. Health and XP remain on the left. Idle warnings and short notifications appear directly underneath; the small message icon opens **Messages** so you can read the last 40 notices. The menu palette uses warm stone, dark leather and brass. Buttons and headers are carved runestones with chipped bevels, stone grain and incised edge marks; selected controls have a warm amber inlay. Nine-slice SVG artwork preserves the edges at every screen size. Panels keep hard corners and gameplay pins remain circular. Station scenes fill portrait displays with a focused view of their artwork.
+## Equipment, shops and pacing
 
-**Dungeoneering Mastery** replaces the Biome Mastery name. Its HUD shortcut displays the current dungeon’s **unspent mastery points**, and spending them updates that number. Essence remains a separate enchanting material.
+| Build | Zone 1 / Iron | Zone 2 / Steel |
+| --- | ---: | ---: |
+| Maximum equipment, base proficiency | 80 DPS | 160 DPS |
+| Shop training with an unrefined weapon | ~87 DPS | ~174 DPS |
+| Ordinary combined build | ~98 DPS | ~198 DPS |
+| Recommended build budget | 100 DPS | 200 DPS |
 
-Defeating the first guardian unlocks **1× / 2× Delve speed**. The existing testing code retains its higher combat speeds. **This changes combat only:** active gathering, crafting, bonus timing and idle production keep their own real-time clocks. Delve speed starts at 1× each launch.
+The shop example uses Heavy Strikes 7, Quick Hands 3 and Keen Edge 3. Crafted equipment and Heavy Strikes offer alternative damage paths: the stronger increase applies fully, plus 15% of the weaker. Above the Zone’s build budget, additional calculated single-target DPS contributes at 25%. The same adjustment applies to actual attacks, so the HUD and purchase previews show the damage you receive.
 
-Inventory and Codex artwork use centered, painted circular medallions. The 104 collection entries have distinct images, including themed boss portraits, resources, tools and skills. Held equipment retains its articulated textures.
+Early shop ranks are affordable. High ranks cost sharply more seals and can exceed the recommended range. Skilling remains a viable optional path with finite equipment upgrades, style proficiency and small crafting-level bonuses. Conditional effects and extra targets can add damage beyond the single-target figure.
 
-## Experience and zone pacing
-
-XP orbs no longer expire. Their positions and values survive Skills visits, deaths, retries, save/reload and returning to an earlier zone. Finishing an encounter collects the remaining XP automatically. Pending level-up choices also survive reload, and banking an orb cannot award it twice.
-
-| Zone | Full-zone target at 1× | Intended single-target DPS |
+| Zone | Target at 1× | Reference DPS |
 | --- | --- | ---: |
-| 1 | ~10 minutes | 81 (Iron reference) |
-| 2 | ~20 minutes | 161 (Steel reference) |
-| Later | Previous 30–40-minute targets | Current Steel reference; further progression reserved |
+| 1 | ~10 minutes | ~80 |
+| 2 | ~20 minutes | ~160 |
+| 3 | ~30 minutes | Current Steel reference |
+| 4+ | ~35–40 minutes | Current Steel reference |
 
-**Equipment** shows your worn set, current DPS, health, attack speed and range. Owned weapons display comparable DPS beside an Equip arrow. Armor and jewelry have separate tabs; Training can be expanded for each style’s proficiency and modifiers. The book icons open detailed rules and limits in the Codex. Iron ends at **100 permanent DPS** and Steel at **200 DPS** for a complete build. The weapon HUD also includes current damage, speed and critical powers.
+References assume sustained single-target combat with modest shop ranks. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Later equipment progression remains reserved.
 
-Targets use continuous single-target attacking at normal Mastery pressure, before temporary powers. Menus, crafting, movement and deaths affect wall-clock time; cleaves, splash, offensive powers and faster game speed can shorten it. [BALANCE.md](BALANCE.md) documents the reference builds and every weapon’s attainable DPS; [balance-report.json](balance-report.json) contains the numbers.
+Ordinary monsters drop **no gold**. Baseline clears pay **191 gold in Zone 1 / 293 in Zone 2**, mainly from guardians and floor caches, before elites and jewelry. Scavenging remains another gold source. Fractional rewards survive reload; existing balances and crafting costs are preserved.
 
-A baseline full clear pays **346 gold in Zone 1** and **586 in Zone 2**, before elite, Gold Find and jewelry bonuses. Smaller monster rewards accumulate into whole coins, with the remainder saved across reloads. Guardians and floor clears supply most of the income. Existing balances, Scavenging income and crafting costs are preserved.
+## Minimal runestone interface
 
-## Active gathering and crafting
+Gameplay uses outlined information and isolated controls with transparent backing. Delve, Equipment, Skills, Zone Shop, Codex, Settings, Pause and unlocked speed occupy a circular icon rail. **Settings → Navigation** selects either side and reorders pins with dragging or arrows. Titles sit at the top center, health/XP on the left, and warnings/messages below them. The message icon reopens the latest 40 notices.
 
-Hold the work button, hold the scene, or hold Space to work. After you start working, temporary bonuses appear in the scene:
+Menus use warm stone, leather and brass. Carved runestone buttons and headers keep hard corners; painted medallions frame the icons. All **108 collection entries** have distinct artwork. Tooltips, native buttons, focus restoration and accessible labels support keyboard and touch navigation. Detailed explanations stay in the Codex.
 
-- Iron/silver outcrops, oak offcuts and loose salvage award extra materials.
-- Forge sparks, fletching twigs, aether glistens, rune motes and opal glints advance the active crafting cycle by **35%**.
-- Tap a bonus, drag over it while holding, or focus it and press Enter/Space. A second finger can collect bonuses while the first keeps the work button held.
-- Bonuses expire after six seconds. They do not spawn just because an idle task is running, cannot be collected twice, and never bypass recipe ingredients. Normal work continues without collecting them.
+**Equipment** shows the worn set, actual Zone DPS, health, attack speed and reach. Owned weapons can be compared directly. Armor and jewelry have separate tabs; style training expands when needed. Books return you to the same recipe, shop, search or unapplied Mastery allocation.
 
-The **Skills** hub organizes each discipline into Gather, Refine, Equipment and Tools. Material costs show owned / required, missing ingredients link to their source, and tracked recipes follow you between stations.
+## Gathering and crafting
 
-Clear all three floors of **Zone 1** to unlock Tier 2 in every discipline. Gather / Refine has a resource-tier selector, and locked activities explain the required clear. The gate applies to active work, idle assignment and offline production. Each of the ten new activities supports bonuses, visible tools and a direct Idle button.
+**Skills** organizes each discipline into Gather, Refine, Equipment and Tools. Hold the work control, scene or Space. Active material bonuses can be tapped, dragged over, or collected with Enter/Space while focused. Forge sparks, twigs, glistens and similar crafting bonuses advance the cycle by **35%**, while still consuming ingredients. A second finger can collect bonuses while the first keeps working.
 
-| Discipline | Zone 2 resources and recipes |
+Resource costs link to their sources, and tracked recipes follow you back to the crafting bench. Every skill hub and activity has a direct **Idle** button. The first slot unlocks at **Zone 1, Floor 2**, with a notice linking directly to Skills. The second opens at Zone 10. Assigned tasks continue during combat and menus, with up to eight hours offline; missing ingredients pause refining.
+
+Crafted pickaxes, hatchets and mattocks equip automatically, appear in gathering scenes, work **8% faster actively**, and add one material to gathering bonuses. Each station has five upgrades, each granting **2% ingredient conservation and 3% work speed**. Conservation carries between crafts until it saves a whole ingredient; viewing costs never consumes that credit.
+
+Clear Zone 1 to unlock the second resource tier in every discipline. The gate applies to active, idle and offline work, armor recipes and promotions.
+
+| Discipline | Zone 2 gathering / refining |
 | --- | --- |
 | Blacksmithing | Coal; 2 Iron Ore + 1 Coal → 1 Steel Bar |
-| Woodworking | Willow Logs; 2 Willow + 1 Steel Bar → 12 arrows |
+| Woodworking | Willow; 2 Willow + 1 Steel Bar → 12 arrows |
 | Scavenging | Ancient Salvage; 2 salvage → 2 Ancient Fragments |
-| Warding | 2 Warded Cloth + 1 Willow → 2 Runic Cloth; 2 Runic Cloth + 2 Ancient Fragments → 10 runes |
+| Warding | 2 Warded Cloth + 1 Willow → 2 Runic Cloth; 2 cloth + 2 fragments → 10 runes |
 | Artisan | Rough Garnet → Cut Garnet |
 
-Steel, willow, runic cloth, ancient fragments and cut garnets feed real armor recipes, promotions and further upgrades. All three styles use cut garnets when promoting. Coal, willow, ancient salvage and garnets have new, appropriate gathering environments. Existing opal jewelry remains available.
+All 20 activities support their appropriate scenes, active bonuses and visible tools. Existing starter recipes cross disciplines too: arrows use oak and iron; runes use cloth and fragments; armor uses different proportions of cloth, metal and wood. Existing opal jewelry remains available.
 
-## Linked crafting
+## Weapons and armor
 
-| Product | Base recipe |
-| --- | --- |
-| 8 arrows | 2 oak logs + 1 iron bar |
-| 6 arcane runes | 2 warded cloth + 2 relic fragments |
-| Iron Armor set | 10 bars + 2 cloth + 40 gold |
-| Plain Ranger Leathers | 4 bars + 10 cloth + 6 logs + 40 gold |
-| Plain Linen Robes | 2 bars + 18 cloth + 4 fragments + 40 gold |
-| Iron pickaxe | 4 bars + 6 logs + 15 gold |
-| Iron hatchet | 3 bars + 8 logs + 15 gold |
-| Iron mattock | 5 bars + 6 logs + 20 gold |
+One weapon selects your Melee, Ranged or Magic style. Each style has separate refinement, speed, reach, enchantment and proficiency. Iron caps at refinement **10**, speed/reach **5**, reinforcement **5** and enchantment **2**. Steel caps at **20 / 10 / 10 / 4**. Clear Zone 1, reach refinement 10 and crafting level 10, then pay a Steel promotion to open the next ranks for that style.
 
-Sets are crafted once and equipped explicitly. Reinforcement costs grow with each class’s own rank. Bows and staves use crafting materials to build the weapon; crafting them no longer consumes the ammunition you need to use them.
+Combat proficiency grants up to **3% damage** and matching crafting levels up to **5%** more. Equipment-only dedicated limits are approximately **86 / 173 DPS**. Zone elemental upgrades work with every combat style.
 
-Improvised gathering tools remain available so you can gather the materials for a proper tool. Crafted tools equip automatically, appear on your character, provide **8% faster active gathering**, and add one material to each gathering bonus. Crafting stations provide their own visible hammer, knife, shuttle, stylus or polishing chisel.
+Armor equips independently of the weapon. Warrior, Ranger and Mage each have two illustrated sets: Iron/Steel armor, Plain/Cured leathers, and Linen/Blue Wool robes. The worn set supplies its own health and protection, movement or Magic bonus. Reinforcement adds 8 HP per rank, limited by that set’s tier. Switching owned armor never heals you. Promotions change held weapon art; bows aim toward targets while retreating, and articulated hands, collars and weapon grips stay joined across poses.
 
-Each station has **five upgrade levels**. Every level adds **2% ingredient conservation and 3% active/idle work speed**, up to 10% conservation and 15% speed. Conservation carries between crafts until a whole ingredient can be saved, avoiding fractional bars or fragments. Viewing a recipe does not consume that credit; only a successful craft does. Recipes show the exact current cost, and the station records ingredients saved.
+## Guardians and elites
 
-## Weapons and actual armor sets
+The first two floor overlords use **two telegraphed mechanics**; a Zone’s final overlord adds a **third**, has more health and attacks faster below 40% health. Warnings lock before damage and can be dodged. Overgrowth uses green thorns/roots, Embervault cinders/magma, Hollow Crypt violet souls/grave marks, and Astral Rift cyan stars/rifts.
 
-Only one weapon is wielded at a time. It selects your permanent Melee, Ranged or Magic combat profile. Each has independent refinement, speed, reach, enchantment and proficiency. Iron refinement ends at **10**; Steel at **20**. Each weapon’s damage curve reaches the same tier ceiling while retaining its own cooldown, reach and utility. Speed adds 2% and reach 3% per rank, capped at **5 ranks in Iron / 10 in Steel**. Reinforcement caps at 5 / 10 and enchantment at 2 / 4.
-
-Finish Iron refinement 10, clear Zone 1 and reach crafting level 10, then pay for a **Steel promotion** in Skills → Equipment. It retains rank 10 and opens refinements 11–20 for that style only. Track the promotion to follow its material requirements back to the bench. Combat proficiency adds at most **3%** damage; crafting-skill levels 11–60 add at most **5%** more. Dedicated training therefore tops out near **108 / 216 DPS**. Temporary wave powers remain separate.
-
-**Armor equips independently of weapons.** Craft a named set in Skills, then choose it in Equipment. Switching from a bow to a staff leaves your worn set and appearance intact. Owned sets and the selected outfit survive reload. Switching an owned set never heals you; newly crafting a set can grant its genuine increase in maximum health once.
-
-| Class | Two available armor tiers | Crafting skill |
-| --- | --- | --- |
-| Warrior | Iron, Steel | Blacksmithing |
-| Ranger | Plain, Cured leathers | Woodworking |
-| Mage | Plain Linen, Blue Wool robes | Warding |
-
-The tiers require skill levels **1 / 10**. Tier 2 also requires the Zone 2 unlock and new materials. Warrior sets favor health and damage reduction, Ranger outfits favor mobility, and Mage robes add 4% / 8% magic damage. Reinforcement adds **8 HP per rank**, limited by the worn set’s own tier. Later armor is unavailable in recipes, Equipment and the Codex.
-
-All six existing weapon families use the illustrated Iron / Steel art, changing on a paid tier promotion. The rig uses per-weapon grip anchors, articulated elbows and separate hand layers. Halberds attach to their shafts with two aligned hands; greatswords have a support hand; bows draw and release; shields cover the grip hand. Weapon-specific swings stay forward of the face. Helmets are masked independently, and robe hems animate separately from boots. The same renderer handles combat, work scenes, Equipment and the character creator. Bows keep aiming at their target while the character retreats; both hands, the string and the nocked arrow share that aim. A continuous neck and collar joins the head to every outfit.
-
-Old excess ranks and unavailable outfits are retained in `legacyProgressionArchive` / `archivedArmor`. Playable upgrades follow the new tier limits, and future outfits map to an available set of the same class. Promotions and selected outfits survive reload. Weapon changes do not switch armor, and every class can still use temporary elemental powers.
-
-At your first 150-gold balance, a dismissible invitation suggests visiting Skills and crafting equipment.
-
-## Dungeoneering threats and power ranks
-
-Each floor overlord has **two telegraphed mechanics**: a projectile volley and marked ground strikes. The final overlord of a zone is substantially tougher, adds a **third locked-direction attack**, and attacks more often below 40% health. The warnings lock before striking, give time to move, pause with combat, and deal no damage until they resolve.
-
-| Dungeon | Attack theme |
-| --- | --- |
-| Overgrowth | Green thorns, roots and a heartwood cleave |
-| Embervault | Cinders, magma eruptions and furnace breath |
-| Hollow Crypt | Violet souls, grave marks and a reaper’s gaze |
-| Astral Rift | Cyan stars, rift collapses and astral severance |
-
-After a boss has first appeared, a smaller elite echo can occasionally replace a wave enemy. There is at most one per wave, it counts toward completion, and it does not grant extra Mastery points or Essence.
-
-Power cards show **Rank N**, the previous and next effects, and the improvement from the pick. A separate book button opens the full rank table without choosing the power. Number keys 1–3 still work without displaying shortcut numbers. Repeated picks strengthen the same power. Might is additive at 10 percentage points per rank (maximum +60%), Haste at 8 (maximum +48%), and critical chance rises by 8 per rank from 5% to a maximum of 45%. Extra projectiles deal 35% weapon damage. The higher zone targets and bounded bonuses make permanent training and repeat clears useful.
-
-Burn now has visible flames and orange **Burn** damage numbers. Rank 1 burns for 10% of the triggering hit per second for 2.7 seconds; Rank 2 deals 20% per second for 3.4 seconds. Higher ranks further increase damage and duration. All powers have explicit rank limits and their totals appear in Equipment.
-
-## Idle tasks
-
-The warning **“Idle unlocks at Zone 1 · Floor 2”** stays visible until you clear Floor 1. Unlocking idle adds a **Select an idle task** action to the floor-clear screen and notice; it opens the Skills hub directly.
-
-Every discipline hub and activity card has an **Idle** button. Press it to assign a free slot; press the same **Idle** button, marked with a stop icon, to stop it. The activity bar also has an Idle button. If both slots are occupied, a clear slot chooser asks which existing task to replace. No text dropdown is needed. Assigned tasks show progress and ingredient shortages, and the character works when you watch an assigned station.
-
-The first slot opens at Zone 1, Floor 2; the second opens at Zone 10. Idle production continues while menus are open or you are delving, up to eight hours offline. Pausing an assignment keeps its partial progress.
+Known bosses can return as smaller elite echoes, at most one per wave. They count toward completion and grant seals/gold without duplicate Mastery or Essence. Burn has visible flames and orange damage numbers; shop ranks improve its damage and duration.
 
 ## Controls and saves
 
 | Action | Controls |
 | --- | --- |
-| Move | WASD, arrows, drag the arena, or touch joystick |
-| Dash | Double tap a movement key / joystick direction, Space in combat, or Dash button |
-| Active work | Hold work button / scene / Space; release to stop |
-| Bonus collection | Tap, held-pointer drag, Enter or Space on a focused bonus |
-| Skills / Equipment / Codex | G / E / C |
-| Return to the delve | D or Delve pin |
-| Close menu / pause combat | Escape |
-| Choose a wave power | Click, Enter/Space, or 1–3 |
+| Move | WASD, arrows, drag the arena, touch joystick |
+| Dash | Double tap a direction, Space in combat, Dash button |
+| Work | Hold work control, scene or Space |
+| Collect active bonus | Tap, drag, Enter/Space on focused bonus |
+| Skills / Equipment / Codex / Zone Shop | G / E / C / B |
+| Return to delve | D or Delve pin |
+| Close menu / pause | Escape |
 
-Existing saves and backups keep the `deepwell-prototype-v1` storage key. Former global upgrades migrate once to the independent profiles, subject to current tier limits; original excess investment is archived. Existing station boosts and production bonuses are retained. Settings includes backup/restore and reduced motion. Export your old save and restore it here if the files use different browser storage origins.
+Saves retain the `deepwell-prototype-v1` key. Settings provides backup/restore and reduced motion. Back up and restore your save when moving between browser origins or downloaded filenames.
 
-## Test travel
+Existing power ranks migrate into their saved Zone, and pending choices convert to seals. Earned XP becomes global XP while uncollected orbs stay separate. Old biome Mastery banks are pooled; duplicate allocations are refunded. Migration runs once and archives the old Zone/Mastery record. Equipment, materials, gold and XP caches remain. Older excess equipment ranks and unavailable armor remain archived under the existing tier rules.
 
-The full testing code unlocks **Settings → Test travel**, clears all four authored dungeons and enables the same 1×–500× combat-speed choices as the speed code. Choose a zone and floor to restart there. Travel resets zone powers and grants no clear reward. Testing unlocks persist in the save; game speed still starts at 1× each launch. Redeem the code again on older testing saves to enable travel.
+The **max** testing code unlocks **Settings → Test travel**, marks all four authored dungeons complete, funds their shops and enables 1×–500× combat speeds. Travel grants no clear reward and retains purchased training in each Zone. Testing unlocks persist; redeem max again on an older testing save to fund the new wallets.
 
 ## Development and validation
 
-Completed builds are delivered on GitHub with a playable ZIP in `downloads/`. Before pushing, review staged files for private data and credentials; exclude personal saves, local configuration and diagnostics. Verify that the downloadable ZIP contains the current standalone game. [AGENTS.md](AGENTS.md) records the delivery workflow.
-
-Player-facing layouts and short labels live in `src/presentation.js` and `src/presentation.css`; readable reference pages and return navigation in `src/codex.js`; the appearance editor in `src/character-creator.js`. Core skill and resource definitions live in `src/game-data.json`; tier rules and render hooks in `src/zone-progression.js`; the articulated character rig in `src/avatar-rig.js`. Skills, HUD / XP and bosses remain in `src/systems.js`, `src/arena.js` and `src/dungeoneering.js`. Run `npm run build` to compile the source, styles and embedded art into the standalone HTML. Gold rewards live in `src/economy.js`; test travel in `src/testing.js`. The original combat engine remains in `index.html`.
+Builds are committed to GitHub with the standalone ZIP in `downloads/`. [AGENTS.md](AGENTS.md) describes public-file review and delivery verification. Cloud drafts and website deployments are separate.
 
 ```sh
 npm ci
-# If no system Chromium is installed:
+# If system Chromium is unavailable:
 npx playwright install chromium
 npm run build
 npm test
 npm run report:balance
+npm run review:ui
 ```
 
-Ten suites use isolated browser storage and local servers. They cover **20 activities, four biomes and 104 distinct Codex icons**, saves, migration, exact recipes, conservation, tools, style isolation, real elemental attacks, touch / keyboard work, the actual Floor 1 idle unlock, direct idle assignment, and the gold milestone. Tier tests also check an actual Zone 1 completion, all six weapon ceilings against live damage / cooldowns, bounded training, paid promotion, thirty rig poses, every new activity and 320px layouts. Full-zone simulations verify pacing. Existing wave powers, biomes and jewelry remain guarded by a manifest.
+Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. The original engine and compiled standalone output are in `index.html`.
 
-Painted icon source sheets and mappings live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without changing the source images. `npm run art:icons` packs their artwork into `src/painted-icons.json` and records alignment bounds in `assets/icons/metrics.json`; the build embeds these icons for both initial HUD elements and dynamic menus.
+Eleven browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 108 distinct painted collection icons. Full combat simulations verify the first four Zones and later pacing. Static encounters, biome and jewelry definitions remain guarded by a manifest.
 
-The equipment sheets and their transparent gutters are packed by `scripts/export-equipment.py` using Pillow, NumPy and SciPy. It exports `src/equipment-art.json` and `src/equipment-regions.js`; those are embedded into the standalone game by the build. The original plain source sheets remain in the workspace’s generated-image folder, and ornate concepts are saved under `assets/equipment/concepts`.
-
-Presentation tests cover the complete source → tracked recipe → craft loop, DPS refresh after outfit / skill changes, all 104 readable Codex entries, search and focus restoration, pending power choices, unapplied Mastery edits, and both rail positions from 320px phones to desktop.
-
-Revision tests verify continuous bow aiming while retreating, all six collar joins, exact full-zone gold rewards, saved fractional coins, real code redemption and travel, and the distinct painted backgrounds of all 104 Codex entries.
-
-Tests also verify all four boss themes, dodgeable telegraphs, elite gating and rewards, real touch double-tap dashes, exact burn stacking, independent armor persistence, and identical skilling output at 1×, 2× and 500× Delve speed.
-
-Use `CHROMIUM_PATH` for a custom browser location. Test screenshots go to the ignored `test-results/` directory.
+Generated icon sheets, calibrated regions and alignment metrics live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without altering source art; `npm run art:icons` exports embedded WebP badges. `scripts/export-equipment.py` packs rig textures using Pillow, NumPy and SciPy. Use `CHROMIUM_PATH` for a custom browser. Local test output stays in ignored `test-results/`.

@@ -8,11 +8,13 @@ function fillTestingResources(){
  if(!data.biomeLoot||typeof data.biomeLoot!=='object')data.biomeLoot={};
  for(let i=0;i<BIOMES.length;i++){
   data.biomeLoot[i]=Math.max(SANDBOX_RESOURCE_CAP,Number(data.biomeLoot[i])||0);
-  const m=masteryFor(i);m.points=Math.max(m.points,9999);m.earned=Math.max(m.earned,9999);
+  const b=zoneShopFor(i);b.currency=Math.max(b.currency,SANDBOX_RESOURCE_CAP);b.earned=Math.max(b.earned,b.currency);codexDiscover('zone_currency_'+i);
+  const m=masteryFor();m.points=Math.max(m.points,9999);m.earned=Math.max(m.earned,9999);
   if(!data.seenElites)data.seenElites={};data.seenElites[i]=[true,true,true];
   codexDiscover('biome_'+i);codexDiscover('loot_'+i);
   for(let b=0;b<3;b++)codexDiscover('boss_'+i+'_'+b);
  }
+ for(const key of new Set([...Object.keys(data.zoneShops),String(zoneNumber())])){const b=zoneShopFor(Number(key));b.currency=Math.max(b.currency,SANDBOX_RESOURCE_CAP);b.earned=Math.max(b.earned,b.currency);}
  data.masteryIntroSeen=true;data.zone2SkillsAnnounced=true;
  for(const key of keys)if(CODEX_ITEMS.some(v=>v.id==='resource_'+key))codexDiscover('resource_'+key);
  save();refreshUI();refreshTestTravel();
@@ -22,7 +24,7 @@ function refreshTestTravel(){
  let host=$('testTravel');if(!data.devTravelUnlocked){host?.remove();return;}
  if(!host){host=document.createElement('section');host.id='testTravel';host.className='test-travel';root.querySelector('.settings-save')?.before(host);if(!host.isConnected)root.append(host);}
  const count=Math.min(1000,Math.max(BIOMES.length,Math.ceil(data.cleared/3),zoneNumber()+1));
- host.innerHTML='<div class="compact-section-title"><h3>Test travel</h3></div><div class="test-route"><label for="testZone">Zone<select id="testZone">'+Array.from({length:count},(_,i)=>'<option value="'+(i+1)+'" '+(i===zoneNumber()?'selected':'')+'>'+(i+1)+' · '+BIOMES[i%BIOMES.length].name+'</option>').join('')+'</select></label><label for="testFloor">Floor<select id="testFloor">'+[1,2,3].map(n=>'<option '+(n===zoneStage()?'selected':'')+'>'+n+'</option>').join('')+'</select></label><button type="button" id="testTravelGo" aria-label="Restart selected zone and floor" data-hint="Restart selected floor · zone powers reset">'+uiIcon('arrow')+'</button></div>';
+ host.innerHTML='<div class="compact-section-title"><h3>Test travel</h3></div><div class="test-route"><label for="testZone">Zone<select id="testZone">'+Array.from({length:count},(_,i)=>'<option value="'+(i+1)+'" '+(i===zoneNumber()?'selected':'')+'>'+(i+1)+' · '+BIOMES[i%BIOMES.length].name+'</option>').join('')+'</select></label><label for="testFloor">Floor<select id="testFloor">'+[1,2,3].map(n=>'<option '+(n===zoneStage()?'selected':'')+'>'+n+'</option>').join('')+'</select></label><button type="button" id="testTravelGo" aria-label="Restart selected zone and floor" data-hint="Restart selected floor">'+uiIcon('arrow')+'</button></div>';
  $('testTravelGo').onclick=()=>testTravelTo(Number($('testZone').value),Number($('testFloor').value));
 }
 function testTravelTo(zone,stage){

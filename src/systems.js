@@ -40,10 +40,8 @@ function normalizeProgression(){
   data.skillsNudgeSeen=!!data.skillsNudgeSeen||data.unlockedWeapons?.length>1;
   data.idleNoticeSlots=Math.min(2,finiteRank(data.idleNoticeSlots));data.idleFirstAssigned=!!data.idleFirstAssigned||data.idleJobs?.some(Boolean)||false;
   if(data.idleJobs?.filter(Boolean).length>=idleSlotsUnlocked()&&idleSlotsUnlocked()>0)data.idleNoticeSlots=idleSlotsUnlocked();
-  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();projectCombatStyle();
+  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();normalizeZoneShopProgression();projectCombatStyle();
 }
-
-function attackCooldown(){return weaponInfo().cooldown/(1+styleStats().speedPercent/100)/waveHasteFactor();}
 
 function stationRank(group){return data.stationLevels?.[group]||0;}
 function toolForSkill(key){return Object.keys(TOOL_DEFS).find(id=>TOOL_DEFS[id].skills.includes(key));}
@@ -112,12 +110,7 @@ function clearSkillBonuses(){
   const s=bonusState();s.nodes=[];s.lastInput=-100;s.pointers.clear();$('skillBonusLayer')?.replaceChildren();
 }
 function bonusEligible(){return !!SKILLS[game.scene]&&!drawerKind&&$('overlay').classList.contains('hidden')&&$('resourcePicker').classList.contains('hidden')&&!game.customizing&&!document.hidden;}
-function bonusPosition(){
-  const r=canvas.getBoundingClientRect(),bar=$('skillActionBar').getBoundingClientRect(),header=document.querySelector('.hud-center').getBoundingClientRect(),track=$('trackedRecipe').getBoundingClientRect();
-  const minY=Math.max(120,header.bottom-r.top+30,track.height?track.bottom-r.top+31:0),maxY=bar.top-r.top-34;
-  if(maxY<minY)return null;
-  return {x:Math.max(30,Math.min(r.width-30,r.width*(.30+Math.random()*.48))),y:minY+Math.random()*(maxY-minY)};
-}
+
 function spawnSkillBonus(){
   if(!bonusEligible()||!canUseSkill(game.scene)||!hasIngredients(skillCost(game.scene)))return false;
   const s=bonusState();if(s.nodes.length>=3)return false;

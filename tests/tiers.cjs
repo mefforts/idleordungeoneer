@@ -36,10 +36,10 @@ function instrumentation(){
   ]);assert.ok(costs.every(c=>c.made>0));passed.push('All six new refining recipes consume their exact cross-skill ingredients and produce real equipment materials / ammunition');
   for(const tier of [1,2]){
    const normal=await p.evaluate(t=>__tierTest.dps(t),tier),dedicated=await p.evaluate(t=>__tierTest.dps(t,true),tier);report['tier'+tier]={normal,dedicated};
-   assert.ok(normal.every(r=>Math.abs(r.now-tier*100)<.001),'All six weapons reach the tier budget');
+   assert.ok(normal.every(r=>Math.abs(r.now-tier*80)<.001),'All six weapons reach the tier budget');
    assert.ok(normal.every(r=>Math.abs(r.damage/r.cooldown*1.05-r.now)<.001),'Reported DPS agrees with live hit damage and attack cooldown');
-   assert.ok(dedicated.every(r=>r.now>tier*100&&r.now<=tier*108+.001),'Dedicated training stays at most 8% above the tier budget');
-  }passed.push('Live attacks and readiness figures agree: all six weapon families cap at 100 / 200 DPS; exhaustive training stays within 108 / 216');
+   assert.ok(dedicated.every(r=>r.now>tier*80&&r.now<=tier*86.4+.001),'Dedicated training stays at most 8% above the tier budget');
+  }passed.push('Live attacks and readiness figures agree: all six weapon families reach 80 / 160 equipment DPS; exhaustive training stays within 86.4 / 172.8');
   const caps=await p.evaluate(()=>__tierTest.capAndPromote());assert.deepEqual(caps,{blocked:false,spent:0,promote:true,again:false,rankAfterPromotion:10,upgrade:true,rank:11,tier:2,other:1});passed.push('A capped upgrade spends nothing; a paid Steel promotion retains rank 10, opens rank 11 and leaves other combat styles alone');
   const rig=await p.evaluate(()=>{
    const d=__deepwell.getState().data,rows=[];for(const weapon of ['sword','shield','polearm','greatsword','bow','staff'])for(const attack of [0,.25,.5,.75,1]){

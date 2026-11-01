@@ -5,8 +5,8 @@
     "overflow": false
   },
   "activity": {
-    "words": 17,
-    "text": "Mining Blacksmithing · 13 56 DPS 391 8 Delve Equipment Skills Codex Settings 282 Idle Hold +2 Tier 2 unlocked Steel · willow · ancient salvage · garnets",
+    "words": 19,
+    "text": "Mining Blacksmithing · 13 47 DPS 391 16 Delve Equipment Skills Zone Shop Codex Settings 282 Idle Hold +2 Tier 2 unlocked Steel · willow · ancient salvage · garnets",
     "overflow": false
   },
   "gather": {
@@ -16,7 +16,7 @@
   },
   "craft": {
     "words": 31,
-    "text": "Skills Smithing Woodwork Warding Scavenge Artisan Blacksmithing 13 Gather Refine Equipment Tools Weapons Iron Sword & Shield 54.4 DPS Equip Iron Halberd 54.4 DPS Equip Iron Greatsword 56.3 DPS Equip Armor Iron Armor +35 4% Steel Armor +65 7% 0 / 16 0 / 6 0 / 4 391 / 140 Craft",
+    "text": "Skills Smithing Woodwork Warding Scavenge Artisan Blacksmithing 13 Gather Refine Equipment Tools Weapons Iron Sword & Shield 44.9 DPS Equip Iron Halberd 44.9 DPS Equip Iron Greatsword 46.8 DPS Equip Armor Iron Armor +35 4% Steel Armor +65 7% 0 / 16 0 / 6 0 / 4 391 / 140 Craft",
     "overflow": false
   },
   "tools": {
@@ -26,37 +26,37 @@
   },
   "equipment": {
     "words": 46,
-    "text": "Equipment Iron Arming Sword Iron Armor 56.1 DPS 155 HP 1.18 /s 62 Weapons Armor Jewelry Iron Arming Sword Melee · 5 / 10 56.1 DPS Iron Sword & Shield Melee · 5 / 10 54.4 DPS Iron Halberd Melee · 5 / 10 54.4 DPS Iron Greatsword Melee · 5 / 10 56.3 DPS Iron-bound Hunting Bow Ranged · 0 / 10 12.7 DPS Iron-bound Focus Staff Magic · 0 / 10 11.3 DPS Craft weapons Training Melee 1 Ranged 1 Magic 1",
+    "text": "Equipment Iron Arming Sword Iron Armor 46.6 DPS 155 HP 1.18 /s 62 Weapons Armor Jewelry Iron Arming Sword Melee · 5 / 10 46.6 DPS Iron Sword & Shield Melee · 5 / 10 44.9 DPS Iron Halberd Melee · 5 / 10 44.9 DPS Iron Greatsword Melee · 5 / 10 46.8 DPS Iron-bound Hunting Bow Ranged · 0 / 10 12.7 DPS Iron-bound Focus Staff Magic · 0 / 10 11.3 DPS Craft weapons Training Melee 1 Ranged 1 Magic 1",
     "overflow": false
   },
   "settings": {
-    "words": 47,
-    "text": "Settings Reduced motion OFF Resume last skill OFF Appearance Navigation Left Right Reorder pins Delve Equipment Skills Codex Settings Pause / resume Delve speed Reset order Dungeoneering Mastery Controls Show tips Redeem code Save Back up Restore Reset progress Messages 1 02:27 PM Tier 2 unlocked Steel · willow · ancient salvage · garnets",
+    "words": 49,
+    "text": "Settings Reduced motion OFF Resume last skill OFF Appearance Navigation Left Right Reorder pins Delve Equipment Skills Zone Shop Codex Settings Pause / resume Delve speed Reset order Dungeoneering Mastery Controls Show tips Redeem code Save Back up Restore Reset progress Messages 1 03:14 PM Tier 2 unlocked Steel · willow · ancient salvage · garnets",
     "overflow": false
   },
   "mastery": {
-    "words": 32,
-    "text": "Dungeoneering Mastery The Embervault 8 Onslaught 1× spawns 0/5 1 Fortune 1.5% drops 0/4 1 Adaptation 0% protection 0/3 1 Spawn rate 1× 1× Refund all Apply Travel Travel resets zone powers. The Overgrowth The Embervault The Hollow Crypt The Astral Rift Deepest floor · 4",
+    "words": 35,
+    "text": "Dungeoneering Mastery Dungeoneering 1 16 Onslaught 1× spawns 0/5 1 Fortune 40% seal drops 0/4 1 Discovery 1.50% rare finds 0/3 1 Spawn rate 1× 1× Refund all Apply Travel Purchased training stays in its Zone. The Overgrowth The Embervault The Hollow Crypt The Astral Rift Deepest floor · 4",
     "overflow": false
   },
-  "powers": {
-    "words": 20,
-    "text": "Level 3 Choose a power Quick Hands +8% attack speed Rank 1 Storm Echo 13% chance · 35% chain damage Rank 1 Gathering Aura +55 pickup range Rank 1",
+  "shop": {
+    "words": 42,
+    "text": "Zone Shop Zone 1 Zone 2 Zone 3 Zone 4 The Embervault Zone 2 87 Ember Seals Offense Defense Utility Heavy Strikes Rank 3 / 20 104.3 124.4 DPS 15 Quick Hands Rank 0 / 20 104.3 105.9 DPS 10 Sweeping Edge Rank 0 / 3 +0 melee targets +1 melee targets Melee 28 Extended Reach Rank 0 / 10 +0% melee reach +3% melee reach Melee 6 Keen Edge Rank 0 / 20 104.3 105.8 DPS 14",
     "overflow": false
   },
   "codex": {
-    "words": 86,
-    "text": "Codex 26 / 104 All Skills Materials Weapons Armor Tools Jewelry Biomes Enemies Powers 104 Discovered Skills Blacksmithing Skills Woodworking Skills Warding Skills Scavenging Skills Artisan Materials Iron Ore Materials Iron Bar Materials Oak Logs Materials Arrow Materials Warded Cloth Materials Arcane Rune Materials Relic Fragment Materials Rough Opal Materials Silver Ore Materials Silver Bar Materials Cut Opal Jewelry Opal Leech Ring Jewelry Opal Coin Ring Jewelry Opal Scholar Ring Jewelry Opal Reach Ring Jewelry Opal Vigor Amulet Jewelry Opal Guard Amulet Jewelry Opal Haste Amulet Jewelry Opal Fortune Amulet",
+    "words": 87,
+    "text": "Codex 27 / 108 All Skills Materials Weapons Armor Tools Jewelry Biomes Enemies Zone Upgrades 108 Discovered Skills Blacksmithing Skills Woodworking Skills Warding Skills Scavenging Skills Artisan Materials Iron Ore Materials Iron Bar Materials Oak Logs Materials Arrow Materials Warded Cloth Materials Arcane Rune Materials Relic Fragment Materials Rough Opal Materials Silver Ore Materials Silver Bar Materials Cut Opal Jewelry Opal Leech Ring Jewelry Opal Coin Ring Jewelry Opal Scholar Ring Jewelry Opal Reach Ring Jewelry Opal Vigor Amulet Jewelry Opal Guard Amulet Jewelry Opal Haste Amulet Jewelry Opal Fortune Amulet",
     "overflow": false
   },
   "reading": {
     "words": 71,
-    "text": "Codex 26 / 104 Skills Blacksmithing Mine iron, silver and coal. Smelt bars to forge weapons, armor and tools. Activities Mining Smithing Silver Mining Silver Smelting Coal Mining Steel Smithing Station Each upgrade 2% ingredient conservation · 3% faster work Maximum level 5 Current level 0 Conservation accumulates between crafts until it saves a whole ingredient. Recipe costs show the current discounted amount. Gathering tools equip automatically, speed up active gathering by 8% and add one material to gathering bonuses.",
+    "text": "Codex 27 / 108 Skills Blacksmithing Mine iron, silver and coal. Smelt bars to forge weapons, armor and tools. Activities Mining Smithing Silver Mining Silver Smelting Coal Mining Steel Smithing Station Each upgrade 2% ingredient conservation · 3% faster work Maximum level 5 Current level 0 Conservation accumulates between crafts until it saves a whole ingredient. Recipe costs show the current discounted amount. Gathering tools equip automatically, speed up active gathering by 8% and add one material to gathering bonuses.",
     "overflow": false
   },
   "mobile-activity": {
-    "words": 9,
-    "text": "Mining Blacksmithing · 13 56 391 8 Delve Equipment Skills Codex Settings 284 Idle Hold +2",
+    "words": 18,
+    "text": "Mining Blacksmithing · 13 104 391 16 Delve Equipment Skills Zone Shop Codex Settings 284 Idle Hold +2 Zone Shop Spend Ember Seals on training",
     "overflow": false
   },
   "mobile-gather": {
@@ -66,22 +66,22 @@
   },
   "mobile-craft": {
     "words": 31,
-    "text": "Skills Smithing Woodwork Warding Scavenge Artisan Blacksmithing 13 Gather Refine Equipment Tools Weapons Iron Sword & Shield 54.4 DPS Equip Iron Halberd 54.4 DPS Equip Iron Greatsword 56.3 DPS Equip Armor Iron Armor +35 4% Steel Armor Craft",
+    "text": "Skills Smithing Woodwork Warding Scavenge Artisan Blacksmithing 13 Gather Refine Equipment Tools Weapons Iron Sword & Shield 103.1 DPS Equip Iron Halberd 103.2 DPS Equip Iron Greatsword 104.4 DPS Equip Armor Iron Armor +35 4% Steel Armor Craft",
     "overflow": false
   },
   "mobile-reading": {
     "words": 38,
-    "text": "Codex 26 / 104 Skills Blacksmithing Mine iron, silver and coal. Smelt bars to forge weapons, armor and tools. Activities Mining Smithing Silver Mining Silver Smelting Coal Mining Steel Smithing Station Each upgrade 2% ingredient conservation · 3% faster work Maximum level 5 Current level 0",
+    "text": "Codex 27 / 108 Skills Blacksmithing Mine iron, silver and coal. Smelt bars to forge weapons, armor and tools. Activities Mining Smithing Silver Mining Silver Smelting Coal Mining Steel Smithing Station Each upgrade 2% ingredient conservation · 3% faster work Maximum level 5 Current level 0",
     "overflow": false
   },
-  "mobile-powers": {
-    "words": 22,
-    "text": "Level 9 Choose a power Heavy Strikes +10% damage Rank 1 Ember Brand 10% / s · 2.7s 20% / s · 3.4s +10% burn / s · +0.7s Rank 2 Restoration 0.7 HP / s Rank 1",
+  "mobile-shop": {
+    "words": 40,
+    "text": "Zone Shop Zone 1 Zone 2 Zone 3 Zone 4 The Embervault Zone 2 87 Ember Seals Offense Defense Utility Heavy Strikes Rank 3 / 20 104.3 124.4 DPS 15 Quick Hands Rank 0 / 20 104.3 105.9 DPS 10 Sweeping Edge Rank 0 / 3 +0 melee targets +1 melee targets Melee 28 Extended Reach Rank 0 / 10 +0% melee reach +3% melee reach Melee 6 Keen Edge",
     "overflow": false
   },
   "combat": {
     "words": 14,
-    "text": "The Embervault Zone 2 · Floor 1 0 / 36 56 DPS 391 8 Delve Equipment Skills Codex Settings PAUSE 1× ♥ 155 / 155 ZONE LV. 1 ⇢ DASH",
+    "text": "The Embervault Zone 2 · Floor 1 0 / 36 104 DPS 391 16 Delve Equipment Skills Zone Shop Codex Settings PAUSE 1× ♥ 155 / 155 1 ⇢ DASH 87",
     "overflow": false
   },
   "errors": []

@@ -28,7 +28,7 @@ function normalizeTierProgression(){
 function weaponDamageBase(id=data.weaponType,rank=data.styles[styleForWeapon(id)].weapon){
  const w=WEAPON_TYPES[id],r=Math.max(0,Math.min(TIER_LIMITS[styleTier(styleForWeapon(id))].weapon,rank));
  const starter=14*w.power/w.cooldown*1.05;
- const first=100/1.1,second=200/1.2;
+ const first=80/1.1,second=160/1.2;
  const budget=r<=10?starter+(first-starter)*r/10:first+(second-first)*(r-10)/10;
  const robeAllowance=styleForWeapon(id)==='magic'?Math.min(1,r/10)*.04+Math.max(0,r-10)/10*.04:0;
  return budget*w.cooldown/w.power/1.05/(1+robeAllowance);
@@ -103,7 +103,7 @@ function promoteStyle(id){
  if(data.styles[id].weapon<10||weaponCraftLevel(STYLE_DEFS[id].weapon)<10){toast('Finish your Iron training','Reach Iron refinement 10 and '+DISCIPLINES[STYLE_DEFS[id].group].name+' level 10.');return false;}
  if(!spendAtStation(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group))return false;
  data.styles[id].tier=2;projectCombatStyle();codexDiscover('unlock_steel');
- toast(STYLE_DEFS[id].name+' upgraded to Steel','Refinement 11–20 is now available. The intended permanent ceiling is 200 DPS.');save();refreshUI();renderDisciplineDrawer();return true;
+ toast(STYLE_DEFS[id].name+' upgraded to Steel','Refinement 11–20 unlocked');save();refreshUI();renderDisciplineDrawer();return true;
 }
 function styleUpgradeBase(id,kind){
  const s=data.styles[id],r=s[kind]||0,tier=kind==='armor'&&data.ownedArmor.includes(id+'_2')?2:styleTier(id),cap=TIER_LIMITS[tier][kind],local=tier===2?Math.max(0,r-TIER_LIMITS[1][kind]):r;
@@ -148,13 +148,7 @@ function produce(key,active=false){
  const xp=active?Math.max(5,Math.floor(skill.gain*.65)):skill.gain;data[skill.xp]=(data[skill.xp]||0)+xp;const group=disciplineOf(key);data[group.xp]=(data[group.xp]||0)+xp;
  codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
 }
-function weaponDps(id,options={}){
- const style=styleForWeapon(id),s=data.styles[style],w=WEAPON_TYPES[id],cap=styleUpgradeCap(style,'weapon'),rank=options.ceiling?cap:Math.min(cap,s.weapon+(options.next?1:0)),stats=styleStats(style);
- const armorAllowance=style==='magic'?(styleTier(style)===2?8:4):0;
- const percent=options.ceiling?armorAllowance+(options.dedicated?8:0):stats.damagePercent,speed=options.ceiling?styleUpgradeCap(style,'speed')*2:stats.speedPercent;
- const damage=weaponDamageBase(id,rank)*w.power*(1+percent/100)*(options.run?waveDamageFactor():1),rate=(1+speed/100)/w.cooldown*(options.run?waveHasteFactor():1);
- return damage*rate*(options.run?1+waveCritChance():1.05)*(options.run&&['bow','staff'].includes(id)?1+.35*waveRank('multishot'):1);
-}
+
 function refinementForTarget(id,target=zoneBalance().dps){
  const cap=styleUpgradeCap(styleForWeapon(id),'weapon'),stats=styleStats(styleForWeapon(id)),w=WEAPON_TYPES[id];
  for(let r=0;r<=cap;r++)if(weaponDamageBase(id,r)*w.power*(1+stats.damagePercent/100)*(1+stats.speedPercent/100)/w.cooldown*1.05>=target)return r;
@@ -182,7 +176,7 @@ function installTierProgressionUI(){
  TOOL_DEFS.pickaxe.skills.push('coal');TOOL_DEFS.hatchet.skills.push('willow');TOOL_DEFS.mattock.skills.push('ancientScavenge','cleanAncient','garnetSearch');
  for(const key of TIER_RESOURCES)if(!CODEX_ITEMS.some(a=>a.id==='resource_'+key))CODEX_ITEMS.push({id:'resource_'+key,cat:'Materials',name:RESOURCE_LABEL[key],desc:'Zone 2 material · '+SKILLS[RESOURCE_SOURCE[key]].name+' · '+(SKILLS[RESOURCE_SOURCE[key]].cost?Object.entries(SKILLS[RESOURCE_SOURCE[key]].cost).map(([k,n])=>n+' '+RESOURCE_LABEL[k]).join(' + '):'Clear Zone 1 to gather')});
  for(const [id,sk]of Object.entries(SKILLS).filter(([,s])=>s.tier===2))CODEX_ITEMS.push({id:'skill_'+id,cat:'Skills',name:sk.name,desc:'Unlocked by clearing Zone 1 · '+sk.item});
- CODEX_ITEMS.push({id:'unlock_steel',cat:'Weapons',name:'Steel tier',desc:'Clear Zone 1, finish Iron refinement 10, train crafting to level 10 and promote a combat style. Intended permanent ceiling: 200 DPS.'});
+ CODEX_ITEMS.push({id:'unlock_steel',cat:'Weapons',name:'Steel tier',desc:'Clear Zone 1, finish Iron refinement 10, train crafting to level 10 and promote a combat style. Refinement 11–20.'});
  zone2CampImage=new Image();zone2CampImage.src=iconAsset('zone2-gathering');
  $('consolidatedSkills').addEventListener('click',e=>{const promote=e.target.closest('[data-promote-style]'),tier=e.target.closest('[data-workshop-tier]');if(promote&&!promote.disabled)promoteStyle(promote.dataset.promoteStyle);if(tier){workshopTier=Number(tier.dataset.workshopTier);renderDisciplineDrawer();}});
 }
@@ -194,7 +188,7 @@ function refreshTierProgressionUI(){
  }
 }
 
-function defaults(){return {tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
+function defaults(){return {tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
 
 function drawWorkstationScene(w,h,key){
  const base=SKILLS[key].scene||key,advanced={coal:[0,0],willow:[1,0],ancientScavenge:[0,1],cleanAncient:[0,1],garnetSearch:[1,1],garnetCut:[1,1]}[key];
@@ -251,13 +245,13 @@ function attack(){
  if(isRanged()){
   const ammo=data.weaponType==='bow'?'arrows':'runes';if((data[ammo]||0)<1){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1')}return false;}data[ammo]--;
   const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,aimAngle:localAimAngle(p.aimAngle),data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*1.16,y:p.y+18+hand.y*1.16};
-  const number=Math.min(5,1+(game.upgrades.multishot||0));
+  const number=1+waveRank('multishot');
   for(let i=0;i<number;i++){
-   const target=targets[Math.min(i,targets.length-1)].e,a=Math.atan2(target.y-origin.y,target.x-origin.x)+(i-(number-1)/2)*.07;
-   game.shots.push({x:origin.x,y:origin.y,vx:Math.cos(a)*(data.weaponType==='bow'?360:295),vy:Math.sin(a)*(data.weaponType==='bow'?360:295),damage:damage*(i===0?1:.35),combatStyle:combatStyle(),life:Math.max(1.4,(reach+35)/(data.weaponType==='bow'?360:295)),pierce:game.upgrades.pierce||0,hits:new Set(),magic:data.weaponType==='staff'});
+   const target=targets[Math.min(i,targets.length-1)].e,a=Math.atan2(target.y-origin.y,target.x-origin.x);
+   game.shots.push({x:origin.x,y:origin.y,vx:Math.cos(a)*(data.weaponType==='bow'?360:295),vy:Math.sin(a)*(data.weaponType==='bow'?360:295),damage:damage*(i===0?1:.15),combatStyle:combatStyle(),life:Math.max(1.4,(reach+35)/(data.weaponType==='bow'?360:295)),pierce:waveRank('pierce'),hits:new Set(),magic:data.weaponType==='staff'});
   }
  }else{
-  const maxHits=(data.weaponType==='greatsword'?4:data.weaponType==='polearm'?3:1)+(game.upgrades.cleave||0);
+  const maxHits=(data.weaponType==='greatsword'?4:data.weaponType==='polearm'?3:1)+waveRank('cleave');
   const cone=data.weaponType==='greatsword'?1.65:data.weaponType==='polearm'?.68:1.05;
   let hits=0;
   for(const t of targets){if(hits>=maxHits)break;

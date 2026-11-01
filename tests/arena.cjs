@@ -23,7 +23,7 @@ function instrumentation(){
         const model=zoneBalance(index);data=defaults();data.floor=index*3+1;data.cleared=index*3;
         data.weaponType=weapon;data.unlockedWeapons=Object.keys(WEAPON_TYPES);data.onboardingDone=data.masteryIntroSeen=true;normalizeProgression();
         const style=combatStyle();data.styles[style].tier=model.gearTier;data.styles[style].weapon=model.weaponRank;data.styles[style].speed=model.speedRank;data.styles[style].xp=80*(model.proficiency-1)**2;
-        data.arrows=data.runes=100000;projectCombatStyle();let total=0,kills=0;
+        zoneShopFor(index).ranks={...model.shopRanks};data.arrows=data.runes=100000;projectCombatStyle();let total=0,kills=0;
         for(let floor=0;floor<3;floor++){
           startFloor();game.player.hp=game.player.maxHp=1e9;game.player.invuln=1e8;let steps=0;
           while(game.status==='running'&&steps++<600000)tickCombat(.04);
@@ -87,13 +87,11 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     await p.evaluate(()=>__deepwell.save());await p.reload();assert.equal(await p.evaluate(()=>__deepwell.xpOrbs()[0].value),17);
     await p.evaluate(()=>__arenaTest.roundTripXp());assert.equal(await p.evaluate(()=>__deepwell.xpOrbs()[0].value),17);
     await p.click('#introDelve');await p.evaluate(()=>{__arenaTest.quietCombat();__arenaTest.placeXp([{x:3000,y:3000,value:89}]);__arenaTest.finish();});
-    let bank=await p.evaluate(()=>__arenaTest.bank());assert.equal(bank.gems.length,0);assert.equal(bank.pending,2);assert.equal(bank.xp,10);
-    await p.reload();await p.click('#introDelve');bank=await p.evaluate(()=>__arenaTest.bank());assert.equal(bank.pending,2);assert.equal(bank.xp,10);assert.equal(bank.gems.length,0);assert.equal(await p.evaluate(()=>__deepwell.getState().status),'upgrade');
-    await p.click('[data-pick="2"]');await p.click('[data-pick="2"]');await p.evaluate(()=>__deepwell.save());await p.reload();assert.equal(await p.evaluate(()=>__arenaTest.bank().pending),0);assert.equal(await p.evaluate(()=>__arenaTest.bank().xp),10);
-    results.push('XP survives elapsed time, activity and biome travel, death, retry and reload; encounter banking awards every point once, including pending power choices');
-    await p.click('#introSkills');await p.evaluate(()=>__arenaTest.firstGuardian());await p.click('#masteryGotIt');assert.ok(await p.locator('[data-pick="2"]').isVisible(),'Mastery introduction restores queued power choices');
-    while((await p.evaluate(()=>__arenaTest.bank())).pending>0)await p.click('[data-pick="2"]');
-    results.push('First-guardian Mastery introduction preserves and restores simultaneous XP power choices');
+    let bank=await p.evaluate(()=>__arenaTest.bank());assert.equal(bank.gems.length,0);assert.equal(bank.pending,0);assert.equal(bank.xp,89);
+    await p.reload();await p.click('#introDelve');bank=await p.evaluate(()=>__arenaTest.bank());assert.equal(bank.pending,0);assert.equal(bank.xp,89);assert.equal(bank.gems.length,0);assert.equal(await p.evaluate(()=>__deepwell.getState().status),'running');
+    results.push('XP survives time, activity and Zone travel, death, retry and reload; encounter banking awards every point once without opening power choices');
+    await p.evaluate(()=>__arenaTest.firstGuardian());assert.equal(await p.locator('#masteryGotIt').count(),0);assert.equal(await p.locator('[data-pick]').count(),0);assert.equal(await p.locator('#overlay').isHidden(),true);
+    results.push('The first-guardian Mastery unlock leaves combat running without a popup');
     await p.click('#quickGear');assert.ok(await p.locator('#combatReadiness').isVisible());
     assert.equal(await p.locator('#combatWeaponSelector .weapon-option').count(),(await p.evaluate(()=>__deepwell.getState().data.unlockedWeapons)).length);assert.equal(await p.locator('#combatReadiness .loadout-stats>span').count(),4);
     const dps=await p.evaluate(()=>Object.keys(__deepwell.getState().data.styles).map(style=>({style,dps:__deepwell.weaponDps(style==='ranged'?'bow':style==='magic'?'staff':'sword')})));assert.ok(dps.every(row=>row.dps>0));
@@ -113,7 +111,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     await p.close();
     const speed=await page({viewport:{width:390,height:844}});
     await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);
-    const seed=await speed.evaluate(()=>{const d=__deepwell.getState().data;d.mastery={'0':{points:1,earned:1,onslaught:0,fortune:0,adaptation:0,intensity:0}};return d;});
+    const seed=await speed.evaluate(()=>{const d=__deepwell.getState().data;d.dungeonMastery={points:1,earned:1,onslaught:0,fortune:0,adaptation:0,intensity:0};return d;});
     await speed.addInitScript(d=>localStorage.setItem('deepwell-prototype-v1',JSON.stringify({...d,savedAt:Date.now()})),seed);
     await speed.reload();await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);await speed.evaluate(()=>__deepwell.start());assert.ok(await speed.locator('#speedControl').isVisible());
     await speed.click('#speedToggle');assert.ok(await speed.locator('#speedOptions [data-speed="2"]').isVisible());assert.equal(await speed.locator('#speedOptions [data-speed="5"]').isVisible(),false);

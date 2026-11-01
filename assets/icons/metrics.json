@@ -1115,7 +1115,7 @@
     "width": 178,
     "height": 180
   },
-  "codex-permanent_talent_adaptation": {
+  "discontinued-mastery-guard": {
     "x": 6,
     "y": 6,
     "width": 180,
@@ -1149,6 +1149,78 @@
     "x": 7,
     "y": 6,
     "width": 179,
+    "height": 180
+  },
+  "currency-overgrowth": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-zone_currency_0": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "currency-embervault": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-zone_currency_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "currency-crypt": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-zone_currency_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "currency-rift": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-zone_currency_3": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "zone-shop": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-zone_shop": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "dungeoneering-level": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-permanent_talent_adaptation": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
     "height": 180
   },
   "codex-armor_set_melee_1": {

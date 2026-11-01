@@ -3,6 +3,7 @@ const ARENA_PINS = [
   {id:'delve',element:'delveNav',name:'Delve'},
   {id:'gear',element:'quickGear',name:'Equipment'},
   {id:'skills',element:'quickSkills',name:'Skills'},
+  {id:'shop',element:'quickShop',name:'Zone Shop'},
   {id:'codex',element:'quickCodex',name:'Codex'},
   {id:'settings',element:'quickSettings',name:'Settings'},
   {id:'pause',element:'quickPause',name:'Pause / resume'},
@@ -14,6 +15,7 @@ let arenaInstalled=false, noticeSequence=0, pinDrag=null;
 function normalizeArenaData(){
   const layout=data.hudLayout&&typeof data.hudLayout==='object'?data.hudLayout:{};
   const order=Array.isArray(layout.order)?layout.order.filter(id=>ARENA_PINS.some(p=>p.id===id)):[];
+  if(!order.includes('shop')&&order.length)order.splice(Math.max(0,order.indexOf('skills')+1),0,'shop');
   data.hudLayout={side:layout.side==='left'?'left':'right',order:[...new Set([...order,...ARENA_PINS.map(p=>p.id)])]};
   data.noticeHistory=(Array.isArray(data.noticeHistory)?data.noticeHistory:[]).filter(n=>n&&typeof n.title==='string').slice(-40).map(n=>({title:n.title.slice(0,160),description:String(n.description||'').slice(0,350),time:Math.max(0,Number(n.time)||0)}));
   if(!data.xpCaches||typeof data.xpCaches!=='object'||Array.isArray(data.xpCaches))data.xpCaches={};
@@ -34,39 +36,7 @@ function announce(msg,seconds=2){
   // Encounter text joins the reading column instead of obscuring the arena.
   $('announcement').classList.add('hidden');game.announcementTime=0;rememberNotice(msg);
 }
-function expectedAttacks(hp,damage){
-  const n=Math.max(1,Math.ceil(hp/damage-1e-9));let previous=0,current=1;
-  for(let i=2;i<=n;i++){const next=1+.95*current+.05*previous;previous=current;current=next;}
-  return current;
-}
-function zoneBalance(index=zoneNumber()){
-  index=Math.max(0,Math.floor(Number(index)||0));
-  if(ZONE_BALANCE_CACHE.has(index))return ZONE_BALANCE_CACHE.get(index);
-  const minutes=index===0?10:index===1?20:index===2?30:Math.min(40,35+index-3);
-  const weaponRank=index===0?8:index===1?16:20,speedRank=index===0?3:index===1?9:10,proficiency=1,gearTier=index===0?1:2;
-  const starter=14/.88*1.05,first=100/1.1,second=200/1.2;
-  const referenceDps=(weaponRank<=10?starter+(first-starter)*weaponRank/10:first+(second-first)*(weaponRank-10)/10)*(1+speedRank*.02);
-  const cooldown=.88/(1+speedRank*.02),hit=referenceDps*cooldown/1.05;
-  const countScale=Math.min(2.5,1+index*.5),counts=[SWARM_TARGETS[0],SWARM_TARGETS[2],SWARM_TARGETS[4]].map(n=>Math.round(n*.4*countScale));
-  const targets=[counts[0],0,counts[1],0,counts[2],0],swarmCount=counts.reduce((a,b)=>a+b,0)*3;
-  const model={index,minutes,seconds:minutes*60,weaponRank,speedRank,proficiency,gearTier,hit,cooldown,dps:hit*1.05/cooldown,targets,swarmCount,spawnSeconds:minutes*60*.55/swarmCount,hpScale:1};
-  const forecast=scale=>{
-    let seconds=18*.72;
-    for(let floor=0;floor<3;floor++)for(let phase=0;phase<6;phase++){
-      const boss=phase%2===1,base=boss?[160,230,360][Math.floor(phase/2)]*(phase===5?(floor===2?3.2:1.75):1):30+phase*4,hp=base*Math.pow(1.14,floor)*scale;
-      if(boss)seconds+=expectedAttacks(hp,hit)*cooldown+1.5;
-      else{
-        let attacks=0;for(let sample=0;sample<21;sample++)attacks+=expectedAttacks(hp*(.9+sample*.01),hit)/21;
-        seconds+=Math.max(targets[phase]*attacks*cooldown,(targets[phase]-1)*model.spawnSeconds+1.5);
-      }
-    }
-    return seconds;
-  };
-  let lo=.001,hi=1;while(forecast(hi)<model.seconds)hi*=2;
-  for(let i=0;i<38;i++){const mid=(lo+hi)/2;if(forecast(mid)<model.seconds)lo=mid;else hi=mid;}
-  model.hpScale=(lo+hi)/2;model.forecastSeconds=forecast(model.hpScale);
-  ZONE_BALANCE_CACHE.set(index,model);return model;
-}
+
 function zoneEnemyHp(boss=false,bossIndex=0,variance=1){
   const model=zoneBalance(),base=boss?[160,230,360][bossIndex]*(bossIndex===2?(zoneStage()===3?3.2:1.75):1):30+game.phase*4;
   return base*Math.pow(1.14,zoneStage()-1)*model.hpScale*(boss?1:variance);
@@ -104,7 +74,7 @@ function setArenaSpeed(value){
   $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');refreshArenaUI();
 }
 
-function installArenaUI(){
+function installArenaUI(){installZoneShopPin();
   const nav=document.querySelector('.hud-actions');nav.classList.add('icon-rail');document.querySelector('.hud-center').append($('phaseBadge'));
   $('quickPause').classList.add('hud-icon');$('quickPause').removeAttribute('title');
   $('speedToggle').classList.add('hud-icon');$('speedToggle').innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="m5 7 11 9L5 25V7Zm12 0 11 9-11 9V7Z" fill="currentColor"/></svg><span class="speed-badge">1×</span>';
@@ -123,7 +93,7 @@ function installArenaUI(){
 function resetRun(){
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
  normalizeZone();checkpointGroundXp();const p=game.player;
- p.x=p.y=0;p.hp=maxHp()+(data.zone.upgrades.vitality||0)*18;p.maxHp=p.hp;
+ p.x=p.y=0;p.hp=maxHp()+waveVitality();p.maxHp=p.hp;
  p.invuln=p.dashCooldown=p.dashTime=0;p.vx=p.vy=0;p.attackPose=p.hitPose=0;p.aimTarget=null;p.aimAngle=0;p.aimFacing=p.facing=1;
  game.phase=-1;game.phaseKills=0;game.phaseSpawned=0;game.runLevel=data.zone.level;game.runXp=data.zone.xp;
  game.requiredXp=data.zone.required;game.pendingLevels=Math.max(0,Math.floor(Number(data.zone.pending)||0));game.upgrades={...data.zone.upgrades};
@@ -133,11 +103,7 @@ function resetRun(){
  game.camX=game.camY=0;game.boss=null;
 }
 
-function syncZone(){data.zone={index:zoneNumber(),upgrades:{...game.upgrades},level:game.runLevel,xp:game.runXp,required:game.requiredXp,pending:game.pendingLevels};checkpointGroundXp();}
-
 function save(){if(game.restoringSave)return;checkpointGroundXp();try{data.goldHighWater=Math.max(data.goldHighWater||0,data.gold);data.savedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}catch(err){if(!saveWarningShown&&$('toastStack')){saveWarningShown=true;toast('Progress could not be saved','Allow browser storage, or back up your save in Settings.')}}}
-
-function startFloor(){game.scene='combat';game.manualPaused=false;game.menuPaused=false;resetRun();game.status='running';hideOverlay();setScene('combat',false);nextPhase();if(game.pendingLevels>0){game.status='upgrade';showUpgrade();}updatePauseHud();refreshUI();}
 
 function finishPhase(){game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
 

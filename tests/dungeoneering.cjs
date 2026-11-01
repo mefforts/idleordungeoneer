@@ -35,27 +35,18 @@ function instrumentation(){
       const elite=spawnEnemy(),second=spawnEnemy(),before={points:masteryFor().points,essence:data.essence};onKill(elite);
       return {unseen,seen,index:elite.bossIndex,elite:!!elite.elite,boss:!!elite.boss,second:!!second.elite,before,after:{points:masteryFor().points,essence:data.essence},kills:game.phaseKills};
     },
-    rewards(){fresh();game.upgrades={wisdom:1,forage:1};const boss=spawnEnemy(true,0);boss.name='Reward check';game.boss=boss;onKill(boss);return {gold:data.gold,xp:23+56+game.runXp,level:game.runLevel};},
+    rewards(){fresh();zoneShopFor().ranks={wisdom:1,forage:1};syncZone();const boss=spawnEnemy(true,0);boss.name='Reward check';game.boss=boss;onKill(boss);return {gold:data.gold,xp:data.dungeoneeringXp,level:game.runLevel};},
     capped(){fresh();game.upgrades={...UPGRADE_CAPS};game.pendingLevels=200;game.status='upgrade';showUpgrade();return {gold:data.gold,pending:game.pendingLevels,status:game.status};},
     burn(){
-      fresh();game.upgrades.fire=1;const enemy=spawnEnemy();enemy.x=0;enemy.y=40;enemy.hp=enemy.maxHp=500;
+      fresh();zoneShopFor().ranks.fire=1;syncZone();const enemy=spawnEnemy();enemy.x=0;enemy.y=40;enemy.hp=enemy.maxHp=500;
       const random=Math.random;Math.random=()=>.99;
       try{dealDamage(enemy,10,0,0);tickBurn(enemy,.6);const first={hp:enemy.hp,rate:enemy.burnDps,floaters:game.floaters.map(f=>f.text)};
-        game.pendingLevels=1;game.status='upgrade';game.levelChoices=[UPGRADES.find(u=>u.id==='fire')];selectUpgrade(0);const before=enemy.hp;tickBurn(enemy,.6);
+        grantZoneCurrency(100);buyZoneUpgrade('fire',0);const before=enemy.hp;tickBurn(enemy,.6);
         return {first,second:{damage:before-enemy.hp,rate:enemy.burnDps,rank:game.upgrades.fire,floaters:game.floaters.map(f=>f.text)}};
       }finally{Math.random=random;game.manualPaused=game.menuPaused=true;}
     },
-    fireChoices(){
-      fresh();game.upgrades=Object.fromEntries(Object.entries(UPGRADE_CAPS).map(([id,n])=>[id,n]));game.upgrades.fire=1;game.upgrades.might=game.upgrades.regen=0;game.pendingLevels=1;game.status='upgrade';showUpgrade();
-    },
-    bestEarlyDps(id){
-      fresh();data.weaponType=id;projectCombatStyle();let best=0,build={};
-      for(let might=0;might<=6;might++)for(let haste=0;haste<=6;haste++)for(let crit=0;crit<=5;crit++)for(let multishot=0;multishot<=4;multishot++){
-        if(might+haste+crit+multishot>8||!['bow','staff'].includes(id)&&multishot)continue;
-        game.upgrades={might,haste,crit,multishot};const dps=weaponDps(id,{run:true});if(dps>best){best=dps;build={...game.upgrades};}
-      }
-      return {weapon:id,dps:best,target:zoneBalance().dps,build};
-    },
+    fireChoices(){fresh();zoneShopFor().ranks={fire:1};grantZoneCurrency(100);syncZone();openZoneShop();},
+    bestEarlyDps(id){fresh();data.weaponType=id;projectCombatStyle();zoneShopFor().ranks={might:1,haste:1,crit:1};return {weapon:id,dps:weaponDps(id),target:zoneBalance().dps};},
     viewCodex(){data.discovered=Object.fromEntries(CODEX_ITEMS.map(c=>[c.id,1]));showCodex();},
     plain(){fresh();refreshUI();}
   };
@@ -91,12 +82,12 @@ function instrumentation(){
     const elites=await p.evaluate(()=>__dungeonTest.elites());assert.equal(elites.unseen,false);assert.deepEqual(elites.seen,[true,false,false]);assert.equal(elites.elite,true);assert.equal(elites.boss,false);assert.equal(elites.index,0);assert.equal(elites.second,false);assert.deepEqual(elites.after,elites.before);assert.equal(elites.kills,1);
     passed.push('All four areas use themed attacks; floor overlords have two mechanics, zone overlords three; telegraphs precede damage and can be dodged');
     passed.push('Elite echoes appear only after a known boss has appeared, stay capped at one per wave, count toward the wave and grant no duplicate Mastery');
-    const burn=await p.evaluate(()=>__dungeonTest.burn());assert.equal(burn.first.rate,1);assert.equal(burn.second.rank,2);assert.equal(burn.second.rate,2);assert.ok(Math.abs(burn.second.damage-1.2)<1e-6);assert.ok(burn.second.floaters.some(t=>/Burn/.test(t)));
-    await p.evaluate(()=>__dungeonTest.fireChoices());assert.equal(await p.locator('.choice-number').count(),0);const fire=p.locator('[data-pick="1"]');assert.match(await fire.innerText(),/Rank 2/);assert.match(await fire.locator('.power-before').innerText(),/10%/);assert.match(await fire.locator('.power-after').innerText(),/20%/);await p.screenshot({path:path.join(resultsDir,'dungeon-power-ranks.png')});await p.keyboard.press('2');assert.equal(await p.evaluate(()=>__deepwell.getState().upgrades.fire),2);
-    passed.push('Burn deals visible tick damage, doubles its per-second damage on rank two, and buff cards show exact current/next effects while number shortcuts still work');
-    const rewards=await p.evaluate(()=>__dungeonTest.rewards());assert.equal(rewards.gold,53);assert.equal(rewards.level,3);assert.ok(Math.abs(rewards.xp-112.7)<1e-6);const capped=await p.evaluate(()=>__dungeonTest.capped());assert.deepEqual(capped,{gold:445,pending:0,status:'running'});passed.push('XP and gold powers also apply to guardian rewards; capped legacy choices convert safely without recursion');
-    const early=[];for(const id of ['sword','shield','polearm','greatsword','bow','staff']){const result=await p.evaluate(id=>__dungeonTest.bestEarlyDps(id),id);assert.ok(result.dps<result.target,'Eight offensive picks alone should not reach ideal DPS: '+id);early.push(result);}
-    passed.push('Even optimal early offensive picks stay below Zone 1’s ideal DPS without permanent training');
+    const burn=await p.evaluate(()=>__dungeonTest.burn());assert.equal(burn.first.rate,.2);assert.equal(burn.second.rank,2);assert.equal(burn.second.rate,.4);assert.ok(Math.abs(burn.second.damage-.24)<1e-6);assert.ok(burn.second.floaters.some(t=>/Burn/.test(t)));
+    await p.evaluate(()=>__dungeonTest.fireChoices());const fire=p.locator('.zone-upgrade').filter({has:p.locator('[data-buy-zone="fire"]')});assert.match(await fire.innerText(),/Rank 1/);assert.match(await fire.innerText(),/2%/);assert.match(await fire.innerText(),/4%/);await fire.locator('[data-buy-zone]').click();assert.equal(await p.evaluate(()=>__deepwell.getState().upgrades.fire),2);await p.click('#drawerClose');
+    passed.push('Burn ticks remain visible; purchased rank two doubles its damage and the Zone Shop shows exact current / next effects');
+    const rewards=await p.evaluate(()=>__dungeonTest.rewards());assert.equal(rewards.gold,53);assert.equal(rewards.level,1);assert.ok(Math.abs(rewards.xp-100.94)<1e-6);const capped=await p.evaluate(()=>__dungeonTest.capped());assert.deepEqual(capped,{gold:45,pending:0,status:'running'});passed.push('Zone training applies to guardian XP and gold; obsolete choice calls cannot open a popup or grant duplicate rewards');
+    const early=[];for(const id of ['sword','shield','polearm','greatsword','bow','staff']){const result=await p.evaluate(id=>__dungeonTest.bestEarlyDps(id),id);assert.ok(result.dps<result.target,'Three early purchases should stay below ideal DPS: '+id);early.push(result);}
+    passed.push('The first three offensive purchases stay below Zone 1’s recommended DPS across every weapon');
     await p.evaluate(()=>__dungeonTest.plain());await p.keyboard.down('d');await p.keyboard.up('d');assert.equal((await p.evaluate(()=>__deepwell.getState())).dashCooldown,0);await p.waitForTimeout(80);await p.keyboard.down('d');await p.keyboard.up('d');assert.ok((await p.evaluate(()=>__deepwell.getState())).dashCooldown>2.7);
     await p.evaluate(()=>{__dungeonTest.plain();__deepwell.toggleManualPause();});await p.keyboard.press('a');await p.waitForTimeout(70);await p.keyboard.press('a');assert.equal((await p.evaluate(()=>__deepwell.getState())).dashCooldown,0);
     const touch=await page({}, {viewport:{width:390,height:844},hasTouch:true,isMobile:true});await touch.evaluate(()=>__dungeonTest.plain());const joystick=await touch.locator('#joystickZone').boundingBox(),cdp=await touch.context().newCDPSession(touch);const point={x:joystick.x+joystick.width*.76,y:joystick.y+joystick.height*.5};

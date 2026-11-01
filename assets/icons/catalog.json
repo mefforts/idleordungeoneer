@@ -1223,7 +1223,7 @@
           "aliases": []
         },
         {
-          "key": "codex-permanent_talent_adaptation",
+          "key": "discontinued-mastery-guard",
           "aliases": []
         },
         {
@@ -1463,6 +1463,87 @@
           1025.5,
           203.0,
           201.5
+        ]
+      ]
+    },
+    {
+      "file": "zone-shop.png",
+      "columns": 2,
+      "rows": 3,
+      "icons": [
+        {
+          "key": "currency-overgrowth",
+          "aliases": [
+            "codex-zone_currency_0"
+          ]
+        },
+        {
+          "key": "currency-embervault",
+          "aliases": [
+            "codex-zone_currency_1"
+          ]
+        },
+        {
+          "key": "currency-crypt",
+          "aliases": [
+            "codex-zone_currency_2"
+          ]
+        },
+        {
+          "key": "currency-rift",
+          "aliases": [
+            "codex-zone_currency_3"
+          ]
+        },
+        {
+          "key": "zone-shop",
+          "aliases": [
+            "codex-zone_shop"
+          ]
+        },
+        {
+          "key": "dungeoneering-level",
+          "aliases": [
+            "codex-permanent_talent_adaptation"
+          ]
+        }
+      ],
+      "regions": [
+        [
+          44.0,
+          28.0,
+          451.0,
+          449.0
+        ],
+        [
+          529.0,
+          28.0,
+          451.0,
+          449.0
+        ],
+        [
+          45.0,
+          513.0,
+          450.0,
+          451.0
+        ],
+        [
+          527.0,
+          512.0,
+          452.0,
+          452.0
+        ],
+        [
+          39.0,
+          992.0,
+          460.0,
+          464.0
+        ],
+        [
+          526.0,
+          991.0,
+          459.0,
+          465.0
         ]
       ]
     }
