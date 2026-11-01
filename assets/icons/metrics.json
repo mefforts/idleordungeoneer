@@ -1,0 +1,1388 @@
+{
+  "tool-pickaxe": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-tool_pickaxe": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "pickaxe": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "tool-hatchet": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-tool_hatchet": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "tool-mattock": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-tool_mattock": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "station-blacksmithing": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "anvil": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "station-woodworking": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "station-warding": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "station-scavenging": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "station-artisan": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-melee-speed": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-melee-reach": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-melee-enchant": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-ranged-speed": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "style-ranged-reach": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-ranged-enchant": {
+    "x": 6,
+    "y": 7,
+    "width": 180,
+    "height": 179
+  },
+  "style-magic-speed": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-magic-reach": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-magic-enchant": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "idle-task": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "bonus-spark": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "bonus-silver": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "bonus-twig": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "bonus-glisten": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "bonus-rune": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "bonus-opal": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "resource-coal": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "codex-resource_coal": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "resource-steelBars": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_steelBars": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "resource-willowLogs": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_willowLogs": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "resource-ancientSalvage": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_ancientSalvage": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "resource-ancientFragments": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_ancientFragments": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "resource-garnets": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_garnets": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "resource-cutGarnets": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_cutGarnets": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "resource-runicCloth": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_runicCloth": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-coal": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_coal": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-steelSmelt": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_steelSmelt": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-willow": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_willow": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-steelFletch": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_steelFletch": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-ancientScavenge": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_ancientScavenge": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-cleanAncient": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_cleanAncient": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-aetherWeave": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_aetherWeave": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-greaterRune": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "codex-skill_greaterRune": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "action-garnetSearch": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_garnetSearch": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-garnetCut": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_garnetCut": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-unlock_steel": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "mastery-points": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-permanent_mastery": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "mastery-unlock": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-menu": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "settings-menu": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "skills-menu": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "coins": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-permanent_gold": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "ore": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_ore": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "bar": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "codex-resource_bars": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "wood-logs": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_logs": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "arrows-art": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "codex-resource_arrows": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "cloth-art": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_cloth": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "runes-art": {
+    "x": 6,
+    "y": 7,
+    "width": 180,
+    "height": 179
+  },
+  "codex-resource_runes": {
+    "x": 6,
+    "y": 7,
+    "width": 180,
+    "height": 179
+  },
+  "relic": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_scraps": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "rough-opal": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_opals": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "silver-ore": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_silverOre": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "silver-bar": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_silverBars": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "opal": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-resource_cutOpals": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "gold-purse": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "essence": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-permanent_essence": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-discipline_blacksmithing": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-discipline_woodworking": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-discipline_warding": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-discipline_scavenging": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "scavenge-icon": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "codex-discipline_artisan": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-mine": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_mine": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-forge": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_forge": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-silverMine": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_silverMine": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-silverSmelt": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_silverSmelt": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-wood": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_wood": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-fletch": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_fletch": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-ward": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_ward": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-rune": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_rune": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-scavenge": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_scavenge": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "action-polish": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-skill_polish": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_cleave": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_crit": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_fire": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_forage": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_frost": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_haste": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_magnet": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_might": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "sharpen": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "codex-upgrade_multishot": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_nova": {
+    "x": 6,
+    "y": 7,
+    "width": 180,
+    "height": 179
+  },
+  "codex-upgrade_pierce": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_reach": {
+    "x": 6,
+    "y": 7,
+    "width": 180,
+    "height": 179
+  },
+  "codex-upgrade_regen": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "codex-upgrade_storm": {
+    "x": 6,
+    "y": 7,
+    "width": 180,
+    "height": 179
+  },
+  "codex-upgrade_swift": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_vitality": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-upgrade_ward": {
+    "x": 7,
+    "y": 7,
+    "width": 179,
+    "height": 179
+  },
+  "codex-upgrade_wisdom": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-permanent_armor": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "reinforce": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-permanent_enchant": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "enchant-art": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-trinket_leech": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "ring-leech": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-trinket_coin": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "ring-coin": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-trinket_scholar": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "ring-scholar": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-trinket_reach": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "ring-reach": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-trinket_vigor": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "amulet-vigor": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-trinket_guard": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "amulet-guard": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-trinket_haste": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "amulet-haste": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-trinket_fortune": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "amulet-fortune": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-biome_0": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-biome_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-biome_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-biome_3": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_0_0": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_0_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_0_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_1_0": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_1_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_1_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_2_0": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_2_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_2_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_3_0": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_3_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-boss_3_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-loot_0": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-loot_1": {
+    "x": 8,
+    "y": 6,
+    "width": 177,
+    "height": 180
+  },
+  "codex-loot_2": {
+    "x": 7,
+    "y": 6,
+    "width": 178,
+    "height": 180
+  },
+  "codex-loot_3": {
+    "x": 7,
+    "y": 6,
+    "width": 178,
+    "height": 180
+  },
+  "codex-permanent_talent_onslaught": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-permanent_talent_fortune": {
+    "x": 7,
+    "y": 6,
+    "width": 178,
+    "height": 180
+  },
+  "codex-permanent_talent_adaptation": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "helmet": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "skull": {
+    "x": 7,
+    "y": 6,
+    "width": 178,
+    "height": 180
+  },
+  "boots": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "bag": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "spell": {
+    "x": 7,
+    "y": 6,
+    "width": 179,
+    "height": 180
+  },
+  "codex-armor_set_melee_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-melee-armor": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-armor_melee": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-armor_set_melee_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-armor_set_ranged_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-ranged-armor": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-armor_ranged": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-armor_set_ranged_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-armor_set_magic_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-magic-armor": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-armor_magic": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-armor_set_magic_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-sword_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "sword": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-weapon_sword": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-melee-weapon": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-sword_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-shield_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "shield": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-weapon_shield": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-shield_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-polearm_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "halberd": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-weapon_polearm": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-polearm_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-greatsword_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "greatsword": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-weapon_greatsword": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-greatsword_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-bow_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "bow": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-weapon_bow": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-ranged-weapon": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-bow_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-staff_1": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "staff": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "codex-weapon_staff": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "style-magic-weapon": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  },
+  "weapon-art-staff_2": {
+    "x": 6,
+    "y": 6,
+    "width": 180,
+    "height": 180
+  }
+}

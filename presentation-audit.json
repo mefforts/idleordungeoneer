@@ -6,7 +6,7 @@
   },
   "activity": {
     "words": 17,
-    "text": "Mining Blacksmithing · 13 56 DPS 2,376 8 Delve Equipment Skills Codex Settings 282 Idle Hold +2 Tier 2 unlocked Steel · willow · ancient salvage · garnets",
+    "text": "Mining Blacksmithing · 13 56 DPS 391 8 Delve Equipment Skills Codex Settings 282 Idle Hold +2 Tier 2 unlocked Steel · willow · ancient salvage · garnets",
     "overflow": false
   },
   "gather": {
@@ -16,12 +16,12 @@
   },
   "craft": {
     "words": 31,
-    "text": "Skills Smithing Woodwork Warding Scavenge Artisan Blacksmithing 13 Gather Refine Equipment Tools Weapons Iron Sword & Shield 54.4 DPS Equip Iron Halberd 54.4 DPS Equip Iron Greatsword 56.3 DPS Equip Armor Iron Armor +35 4% Steel Armor +65 7% 0 / 16 0 / 6 0 / 4 2,376 / 140 Craft",
+    "text": "Skills Smithing Woodwork Warding Scavenge Artisan Blacksmithing 13 Gather Refine Equipment Tools Weapons Iron Sword & Shield 54.4 DPS Equip Iron Halberd 54.4 DPS Equip Iron Greatsword 56.3 DPS Equip Armor Iron Armor +35 4% Steel Armor +65 7% 0 / 16 0 / 6 0 / 4 391 / 140 Craft",
     "overflow": false
   },
   "tools": {
     "words": 23,
-    "text": "Skills Smithing Woodwork Warding Scavenge Artisan Blacksmithing 13 Gather Refine Equipment Tools Station 0 / 5 0% Saved +0% Speed 282 / 96 2,376 / 25 Upgrade 1 Tools Iron Pickaxe +8% Iron Idle Idle 1 / 1 Iron +2 / 7.0s",
+    "text": "Skills Smithing Woodwork Warding Scavenge Artisan Blacksmithing 13 Gather Refine Equipment Tools Station 0 / 5 0% Saved +0% Speed 282 / 96 391 / 25 Upgrade 1 Tools Iron Pickaxe +8% Iron Idle Idle 1 / 1 Iron +2 / 7.0s",
     "overflow": false
   },
   "equipment": {
@@ -31,7 +31,7 @@
   },
   "settings": {
     "words": 47,
-    "text": "Settings Reduced motion OFF Resume last skill OFF Appearance Navigation Left Right Reorder pins Delve Equipment Skills Codex Settings Pause / resume Delve speed Reset order Dungeoneering Mastery Controls Show tips Redeem code Save Back up Restore Reset progress Messages 1 05:47 AM Tier 2 unlocked Steel · willow · ancient salvage · garnets",
+    "text": "Settings Reduced motion OFF Resume last skill OFF Appearance Navigation Left Right Reorder pins Delve Equipment Skills Codex Settings Pause / resume Delve speed Reset order Dungeoneering Mastery Controls Show tips Redeem code Save Back up Restore Reset progress Messages 1 02:27 PM Tier 2 unlocked Steel · willow · ancient salvage · garnets",
     "overflow": false
   },
   "mastery": {
@@ -55,8 +55,8 @@
     "overflow": false
   },
   "mobile-activity": {
-    "words": 16,
-    "text": "Mining Blacksmithing · 13 56 2,376 8 Delve Equipment Skills Codex Settings 284 Idle Hold +2 Tier 2 unlocked Steel · willow · ancient salvage · garnets",
+    "words": 9,
+    "text": "Mining Blacksmithing · 13 56 391 8 Delve Equipment Skills Codex Settings 284 Idle Hold +2",
     "overflow": false
   },
   "mobile-gather": {
@@ -81,7 +81,7 @@
   },
   "combat": {
     "words": 14,
-    "text": "The Embervault Zone 2 · Floor 1 0 / 36 56 DPS 2,376 8 Delve Equipment Skills Codex Settings PAUSE 1× ♥ 155 / 155 ZONE LV. 1 ⇢ DASH",
+    "text": "The Embervault Zone 2 · Floor 1 0 / 36 56 DPS 391 8 Delve Equipment Skills Codex Settings PAUSE 1× ♥ 155 / 155 ZONE LV. 1 ⇢ DASH",
     "overflow": false
   },
   "errors": []

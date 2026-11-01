@@ -1,5 +1,23 @@
 {
-  "version": 6,
+  "version": 8,
+  "economy": [
+    {
+      "zone": 1,
+      "monsters": 90,
+      "guardians": 126,
+      "clears": 130,
+      "total": 346,
+      "perMinute": 34.6
+    },
+    {
+      "zone": 2,
+      "monsters": 189,
+      "guardians": 189,
+      "clears": 208,
+      "total": 586,
+      "perMinute": 29.3
+    }
+  ],
   "refinementHasFiniteCap": true,
   "limits": {
     "1": {
@@ -704,7 +722,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 633.9999999999767,
+      "seconds": 626.5999999999781,
       "kills": 369,
       "referenceDps": 80.63227272727272,
       "targetSeconds": 600
@@ -712,7 +730,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1255.2000000001992,
+      "seconds": 1266.8400000002052,
       "kills": 549,
       "referenceDps": 160.9090909090909,
       "targetSeconds": 1200

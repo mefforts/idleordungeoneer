@@ -194,7 +194,7 @@ function refreshTierProgressionUI(){
  }
 }
 
-function defaults(){return {tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
+function defaults(){return {tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
 
 function drawWorkstationScene(w,h,key){
  const base=SKILLS[key].scene||key,advanced={coal:[0,0],willow:[1,0],ancientScavenge:[0,1],cleanAncient:[0,1],garnetSearch:[1,1],garnetCut:[1,1]}[key];
@@ -243,13 +243,14 @@ function attack(){
  if(!game.enemies.length)return false;
  const p=game.player,style=weaponInfo(),reach=attackReach(),targets=game.enemies.map(e=>({e,d:Math.hypot(e.x-p.x,e.y-p.y)})).filter(o=>o.d<reach+o.e.rad).sort((a,b)=>a.d-b.d);
  if(!targets.length)return false;
+ if(isRanged()&&p.aimTarget){const index=targets.findIndex(o=>o.e===p.aimTarget);if(index>0)targets.unshift(targets.splice(index,1)[0]);}
  const first=targets[0].e,angle=Math.atan2(first.y-p.y,first.x-p.x);
- p.facing=Math.cos(angle)<0?-1:1;p.attackPose=.38;
+ p.facing=Math.cos(angle)<0?-1:1;p.aimFacing=p.facing;p.aimAngle=angle;p.aimTarget=first;p.attackPose=.38;
  let damage=attackDamage();
  if(data.weaponType==='greatsword'&&p.hp<p.maxHp*.5)damage*=1.65;
  if(isRanged()){
   const ammo=data.weaponType==='bow'?'arrows':'runes';if((data[ammo]||0)<1){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1')}return false;}data[ammo]--;
-  const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*1.16,y:p.y+18+hand.y*1.16};
+  const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,aimAngle:localAimAngle(p.aimAngle),data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*1.16,y:p.y+18+hand.y*1.16};
   const number=Math.min(5,1+(game.upgrades.multishot||0));
   for(let i=0;i<number;i++){
    const target=targets[Math.min(i,targets.length-1)].e,a=Math.atan2(target.y-origin.y,target.x-origin.x)+(i-(number-1)/2)*.07;
@@ -272,5 +273,14 @@ function attack(){
 function drawPlayer(p){
  if(p.invuln>0&&!game.menuPaused&&!game.manualPaused&&!reducedMotion()&&Math.sin(game.frame*38)>0)return;
  if(p.dashTime>0){glow(p.x,p.y-3,64,'#86efdd9a');for(let i=1;i<=3;i++){ctx.save();ctx.globalAlpha=.2/i;ellipse(p.x-p.dashDX*i*21,p.y-p.dashDY*i*21,22,14,'#affff2');ctx.restore()}}
- DeepwellAvatar.render(ctx,{x:p.x,y:p.y+18,scale:1.16,time:game.frame,pose:'combat',vx:p.vx,vy:p.vy,facing:p.facing,attack:p.attackPose/.38,charge:data.weaponType==='bow'?clamp(1-game.attackTimer/attackCooldown(),0,1):0,hit:p.hitPose/.26,data});
+ DeepwellAvatar.render(ctx,{x:p.x,y:p.y+18,scale:1.16,time:game.frame,pose:'combat',vx:p.vx,vy:p.vy,facing:p.facing,aimAngle:localAimAngle(p.aimAngle),attack:p.attackPose/.38,charge:data.weaponType==='bow'?clamp(1-game.attackTimer/attackCooldown(),0,1):0,hit:p.hitPose/.26,data});
+}
+
+function localAimAngle(angle=0){return Math.max(-.8,Math.min(.8,Math.atan2(Math.sin(angle),Math.abs(Math.cos(angle)))));}
+function updateCombatAim(){
+ const p=game.player;if(!isRanged()){p.aimTarget=null;return;}
+ const reach=attackReach(),inRange=e=>game.enemies.includes(e)&&e.hp>0&&Math.hypot(e.x-p.x,e.y-p.y)<reach+e.rad;
+ const target=p.aimTarget&&inRange(p.aimTarget)?p.aimTarget:game.enemies.filter(inRange).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
+ if(target){p.aimTarget=target;p.aimAngle=Math.atan2(target.y-p.y,target.x-p.x);if(Math.abs(target.x-p.x)>3)p.aimFacing=target.x<p.x?-1:1;p.facing=p.aimFacing||p.facing;}
+ else{p.aimTarget=null;p.aimAngle=p.facing<0?Math.PI:0;}
 }

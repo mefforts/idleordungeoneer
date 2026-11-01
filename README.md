@@ -1,6 +1,6 @@
 # Idle or Dungeoneer
 
-**[Download the game (ZIP)](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Polished_v7.zip)** — extract the ZIP and open `index.html` in your browser.
+**[Download the latest game (ZIP)](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)** — extract the ZIP and open `index.html` in your browser.
 
 Open **index.html** in a modern browser. The entire game, illustrations, creature sprites and icons are embedded in that file; playing needs no package installation or internet connection. `npm start` serves it locally with Python 3 if you prefer a consistent browser save origin.
 
@@ -28,6 +28,8 @@ The title and location sit at the top center. Health and XP remain on the left. 
 
 Defeating the first guardian unlocks **1× / 2× Delve speed**. The existing testing code retains its higher combat speeds. **This changes combat only:** active gathering, crafting, bonus timing and idle production keep their own real-time clocks. Delve speed starts at 1× each launch.
 
+Inventory and Codex artwork use centered, painted circular medallions. The 104 collection entries have distinct images, including themed boss portraits, resources, tools and skills. Held equipment retains its articulated textures.
+
 ## Experience and zone pacing
 
 XP orbs no longer expire. Their positions and values survive Skills visits, deaths, retries, save/reload and returning to an earlier zone. Finishing an encounter collects the remaining XP automatically. Pending level-up choices also survive reload, and banking an orb cannot award it twice.
@@ -41,6 +43,8 @@ XP orbs no longer expire. Their positions and values survive Skills visits, deat
 **Equipment** shows your worn set, current DPS, health, attack speed and range. Owned weapons display comparable DPS beside an Equip arrow. Armor and jewelry have separate tabs; Training can be expanded for each style’s proficiency and modifiers. The book icons open detailed rules and limits in the Codex. Iron ends at **100 permanent DPS** and Steel at **200 DPS** for a complete build. The weapon HUD also includes current damage, speed and critical powers.
 
 Targets use continuous single-target attacking at normal Mastery pressure, before temporary powers. Menus, crafting, movement and deaths affect wall-clock time; cleaves, splash, offensive powers and faster game speed can shorten it. [BALANCE.md](BALANCE.md) documents the reference builds and every weapon’s attainable DPS; [balance-report.json](balance-report.json) contains the numbers.
+
+A baseline full clear pays **346 gold in Zone 1** and **586 in Zone 2**, before elite, Gold Find and jewelry bonuses. Smaller monster rewards accumulate into whole coins, with the remainder saved across reloads. Guardians and floor clears supply most of the income. Existing balances, Scavenging income and crafting costs are preserved.
 
 ## Active gathering and crafting
 
@@ -100,7 +104,7 @@ Finish Iron refinement 10, clear Zone 1 and reach crafting level 10, then pay fo
 
 The tiers require skill levels **1 / 10**. Tier 2 also requires the Zone 2 unlock and new materials. Warrior sets favor health and damage reduction, Ranger outfits favor mobility, and Mage robes add 4% / 8% magic damage. Reinforcement adds **8 HP per rank**, limited by the worn set’s own tier. Later armor is unavailable in recipes, Equipment and the Codex.
 
-All six existing weapon families use the illustrated Iron / Steel art, changing on a paid tier promotion. The rig uses per-weapon grip anchors, articulated elbows and separate hand layers. Halberds attach to their shafts with two aligned hands; greatswords have a support hand; bows draw and release; shields cover the grip hand. Weapon-specific swings stay forward of the face. Helmets are masked independently, and robe hems animate separately from boots. The same renderer handles combat, work scenes, Equipment and the character creator.
+All six existing weapon families use the illustrated Iron / Steel art, changing on a paid tier promotion. The rig uses per-weapon grip anchors, articulated elbows and separate hand layers. Halberds attach to their shafts with two aligned hands; greatswords have a support hand; bows draw and release; shields cover the grip hand. Weapon-specific swings stay forward of the face. Helmets are masked independently, and robe hems animate separately from boots. The same renderer handles combat, work scenes, Equipment and the character creator. Bows keep aiming at their target while the character retreats; both hands, the string and the nocked arrow share that aim. A continuous neck and collar joins the head to every outfit.
 
 Old excess ranks and unavailable outfits are retained in `legacyProgressionArchive` / `archivedArmor`. Playable upgrades follow the new tier limits, and future outfits map to an available set of the same class. Promotions and selected outfits survive reload. Weapon changes do not switch armor, and every class can still use temporary elemental powers.
 
@@ -146,11 +150,15 @@ The first slot opens at Zone 1, Floor 2; the second opens at Zone 10. Idle produ
 
 Existing saves and backups keep the `deepwell-prototype-v1` storage key. Former global upgrades migrate once to the independent profiles, subject to current tier limits; original excess investment is archived. Existing station boosts and production bonuses are retained. Settings includes backup/restore and reduced motion. Export your old save and restore it here if the files use different browser storage origins.
 
+## Test travel
+
+The full testing code unlocks **Settings → Test travel**, clears all four authored dungeons and enables the same 1×–500× combat-speed choices as the speed code. Choose a zone and floor to restart there. Travel resets zone powers and grants no clear reward. Testing unlocks persist in the save; game speed still starts at 1× each launch. Redeem the code again on older testing saves to enable travel.
+
 ## Development and validation
 
 Completed builds are delivered on GitHub with a playable ZIP in `downloads/`. Before pushing, review staged files for private data and credentials; exclude personal saves, local configuration and diagnostics. Verify that the downloadable ZIP contains the current standalone game. [AGENTS.md](AGENTS.md) records the delivery workflow.
 
-Player-facing layouts and short labels live in `src/presentation.js` and `src/presentation.css`; readable reference pages and return navigation in `src/codex.js`; the appearance editor in `src/character-creator.js`. Core skill and resource definitions live in `src/game-data.json`; tier rules and render hooks in `src/zone-progression.js`; the articulated character rig in `src/avatar-rig.js`. Skills, HUD / XP and bosses remain in `src/systems.js`, `src/arena.js` and `src/dungeoneering.js`. Run `npm run build` to compile the source, styles and embedded art into the standalone HTML. The original combat engine remains in `index.html`.
+Player-facing layouts and short labels live in `src/presentation.js` and `src/presentation.css`; readable reference pages and return navigation in `src/codex.js`; the appearance editor in `src/character-creator.js`. Core skill and resource definitions live in `src/game-data.json`; tier rules and render hooks in `src/zone-progression.js`; the articulated character rig in `src/avatar-rig.js`. Skills, HUD / XP and bosses remain in `src/systems.js`, `src/arena.js` and `src/dungeoneering.js`. Run `npm run build` to compile the source, styles and embedded art into the standalone HTML. Gold rewards live in `src/economy.js`; test travel in `src/testing.js`. The original combat engine remains in `index.html`.
 
 ```sh
 npm ci
@@ -161,11 +169,15 @@ npm test
 npm run report:balance
 ```
 
-Nine suites use isolated browser storage and local servers. They cover **20 activities, four biomes and 104 distinct Codex icons**, saves, migration, exact recipes, conservation, tools, style isolation, real elemental attacks, touch / keyboard work, the actual Floor 1 idle unlock, direct idle assignment, and the gold milestone. Tier tests also check an actual Zone 1 completion, all six weapon ceilings against live damage / cooldowns, bounded training, paid promotion, thirty rig poses, every new activity and 320px layouts. Full-zone simulations verify pacing. Existing wave powers, biomes and jewelry remain guarded by a manifest.
+Ten suites use isolated browser storage and local servers. They cover **20 activities, four biomes and 104 distinct Codex icons**, saves, migration, exact recipes, conservation, tools, style isolation, real elemental attacks, touch / keyboard work, the actual Floor 1 idle unlock, direct idle assignment, and the gold milestone. Tier tests also check an actual Zone 1 completion, all six weapon ceilings against live damage / cooldowns, bounded training, paid promotion, thirty rig poses, every new activity and 320px layouts. Full-zone simulations verify pacing. Existing wave powers, biomes and jewelry remain guarded by a manifest.
+
+Painted icon source sheets and mappings live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without changing the source images. `npm run art:icons` packs their artwork into `src/painted-icons.json` and records alignment bounds in `assets/icons/metrics.json`; the build embeds these icons for both initial HUD elements and dynamic menus.
 
 The equipment sheets and their transparent gutters are packed by `scripts/export-equipment.py` using Pillow, NumPy and SciPy. It exports `src/equipment-art.json` and `src/equipment-regions.js`; those are embedded into the standalone game by the build. The original plain source sheets remain in the workspace’s generated-image folder, and ornate concepts are saved under `assets/equipment/concepts`.
 
 Presentation tests cover the complete source → tracked recipe → craft loop, DPS refresh after outfit / skill changes, all 104 readable Codex entries, search and focus restoration, pending power choices, unapplied Mastery edits, and both rail positions from 320px phones to desktop.
+
+Revision tests verify continuous bow aiming while retreating, all six collar joins, exact full-zone gold rewards, saved fractional coins, real code redemption and travel, and the distinct painted backgrounds of all 104 Codex entries.
 
 Tests also verify all four boss themes, dodgeable telegraphs, elite gating and rewards, real touch double-tap dashes, exact burn stacking, independent armor persistence, and identical skilling output at 1×, 2× and 500× Delve speed.
 

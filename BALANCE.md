@@ -39,10 +39,21 @@ Refinement interpolates each weapon’s starter output to the same tier budget. 
 
 References sit below the full tier ceilings, at about **80 DPS for Zone 1** and **160 DPS for Zone 2**, with a sword, base proficiency and no temporary powers. Continuous single-target combat determines the health budget. Movement, missed shots, deaths, menus and preparation add time; cleaves, splash and wave powers can shorten it. Delve speed affects combat only.
 
-- Latest full-zone simulation: Zone 1 cleared in **10.6 minutes**, with 369 defeats.
-- Latest full-zone simulation: Zone 2 cleared in **20.9 minutes**, with 549 defeats.
+- Latest full-zone simulation: Zone 1 cleared in **10.4 minutes**, with 369 defeats.
+- Latest full-zone simulation: Zone 2 cleared in **21.1 minutes**, with 549 defeats.
 
 Later zones remain playable against the current Steel reference and retain their previous 30–40-minute pacing targets. Further equipment and zone-specific progression are not authored in this pass.
+
+## Delve gold
+
+Baseline rewards exclude elite echoes, Gold Find and jewelry bonuses. Whole coins are paid from a saved fractional remainder, so smaller monster drops survive reload. Existing balances are preserved; Scavenging and crafting costs are unchanged.
+
+| Zone | Monsters | Guardians | Floor clears | Full zone | Gold / target minute |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 90.0 | 126 | 130 | 346.0 | 34.6 |
+| 2 | 189.0 | 189 | 208 | 586.0 | 29.3 |
+
+Zone 1 pays 346 gold across a normal clear; Zone 2 pays 586, down from roughly 1,600 / 2,900. Gold Find and gold jewelry still multiply enemy rewards. An elite pays three regular monster shares; fully capped power choices pay 2 gold per surplus level.
 
 ## Zone 2 resource chain
 

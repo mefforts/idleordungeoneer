@@ -61,3 +61,13 @@ body.codex-modal-open .stage-wrap,body.mastery-modal-open .stage-wrap{z-index:20
 @media(pointer:coarse){.player-ui .idle-action{min-height:42px}.player-ui .cost-chip{min-height:36px}.player-ui .recipe-title .codex-link{min-height:42px}.player-ui .weapon-equip{min-height:42px}}
 
 .player-ui .codex-header{position:sticky;top:0;z-index:5}.codex-heading-group{display:flex;align-items:center;gap:8px;min-width:0}.player-ui .codex-heading-group .codex-back{margin:0;min-width:30px;width:30px;min-height:36px;padding:5px}.codex-heading-group .codex-back .ui-glyph{width:17px;height:17px}
+/* The travel controls exist only after explicitly enabling the test code. */
+.test-travel{margin:20px 0}.test-travel .compact-section-title{margin-top:0}.test-route{display:grid;grid-template-columns:minmax(0,1fr) 66px 42px;gap:8px;align-items:end}.test-route label{display:grid;gap:7px;min-width:0;font:11px system-ui;color:#d1bea0}.test-route select{width:100%;min-width:0;min-height:42px;padding:9px;font:11px system-ui;background:#29231b;border:1px solid #8d7753;color:#f0dfbd;border-radius:0}.test-route button{min-height:42px;padding:9px}.test-route button .ui-glyph{width:18px;height:18px}
+/* Inventory artwork carries one centered medallion; containers add no second plate. */
+.player-ui :is(.nav-icon,.hud-chip,.hud-pin,.codex-icon,.craft-tile-icon,.talent-icon) img{object-fit:contain;object-position:50% 50%}
+.player-ui .codex-icon img{border-radius:0}
+@layer presentation{
+ .player-ui :is(.nav-icon,.craft-tile-icon,.talent-icon){background:none!important;border:0!important;box-shadow:none!important}
+ .player-ui .codex-icon{background:none!important;border:0!important;box-shadow:none!important}
+ .player-ui .hud-pin .nav-icon,.player-ui .hud-chip .nav-icon{padding:0!important}
+}

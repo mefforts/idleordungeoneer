@@ -277,17 +277,18 @@ function armJoints(shoulder,hand,bend=1,length=14){
 }
 function poseRig(options={}){
  const {pose='idle',time=0,attack=0,action=0,vx=0,vy=0,data={}}=options,weapon=data.weaponType||'sword';
- const walking=pose==='walk'||pose==='combat'&&Math.hypot(vx,vy)>.1,walk=walking?Math.sin(time*10):0;
+ const walking=pose==='walk'||pose==='combat'&&Math.hypot(vx,vy)>.1,backpedal=pose==='combat'&&vx*(options.facing||1)<-.1,walk=walking?Math.sin(time*10)*(backpedal?-1:1):0;
  const activity=['mine','smith','wood','fletch','ward','rune','scavenge','cast'].includes(pose),a=(pose==='attack'&&attack===0?.65:Math.max(0,Math.min(1,attack))),stroke=a>0?Math.sin(a*Math.PI*.5):0;
  let main={x:19,y:-25},back={x:-17,y:-27},angle=.48;
  if(weapon==='polearm'){main={x:15+stroke*2,y:-24-stroke*4};angle=.28+stroke*.42;back={x:main.x+Math.sin(angle)*13,y:main.y-Math.cos(angle)*13};}
  else if(weapon==='greatsword'){main={x:16+stroke*5,y:-25-stroke*4};angle=.42+stroke*1.12;back={x:main.x-Math.sin(angle)*7,y:main.y+Math.cos(angle)*7};}
- else if(weapon==='bow'){const draw=Math.max(0,Math.min(1,((options.charge||0)-.45)/.55));main={x:32+stroke,y:-40};angle=.04;back={x:16-draw*12,y:-40};}
+ else if(weapon==='bow'){const draw=Math.max(0,Math.min(1,((options.charge||0)-.45)/.55)),aim=Math.max(-.8,Math.min(.8,options.aimAngle||0));main={x:8+(24+stroke)*Math.cos(aim),y:-40+(24+stroke)*Math.sin(aim)};angle=aim;back={x:main.x-(12+draw*14)*Math.cos(aim),y:main.y-(12+draw*14)*Math.sin(aim)};}
  else if(weapon==='staff'){main={x:20+stroke*3,y:-25-stroke*3};angle=.24+stroke*.18;back={x:-14+stroke*7,y:-31-stroke*8};}
  else{main={x:19+stroke*10,y:-25-stroke*7};angle=.48+stroke*1.18;}
  if(activity){const work=options.working===false?0:Math.sin(time*((pose==='mine'||pose==='wood'||pose==='scavenge')?4.4:5.4))*.5-action*.35;main={x:21+work*7,y:-26-work*9};back={x:-15,y:-27};angle=.5+work*.9;if(pose==='ward'||pose==='rune'||pose==='cast'){main={x:22,y:-37+Math.sin(time*3)*2};back={x:-16,y:-32};angle=.5;}}
- if(walking&&!a&&!activity){main.y+=walk*1.2;back.y-=walk*1.2;}
- return {weapon,activity,walking,walk,stroke,angle,main,back,frontArm:armJoints({x:12,y:-45},main,-1,14),backArm:armJoints({x:-10,y:-45},back,1,['polearm','greatsword'].includes(weapon)&&!activity?17:14)};
+ if(walking&&!a&&!activity){if(weapon==='bow'){main.y+=walk*.6;back.y+=walk*.6;}else{main.y+=walk*1.2;back.y-=walk*1.2;}}
+ const bowPoint=(x,y)=>({x:main.x+x*Math.cos(angle)-y*Math.sin(angle),y:main.y+x*Math.sin(angle)+y*Math.cos(angle)});
+ return {weapon,activity,walking,backpedal,walk,stroke,angle,main,back,bowUpper:bowPoint(-12,-25),bowLower:bowPoint(-12,25),arrowTip:bowPoint(27,0),frontArm:armJoints({x:12,y:-45},main,-1,14),backArm:armJoints({x:-10,y:-45},back,1,['polearm','greatsword'].includes(weapon)&&!activity?17:weapon==='bow'&&!activity?16:14)};
 }
 function drawRigArm(c,joints,side,data){
  if(global.DeepwellEquipmentArt?.paintArm(c,data,side,0,joints))return;
@@ -304,9 +305,11 @@ function render(c,options={}){
  if(kit.enchant)drawAura(c,kit.enchant,time);
  if(!kit.armorSet)drawCape(c,tier(armor),time,rig.walk);
  for(const side of [-1,1]){const stride=rig.walking?side*rig.walk*.24:0;if(!art?.paintLeg(c,data,side,stride))drawLeg(c,side,stride,0,time);}
+ // The neck overlaps both the jaw and the collar, including textured outfits.
+ path(c,[-4.5,-57,4.5,-57,5.5,-44,-5.5,-44],SKIN_D,'',0);path(c,[-3,-56,2,-56,2.5,-45,-3.5,-45],SKIN,'',0);
  if(!art?.paintBody(c,data,{time,walking:rig.walking,walk:rig.walk}))drawBody(c,0);
  drawRigArm(c,rig.backArm,-1,data);drawRigArm(c,rig.frontArm,1,data);
- if(kit.armorSet){const bare=kit.armorSet==='ranged_1';c.save();c.translate(0,-63);c.scale(bare?.84:.76,bare?.84:.76);c.translate(0,58);drawHead(c,0,time,rig.walk,!bare);c.restore();art?.paintHead(c,data);}else drawHead(c,0,time,rig.walk);
+ if(kit.armorSet){const bare=kit.armorSet==='ranged_1';c.save();c.translate(0,3);c.save();c.translate(0,-63);c.scale(bare?.84:.76,bare?.84:.76);c.translate(0,58);drawHead(c,0,time,rig.walk,!bare);c.restore();art?.paintHead(c,data);c.restore();}else drawHead(c,0,time,rig.walk);
  if(rig.activity){
   c.save();c.translate(rig.main.x,rig.main.y);c.rotate(rig.angle);c.translate(0,-18);
   if(pose==='scavenge')drawMattock(c);else if(pose==='mine')drawPickaxe(c);else if(pose==='smith')drawHammer(c);else if(pose==='wood')drawHatchet(c);else if(pose==='fletch')drawFletchingTool(c);else if(pose==='ward')drawWardTool(c,time);else if(pose==='rune')drawRuneTool(c,time);else ellipse(c,0,18,5,5,'#8ad9ef');c.restore();
@@ -315,8 +318,8 @@ function render(c,options={}){
   if(!art?.paintWeapon(c,data,type,{x:rig.main.x,y:rig.main.y,angle:rig.angle})){c.save();c.translate(rig.main.x,rig.main.y-18);drawSword(c,kit.weapon,kit.enchant);c.restore();}
   if(rig.weapon==='shield')art?.paintWeapon(c,data,'shield',{x:rig.back.x-1,y:rig.back.y-2,angle:-.12});
   if(rig.weapon==='bow'){
-   const h=rig.main;c.strokeStyle='#d5c7a6';c.lineWidth=.65;c.beginPath();c.moveTo(h.x-12,h.y-25);c.lineTo(rig.back.x,rig.back.y);c.lineTo(h.x-12,h.y+25);c.stroke();
-   if(options.charge>.45&&(data.arrows||0)>0){line(c,rig.back.x,rig.back.y,h.x+22,h.y,'#b7a077',1);path(c,[h.x+27,h.y,h.x+21,h.y-2,h.x+21,h.y+2],'#c9d4d1','',0);}
+   c.strokeStyle='#d5c7a6';c.lineWidth=.65;c.beginPath();c.moveTo(rig.bowUpper.x,rig.bowUpper.y);c.lineTo(rig.back.x,rig.back.y);c.lineTo(rig.bowLower.x,rig.bowLower.y);c.stroke();
+   if(options.charge>.45&&(data.arrows||0)>0){line(c,rig.back.x,rig.back.y,rig.arrowTip.x,rig.arrowTip.y,'#b7a077',1);c.save();c.translate(rig.arrowTip.x,rig.arrowTip.y);c.rotate(rig.angle);path(c,[0,0,-6,-2,-6,2],'#c9d4d1','',0);c.restore();}
   }
   if(rig.weapon==='staff'&&options.attack>0){c.save();c.globalAlpha=options.attack*.65;ellipse(c,rig.back.x,rig.back.y,5+rig.stroke*2,5+rig.stroke*2,'#a4cee2');c.restore();}
  }

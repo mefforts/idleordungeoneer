@@ -11,7 +11,7 @@ function fixture(){
      tiers.push({tier,rank:s.weapon,speedRank:s.speed,damage:styleStats(style).baseDamage*w.power*(1+styleStats(style).damagePercent/100),cooldown:attackCooldown(),normal:weaponDps(id),dedicated:weaponDps(id,{ceiling:true,dedicated:true})});}
     weapons.push({id,name:w.name,tiers});
    }
-   return {version:6,refinementHasFiniteCap:true,limits:TIER_LIMITS,promotionCosts:TIER_PROMOTION_COSTS,zones:[0,1].map(i=>zoneBalance(i)),weapons,armorSets:Object.values(ARMOR_SETS),resources:TIER_RESOURCES.map(key=>({key,name:RESOURCE_LABEL[key],source:RESOURCE_SOURCE[key]})),activities:Object.entries(SKILLS).filter(([,s])=>s.tier===2).map(([id,s])=>({id,...s,activeSeconds:ACTIVE_INTERVAL[id],group:disciplineFor(id)})),powerRanks:Object.entries(UPGRADE_CAPS).map(([id,max])=>({id,max,first:powerSummary(id,1),last:powerSummary(id,max)}))};
+   return {version:8,economy:[0,1].map(i=>({zone:i+1,...zoneGoldBudget(i)})),refinementHasFiniteCap:true,limits:TIER_LIMITS,promotionCosts:TIER_PROMOTION_COSTS,zones:[0,1].map(i=>zoneBalance(i)),weapons,armorSets:Object.values(ARMOR_SETS),resources:TIER_RESOURCES.map(key=>({key,name:RESOURCE_LABEL[key],source:RESOURCE_SOURCE[key]})),activities:Object.entries(SKILLS).filter(([,s])=>s.tier===2).map(([id,s])=>({id,...s,activeSeconds:ACTIVE_INTERVAL[id],group:disciplineFor(id)})),powerRanks:Object.entries(UPGRADE_CAPS).map(([id,max])=>({id,max,first:powerSummary(id,1),last:powerSummary(id,max)}))};
   }finally{data=original;}
  };
 }
@@ -42,6 +42,11 @@ function fixture(){
    'References sit below the full tier ceilings, at about **80 DPS for Zone 1** and **160 DPS for Zone 2**, with a sword, base proficiency and no temporary powers. Continuous single-target combat determines the health budget. Movement, missed shots, deaths, menus and preparation add time; cleaves, splash and wave powers can shorten it. Delve speed affects combat only.','',
    ...r.simulated.map(s=>'- Latest full-zone simulation: Zone '+s.zone+' cleared in **'+f(s.seconds/60)+' minutes**, with '+s.kills+' defeats.'),'',
    'Later zones remain playable against the current Steel reference and retain their previous 30–40-minute pacing targets. Further equipment and zone-specific progression are not authored in this pass.','',
+   '## Delve gold','',
+   'Baseline rewards exclude elite echoes, Gold Find and jewelry bonuses. Whole coins are paid from a saved fractional remainder, so smaller monster drops survive reload. Existing balances are preserved; Scavenging and crafting costs are unchanged.','',
+   '| Zone | Monsters | Guardians | Floor clears | Full zone | Gold / target minute |','| --- | ---: | ---: | ---: | ---: | ---: |',
+   ...r.economy.map(e=>'| '+e.zone+' | '+f(e.monsters)+' | '+e.guardians+' | '+e.clears+' | '+f(e.total)+' | '+f(e.perMinute)+' |'),'',
+   'Zone 1 pays 346 gold across a normal clear; Zone 2 pays 586, down from roughly 1,600 / 2,900. Gold Find and gold jewelry still multiply enemy rewards. An elite pays three regular monster shares; fully capped power choices pay 2 gold per surplus level.','',
    '## Zone 2 resource chain','',
    'All ten second-tier activities require clearing Zone 1 / entering Zone 2. The requirement applies to active gathering, refining, idle assignment, offline production, armor crafting and style promotion.','',
    '| Discipline | New gathering / refining | Uses |','| --- | --- | --- |',

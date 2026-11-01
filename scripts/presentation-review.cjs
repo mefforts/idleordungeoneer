@@ -7,7 +7,7 @@ function fixture(){window.__uiReview={power(){game.pendingLevels=1;game.runLevel
   const initial=await runtime.browser.newPage();await initial.goto(runtime.baseURL);const seed=await initial.evaluate(()=>__deepwell.getState().data);await initial.close();
   const context=await runtime.browser.newContext({viewport:{width:1440,height:1000}});
   await context.addInitScript(d=>{
-   d.floor=4;d.cleared=3;d.gold=2376;d.ore=282;d.bars=73;d.cloth=48;d.logs=35;d.scraps=16;d.arrows=240;d.runes=120;d.blacksmithXp=3000;d.woodworkingXp=500;d.wardingSkillXp=700;
+   d.floor=4;d.cleared=3;d.gold=391;d.ore=282;d.bars=73;d.cloth=48;d.logs=35;d.scraps=16;d.arrows=240;d.runes=120;d.blacksmithXp=3000;d.woodworkingXp=500;d.wardingSkillXp=700;
    d.onboardingDone=d.tutorialSeen=d.masteryIntroSeen=d.skillsNudgeSeen=true;d.idleFirstAssigned=true;d.idleNoticeSlots=1;d.idleJobs=['mine'];
    d.tools={pickaxe:true,hatchet:true,mattock:true};d.ownedArmor=['melee_1','ranged_1','magic_1'];d.equippedArmor='melee_1';d.equipmentVersion=d.tierProgressionVersion=1;d.unlockedWeapons=['sword','shield','polearm','greatsword','bow','staff'];
    d.styles.melee.weapon=5;d.styles.melee.speed=2;d.styles.melee.tier=1;d.mastery={0:{points:8,earned:8,onslaught:0,fortune:0,adaptation:0,intensity:0},1:{points:8,earned:8,onslaught:0,fortune:0,adaptation:0,intensity:0}};

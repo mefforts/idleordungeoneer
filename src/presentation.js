@@ -150,7 +150,7 @@ function powerCompact(id,rank){
 function powerGain(id){return {might:'+10% damage',haste:'+8% attack speed',cleave:'+1 target',reach:'+12% reach',ward:'+10% protection',vitality:'+18 HP · heal 18',crit:'+8% critical chance',multishot:'+1 shot',pierce:'+1 pierce',storm:'+13% chance · +35% damage',fire:'+10% burn / s · +0.7s',frost:'+8% slow · +0.35s',nova:'+2 targets · +5% splash',swift:'+12% movement',magnet:'+55 pickup range',regen:'+0.7 HP / s',wisdom:'+15% XP',forage:'+10% gold'}[id];}
 function showUpgrade(){
  const allowed=UPGRADES.filter(u=>(!u.ranged||isRanged())&&(!u.melee||!isRanged())&&(game.upgrades[u.id]||0)<UPGRADE_CAPS[u.id]);
- if(!allowed.length){const levels=Math.max(1,game.pendingLevels);data.gold+=15*levels;game.pendingLevels=0;syncZone();save();game.status='running';hideOverlay();toast('Powers complete','+'+(15*levels)+' gold');return;}
+ if(!allowed.length){const levels=Math.max(1,game.pendingLevels),gold=grantDelveGold(delveGoldReward('overflow')*levels);game.pendingLevels=0;syncZone();save();game.status='running';hideOverlay();toast('Powers complete','+'+gold+' gold');return;}
  const picks=[];for(const category of ['A','B','C']){let pool=allowed.filter(u=>u.group===category&&!picks.some(p=>p.id===u.id));if(!pool.length)pool=allowed.filter(u=>!picks.some(p=>p.id===u.id));if(!pool.length)break;picks.push(pool[Math.floor(Math.random()*pool.length)]);}game.levelChoices=picks;
  showOverlay('<div class="power-header"><div><small>Level '+game.runLevel+'</small><h2>Choose a power</h2></div></div><div class="upgrade-options">'+picks.map((o,i)=>{const r=game.upgrades[o.id]||0;return '<div class="power-offer"><button type="button" class="upgrade-choice" data-pick="'+i+'"><span class="upgrade-symbol">'+artHTML('codex-upgrade_'+o.id)+'</span><span class="upgrade-description"><strong>'+o.name+'</strong>'+(r?'<small class="power-before">'+powerCompact(o.id,r)+'</small>':'')+'<small class="power-after">'+powerCompact(o.id,r+1)+'</small>'+(r?'<small class="power-increment">'+powerGain(o.id)+'</small>':'')+'</span><span class="choice-rank">Rank '+(r+1)+'</span></button>'+codexLink('upgrade_'+o.id,o.name+' details')+'</div>';}).join('')+'</div>','upgrade-overlay');
  document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>selectUpgrade(Number(b.dataset.pick)));
@@ -184,7 +184,7 @@ function renderSettingsDrawer(){
  const general=document.createElement('section');general.className='settings-group';general.append(motion,resume,appearance);root.append(general);
  const controls=document.createElement('section');controls.id='hudSettings';controls.className='hud-settings';root.append(controls);renderHudSettings();
  const actions=document.createElement('section');actions.className='settings-actions';actions.append(mastery,help,tour,codes,code);root.append(actions);
- const save=document.createElement('section');save.className='settings-save';save.innerHTML='<div class="compact-section-title"><h3>Save</h3></div><div class="save-actions"></div>';save.querySelector('.save-actions').append(exp,imp);save.append(file,reset);root.append(save);root.insertAdjacentHTML('beforeend',recentMessagesHtml());
+ const save=document.createElement('section');save.className='settings-save';save.innerHTML='<div class="compact-section-title"><h3>Save</h3></div><div class="save-actions"></div>';save.querySelector('.save-actions').append(exp,imp);save.append(file,reset);root.append(save);root.insertAdjacentHTML('beforeend',recentMessagesHtml());refreshTestTravel();
  if(codeWasOpen)code.classList.remove('hidden');$('codeInput').value=codeValue;$('gameDrawer').scrollTop=scroll;if(focusId)$(focusId)?.focus({preventScroll:true});
 }
 function showMastery(){
@@ -307,8 +307,8 @@ function presentationResourceImage(key){
 }
 
 function clearFloor(){
- game.status='clear';game.phase=6;const floor=data.floor,award=65+floor*25,essence=2+Math.floor(floor/2);
- data.gold+=award;data.essence+=essence;codexDiscover('permanent_essence');data.cleared=Math.max(data.cleared,floor);
+ game.status='clear';game.phase=6;const floor=data.floor,award=delveGoldReward('floor',floor),essence=2+Math.floor(floor/2);
+ grantDelveGold(award);data.essence+=essence;codexDiscover('permanent_essence');data.cleared=Math.max(data.cleared,floor);
  syncZone();
  const frontier= Math.max(1,data.cleared+1);
  // Replays of a previously cleared last floor loop at the start of that biome.

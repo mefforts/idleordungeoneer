@@ -191,7 +191,7 @@ function tickCombat(dt){const p=game.player;game.frame+=dt;game.phaseTime+=dt;ga
  p.attackPose=Math.max(0,p.attackPose-dt);p.hitPose=Math.max(0,p.hitPose-dt);let dx=(game.keys.KeyD||game.keys.ArrowRight?1:0)-(game.keys.KeyA||game.keys.ArrowLeft?1:0),dy=(game.keys.KeyS||game.keys.ArrowDown?1:0)-(game.keys.KeyW||game.keys.ArrowUp?1:0);
  if(game.joystick.pointer!==null){dx=game.joystick.x;dy=game.joystick.y;}else if(game.mouseMove.active){dx=game.mouseMove.x;dy=game.mouseMove.y}
  const norm=Math.hypot(dx,dy)||1;dx/=norm;dy/=norm;p.vx=dx;p.vy=dy;if(Math.abs(dx)>.15)p.facing=dx<0?-1:1;const spd=175*(1+trinketBonus('speed'))*(1+styleStats().movePercent/100)*waveSwiftFactor();if(p.dashTime>0){p.x+=p.dashDX*650*dt;p.y+=p.dashDY*650*dt;p.dashTime-=dt;burst(p.x,p.y,1,'#a4e2b2')}else{p.x+=dx*spd*dt;p.y+=dy*spd*dt}
- resolveWorldCollisions(p);
+ resolveWorldCollisions(p);updateCombatAim();
  if(game.upgrades.regen)p.hp=Math.min(p.maxHp,p.hp+(waveRank('regen')*.7)*dt);
  game.attackTimer-=dt;if(game.attackTimer<=0&&attack()){game.attackTimer=attackCooldown()}
  if(game.phase%2===0&&game.phase<6){
@@ -277,11 +277,11 @@ function drawCombat(w,h){const b=biome();drawTiles(b,w,h);ctx.save();const jitte
    ctx.globalAlpha=.22+Math.sin(game.frame+i)*.16;disc(px+game.camX-w/2,py+game.camY-h/2,1+i%3*.5,motecolor)}ctx.restore();
  for(const o of game.floaters){ctx.globalAlpha=clamp(o.life/.8,0,1);ctx.shadowColor='#060b15';ctx.shadowBlur=5;textAt(o.text,o.x,o.y,'bold 17px Georgia',o.color);ctx.shadowBlur=0}ctx.globalAlpha=1;ctx.restore();}
 
-function onKill(e){flushBurnDamage(e);const i=game.enemies.indexOf(e);if(i>=0)game.enemies.splice(i,1);earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;const b=biome();burst(e.x,e.y,e.boss?18:(game.enemies.length>65?2:8),b.accent);game.shake=e.boss?7:1.5;if(e.boss){const bidx=e.bossIndex;const m=masteryFor();const reward=bidx===2?2:1;m.points+=reward;m.earned+=reward;data.gold+=Math.round((bidx===2?55+data.floor*10:18+data.floor*4)*(1+trinketBonus('gold'))*(1+.10*waveRank('forage')));data.essence+=bidx===2?2:1;for(let i=0;i<7;i++)game.gems.push({x:e.x+rand(-35,35),y:e.y+rand(-35,35),value:14*(1+.15*waveRank('wisdom'))*(1+trinketBonus('xp'))});toast(e.name+' defeated',`+${bidx===2?2:1} essence · +${reward} mastery`);save();game.boss=null;if(game.status==='running'){finishPhase();if(!data.masteryIntroSeen)showMasteryIntroduction()}else game.transition=.85;}
+function onKill(e){flushBurnDamage(e);const i=game.enemies.indexOf(e);if(i>=0)game.enemies.splice(i,1);earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;const b=biome();burst(e.x,e.y,e.boss?18:(game.enemies.length>65?2:8),b.accent);game.shake=e.boss?7:1.5;if(e.boss){const bidx=e.bossIndex;const m=masteryFor();const reward=bidx===2?2:1;m.points+=reward;m.earned+=reward;grantDelveGold(delveGoldReward('guardian',data.floor,bidx)*(1+trinketBonus('gold'))*(1+.10*waveRank('forage')));data.essence+=bidx===2?2:1;for(let i=0;i<7;i++)game.gems.push({x:e.x+rand(-35,35),y:e.y+rand(-35,35),value:14*(1+.15*waveRank('wisdom'))*(1+trinketBonus('xp'))});toast(e.name+' defeated',`+${bidx===2?2:1} essence · +${reward} mastery`);save();game.boss=null;if(game.status==='running'){finishPhase();if(!data.masteryIntroSeen)showMasteryIntroduction()}else game.transition=.85;}
   else{
  const m=masteryFor(),chance=Math.min(.30,.015+m.fortune*.018);
  if(Math.random()<chance+trinketBonus('find')){const id=biomeIndex();data.biomeLoot[id]=(data.biomeLoot[id]||0)+1;codexDiscover('loot_'+id);if(game.enemies.length<40)floater(e.x,e.y-26,'◆ '+biomeLootName(),'#d5f4ab');}
- data.gold+=(e.elite?3:1)*(2+Math.floor(data.floor/3))*(1+waveRank('forage')*.10)*(1+trinketBonus('gold'));
+ grantDelveGold(delveGoldReward(e.elite?'elite':'mob')*(1+waveRank('forage')*.10)*(1+trinketBonus('gold')));
  const value=(e.elite?2:1)*(8+Math.floor(data.floor/3))*(1+waveRank('wisdom')*.15)*(1+trinketBonus('xp'));
  if(game.gems.length>240)gainXp(value);else game.gems.push({x:e.x+rand(-7,7),y:e.y+rand(-7,7),value});
  if(game.phaseKills>=game.phaseTarget){finishPhase()}

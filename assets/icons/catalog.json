@@ -1,0 +1,1470 @@
+{
+  "size": 192,
+  "sheets": [
+    {
+      "file": "work-materials.png",
+      "columns": 6,
+      "rows": 8,
+      "icons": [
+        {
+          "key": "tool-pickaxe",
+          "aliases": [
+            "codex-tool_pickaxe",
+            "pickaxe"
+          ]
+        },
+        {
+          "key": "tool-hatchet",
+          "aliases": [
+            "codex-tool_hatchet"
+          ]
+        },
+        {
+          "key": "tool-mattock",
+          "aliases": [
+            "codex-tool_mattock"
+          ]
+        },
+        {
+          "key": "station-blacksmithing",
+          "aliases": [
+            "anvil"
+          ]
+        },
+        {
+          "key": "station-woodworking",
+          "aliases": []
+        },
+        {
+          "key": "station-warding",
+          "aliases": []
+        },
+        {
+          "key": "station-scavenging",
+          "aliases": []
+        },
+        {
+          "key": "station-artisan",
+          "aliases": []
+        },
+        {
+          "key": "style-melee-speed",
+          "aliases": []
+        },
+        {
+          "key": "style-melee-reach",
+          "aliases": []
+        },
+        {
+          "key": "style-melee-enchant",
+          "aliases": []
+        },
+        {
+          "key": "style-ranged-speed",
+          "aliases": []
+        },
+        {
+          "key": "style-ranged-reach",
+          "aliases": []
+        },
+        {
+          "key": "style-ranged-enchant",
+          "aliases": []
+        },
+        {
+          "key": "style-magic-speed",
+          "aliases": []
+        },
+        {
+          "key": "style-magic-reach",
+          "aliases": []
+        },
+        {
+          "key": "style-magic-enchant",
+          "aliases": []
+        },
+        {
+          "key": "idle-task",
+          "aliases": []
+        },
+        {
+          "key": "bonus-spark",
+          "aliases": []
+        },
+        {
+          "key": "bonus-silver",
+          "aliases": []
+        },
+        {
+          "key": "bonus-twig",
+          "aliases": []
+        },
+        {
+          "key": "bonus-glisten",
+          "aliases": []
+        },
+        {
+          "key": "bonus-rune",
+          "aliases": []
+        },
+        {
+          "key": "bonus-opal",
+          "aliases": []
+        },
+        {
+          "key": "resource-coal",
+          "aliases": [
+            "codex-resource_coal"
+          ]
+        },
+        {
+          "key": "resource-steelBars",
+          "aliases": [
+            "codex-resource_steelBars"
+          ]
+        },
+        {
+          "key": "resource-willowLogs",
+          "aliases": [
+            "codex-resource_willowLogs"
+          ]
+        },
+        {
+          "key": "resource-ancientSalvage",
+          "aliases": [
+            "codex-resource_ancientSalvage"
+          ]
+        },
+        {
+          "key": "resource-ancientFragments",
+          "aliases": [
+            "codex-resource_ancientFragments"
+          ]
+        },
+        {
+          "key": "resource-garnets",
+          "aliases": [
+            "codex-resource_garnets"
+          ]
+        },
+        {
+          "key": "resource-cutGarnets",
+          "aliases": [
+            "codex-resource_cutGarnets"
+          ]
+        },
+        {
+          "key": "resource-runicCloth",
+          "aliases": [
+            "codex-resource_runicCloth"
+          ]
+        },
+        {
+          "key": "action-coal",
+          "aliases": [
+            "codex-skill_coal"
+          ]
+        },
+        {
+          "key": "action-steelSmelt",
+          "aliases": [
+            "codex-skill_steelSmelt"
+          ]
+        },
+        {
+          "key": "action-willow",
+          "aliases": [
+            "codex-skill_willow"
+          ]
+        },
+        {
+          "key": "action-steelFletch",
+          "aliases": [
+            "codex-skill_steelFletch"
+          ]
+        },
+        {
+          "key": "action-ancientScavenge",
+          "aliases": [
+            "codex-skill_ancientScavenge"
+          ]
+        },
+        {
+          "key": "action-cleanAncient",
+          "aliases": [
+            "codex-skill_cleanAncient"
+          ]
+        },
+        {
+          "key": "action-aetherWeave",
+          "aliases": [
+            "codex-skill_aetherWeave"
+          ]
+        },
+        {
+          "key": "action-greaterRune",
+          "aliases": [
+            "codex-skill_greaterRune"
+          ]
+        },
+        {
+          "key": "action-garnetSearch",
+          "aliases": [
+            "codex-skill_garnetSearch"
+          ]
+        },
+        {
+          "key": "action-garnetCut",
+          "aliases": [
+            "codex-skill_garnetCut"
+          ]
+        },
+        {
+          "key": "codex-unlock_steel",
+          "aliases": []
+        },
+        {
+          "key": "mastery-points",
+          "aliases": [
+            "codex-permanent_mastery",
+            "mastery-unlock"
+          ]
+        },
+        {
+          "key": "codex-menu",
+          "aliases": []
+        },
+        {
+          "key": "settings-menu",
+          "aliases": []
+        },
+        {
+          "key": "skills-menu",
+          "aliases": []
+        },
+        {
+          "key": "coins",
+          "aliases": [
+            "codex-permanent_gold"
+          ]
+        }
+      ],
+      "regions": [
+        [
+          9.0,
+          7.0,
+          166.0,
+          165.0
+        ],
+        [
+          188.0,
+          6.0,
+          168.0,
+          166.0
+        ],
+        [
+          369.0,
+          6.0,
+          168.0,
+          166.0
+        ],
+        [
+          549.0,
+          5.0,
+          168.0,
+          167.0
+        ],
+        [
+          730.0,
+          5.0,
+          168.0,
+          167.0
+        ],
+        [
+          911.0,
+          5.0,
+          167.0,
+          167.0
+        ],
+        [
+          8.0,
+          185.0,
+          168.0,
+          167.0
+        ],
+        [
+          188.0,
+          185.0,
+          168.0,
+          167.0
+        ],
+        [
+          369.0,
+          185.0,
+          168.0,
+          167.0
+        ],
+        [
+          550.0,
+          185.0,
+          167.0,
+          167.0
+        ],
+        [
+          730.0,
+          185.0,
+          168.0,
+          167.0
+        ],
+        [
+          911.0,
+          185.0,
+          168.0,
+          167.0
+        ],
+        [
+          8.0,
+          366.0,
+          167.0,
+          166.0
+        ],
+        [
+          188.0,
+          365.0,
+          168.0,
+          167.0
+        ],
+        [
+          369.0,
+          366.0,
+          168.0,
+          166.0
+        ],
+        [
+          550.0,
+          366.0,
+          167.0,
+          166.0
+        ],
+        [
+          730.0,
+          366.0,
+          168.0,
+          166.0
+        ],
+        [
+          911.0,
+          366.0,
+          167.0,
+          166.0
+        ],
+        [
+          8.0,
+          546.0,
+          168.0,
+          167.0
+        ],
+        [
+          188.0,
+          546.0,
+          168.0,
+          167.0
+        ],
+        [
+          369.0,
+          546.0,
+          168.0,
+          167.0
+        ],
+        [
+          549.0,
+          546.0,
+          168.0,
+          167.0
+        ],
+        [
+          730.0,
+          546.0,
+          168.0,
+          167.0
+        ],
+        [
+          911.0,
+          546.0,
+          167.0,
+          167.0
+        ],
+        [
+          8.0,
+          726.0,
+          168.0,
+          168.0
+        ],
+        [
+          188.0,
+          726.0,
+          168.0,
+          168.0
+        ],
+        [
+          369.0,
+          727.0,
+          168.0,
+          167.0
+        ],
+        [
+          549.0,
+          726.0,
+          168.0,
+          168.0
+        ],
+        [
+          730.0,
+          726.0,
+          168.0,
+          168.0
+        ],
+        [
+          911.0,
+          727.0,
+          167.0,
+          167.0
+        ],
+        [
+          8.0,
+          908.0,
+          167.0,
+          167.0
+        ],
+        [
+          188.0,
+          908.0,
+          168.0,
+          167.0
+        ],
+        [
+          369.0,
+          907.0,
+          168.0,
+          168.0
+        ],
+        [
+          549.0,
+          908.0,
+          168.0,
+          167.0
+        ],
+        [
+          730.0,
+          908.0,
+          168.0,
+          167.0
+        ],
+        [
+          911.0,
+          908.0,
+          167.0,
+          167.0
+        ],
+        [
+          8.0,
+          1088.0,
+          167.0,
+          167.0
+        ],
+        [
+          188.0,
+          1088.0,
+          168.0,
+          167.0
+        ],
+        [
+          369.0,
+          1088.0,
+          168.0,
+          167.0
+        ],
+        [
+          549.0,
+          1088.0,
+          168.0,
+          167.0
+        ],
+        [
+          730.0,
+          1088.0,
+          168.0,
+          167.0
+        ],
+        [
+          911.0,
+          1088.0,
+          167.0,
+          167.0
+        ],
+        [
+          7.0,
+          1268.0,
+          169.0,
+          167.0
+        ],
+        [
+          188.0,
+          1268.0,
+          168.0,
+          167.0
+        ],
+        [
+          369.0,
+          1268.0,
+          168.0,
+          167.0
+        ],
+        [
+          550.0,
+          1268.0,
+          167.0,
+          167.0
+        ],
+        [
+          730.0,
+          1268.0,
+          168.0,
+          167.0
+        ],
+        [
+          911.0,
+          1268.0,
+          168.0,
+          167.0
+        ]
+      ]
+    },
+    {
+      "file": "materials-powers.png",
+      "columns": 6,
+      "rows": 8,
+      "icons": [
+        {
+          "key": "ore",
+          "aliases": [
+            "codex-resource_ore"
+          ]
+        },
+        {
+          "key": "bar",
+          "aliases": [
+            "codex-resource_bars"
+          ]
+        },
+        {
+          "key": "wood-logs",
+          "aliases": [
+            "codex-resource_logs"
+          ]
+        },
+        {
+          "key": "arrows-art",
+          "aliases": [
+            "codex-resource_arrows"
+          ]
+        },
+        {
+          "key": "cloth-art",
+          "aliases": [
+            "codex-resource_cloth"
+          ]
+        },
+        {
+          "key": "runes-art",
+          "aliases": [
+            "codex-resource_runes"
+          ]
+        },
+        {
+          "key": "relic",
+          "aliases": [
+            "codex-resource_scraps"
+          ]
+        },
+        {
+          "key": "rough-opal",
+          "aliases": [
+            "codex-resource_opals"
+          ]
+        },
+        {
+          "key": "silver-ore",
+          "aliases": [
+            "codex-resource_silverOre"
+          ]
+        },
+        {
+          "key": "silver-bar",
+          "aliases": [
+            "codex-resource_silverBars"
+          ]
+        },
+        {
+          "key": "opal",
+          "aliases": [
+            "codex-resource_cutOpals"
+          ]
+        },
+        {
+          "key": "gold-purse",
+          "aliases": []
+        },
+        {
+          "key": "essence",
+          "aliases": [
+            "codex-permanent_essence"
+          ]
+        },
+        {
+          "key": "codex-discipline_blacksmithing",
+          "aliases": []
+        },
+        {
+          "key": "codex-discipline_woodworking",
+          "aliases": []
+        },
+        {
+          "key": "codex-discipline_warding",
+          "aliases": []
+        },
+        {
+          "key": "codex-discipline_scavenging",
+          "aliases": [
+            "scavenge-icon"
+          ]
+        },
+        {
+          "key": "codex-discipline_artisan",
+          "aliases": []
+        },
+        {
+          "key": "action-mine",
+          "aliases": [
+            "codex-skill_mine"
+          ]
+        },
+        {
+          "key": "action-forge",
+          "aliases": [
+            "codex-skill_forge"
+          ]
+        },
+        {
+          "key": "action-silverMine",
+          "aliases": [
+            "codex-skill_silverMine"
+          ]
+        },
+        {
+          "key": "action-silverSmelt",
+          "aliases": [
+            "codex-skill_silverSmelt"
+          ]
+        },
+        {
+          "key": "action-wood",
+          "aliases": [
+            "codex-skill_wood"
+          ]
+        },
+        {
+          "key": "action-fletch",
+          "aliases": [
+            "codex-skill_fletch"
+          ]
+        },
+        {
+          "key": "action-ward",
+          "aliases": [
+            "codex-skill_ward"
+          ]
+        },
+        {
+          "key": "action-rune",
+          "aliases": [
+            "codex-skill_rune"
+          ]
+        },
+        {
+          "key": "action-scavenge",
+          "aliases": [
+            "codex-skill_scavenge"
+          ]
+        },
+        {
+          "key": "action-polish",
+          "aliases": [
+            "codex-skill_polish"
+          ]
+        },
+        {
+          "key": "codex-upgrade_cleave",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_crit",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_fire",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_forage",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_frost",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_haste",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_magnet",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_might",
+          "aliases": [
+            "sharpen"
+          ]
+        },
+        {
+          "key": "codex-upgrade_multishot",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_nova",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_pierce",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_reach",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_regen",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_storm",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_swift",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_vitality",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_ward",
+          "aliases": []
+        },
+        {
+          "key": "codex-upgrade_wisdom",
+          "aliases": []
+        },
+        {
+          "key": "codex-permanent_armor",
+          "aliases": [
+            "reinforce"
+          ]
+        },
+        {
+          "key": "codex-permanent_enchant",
+          "aliases": [
+            "enchant-art"
+          ]
+        }
+      ],
+      "regions": [
+        [
+          17.0,
+          8.0,
+          168.0,
+          166.0
+        ],
+        [
+          193.0,
+          7.0,
+          169.0,
+          167.0
+        ],
+        [
+          371.0,
+          8.0,
+          168.0,
+          166.0
+        ],
+        [
+          547.0,
+          8.0,
+          169.0,
+          166.0
+        ],
+        [
+          725.0,
+          8.0,
+          168.0,
+          166.0
+        ],
+        [
+          902.0,
+          7.0,
+          168.0,
+          167.0
+        ],
+        [
+          16.0,
+          179.0,
+          169.0,
+          168.0
+        ],
+        [
+          193.0,
+          179.0,
+          169.0,
+          168.0
+        ],
+        [
+          371.0,
+          180.0,
+          168.0,
+          167.0
+        ],
+        [
+          547.0,
+          180.0,
+          169.0,
+          167.0
+        ],
+        [
+          724.0,
+          179.0,
+          169.0,
+          168.0
+        ],
+        [
+          901.0,
+          179.0,
+          169.0,
+          168.0
+        ],
+        [
+          16.0,
+          354.0,
+          169.0,
+          168.0
+        ],
+        [
+          193.0,
+          355.0,
+          169.0,
+          167.0
+        ],
+        [
+          371.0,
+          355.0,
+          168.0,
+          167.0
+        ],
+        [
+          547.0,
+          354.0,
+          168.0,
+          168.0
+        ],
+        [
+          723.0,
+          354.0,
+          170.0,
+          168.0
+        ],
+        [
+          901.0,
+          355.0,
+          169.0,
+          168.0
+        ],
+        [
+          16.0,
+          530.0,
+          169.0,
+          168.0
+        ],
+        [
+          193.0,
+          530.0,
+          170.0,
+          168.0
+        ],
+        [
+          371.0,
+          530.0,
+          168.0,
+          168.0
+        ],
+        [
+          547.0,
+          530.0,
+          168.0,
+          167.0
+        ],
+        [
+          723.0,
+          530.0,
+          169.0,
+          168.0
+        ],
+        [
+          901.0,
+          530.0,
+          168.0,
+          167.0
+        ],
+        [
+          16.0,
+          705.0,
+          169.0,
+          168.0
+        ],
+        [
+          193.0,
+          705.0,
+          170.0,
+          168.0
+        ],
+        [
+          371.0,
+          706.0,
+          168.0,
+          167.0
+        ],
+        [
+          547.0,
+          705.0,
+          168.0,
+          168.0
+        ],
+        [
+          723.0,
+          706.0,
+          169.0,
+          167.0
+        ],
+        [
+          900.0,
+          705.0,
+          169.0,
+          168.0
+        ],
+        [
+          16.0,
+          881.0,
+          169.0,
+          168.0
+        ],
+        [
+          193.0,
+          882.0,
+          169.0,
+          167.0
+        ],
+        [
+          371.0,
+          882.0,
+          168.0,
+          167.0
+        ],
+        [
+          547.0,
+          881.0,
+          168.0,
+          168.0
+        ],
+        [
+          723.0,
+          882.0,
+          170.0,
+          168.0
+        ],
+        [
+          900.0,
+          881.0,
+          170.0,
+          168.0
+        ],
+        [
+          16.0,
+          1057.0,
+          169.0,
+          169.0
+        ],
+        [
+          193.0,
+          1057.0,
+          169.0,
+          169.0
+        ],
+        [
+          371.0,
+          1058.0,
+          168.0,
+          168.0
+        ],
+        [
+          547.0,
+          1057.0,
+          169.0,
+          169.0
+        ],
+        [
+          723.0,
+          1058.0,
+          170.0,
+          168.0
+        ],
+        [
+          900.0,
+          1057.0,
+          169.0,
+          169.0
+        ],
+        [
+          16.0,
+          1234.0,
+          168.0,
+          168.0
+        ],
+        [
+          193.0,
+          1234.0,
+          169.0,
+          169.0
+        ],
+        [
+          370.0,
+          1234.0,
+          169.0,
+          168.0
+        ],
+        [
+          547.0,
+          1234.0,
+          168.0,
+          168.0
+        ],
+        [
+          723.0,
+          1234.0,
+          169.0,
+          169.0
+        ],
+        [
+          900.0,
+          1234.0,
+          169.0,
+          169.0
+        ]
+      ]
+    },
+    {
+      "file": "dungeons-jewelry.png",
+      "columns": 6,
+      "rows": 6,
+      "icons": [
+        {
+          "key": "codex-trinket_leech",
+          "aliases": [
+            "ring-leech"
+          ]
+        },
+        {
+          "key": "codex-trinket_coin",
+          "aliases": [
+            "ring-coin"
+          ]
+        },
+        {
+          "key": "codex-trinket_scholar",
+          "aliases": [
+            "ring-scholar"
+          ]
+        },
+        {
+          "key": "codex-trinket_reach",
+          "aliases": [
+            "ring-reach"
+          ]
+        },
+        {
+          "key": "codex-trinket_vigor",
+          "aliases": [
+            "amulet-vigor"
+          ]
+        },
+        {
+          "key": "codex-trinket_guard",
+          "aliases": [
+            "amulet-guard"
+          ]
+        },
+        {
+          "key": "codex-trinket_haste",
+          "aliases": [
+            "amulet-haste"
+          ]
+        },
+        {
+          "key": "codex-trinket_fortune",
+          "aliases": [
+            "amulet-fortune"
+          ]
+        },
+        {
+          "key": "codex-biome_0",
+          "aliases": []
+        },
+        {
+          "key": "codex-biome_1",
+          "aliases": []
+        },
+        {
+          "key": "codex-biome_2",
+          "aliases": []
+        },
+        {
+          "key": "codex-biome_3",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_0_0",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_0_1",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_0_2",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_1_0",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_1_1",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_1_2",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_2_0",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_2_1",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_2_2",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_3_0",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_3_1",
+          "aliases": []
+        },
+        {
+          "key": "codex-boss_3_2",
+          "aliases": []
+        },
+        {
+          "key": "codex-loot_0",
+          "aliases": []
+        },
+        {
+          "key": "codex-loot_1",
+          "aliases": []
+        },
+        {
+          "key": "codex-loot_2",
+          "aliases": []
+        },
+        {
+          "key": "codex-loot_3",
+          "aliases": []
+        },
+        {
+          "key": "codex-permanent_talent_onslaught",
+          "aliases": []
+        },
+        {
+          "key": "codex-permanent_talent_fortune",
+          "aliases": []
+        },
+        {
+          "key": "codex-permanent_talent_adaptation",
+          "aliases": []
+        },
+        {
+          "key": "helmet",
+          "aliases": []
+        },
+        {
+          "key": "skull",
+          "aliases": []
+        },
+        {
+          "key": "boots",
+          "aliases": []
+        },
+        {
+          "key": "bag",
+          "aliases": []
+        },
+        {
+          "key": "spell",
+          "aliases": []
+        }
+      ],
+      "regions": [
+        [
+          14.0,
+          11.0,
+          198.0,
+          198.0
+        ],
+        [
+          218.0,
+          11.0,
+          199.0,
+          198.0
+        ],
+        [
+          422.0,
+          10.0,
+          198.0,
+          198.0
+        ],
+        [
+          628.0,
+          11.0,
+          198.0,
+          198.0
+        ],
+        [
+          831.0,
+          11.0,
+          202.0,
+          199.0
+        ],
+        [
+          1039.0,
+          10.0,
+          200.0,
+          200.0
+        ],
+        [
+          10.0,
+          210.0,
+          200.0,
+          199.0
+        ],
+        [
+          216.0,
+          211.0,
+          201.0,
+          199.0
+        ],
+        [
+          421.0,
+          211.0,
+          202.0,
+          199.0
+        ],
+        [
+          626.0,
+          211.0,
+          203.0,
+          200.0
+        ],
+        [
+          832.0,
+          212.0,
+          203.0,
+          199.0
+        ],
+        [
+          1042.0,
+          212.0,
+          201.0,
+          199.0
+        ],
+        [
+          10.0,
+          412.0,
+          204.0,
+          202.0
+        ],
+        [
+          217.0,
+          412.0,
+          200.0,
+          203.0
+        ],
+        [
+          420.0,
+          412.0,
+          203.0,
+          204.0
+        ],
+        [
+          625.0,
+          412.0,
+          204.0,
+          203.0
+        ],
+        [
+          831.0,
+          412.0,
+          204.0,
+          203.0
+        ],
+        [
+          1038.0,
+          412.0,
+          204.0,
+          204.0
+        ],
+        [
+          9.0,
+          617.0,
+          201.0,
+          203.0
+        ],
+        [
+          213.0,
+          617.0,
+          204.0,
+          204.0
+        ],
+        [
+          419.0,
+          619.0,
+          203.0,
+          203.0
+        ],
+        [
+          625.0,
+          617.0,
+          202.0,
+          203.0
+        ],
+        [
+          830.0,
+          618.0,
+          207.0,
+          204.0
+        ],
+        [
+          1039.0,
+          619.0,
+          203.0,
+          203.0
+        ],
+        [
+          10.0,
+          824.0,
+          201.0,
+          198.0
+        ],
+        [
+          214.0,
+          823.0,
+          205.0,
+          201.0
+        ],
+        [
+          419.0,
+          824.0,
+          204.0,
+          200.5
+        ],
+        [
+          624.0,
+          824.0,
+          205.0,
+          201.0
+        ],
+        [
+          830.0,
+          824.0,
+          207.0,
+          201.5
+        ],
+        [
+          1039.0,
+          824.0,
+          203.0,
+          201.5
+        ],
+        [
+          9.0,
+          1024.0,
+          204.0,
+          201.0
+        ],
+        [
+          214.0,
+          1024.0,
+          205.0,
+          201.0
+        ],
+        [
+          419.0,
+          1024.5,
+          204.0,
+          200.5
+        ],
+        [
+          624.0,
+          1025.0,
+          205.0,
+          201.0
+        ],
+        [
+          830.0,
+          1025.5,
+          207.0,
+          201.5
+        ],
+        [
+          1039.0,
+          1025.5,
+          203.0,
+          201.5
+        ]
+      ]
+    }
+  ]
+}

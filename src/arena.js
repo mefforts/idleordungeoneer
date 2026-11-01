@@ -124,7 +124,7 @@ function resetRun(){
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
  normalizeZone();checkpointGroundXp();const p=game.player;
  p.x=p.y=0;p.hp=maxHp()+(data.zone.upgrades.vitality||0)*18;p.maxHp=p.hp;
- p.invuln=p.dashCooldown=p.dashTime=0;p.vx=p.vy=0;p.attackPose=p.hitPose=0;
+ p.invuln=p.dashCooldown=p.dashTime=0;p.vx=p.vy=0;p.attackPose=p.hitPose=0;p.aimTarget=null;p.aimAngle=0;p.aimFacing=p.facing=1;
  game.phase=-1;game.phaseKills=0;game.phaseSpawned=0;game.runLevel=data.zone.level;game.runXp=data.zone.xp;
  game.requiredXp=data.zone.required;game.pendingLevels=Math.max(0,Math.floor(Number(data.zone.pending)||0));game.upgrades={...data.zone.upgrades};
  game.enemies=[];game.shots=[];game.swings=[];game.hostileShots=[];game.xpOwner=data;game.xpZoneIndex=zoneNumber();game.gems=(data.xpCaches?.[game.xpZoneIndex]||[]).map(g=>({...g}));
@@ -162,7 +162,7 @@ function renderLegacySettingsDrawer(){
   if(value==='mefforts'){
    data.devSpeedUnlocked=true;save();feedback.textContent='✓ Delve speed unlocked';feedback.classList.add('code-success');$('speedControl').classList.remove('hidden');toast('Testing Delve speed unlocked','1×–500× · resets at launch');
   }else if(value==='max'){
-   fillTestingResources();feedback.textContent='✓ Resources and mastery points filled';feedback.classList.add('code-success');toast('Sandbox filled','Materials + 9,999 mastery points per biome');
+   fillTestingResources();feedback.textContent='✓ Resources, travel and speed unlocked';feedback.classList.add('code-success');toast('Testing unlocked','Travel · Delve speed · resources');
   }else feedback.textContent='Code not found';
   $('codeInput').value='';
  };$('codeInput').onkeydown=e=>{if(e.key==='Enter')$('codeRedeem').click()};
