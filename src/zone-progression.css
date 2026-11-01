@@ -1,0 +1,5 @@
+.tier-selector{display:flex;gap:8px;margin:4px 0 15px}.tier-selector button{flex:1;min-height:48px;padding:9px 13px;font:600 11px system-ui}.tier-selector small{display:block;font:9px/1.5 system-ui;margin-top:3px;color:#c6b58e}
+.tier-unlock-note{padding:12px 15px;border-left:2px solid #c7a466;background:#8b6e3920;font:11px/1.7 system-ui;color:#dfc99e;margin:0 0 15px}.tier-unlock-note strong{display:block;font:500 19px Georgia;margin-bottom:5px}
+.tier-promotion{margin:18px 0;padding:16px;border:1px solid #a58b5c;background:#57432920}.tier-promotion h4{font:500 23px Georgia;margin:0 0 8px}.tier-promotion p{font:11px/1.7 system-ui}.tier-promotion .gear-cta{min-height:44px}
+.tier-cap-label{font:600 10px/1.6 system-ui;color:#cfb784}.readiness-table td{overflow-wrap:anywhere}.dps-ceilings small{display:block;margin-top:4px;font:9px system-ui;color:#c1ad86}
+@media(max-width:420px){.tier-selector button{padding:9px 8px;font-size:10px}.tier-promotion{padding:13px}}

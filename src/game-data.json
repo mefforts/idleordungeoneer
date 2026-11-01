@@ -1,0 +1,505 @@
+{
+  "SKILLS": {
+    "mine": {
+      "name": "Mining",
+      "icon": "⛏",
+      "resource": "ore",
+      "item": "Iron Ore",
+      "seconds": 7,
+      "amount": 2,
+      "xp": "miningXp",
+      "gain": 9,
+      "boostCost": {
+        "ore": 12,
+        "gold": 25
+      },
+      "verb": "STRIKE",
+      "pose": "mine",
+      "color": "#8fcbd4"
+    },
+    "forge": {
+      "name": "Smithing",
+      "icon": "⚒",
+      "resource": "bars",
+      "item": "Iron Bars",
+      "seconds": 10,
+      "amount": 1,
+      "xp": "smithingXp",
+      "gain": 13,
+      "cost": {
+        "ore": 2
+      },
+      "boostCost": {
+        "bars": 6,
+        "gold": 35
+      },
+      "verb": "SMELT",
+      "pose": "smith",
+      "color": "#f6a45b"
+    },
+    "wood": {
+      "name": "Woodcutting",
+      "icon": "🪓",
+      "resource": "logs",
+      "item": "Oak Logs",
+      "seconds": 8,
+      "amount": 2,
+      "xp": "woodXp",
+      "gain": 9,
+      "boostCost": {
+        "logs": 12,
+        "gold": 25
+      },
+      "verb": "CHOP",
+      "pose": "mine",
+      "color": "#a9d67a"
+    },
+    "fletch": {
+      "name": "Fletching",
+      "icon": "➶",
+      "resource": "arrows",
+      "item": "Arrows",
+      "seconds": 11,
+      "amount": 8,
+      "xp": "fletchXp",
+      "gain": 13,
+      "cost": {
+        "logs": 2,
+        "bars": 1
+      },
+      "boostCost": {
+        "arrows": 40,
+        "gold": 35
+      },
+      "verb": "FLETCH",
+      "pose": "smith",
+      "color": "#e0c27b"
+    },
+    "ward": {
+      "name": "Warding",
+      "icon": "✧",
+      "resource": "cloth",
+      "item": "Warded Cloth",
+      "seconds": 9,
+      "amount": 2,
+      "xp": "wardXp",
+      "gain": 9,
+      "boostCost": {
+        "cloth": 12,
+        "gold": 30
+      },
+      "verb": "WEAVE",
+      "pose": "cast",
+      "color": "#bc9beb"
+    },
+    "rune": {
+      "name": "Runecrafting",
+      "icon": "✦",
+      "resource": "runes",
+      "item": "Arcane Runes",
+      "seconds": 12,
+      "amount": 6,
+      "xp": "runeXp",
+      "gain": 13,
+      "cost": {
+        "cloth": 2,
+        "scraps": 2
+      },
+      "boostCost": {
+        "runes": 30,
+        "gold": 35
+      },
+      "verb": "INSCRIBE",
+      "pose": "cast",
+      "color": "#80c8ef"
+    },
+    "silverMine": {
+      "name": "Silver Mining",
+      "icon": "◇",
+      "resource": "silverOre",
+      "item": "Silver Ore",
+      "seconds": 12,
+      "amount": 2,
+      "xp": "miningXp",
+      "gain": 10,
+      "verb": "MINE",
+      "pose": "mine",
+      "color": "#c8d9e8"
+    },
+    "silverSmelt": {
+      "name": "Silver Smelting",
+      "icon": "▱",
+      "resource": "silverBars",
+      "item": "Silver Bars",
+      "seconds": 16,
+      "amount": 1,
+      "xp": "smithingXp",
+      "gain": 13,
+      "cost": {
+        "silverOre": 2
+      },
+      "verb": "SMELT",
+      "pose": "smith",
+      "color": "#d8e8ff"
+    },
+    "polish": {
+      "name": "Gem Cutting",
+      "icon": "💎",
+      "resource": "cutOpals",
+      "item": "Cut Opal",
+      "seconds": 20,
+      "amount": 1,
+      "xp": "artisanXp",
+      "gain": 16,
+      "cost": {
+        "opals": 1
+      },
+      "verb": "POLISH",
+      "pose": "smith",
+      "color": "#e5aaff"
+    },
+    "scavenge": {
+      "name": "Scavenging",
+      "icon": "⌕",
+      "resource": "scraps",
+      "item": "Relic Fragments",
+      "seconds": 28,
+      "amount": 1,
+      "goldGain": 2,
+      "xp": "scavengeXp",
+      "gain": 8,
+      "verb": "SEARCH",
+      "pose": "mine",
+      "color": "#edcc83"
+    },
+    "coal": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Coal Mining",
+      "resource": "coal",
+      "item": "Coal",
+      "seconds": 11,
+      "amount": 2,
+      "xp": "miningXp",
+      "gain": 13,
+      "verb": "MINE",
+      "pose": "mine",
+      "color": "#c0b7a3",
+      "scene": "mine"
+    },
+    "steelSmelt": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Steel Smithing",
+      "resource": "steelBars",
+      "item": "Steel Bars",
+      "seconds": 15,
+      "amount": 1,
+      "xp": "smithingXp",
+      "gain": 19,
+      "cost": {
+        "ore": 2,
+        "coal": 1
+      },
+      "verb": "SMELT",
+      "pose": "smith",
+      "color": "#d7dfe4",
+      "scene": "forge"
+    },
+    "willow": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Willow Woodcutting",
+      "resource": "willowLogs",
+      "item": "Willow Logs",
+      "seconds": 12,
+      "amount": 2,
+      "xp": "woodXp",
+      "gain": 14,
+      "verb": "CHOP",
+      "pose": "wood",
+      "color": "#b8d7a1",
+      "scene": "wood"
+    },
+    "steelFletch": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Steel Fletching",
+      "resource": "arrows",
+      "item": "Arrows",
+      "seconds": 13,
+      "amount": 12,
+      "xp": "fletchXp",
+      "gain": 19,
+      "cost": {
+        "willowLogs": 2,
+        "steelBars": 1
+      },
+      "verb": "FLETCH",
+      "pose": "fletch",
+      "color": "#d0d9c0",
+      "scene": "fletch"
+    },
+    "ancientScavenge": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Ancient Salvaging",
+      "resource": "ancientSalvage",
+      "item": "Ancient Salvage",
+      "seconds": 24,
+      "amount": 2,
+      "goldGain": 3,
+      "xp": "scavengeXp",
+      "gain": 14,
+      "verb": "SEARCH",
+      "pose": "scavenge",
+      "color": "#d5bb87",
+      "scene": "scavenge"
+    },
+    "cleanAncient": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Salvage Cleaning",
+      "resource": "ancientFragments",
+      "item": "Ancient Fragments",
+      "seconds": 14,
+      "amount": 2,
+      "xp": "scavengeXp",
+      "gain": 18,
+      "cost": {
+        "ancientSalvage": 2
+      },
+      "verb": "CLEAN",
+      "pose": "scavenge",
+      "color": "#b6c6a0",
+      "scene": "scavenge"
+    },
+    "aetherWeave": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Runic Weaving",
+      "resource": "runicCloth",
+      "item": "Runic Cloth",
+      "seconds": 13,
+      "amount": 2,
+      "xp": "wardXp",
+      "gain": 16,
+      "cost": {
+        "cloth": 2,
+        "willowLogs": 1
+      },
+      "verb": "WEAVE",
+      "pose": "ward",
+      "color": "#b5bde3",
+      "scene": "ward"
+    },
+    "greaterRune": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Greater Runecrafting",
+      "resource": "runes",
+      "item": "Arcane Runes",
+      "seconds": 14,
+      "amount": 10,
+      "xp": "runeXp",
+      "gain": 20,
+      "cost": {
+        "runicCloth": 2,
+        "ancientFragments": 2
+      },
+      "verb": "INSCRIBE",
+      "pose": "rune",
+      "color": "#a4c7e8",
+      "scene": "rune"
+    },
+    "garnetSearch": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Garnet Prospecting",
+      "resource": "garnets",
+      "item": "Rough Garnets",
+      "seconds": 30,
+      "amount": 1,
+      "xp": "artisanXp",
+      "gain": 15,
+      "verb": "PROSPECT",
+      "pose": "scavenge",
+      "color": "#e59b91",
+      "scene": "scavenge"
+    },
+    "garnetCut": {
+      "icon": "✦",
+      "tier": 2,
+      "name": "Garnet Cutting",
+      "resource": "cutGarnets",
+      "item": "Cut Garnets",
+      "seconds": 24,
+      "amount": 1,
+      "xp": "artisanXp",
+      "gain": 24,
+      "cost": {
+        "garnets": 1
+      },
+      "verb": "CUT",
+      "pose": "fletch",
+      "color": "#e6a3aa",
+      "scene": "polish"
+    }
+  },
+  "ACTIVE_INTERVAL": {
+    "mine": 2.4,
+    "forge": 2.8,
+    "wood": 2.4,
+    "fletch": 2.8,
+    "ward": 2.4,
+    "rune": 2.8,
+    "scavenge": 3.5,
+    "silverMine": 3.1,
+    "silverSmelt": 3.4,
+    "polish": 3.8,
+    "coal": 3.2,
+    "steelSmelt": 3.6,
+    "willow": 3,
+    "steelFletch": 3.4,
+    "ancientScavenge": 4,
+    "cleanAncient": 3.6,
+    "aetherWeave": 3,
+    "greaterRune": 3.6,
+    "garnetSearch": 4.5,
+    "garnetCut": 4
+  },
+  "DISCIPLINES": {
+    "blacksmithing": {
+      "name": "Blacksmithing",
+      "icon": "⚒",
+      "actions": [
+        "mine",
+        "forge",
+        "silverMine",
+        "silverSmelt",
+        "coal",
+        "steelSmelt"
+      ],
+      "xp": "blacksmithXp",
+      "color": "#b8d4d2",
+      "description": "Mine ore · Smelt bars"
+    },
+    "woodworking": {
+      "name": "Woodworking",
+      "icon": "🪓",
+      "actions": [
+        "wood",
+        "fletch",
+        "willow",
+        "steelFletch"
+      ],
+      "xp": "woodworkingXp",
+      "color": "#a6d57a",
+      "description": "Chop logs · Fletch arrows"
+    },
+    "warding": {
+      "name": "Warding",
+      "icon": "✧",
+      "actions": [
+        "ward",
+        "rune",
+        "aetherWeave",
+        "greaterRune"
+      ],
+      "xp": "wardingSkillXp",
+      "color": "#c3a3f0",
+      "description": "Weave cloth → Inscribe runes"
+    },
+    "scavenging": {
+      "name": "Scavenging",
+      "icon": "⌕",
+      "actions": [
+        "scavenge",
+        "ancientScavenge",
+        "cleanAncient"
+      ],
+      "xp": "scavengingXp",
+      "color": "#edcc83",
+      "description": "Gold, relics and rare opals"
+    },
+    "artisan": {
+      "name": "Artisan",
+      "icon": "💍",
+      "actions": [
+        "polish",
+        "garnetSearch",
+        "garnetCut"
+      ],
+      "xp": "artisanDisciplineXp",
+      "color": "#e6b4f7",
+      "description": "Cut opals · Set silver jewelry"
+    }
+  },
+  "RESOURCE_LABEL": {
+    "gold": "Gold",
+    "essence": "Essence",
+    "ore": "Iron Ore",
+    "bars": "Iron Bars",
+    "logs": "Oak Logs",
+    "arrows": "Arrows",
+    "cloth": "Warded Cloth",
+    "runes": "Arcane Runes",
+    "scraps": "Relic Fragments",
+    "silverOre": "Silver Ore",
+    "silverBars": "Silver Bars",
+    "opals": "Rough Opal",
+    "cutOpals": "Cut Opal",
+    "coal": "Coal",
+    "steelBars": "Steel Bars",
+    "willowLogs": "Willow Logs",
+    "ancientSalvage": "Ancient Salvage",
+    "ancientFragments": "Ancient Fragments",
+    "garnets": "Rough Garnets",
+    "cutGarnets": "Cut Garnets",
+    "runicCloth": "Runic Cloth"
+  },
+  "RESOURCE_ART": {
+    "gold": "coins",
+    "essence": "essence",
+    "ore": "ore",
+    "bars": "bar",
+    "logs": "wood-logs",
+    "arrows": "arrows-art",
+    "cloth": "cloth-art",
+    "runes": "runes-art",
+    "scraps": "relic",
+    "silverOre": "silver-ore",
+    "silverBars": "silver-bar",
+    "opals": "rough-opal",
+    "cutOpals": "opal",
+    "coal": "resource-coal",
+    "steelBars": "resource-steelBars",
+    "willowLogs": "resource-willowLogs",
+    "ancientSalvage": "resource-ancientSalvage",
+    "ancientFragments": "resource-ancientFragments",
+    "garnets": "resource-garnets",
+    "cutGarnets": "resource-cutGarnets",
+    "runicCloth": "resource-runicCloth"
+  },
+  "RESOURCE_SOURCE": {
+    "ore": "mine",
+    "bars": "forge",
+    "logs": "wood",
+    "arrows": "fletch",
+    "cloth": "ward",
+    "runes": "rune",
+    "scraps": "scavenge",
+    "silverOre": "silverMine",
+    "silverBars": "silverSmelt",
+    "opals": "scavenge",
+    "cutOpals": "polish",
+    "coal": "coal",
+    "steelBars": "steelSmelt",
+    "willowLogs": "willow",
+    "ancientSalvage": "ancientScavenge",
+    "ancientFragments": "cleanAncient",
+    "garnets": "garnetSearch",
+    "cutGarnets": "garnetCut",
+    "runicCloth": "aetherWeave"
+  }
+}

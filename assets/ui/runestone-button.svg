@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="80" viewBox="0 0 240 80">
+  <defs>
+    <linearGradient id="edge" x2="0" y2="1"><stop stop-color="#a18c67"/><stop offset=".25" stop-color="#665b47"/><stop offset=".7" stop-color="#393127"/><stop offset="1" stop-color="#16130f"/></linearGradient>
+    <linearGradient id="stone" x2=".18" y2="1"><stop stop-color="#5a5040"/><stop offset=".38" stop-color="#494235"/><stop offset="1" stop-color="#353027"/></linearGradient>
+    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".22 .36" numOctaves="3" seed="21"/><feColorMatrix type="saturate" values="0"/><feBlend in="SourceGraphic" mode="soft-light"/></filter>
+    <clipPath id="face"><path d="M16 12 76 12 81 10 218 12 228 19 228 52 224 57 226 62 217 68 20 68 12 61 12 25Z"/></clipPath>
+  </defs>
+  <path fill="#100e0b" d="m12 3 65 1 7-3 143 3 12 10-1 44-4 6 2 8-12 8H15L2 72 0 22 4 10Z"/>
+  <path fill="url(#edge)" d="m13 2 63 1 8-3 142 3 12 10-1 42-5 7 2 8-11 7H15L3 69 1 22 5 9Z"/>
+  <path fill="url(#stone)" d="M16 12 76 12 81 10 218 12 228 19 228 52 224 57 226 62 217 68 20 68 12 61 12 25Z"/>
+  <g clip-path="url(#face)"><path fill="#8b7d64" opacity=".15" d="m0 14 49 5 59-9 76 9 56-2v10l-80-7-60 8-59-5L0 28Z"/><path fill="#17150f" opacity=".19" d="m0 66 52-9 73 7 65-9 50 1v24H0Z"/><path fill="#5a5140" filter="url(#grain)" opacity=".19" d="M0 0h240v80H0z"/></g>
+  <path fill="none" stroke="#c7b18a" stroke-opacity=".43" d="m8 12 8-7 60 1 8-3 140 3 8 7M6 24l2 37 9 9"/>
+  <path fill="none" stroke="#1b1712" stroke-width="2" d="m14 25 3-9 62-1 4-2 133 2 8 5M20 66h195l8-6"/>
+  <path fill="none" stroke="#b09a72" stroke-opacity=".3" d="m19 17 58-1 5-2 132 2M18 65l-4-5V28"/>
+  <path fill="none" stroke="#16130e" stroke-opacity=".65" d="m29 4-5 5 3 9-7 6m204 46-5-6 3-7-4-3M3 48l8-4 5 3"/>
+  <path fill="none" stroke="#8e7b59" stroke-opacity=".35" d="m30 5-5 4 3 9-7 7m202 44-5-5 3-7"/>
+  <!-- The small edge marks are cut into the bevel, outside the text well. -->
+  <path fill="none" stroke="#211c14" stroke-width="2.2" stroke-linejoin="miter" d="M8 32v16m0-15 4 4-4 5m224-10v16m0-15-4 4 4 5"/>
+  <path fill="none" stroke="#b6a078" stroke-opacity=".5" stroke-width=".8" d="M8.7 32v16m0-14 3.5 3-3.5 5m222.6-10v16m0-14-3.5 3 3.5 5"/>
+</svg>

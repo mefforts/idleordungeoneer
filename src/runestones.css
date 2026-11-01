@@ -1,0 +1,91 @@
+/* Carved runestones. Nine-slice artwork keeps the chips, bevels and incised
+   marks intact on both a short action button and a full-width title lintel.
+   Important rules in this layer replace the older flat surface overrides. */
+:root{
+ --rune-button:url("../assets/ui/runestone-button.svg");
+ --rune-selected:url("../assets/ui/runestone-active.svg");
+ --rune-lintel:url("../assets/ui/runestone-lintel.svg");
+ --stone-grain:url("../assets/ui/stone-grain.svg");
+}
+@layer runestones{
+ :is(.sidebar,.overlay-card,.wardrobe-dialog,.tour-panel,.resource-picker,.skills-nudge,.toast,.speed-options) button:not(:where(.link-button,[class*="swatch"],[data-source],#skillsNudgeDismiss,#idleNudgeDismiss)),
+ :is(.skill-mode,.skill-hold){
+  --rune-face:var(--rune-button);
+  background:none!important;
+  border:1px solid transparent!important;
+  border-image:var(--rune-face) 20 24 fill / 9px 11px / 0 stretch!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  color:#f1dfb9!important;
+  text-shadow:0 1px 1px #0c0906;
+  transition:filter .12s ease,translate .08s ease;
+ }
+ :is(.sidebar,.overlay-card,.wardrobe-dialog,.tour-panel,.resource-picker,.skills-nudge,.toast,.speed-options) button:is(.active,.is-on,.is-idling,.selected,[aria-pressed="true"],[aria-selected="true"],.mastery-commit,.primary-cta,.craft-tile-action,.gear-cta),
+ :is(.skill-mode[aria-pressed="true"],.skill-hold.is-holding){--rune-face:var(--rune-selected)}
+ :is(.sidebar,.overlay-card,.wardrobe-dialog,.tour-panel,.resource-picker,.skills-nudge,.toast,.speed-options) button:hover:not(:disabled),
+ :is(.skill-mode,.skill-hold):hover:not(:disabled){filter:brightness(1.16)!important}
+ :is(.sidebar,.overlay-card,.wardrobe-dialog,.tour-panel,.resource-picker,.skills-nudge,.toast,.speed-options) button:active:not(:disabled),
+ :is(.skill-mode,.skill-hold):active:not(:disabled){filter:brightness(.91)!important;translate:0 1px}
+ :is(.sidebar,.overlay-card,.wardrobe-dialog,.tour-panel,.resource-picker,.skills-nudge,.toast,.speed-options) button:focus-visible,
+ :is(.skill-mode,.skill-hold):focus-visible{outline:2px solid #f2d398!important;outline-offset:3px!important}
+ :is(.sidebar,.overlay-card,.wardrobe-dialog,.tour-panel,.resource-picker,.skills-nudge,.toast,.speed-options) button:disabled,
+ :is(.skill-mode,.skill-hold):disabled{--rune-face:var(--rune-button);opacity:.7!important;color:#c7bda8!important;cursor:not-allowed;filter:none!important}
+ /* Source links and color swatches retain their useful link / color meaning. */
+ :is(.sidebar,.overlay-card) :is(.recipe-assist,.armor-set-card .recipe-assist) button{
+  background:none!important;border:0!important;border-image:none!important;box-shadow:none!important;
+ }
+ /* Individual carved tabs replace the continuous rectangular backing strip. */
+ .sidebar :is(.workflow-tabs,.workshop-tabs,.recipe-filter,.style-switch){background:none!important;border:0!important;box-shadow:none!important}
+ .sidebar .workflow-tabs{padding:0;gap:6px}
+ .sidebar .workshop-tabs{padding-inline:0;gap:6px}
+ .sidebar .workflow-tabs button{min-height:42px;padding-inline:7px}
+ .sidebar .workshop-tab{padding:13px 4px 12px}
+ /* Headers are stone lintels; data rows remain quiet so labels stay readable. */
+ :is(.drawer-heading,.wardrobe-heading),.overlay-card .codex-header,
+ .sidebar :is(.discipline-hero,.discipline-idle-toolbar,.station-upgrade-card>header,.combat-style-card>header,.style-crafting-note){
+  background:none!important;
+  border:1px solid transparent!important;
+  border-image:var(--rune-lintel) 28 36 fill / 12px 15px / 0 stretch!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+ }
+ .sidebar .discipline-hero{padding:15px 19px}
+ .sidebar .discipline-idle-toolbar{padding:14px 18px}
+ .sidebar :is(.station-upgrade-card>header,.combat-style-card>header){padding:12px 18px;margin:-5px -5px 0}
+ .sidebar .style-crafting-note{padding:14px 18px}
+ .overlay-card .codex-header{padding:16px 18px;margin-bottom:14px}
+ .overlay-card .codex-header h2 span{background:none!important;border-left:1px solid #b89b66;border-radius:0;color:#d7c49e;padding:3px 0 3px 9px}
+ .sidebar :is(.systems-subhead,.readiness-title,.hud-settings>h3,.panel-section>h2,.idle-title),
+ .overlay-card>h2{
+  background:none!important;
+  border:1px solid transparent!important;
+  border-image:var(--rune-lintel) 28 36 fill / 10px 14px / 0 stretch!important;
+  padding:13px 21px;
+  text-shadow:0 1px 1px #100c08;
+ }
+ .sidebar .discipline-level{background:none!important;border:0!important;color:#e7c995!important}
+ /* Circular pins stay compact and receive the same cut-stone material. */
+ .icon-rail :is(.hud-icon,#speedToggle){
+  background-image:var(--stone-grain),radial-gradient(circle at 35% 20%,#61513cdd,#241f18e0 78%)!important;
+  background-size:64px 64px,100% 100%!important;
+  border:2px ridge #9c8560!important;
+  box-shadow:inset 0 0 0 2px #17130dc9,0 2px 4px #0008!important;
+ }
+ .icon-rail :is(.hud-icon.active,.hud-icon.paused){
+  background-image:var(--stone-grain),radial-gradient(circle at 35% 20%,#957244e6,#48351ee6 78%)!important;
+  border-color:#d6b67c!important;
+ }
+ .sidebar :is(.work-card,.craft-tile,.armor-set-card){
+  background-image:var(--stone-grain),linear-gradient(130deg,#3b3429,#2c2720)!important;
+  background-size:96px 96px,100% 100%!important;
+ }
+ @media(max-width:760px){
+  .sidebar .workshop-tab{padding:12px 2px 11px}
+  .sidebar .workflow-tabs{gap:4px}
+  .sidebar .workflow-tabs button{padding-inline:5px;font-size:10px}
+  .sidebar .discipline-hero{padding:13px 16px}
+  .sidebar .discipline-idle-toolbar{padding:12px 15px}
+  .sidebar :is(.station-upgrade-card>header,.combat-style-card>header){padding:12px 14px}
+  .sidebar :is(.systems-subhead,.readiness-title,.hud-settings>h3,.panel-section>h2,.idle-title){padding:12px 17px}
+ }
+}

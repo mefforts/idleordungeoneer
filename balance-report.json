@@ -1,0 +1,721 @@
+{
+  "version": 6,
+  "refinementHasFiniteCap": true,
+  "limits": {
+    "1": {
+      "name": "Iron",
+      "dps": 100,
+      "weapon": 10,
+      "armor": 5,
+      "speed": 5,
+      "reach": 5,
+      "enchant": 2
+    },
+    "2": {
+      "name": "Steel",
+      "dps": 200,
+      "weapon": 20,
+      "armor": 10,
+      "speed": 10,
+      "reach": 10,
+      "enchant": 4
+    }
+  },
+  "promotionCosts": {
+    "melee": {
+      "steelBars": 12,
+      "willowLogs": 6,
+      "ancientFragments": 4,
+      "cutGarnets": 1,
+      "gold": 150
+    },
+    "ranged": {
+      "steelBars": 6,
+      "willowLogs": 18,
+      "runicCloth": 6,
+      "cutGarnets": 1,
+      "gold": 150
+    },
+    "magic": {
+      "steelBars": 4,
+      "runicCloth": 18,
+      "ancientFragments": 6,
+      "cutGarnets": 2,
+      "gold": 150
+    }
+  },
+  "zones": [
+    {
+      "index": 0,
+      "minutes": 10,
+      "seconds": 600,
+      "weaponRank": 8,
+      "speedRank": 3,
+      "proficiency": 1,
+      "gearTier": 1,
+      "hit": 63.75238095238093,
+      "cooldown": 0.830188679245283,
+      "dps": 80.63227272727272,
+      "targets": [
+        24,
+        0,
+        40,
+        0,
+        56,
+        0
+      ],
+      "swarmCount": 360,
+      "spawnSeconds": 0.9166666666666666,
+      "hpScale": 1.517176919216154,
+      "forecastSeconds": 600.8295351489713
+    },
+    {
+      "index": 1,
+      "minutes": 20,
+      "seconds": 1200,
+      "weaponRank": 16,
+      "speedRank": 9,
+      "proficiency": 1,
+      "gearTier": 2,
+      "hit": 114.28571428571428,
+      "cooldown": 0.7457627118644068,
+      "dps": 160.9090909090909,
+      "targets": [
+        36,
+        0,
+        60,
+        0,
+        84,
+        0
+      ],
+      "swarmCount": 540,
+      "spawnSeconds": 1.2222222222222223,
+      "hpScale": 5.3429506471510155,
+      "forecastSeconds": 1197.7478102156101
+    }
+  ],
+  "weapons": [
+    {
+      "id": "sword",
+      "name": "Arming Sword",
+      "tiers": [
+        {
+          "tier": 1,
+          "rank": 10,
+          "speedRank": 5,
+          "damage": 76.19047619047619,
+          "cooldown": 0.7999999999999999,
+          "normal": 100,
+          "dedicated": 108.00000000000001
+        },
+        {
+          "tier": 2,
+          "rank": 20,
+          "speedRank": 10,
+          "damage": 139.6825396825397,
+          "cooldown": 0.7333333333333334,
+          "normal": 200,
+          "dedicated": 216.00000000000006
+        }
+      ]
+    },
+    {
+      "id": "shield",
+      "name": "Sword & Shield",
+      "tiers": [
+        {
+          "tier": 1,
+          "rank": 10,
+          "speedRank": 5,
+          "damage": 86.58008658008657,
+          "cooldown": 0.9090909090909091,
+          "normal": 100,
+          "dedicated": 108.00000000000001
+        },
+        {
+          "tier": 2,
+          "rank": 20,
+          "speedRank": 10,
+          "damage": 158.73015873015873,
+          "cooldown": 0.8333333333333334,
+          "normal": 200,
+          "dedicated": 216.00000000000003
+        }
+      ]
+    },
+    {
+      "id": "polearm",
+      "name": "Halberd",
+      "tiers": [
+        {
+          "tier": 1,
+          "rank": 10,
+          "speedRank": 5,
+          "damage": 99.56709956709955,
+          "cooldown": 1.0454545454545452,
+          "normal": 99.99999999999999,
+          "dedicated": 108.00000000000001
+        },
+        {
+          "tier": 2,
+          "rank": 20,
+          "speedRank": 10,
+          "damage": 182.5396825396826,
+          "cooldown": 0.9583333333333333,
+          "normal": 200.00000000000006,
+          "dedicated": 216.00000000000006
+        }
+      ]
+    },
+    {
+      "id": "greatsword",
+      "name": "Greatsword",
+      "tiers": [
+        {
+          "tier": 1,
+          "rank": 10,
+          "speedRank": 5,
+          "damage": 110.82251082251081,
+          "cooldown": 1.1636363636363636,
+          "normal": 99.99999999999999,
+          "dedicated": 108.00000000000001
+        },
+        {
+          "tier": 2,
+          "rank": 20,
+          "speedRank": 10,
+          "damage": 203.1746031746032,
+          "cooldown": 1.0666666666666667,
+          "normal": 200,
+          "dedicated": 216.00000000000006
+        }
+      ]
+    },
+    {
+      "id": "bow",
+      "name": "Hunting Bow",
+      "tiers": [
+        {
+          "tier": 1,
+          "rank": 10,
+          "speedRank": 5,
+          "damage": 95.23809523809524,
+          "cooldown": 1,
+          "normal": 100,
+          "dedicated": 108.00000000000001
+        },
+        {
+          "tier": 2,
+          "rank": 20,
+          "speedRank": 10,
+          "damage": 174.60317460317466,
+          "cooldown": 0.9166666666666667,
+          "normal": 200.00000000000009,
+          "dedicated": 216.00000000000009
+        }
+      ]
+    },
+    {
+      "id": "staff",
+      "name": "Focus Staff",
+      "tiers": [
+        {
+          "tier": 1,
+          "rank": 10,
+          "speedRank": 5,
+          "damage": 117.74891774891773,
+          "cooldown": 1.2363636363636363,
+          "normal": 99.99999999999999,
+          "dedicated": 107.69230769230771
+        },
+        {
+          "tier": 2,
+          "rank": 20,
+          "speedRank": 10,
+          "damage": 215.8730158730159,
+          "cooldown": 1.1333333333333335,
+          "normal": 200,
+          "dedicated": 214.8148148148148
+        }
+      ]
+    }
+  ],
+  "armorSets": [
+    {
+      "id": "melee_1",
+      "name": "Iron Armor",
+      "style": "melee",
+      "group": "blacksmithing",
+      "tier": 1,
+      "level": 1,
+      "health": 35,
+      "perk": 4,
+      "cost": {
+        "bars": 10,
+        "cloth": 2,
+        "gold": 40
+      },
+      "art": "armor-set-melee_1"
+    },
+    {
+      "id": "melee_2",
+      "name": "Steel Armor",
+      "style": "melee",
+      "group": "blacksmithing",
+      "tier": 2,
+      "level": 10,
+      "health": 65,
+      "perk": 7,
+      "cost": {
+        "steelBars": 16,
+        "runicCloth": 6,
+        "ancientFragments": 4,
+        "gold": 140
+      },
+      "art": "armor-set-melee_2"
+    },
+    {
+      "id": "ranged_1",
+      "name": "Plain Ranger Leathers",
+      "style": "ranged",
+      "group": "woodworking",
+      "tier": 1,
+      "level": 1,
+      "health": 24,
+      "perk": 4,
+      "cost": {
+        "bars": 4,
+        "cloth": 10,
+        "logs": 6,
+        "gold": 40
+      },
+      "art": "armor-set-ranged_1"
+    },
+    {
+      "id": "ranged_2",
+      "name": "Cured Ranger Leathers",
+      "style": "ranged",
+      "group": "woodworking",
+      "tier": 2,
+      "level": 10,
+      "health": 45,
+      "perk": 6,
+      "cost": {
+        "steelBars": 6,
+        "willowLogs": 14,
+        "runicCloth": 16,
+        "gold": 140
+      },
+      "art": "armor-set-ranged_2"
+    },
+    {
+      "id": "magic_1",
+      "name": "Plain Linen Robes",
+      "style": "magic",
+      "group": "warding",
+      "tier": 1,
+      "level": 1,
+      "health": 18,
+      "perk": 4,
+      "cost": {
+        "bars": 2,
+        "cloth": 18,
+        "scraps": 4,
+        "gold": 40
+      },
+      "art": "armor-set-magic_1"
+    },
+    {
+      "id": "magic_2",
+      "name": "Blue Wool Robes",
+      "style": "magic",
+      "group": "warding",
+      "tier": 2,
+      "level": 10,
+      "health": 34,
+      "perk": 8,
+      "cost": {
+        "steelBars": 4,
+        "runicCloth": 28,
+        "cutGarnets": 2,
+        "gold": 150
+      },
+      "art": "armor-set-magic_2"
+    }
+  ],
+  "resources": [
+    {
+      "key": "coal",
+      "name": "Coal",
+      "source": "coal"
+    },
+    {
+      "key": "steelBars",
+      "name": "Steel Bars",
+      "source": "steelSmelt"
+    },
+    {
+      "key": "willowLogs",
+      "name": "Willow Logs",
+      "source": "willow"
+    },
+    {
+      "key": "ancientSalvage",
+      "name": "Ancient Salvage",
+      "source": "ancientScavenge"
+    },
+    {
+      "key": "ancientFragments",
+      "name": "Ancient Fragments",
+      "source": "cleanAncient"
+    },
+    {
+      "key": "garnets",
+      "name": "Rough Garnets",
+      "source": "garnetSearch"
+    },
+    {
+      "key": "cutGarnets",
+      "name": "Cut Garnets",
+      "source": "garnetCut"
+    },
+    {
+      "key": "runicCloth",
+      "name": "Runic Cloth",
+      "source": "aetherWeave"
+    }
+  ],
+  "activities": [
+    {
+      "id": "coal",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Coal Mining",
+      "resource": "coal",
+      "item": "Coal",
+      "seconds": 11,
+      "amount": 2,
+      "xp": "miningXp",
+      "gain": 13,
+      "verb": "MINE",
+      "pose": "mine",
+      "color": "#c0b7a3",
+      "scene": "mine",
+      "activeSeconds": 3.2,
+      "group": "blacksmithing"
+    },
+    {
+      "id": "steelSmelt",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Steel Smithing",
+      "resource": "steelBars",
+      "item": "Steel Bars",
+      "seconds": 15,
+      "amount": 1,
+      "xp": "smithingXp",
+      "gain": 19,
+      "cost": {
+        "ore": 2,
+        "coal": 1
+      },
+      "verb": "SMELT",
+      "pose": "smith",
+      "color": "#d7dfe4",
+      "scene": "forge",
+      "activeSeconds": 3.6,
+      "group": "blacksmithing"
+    },
+    {
+      "id": "willow",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Willow Woodcutting",
+      "resource": "willowLogs",
+      "item": "Willow Logs",
+      "seconds": 12,
+      "amount": 2,
+      "xp": "woodXp",
+      "gain": 14,
+      "verb": "CHOP",
+      "pose": "wood",
+      "color": "#b8d7a1",
+      "scene": "wood",
+      "activeSeconds": 3,
+      "group": "woodworking"
+    },
+    {
+      "id": "steelFletch",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Steel Fletching",
+      "resource": "arrows",
+      "item": "Arrows",
+      "seconds": 13,
+      "amount": 12,
+      "xp": "fletchXp",
+      "gain": 19,
+      "cost": {
+        "willowLogs": 2,
+        "steelBars": 1
+      },
+      "verb": "FLETCH",
+      "pose": "fletch",
+      "color": "#d0d9c0",
+      "scene": "fletch",
+      "activeSeconds": 3.4,
+      "group": "woodworking"
+    },
+    {
+      "id": "ancientScavenge",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Ancient Salvaging",
+      "resource": "ancientSalvage",
+      "item": "Ancient Salvage",
+      "seconds": 24,
+      "amount": 2,
+      "goldGain": 3,
+      "xp": "scavengeXp",
+      "gain": 14,
+      "verb": "SEARCH",
+      "pose": "scavenge",
+      "color": "#d5bb87",
+      "scene": "scavenge",
+      "activeSeconds": 4,
+      "group": "scavenging"
+    },
+    {
+      "id": "cleanAncient",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Salvage Cleaning",
+      "resource": "ancientFragments",
+      "item": "Ancient Fragments",
+      "seconds": 14,
+      "amount": 2,
+      "xp": "scavengeXp",
+      "gain": 18,
+      "cost": {
+        "ancientSalvage": 2
+      },
+      "verb": "CLEAN",
+      "pose": "scavenge",
+      "color": "#b6c6a0",
+      "scene": "scavenge",
+      "activeSeconds": 3.6,
+      "group": "scavenging"
+    },
+    {
+      "id": "aetherWeave",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Runic Weaving",
+      "resource": "runicCloth",
+      "item": "Runic Cloth",
+      "seconds": 13,
+      "amount": 2,
+      "xp": "wardXp",
+      "gain": 16,
+      "cost": {
+        "cloth": 2,
+        "willowLogs": 1
+      },
+      "verb": "WEAVE",
+      "pose": "ward",
+      "color": "#b5bde3",
+      "scene": "ward",
+      "activeSeconds": 3,
+      "group": "warding"
+    },
+    {
+      "id": "greaterRune",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Greater Runecrafting",
+      "resource": "runes",
+      "item": "Arcane Runes",
+      "seconds": 14,
+      "amount": 10,
+      "xp": "runeXp",
+      "gain": 20,
+      "cost": {
+        "runicCloth": 2,
+        "ancientFragments": 2
+      },
+      "verb": "INSCRIBE",
+      "pose": "rune",
+      "color": "#a4c7e8",
+      "scene": "rune",
+      "activeSeconds": 3.6,
+      "group": "warding"
+    },
+    {
+      "id": "garnetSearch",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Garnet Prospecting",
+      "resource": "garnets",
+      "item": "Rough Garnets",
+      "seconds": 30,
+      "amount": 1,
+      "xp": "artisanXp",
+      "gain": 15,
+      "verb": "PROSPECT",
+      "pose": "scavenge",
+      "color": "#e59b91",
+      "scene": "scavenge",
+      "activeSeconds": 4.5,
+      "group": "artisan"
+    },
+    {
+      "id": "garnetCut",
+      "icon": "✦",
+      "tier": 2,
+      "name": "Garnet Cutting",
+      "resource": "cutGarnets",
+      "item": "Cut Garnets",
+      "seconds": 24,
+      "amount": 1,
+      "xp": "artisanXp",
+      "gain": 24,
+      "cost": {
+        "garnets": 1
+      },
+      "verb": "CUT",
+      "pose": "fletch",
+      "color": "#e6a3aa",
+      "scene": "polish",
+      "activeSeconds": 4,
+      "group": "artisan"
+    }
+  ],
+  "powerRanks": [
+    {
+      "id": "might",
+      "max": 6,
+      "first": "+10% weapon damage",
+      "last": "+60% weapon damage"
+    },
+    {
+      "id": "haste",
+      "max": 6,
+      "first": "+8% attack speed",
+      "last": "+48% attack speed"
+    },
+    {
+      "id": "cleave",
+      "max": 4,
+      "first": "+1 nearby targets per swing",
+      "last": "+4 nearby targets per swing"
+    },
+    {
+      "id": "reach",
+      "max": 4,
+      "first": "+12% melee reach",
+      "last": "+48% melee reach"
+    },
+    {
+      "id": "ward",
+      "max": 4,
+      "first": "10% less incoming damage",
+      "last": "40% less incoming damage"
+    },
+    {
+      "id": "vitality",
+      "max": 5,
+      "first": "+18 maximum HP",
+      "last": "+90 maximum HP"
+    },
+    {
+      "id": "crit",
+      "max": 5,
+      "first": "13% critical chance",
+      "last": "45% critical chance"
+    },
+    {
+      "id": "multishot",
+      "max": 4,
+      "first": "2 projectiles; each extra bolt deals 35% damage",
+      "last": "5 projectiles; each extra bolt deals 35% damage"
+    },
+    {
+      "id": "pierce",
+      "max": 4,
+      "first": "1 extra pierces; 84% damage retained per pierce",
+      "last": "4 extra pierces; 84% damage retained per pierce"
+    },
+    {
+      "id": "storm",
+      "max": 4,
+      "first": "13% chain chance; 35% hit damage to a nearby foe",
+      "last": "52% chain chance; 140% hit damage to a nearby foe"
+    },
+    {
+      "id": "fire",
+      "max": 4,
+      "first": "10% hit damage / second for 2.7s",
+      "last": "40% hit damage / second for 4.8s"
+    },
+    {
+      "id": "frost",
+      "max": 4,
+      "first": "22% slow for 1.65s",
+      "last": "46% slow for 2.70s"
+    },
+    {
+      "id": "nova",
+      "max": 4,
+      "first": "2 nearby targets at 25% critical-hit damage",
+      "last": "8 nearby targets at 40% critical-hit damage"
+    },
+    {
+      "id": "swift",
+      "max": 4,
+      "first": "+12% movement speed",
+      "last": "+48% movement speed"
+    },
+    {
+      "id": "magnet",
+      "max": 5,
+      "first": "+55 XP pickup radius",
+      "last": "+275 XP pickup radius"
+    },
+    {
+      "id": "regen",
+      "max": 4,
+      "first": "0.7 HP regenerated / second",
+      "last": "2.8 HP regenerated / second"
+    },
+    {
+      "id": "wisdom",
+      "max": 5,
+      "first": "+15% delve XP",
+      "last": "+75% delve XP"
+    },
+    {
+      "id": "forage",
+      "max": 5,
+      "first": "+10% gold from monsters",
+      "last": "+50% gold from monsters"
+    }
+  ],
+  "simulated": [
+    {
+      "zone": 1,
+      "weapon": "sword",
+      "seconds": 633.9999999999767,
+      "kills": 369,
+      "referenceDps": 80.63227272727272,
+      "targetSeconds": 600
+    },
+    {
+      "zone": 2,
+      "weapon": "sword",
+      "seconds": 1255.2000000001992,
+      "kills": 549,
+      "referenceDps": 160.9090909090909,
+      "targetSeconds": 1200
+    }
+  ]
+}

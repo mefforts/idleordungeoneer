@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="120" viewBox="0 0 640 120">
+  <defs>
+    <linearGradient id="edge" x2="0" y2="1"><stop stop-color="#a18d6a"/><stop offset=".25" stop-color="#72644d"/><stop offset=".72" stop-color="#3d3528"/><stop offset="1" stop-color="#17130e"/></linearGradient>
+    <linearGradient id="stone" x2=".15" y2="1"><stop stop-color="#534a3c"/><stop offset=".5" stop-color="#423b30"/><stop offset="1" stop-color="#332e26"/></linearGradient>
+    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".18 .28" numOctaves="3" seed="34"/><feColorMatrix type="saturate" values="0"/><feBlend in="SourceGraphic" mode="soft-light"/></filter>
+    <clipPath id="face"><path d="m23 19 131 1 7-3 449 3 12 14-2 48 3 9-16 11-223-1-7 3-352-3-11-12 2-47-3-6Z"/></clipPath>
+  </defs>
+  <path fill="#100d09" d="M13 6 151 7 159 3 619 5 638 22 635 88 640 101 621 119 385 116 377 120 16 116 1 102 4 29 0 19Z"/>
+  <path fill="url(#edge)" d="M14 4 150 5 159 1 618 3 636 20 633 85 638 98 620 115 385 112 377 116 17 112 3 99 6 28 2 18Z"/>
+  <path fill="url(#stone)" d="m23 19 131 1 7-3 449 3 12 14-2 48 3 9-16 11-223-1-7 3-352-3-11-12 2-47-3-6Z"/>
+  <g clip-path="url(#face)"><path fill="#b19a73" opacity=".08" d="m0 26 100 9 100-7 81 5 98-10 125 10 136-7v17L504 45l-125-9-104 10-74-9-103 8L0 40Z"/><path fill="#19150f" opacity=".16" d="m0 86 123-10 114 12 129-9 119 11 155-7v37H0Z"/><path fill="#645746" filter="url(#grain)" opacity=".18" d="M0 0h640v120H0z"/></g>
+  <path fill="none" stroke="#cbb58b" stroke-opacity=".47" d="m9 19 9-10 133 1 9-5 455 3 12 12M10 34 8 95l12 12 355 3 10-3 230 3"/>
+  <path fill="none" stroke="#201a13" stroke-width="2" d="m19 40 1-8 9-9 125 1 8-3 444 3 12 12m-592 62 349 2 8-3 222 1 10-10"/>
+  <path fill="none" stroke="#9e8965" stroke-opacity=".4" d="m29 27 126 1 7-4 441 3 11 11M25 95l352 2 7-3 220 1"/>
+  <g fill="none" stroke-linejoin="miter"><path stroke="#201a12" stroke-width="3.5" d="M14 47v28m0-27 7 8-7 7 7 8m605-24v28m0-27-7 8 7 7-7 8"/><path stroke="#b49b6e" stroke-width="1.1" stroke-opacity=".72" d="M14.7 47v28m0-26 6 7-6 7 6 8m603.6-24v28m0-26-6 7 6 7-6 8"/></g>
+  <path fill="none" stroke="#1d1811" stroke-width="1.2" stroke-opacity=".7" d="m57 5-7 10 4 8-8 11 2 7m565 73-6-10 5-8-8-9 3-8M4 82l12-7 11 4"/>
+  <path fill="none" stroke="#9b855e" stroke-opacity=".35" d="m59 5-7 10 4 8-8 11m566 80-5-10 4-8-8-9"/>
+  <path fill="none" stroke="#ab9165" stroke-opacity=".4" d="m298 10 7-5 7 5-7 5Zm23 0 7-5 7 5-7 5Z"/>
+</svg>

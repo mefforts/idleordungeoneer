@@ -1,0 +1,276 @@
+/* Two authored equipment tiers. Combat power is finite; skill dedication adds
+   a small, explicit bonus rather than another unbounded damage multiplier. */
+const TIER_LIMITS={1:{name:'Iron',dps:100,weapon:10,armor:5,speed:5,reach:5,enchant:2},2:{name:'Steel',dps:200,weapon:20,armor:10,speed:10,reach:10,enchant:4}};
+const TIER_RESOURCES=['coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth'];
+const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:150},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:150},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:150}};
+const WEAPON_RIGS={sword:{height:57,grip:[.49,.85]},shield:{height:33,grip:[.5,.5]},polearm:{height:104,grip:[.19,.79]},greatsword:{height:76,grip:[.5,.84]},bow:{height:54,grip:[.16,.5],flip:true},staff:{height:80,grip:[.5,.78]}};
+let workshopTier=1,tierProgressionInstalled=false,zone2CampImage=null;
+function tier2Unlocked(){return data.cleared>=3||data.floor>=4;}
+function styleTier(id=combatStyle()){return tier2Unlocked()&&data.styles?.[id]?.tier===2?2:1;}
+function styleUpgradeCap(id,kind){
+ const tier=kind==='armor'&&tier2Unlocked()&&data.ownedArmor?.includes(id+'_2')?2:styleTier(id);
+ return TIER_LIMITS[tier][kind]||0;
+}
+function normalizeTierProgression(){
+ for(const key of TIER_RESOURCES)data[key]=Math.max(0,Math.min(1e12,Number(data[key])||0));
+ const legacy=data.tierProgressionVersion!==1;
+ if(legacy){
+  data.legacyProgressionArchive={styles:JSON.parse(JSON.stringify(data.styles)),armor:[...(data.archivedArmor||[]),...(data.ownedArmor||[])]};
+ }
+ for(const [id,s]of Object.entries(data.styles)){
+  s.tier=legacy?(tier2Unlocked()&&s.weapon>=10?2:1):(tier2Unlocked()&&s.tier===2?2:1);
+  for(const kind of ['weapon','armor','speed','reach','enchant'])s[kind]=Math.min(styleUpgradeCap(id,kind),finiteRank(s[kind]));
+ }
+ data.tierProgressionVersion=1;
+ if(legacy)data.zone2SkillsAnnounced=tier2Unlocked();
+ if(SKILLS[data.lastSkill]?.tier===2&&!tier2Unlocked())data.lastSkill='mine';
+}
+function weaponDamageBase(id=data.weaponType,rank=data.styles[styleForWeapon(id)].weapon){
+ const w=WEAPON_TYPES[id],r=Math.max(0,Math.min(TIER_LIMITS[styleTier(styleForWeapon(id))].weapon,rank));
+ const starter=14*w.power/w.cooldown*1.05;
+ const first=100/1.1,second=200/1.2;
+ const budget=r<=10?starter+(first-starter)*r/10:first+(second-first)*(r-10)/10;
+ const robeAllowance=styleForWeapon(id)==='magic'?Math.min(1,r/10)*.04+Math.max(0,r-10)/10*.04:0;
+ return budget*w.cooldown/w.power/1.05/(1+robeAllowance);
+}
+function styleStats(id=combatStyle()){
+ const s=data.styles[id],level=Math.min(50,1+Math.floor(Math.sqrt(s.xp/80))),armor=armorStats(),skillLevel=levelRange(data[DISCIPLINES[STYLE_DEFS[id].group].xp]||0).lvl;
+ const proficiencyPercent=(level-1)*3/49,craftsmanshipPercent=Math.min(5,Math.max(0,skillLevel-10)*.1),weapon=id===combatStyle()?data.weaponType:s.lastWeapon;
+ return {id,name:STYLE_DEFS[id].name,level,skillLevel,tier:styleTier(id),baseDamage:weaponDamageBase(WEAPON_TYPES[weapon]?weapon:STYLE_DEFS[id].weapon),
+  damagePercent:proficiencyPercent+craftsmanshipPercent+(id==='magic'?armor.magic:0),proficiencyPercent,craftsmanshipPercent,
+  speedPercent:s.speed*2,reachPercent:s.reach*3,armorHealth:armor.health,guardPercent:armor.guard,movePercent:armor.move};
+}
+function earnStyleXp(amount,id=combatStyle()){
+ const before=styleStats(id).level;data.styles[id].xp+=amount;
+ if(styleStats(id).level>before)toast(STYLE_DEFS[id].name+' proficiency '+styleStats(id).level,'Combat proficiency adds up to 3% damage. Dedicated skilling adds up to another 5%.');
+}
+function armorStats(){
+ const set=armorLoadout(),rank=set?Math.min(TIER_LIMITS[set.tier].armor,data.styles[set.style].armor):0;
+ return {set,rank,health:set?set.health+rank*8:0,guard:set?.style==='melee'?set.perk+rank*.25:0,move:set?.style==='ranged'?set.perk:0,magic:set?.style==='magic'?set.perk:0};
+}
+function weaponArtTier(id=data.weaponType){return styleTier(styleForWeapon(id));}
+function describeEquipment(d){
+ const a=ARMOR_SETS[d.equippedArmor],s=d.styles?.[styleForWeapon(d.weaponType)]||{};
+ return {armor:a||null,style:a?.style||'travel',tier:a?.tier||0,weaponTier:s.tier===2?2:1};
+}
+function paintEquipmentBody(c,d,motion={}){
+ const a=equipmentRegion(d,'armor');if(!a)return false;const [x,y,w,h]=a.region,style=a.details.style;
+ const plain=a.details.armor.id==='ranged_1',top=plain?.03:style==='magic'?.24:.25;
+ c.save();c.beginPath();c.moveTo(-11,-50);c.lineTo(11,-50);c.lineTo(15,-44);c.lineTo(12,-30);c.lineTo(style==='magic'?15:16,-18);c.lineTo(-16,-18);c.lineTo(-12,-30);c.lineTo(-15,-44);c.closePath();c.clip();
+ c.drawImage(a.image,x+w*.22,y+h*top,w*.56,h*((style==='magic'?.53:.66)-top),-17,-51,34,35);c.restore();
+ if(style==='magic'){
+  const strips=12;
+  for(let i=0;i<strips;i++){
+   const t=i/strips,sway=Math.sin((motion.time||0)*3-t*1.8)*(motion.walking?1.1:.25)*t;
+   const width=31+t*9,sy=y+h*(.51+t*.405);c.drawImage(a.image,x+w*.13,sy,w*.74,h*.405/strips,-width/2+sway,-28+i*27/strips,width,27/strips+.25);
+  }
+ }
+ return true;
+}
+function paintRigSegment(c,a,side,start,end,top,bottom,width){
+ const [x,y,w,h]=a.region,dx=end.x-start.x,dy=end.y-start.y,len=Math.hypot(dx,dy),rotation=Math.atan2(dy,dx)-Math.PI/2;
+ c.save();c.translate(start.x,start.y);c.rotate(rotation);c.beginPath();c.roundRect(-width/2,-2,width,len+4,width*.36);c.clip();
+ c.fillStyle=a.details.style==='melee'?'#4e504a':a.details.style==='magic'?(a.details.tier===1?'#66513b':'#39475e'):'#68503b';c.fillRect(-width/2,-2,width,len+4);
+ c.drawImage(a.image,x+w*(side<0?.015:.72),y+h*top,w*.265,h*(bottom-top),-width/2,-2,width,len+4);c.restore();
+}
+function paintEquipmentArm(c,d,side,angle,joints){
+ const a=equipmentRegion(d,'armor');if(!a||!joints)return false;
+ const plain=a.details.armor.id==='ranged_1',mage=a.details.style==='magic',upper=plain?[.12,.29]:mage?[.24,.39]:[.21,.40],lower=plain?[.28,.45]:mage?[.38,.51]:[.39,.57];
+ paintRigSegment(c,a,side,joints.shoulder,joints.elbow,...upper,mage?10:a.details.style==='melee'?11:9);
+ paintRigSegment(c,a,side,joints.elbow,joints.hand,...lower,mage?8.5:7.5);return true;
+}
+function paintEquipmentLeg(c,d,side,theta){
+ const a=equipmentRegion(d,'armor');if(!a)return false;const [x,y,w,h]=a.region,mage=a.details.style==='magic';
+ c.save();c.translate(side*6.6,mage?-7:-27);c.rotate(theta*(mage?.18:1));
+ c.drawImage(a.image,x+w*(side<0?.20:.48),y+h*(mage?.89:.59),w*.32,h*(mage?.11:.41),-7.2,0,14.4,mage?8:28);c.restore();return true;
+}
+function paintEquipmentHead(c,d){
+ const a=equipmentRegion(d,'armor');if(!a)return false;const [x,y,w,h]=a.region,id=a.details.armor.id;if(id==='ranged_1')return false;
+ const cap=id==='ranged_2',mage=a.details.style==='magic',crop=cap?[.23,0,.55,.15]:mage?[.24,0,.52,.265]:[.295,0,.41,.245],target=cap?[-17,-84,34,20]:mage?[-20,-84,40,43]:[-18,-83,36,39];
+ c.save();
+ if(a.details.style==='melee'){c.beginPath();c.moveTo(-8,-83);c.lineTo(8,-83);c.quadraticCurveTo(19,-78,18,-65);c.lineTo(14,-50);c.quadraticCurveTo(0,-41,-14,-50);c.lineTo(-18,-65);c.quadraticCurveTo(-19,-77,-8,-83);c.closePath();c.clip();}
+ c.drawImage(a.image,x+w*crop[0],y+h*crop[1],w*crop[2],h*crop[3],...target);c.restore();return true;
+}
+function paintEquipmentWeapon(c,d,type,pose={x:0,y:0,angle:0}){
+ const actual=type||d.weaponType,a=equipmentRegion(d,'weapons',actual),rig=WEAPON_RIGS[actual];if(!a||!rig)return false;
+ const [x,y,w,h]=a.region,height=rig.height,width=height*w/h;
+ c.save();c.translate(pose.x,pose.y);c.rotate(pose.angle||0);if(rig.flip)c.scale(-1,1);
+ c.drawImage(a.image,x,y,w,h,-rig.grip[0]*width,-rig.grip[1]*height,width,height);c.restore();return true;
+}
+function promoteStyle(id){
+ if(!STYLE_DEFS[id]||styleTier(id)===2)return false;
+ if(!tier2Unlocked()){toast('Steel unlocks in Zone 2','Clear all three floors of Zone 1. Second-tier gathering and equipment unlock together.');return false;}
+ if(data.styles[id].weapon<10||weaponCraftLevel(STYLE_DEFS[id].weapon)<10){toast('Finish your Iron training','Reach Iron refinement 10 and '+DISCIPLINES[STYLE_DEFS[id].group].name+' level 10.');return false;}
+ if(!spendAtStation(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group))return false;
+ data.styles[id].tier=2;projectCombatStyle();codexDiscover('unlock_steel');
+ toast(STYLE_DEFS[id].name+' upgraded to Steel','Refinement 11–20 is now available. The intended permanent ceiling is 200 DPS.');save();refreshUI();renderDisciplineDrawer();return true;
+}
+function styleUpgradeBase(id,kind){
+ const s=data.styles[id],r=s[kind]||0,tier=kind==='armor'&&data.ownedArmor.includes(id+'_2')?2:styleTier(id),cap=TIER_LIMITS[tier][kind],local=tier===2?Math.max(0,r-TIER_LIMITS[1][kind]):r;
+ if(tier===1){
+  if(kind==='weapon')return {bars:8+local*5,...(id==='ranged'?{logs:4+local*2}:id==='magic'?{cloth:6+local*2}:{}),gold:30+local*18};
+  if(kind==='armor')return id==='melee'?{bars:6+local*5,gold:25+local*20}:id==='ranged'?{bars:3+local*2,cloth:6+local*4,gold:25+local*20}:{bars:2+local,cloth:12+local*6,gold:25+local*20};
+  if(kind==='enchant')return {bars:4+local*3,essence:2+local*2,cutOpals:1};
+  return {bars:5+local*3,...(id==='ranged'?{logs:8+local*4}:id==='magic'?{cloth:8+local*4}:{}),gold:35+local*20};
+ }
+ const cost={steelBars:(kind==='armor'&&id!=='melee'?4:8)+local*3,gold:75+local*35};
+ if(id==='ranged')cost.willowLogs=8+local*3;
+ if(id==='magic'||kind==='armor'&&id==='ranged')cost.runicCloth=(id==='magic'?12:6)+local*3;
+ if(kind==='weapon')cost.ancientFragments=3+local;
+ if(kind==='enchant'){cost.essence=4+local*2;cost.cutGarnets=1+local;}
+ return cost;
+}
+function craftStyleUpgrade(id,kind){
+ if(!STYLE_DEFS[id]||!['weapon','armor','enchant','speed','reach'].includes(kind))return false;
+ const s=data.styles[id],cap=styleUpgradeCap(id,kind);if(s[kind]>=cap){toast(TIER_LIMITS[styleTier(id)].name+' limit reached',styleTier(id)===1?'Clear Zone 1 and upgrade this style to Steel for the next tier.':'This is the current Steel upgrade limit.');return false;}
+ if(kind==='armor'&&!data.ownedArmor.some(key=>ARMOR_SETS[key]?.style===id)){toast('Craft an armor set first','Choose a '+ARMOR_STYLES[id].label+' set above.');return false;}
+ if(!spendAtStation(styleUpgradeBase(id,kind),upgradeGroup(id,kind)))return false;
+ const oldMax=game.player.maxHp;s[kind]++;projectCombatStyle();game.player.maxHp=maxHp()+waveVitality();
+ if(kind==='armor'&&armorLoadout()?.style===id)game.player.hp=Math.min(game.player.maxHp,game.player.hp+Math.max(0,game.player.maxHp-oldMax));
+ if(kind==='enchant')codexDiscover('permanent_enchant');
+ toast(STYLE_DEFS[id].name+' '+{weapon:'refinement',armor:'reinforcement',enchant:'enchantment',speed:'attack speed',reach:'reach'}[kind]+' '+s[kind]+' / '+cap,'Permanent '+STYLE_DEFS[id].name+' progression · '+TIER_LIMITS[styleTier(id)].name+' tier');
+ save();refreshUI();renderDisciplineDrawer();return true;
+}
+function canUseSkill(key){return !!SKILLS[key]&&(!(SKILLS[key].tier===2)||tier2Unlocked())&&(!['silverMine','silverSmelt'].includes(key)||levelRange(data.blacksmithXp||0).lvl>=10);}
+function skillLockReason(key){return SKILLS[key]?.tier===2&&!tier2Unlocked()?'Clear Zone 1 · enter Zone 2':'Requires Blacksmithing level 10';}
+
+function goToSource(resource){
+ if(resource==='gold'||resource==='essence'){closeDrawer();setScene('combat',true);toast(resource==='gold'?'Gold comes from delving or scavenging':'Defeat a guardian for essence');return;}
+ const key=RESOURCE_SOURCE[resource];if(!key)return;workshopTier=SKILLS[key].tier||1;
+ if(!canUseSkill(key)){openWorkshop(disciplineFor(key),SKILLS[key].cost?'refine':'gather');toast('Resource locked',skillLockReason(key));return;}
+ enterActivity(key);
+}
+function produce(key,active=false){
+ const skill=SKILLS[key];if(!skill||!canUseSkill(key)||!spendAtStation(skill.cost||{},disciplineFor(key)))return false;
+ const amount=skillYield(key);data[skill.resource]=(data[skill.resource]||0)+amount;
+ if(skill.goldGain){data.gold+=skill.goldGain+(data.skillBoosts?.scavenging?1:0)+skill.goldGain*trinketBonus('gold');data.scavengeDry=(data.scavengeDry||0)+1;
+  if(Math.random()<.07+trinketBonus('find')||data.scavengeDry>=20){data.scavengeDry=0;const gem=skill.tier===2?'garnets':'opals';data[gem]++;codexDiscover('resource_'+gem);if(active)toast(gem==='garnets'?'Garnet found!':'Opal found!','A rough gem for Artisan');}}
+ const xp=active?Math.max(5,Math.floor(skill.gain*.65)):skill.gain;data[skill.xp]=(data[skill.xp]||0)+xp;const group=disciplineOf(key);data[group.xp]=(data[group.xp]||0)+xp;
+ codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
+}
+function weaponDps(id,options={}){
+ const style=styleForWeapon(id),s=data.styles[style],w=WEAPON_TYPES[id],cap=styleUpgradeCap(style,'weapon'),rank=options.ceiling?cap:Math.min(cap,s.weapon+(options.next?1:0)),stats=styleStats(style);
+ const armorAllowance=style==='magic'?(styleTier(style)===2?8:4):0;
+ const percent=options.ceiling?armorAllowance+(options.dedicated?8:0):stats.damagePercent,speed=options.ceiling?styleUpgradeCap(style,'speed')*2:stats.speedPercent;
+ const damage=weaponDamageBase(id,rank)*w.power*(1+percent/100)*(options.run?waveDamageFactor():1),rate=(1+speed/100)/w.cooldown*(options.run?waveHasteFactor():1);
+ return damage*rate*(options.run?1+waveCritChance():1.05)*(options.run&&['bow','staff'].includes(id)?1+.35*waveRank('multishot'):1);
+}
+function refinementForTarget(id,target=zoneBalance().dps){
+ const cap=styleUpgradeCap(styleForWeapon(id),'weapon'),stats=styleStats(styleForWeapon(id)),w=WEAPON_TYPES[id];
+ for(let r=0;r<=cap;r++)if(weaponDamageBase(id,r)*w.power*(1+stats.damagePercent/100)*(1+stats.speedPercent/100)/w.cooldown*1.05>=target)return r;
+ return null;
+}
+
+function skillMenuState(){return JSON.stringify([workshopTier,workshopGroup,workshopView,styleBench,recipeCategory,data.floor,data.cleared,data.weaponType,data.equipmentVersion,data.ownedArmor,data.equippedArmor,data.styles,data.tools,data.stationLevels,data.stationCredits,data.stationSaved,data.craftGoal,data.idleJobs,data.idleNoticeSlots,game.pendingIdleSkill,...Object.keys(RESOURCE_LABEL).map(k=>data[k]),...Object.values(DISCIPLINES).map(d=>data[d.xp])]);}
+
+function enterActivity(key){
+ if(!SKILLS[key])return false;if(!canUseSkill(key)){toast('Activity locked',skillLockReason(key));return false;}
+ workshopTier=SKILLS[key].tier||1;closeDrawer();hideOverlay();setScene(key,false);game.menuPaused=!!game.manualPaused;updatePauseHud();save();return true;
+}
+function goalDetails(action){
+ const [type,id]=String(action||'').split(':');
+ if(type==='promotion'&&STYLE_DEFS[id])return {name:STYLE_DEFS[id].name+' Steel promotion',art:'codex-unlock_steel',cost:stationCost(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group),group:STYLE_DEFS[id].group,view:'equipment',done:styleTier(id)===2};
+ if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];return {name:a.name,art:a.art,cost:armorRecipeCost(id),group:a.group,view:'equipment',done:data.ownedArmor.includes(id)};}
+ return legacyGoalDetails(action);
+}
+function installTierProgressionUI(){
+ if(tierProgressionInstalled)return;tierProgressionInstalled=true;
+ for(const [key,sk]of Object.entries(SKILLS).filter(([,s])=>s.tier===2)){
+  const panel=document.createElement('section');panel.className='panel';panel.id=key+'Panel';panel.setAttribute('aria-label',sk.name);$('gameDrawer').append(panel);
+  BONUS_DEFS[key]={name:sk.name+' bonus',art:'action-'+key};
+ }
+ TOOL_DEFS.pickaxe.skills.push('coal');TOOL_DEFS.hatchet.skills.push('willow');TOOL_DEFS.mattock.skills.push('ancientScavenge','cleanAncient','garnetSearch');
+ for(const key of TIER_RESOURCES)if(!CODEX_ITEMS.some(a=>a.id==='resource_'+key))CODEX_ITEMS.push({id:'resource_'+key,cat:'Materials',name:RESOURCE_LABEL[key],desc:'Zone 2 material · '+SKILLS[RESOURCE_SOURCE[key]].name+' · '+(SKILLS[RESOURCE_SOURCE[key]].cost?Object.entries(SKILLS[RESOURCE_SOURCE[key]].cost).map(([k,n])=>n+' '+RESOURCE_LABEL[k]).join(' + '):'Clear Zone 1 to gather')});
+ for(const [id,sk]of Object.entries(SKILLS).filter(([,s])=>s.tier===2))CODEX_ITEMS.push({id:'skill_'+id,cat:'Skills',name:sk.name,desc:'Unlocked by clearing Zone 1 · '+sk.item});
+ CODEX_ITEMS.push({id:'unlock_steel',cat:'Weapons',name:'Steel tier',desc:'Clear Zone 1, finish Iron refinement 10, train crafting to level 10 and promote a combat style. Intended permanent ceiling: 200 DPS.'});
+ zone2CampImage=new Image();zone2CampImage.src=iconAsset('zone2-gathering');
+ $('consolidatedSkills').addEventListener('click',e=>{const promote=e.target.closest('[data-promote-style]'),tier=e.target.closest('[data-workshop-tier]');if(promote&&!promote.disabled)promoteStyle(promote.dataset.promoteStyle);if(tier){workshopTier=Number(tier.dataset.workshopTier);renderDisciplineDrawer();}});
+}
+function refreshTierProgressionUI(){
+ if(!tierProgressionInstalled)return;
+ if(tier2Unlocked()&&!data.zone2SkillsAnnounced){data.zone2SkillsAnnounced=true;toast('Zone 2 skilling unlocked','Coal and steel · willow · ancient salvage · garnets · runic cloth. Visit Skills to continue each discipline.');}
+ const key=game.scene;if(SKILLS[key]?.tier===2){
+  $('activeTool').textContent=({steelSmelt:'Smithing hammer',steelFletch:'Fletching knife',aetherWeave:'Weaving shuttle',greaterRune:'Inscription stylus',garnetCut:'Gem chisel'})[key]||TOOL_DEFS[toolForSkill(key)]?.name||'Prospecting mattock';
+ }
+}
+
+function defaults(){return {tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
+
+function drawWorkstationScene(w,h,key){
+ const base=SKILLS[key].scene||key,advanced={coal:[0,0],willow:[1,0],ancientScavenge:[0,1],cleanAncient:[0,1],garnetSearch:[1,1],garnetCut:[1,1]}[key];
+ const [sheet,oldCol,oldRow]=CAMP_PANELS[base]||[0,0,0],useAdvanced=advanced&&zone2CampImage?.complete&&zone2CampImage.naturalWidth,col=useAdvanced?advanced[0]:oldCol,row=useAdvanced?advanced[1]:oldRow,im=useAdvanced?zone2CampImage:campArt[sheet];
+ if(!im?.complete||!im.naturalWidth){drawProceduralWorkstation(w,h,base);return}
+ const sw=im.naturalWidth/2,sh=im.naturalHeight/2,sx=col*sw,sy=row*sh,portrait=w/h<.94,t=reducedMotion()?0:game.activeClockMs/1000;
+ const focus={wood:.665,mine:.625,silverMine:.625,forge:.68,silverSmelt:.68,fletch:.675,ward:.65,rune:.65,polish:.66,scavenge:.695}[base]||.62;
+ const dw=Math.max(w,h*sw/sh),dh=dw*sh/sw,dx=portrait?w*.5-dw*focus:(w-dw)/2,dy=(h-dh)/2;
+ ctx.drawImage(im,sx,sy,sw,sh,dx,dy,dw,dh);
+ const activeWorking=game.holdSkill===key&&!$('skillHold').disabled,working=activeWorking||(data.idleJobs.includes(key)&&hasIngredients(skillCost(key))),sk=SKILLS[key],pose={mine:'mine',silverMine:'mine',forge:'smith',silverSmelt:'smith',wood:'wood',fletch:'fletch',ward:'ward',rune:'rune',polish:'fletch',scavenge:'scavenge'}[base];
+ const heroPosition={wood:.60,mine:.53,silverMine:.53,forge:.61,silverSmelt:.61,fletch:.60,ward:.57,rune:.57,polish:.57,scavenge:.59};
+ const heroFraction=useAdvanced?(base==='wood'?.64:.62):heroPosition[base];
+ const heroX=portrait?clamp(dx+dw*heroFraction,w*.28,w*.68):dx+dw*heroFraction,feet=Math.min(dy+dh*.81,game.workAreaBottom??h-(innerWidth<=760?304:230)),scale=Math.min(clamp(dw/sw*1.4,1.28,3.2),Math.max(.85,(feet-96*(w/innerWidth))/82)),animFrequency=['mine','silverMine','wood'].includes(base)?4.4:5.4;
+ const animTime=working?t*Math.PI*2/(animFrequency*skillInterval(key,activeWorking)):t*.35;
+ DeepwellAvatar.render(ctx,{x:heroX,y:feet,scale,time:animTime,pose,working,action:working?game.workAction:0,data});
+ const targets={wood:[.73,.53],mine:[.72,.60],silverMine:[.72,.60],forge:[.75,.48],silverSmelt:[.75,.48],scavenge:[.80,.70],fletch:[.75,.49],ward:[.73,.54],rune:[.73,.44],polish:[.75,.49]},[tx,ty]=targets[base],px=dx+dw*tx,py=dy+dh*ty;
+ if(game.workAction>0&&game.lastActiveSkill===key){
+  const age=1-game.workAction/.48;ctx.save();ctx.globalAlpha=Math.max(0,1-age);ctx.strokeStyle=sk.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(px,py,12+age*35,6+age*15,0,0,Math.PI*2);ctx.stroke();
+  if(!reducedMotion())for(let i=0;i<7;i++){const a=i*2.399,dist=age*dw*.045;disc(px+Math.cos(a)*dist,py+Math.sin(a)*dist*.5-age*15,1.5,sk.color)}
+  ctx.font='600 12px system-ui';ctx.textAlign='center';ctx.strokeStyle='#17120c';ctx.lineWidth=3;ctx.strokeText('+'+skillYield(key),heroX,feet-scale*90-age*24+17);textAt('+'+skillYield(key),heroX,feet-scale*90-age*24+17,'600 12px system-ui','#f4e1b7');const resourceIcon=presentationResourceImage(sk.resource);if(resourceIcon.complete&&resourceIcon.naturalWidth)ctx.drawImage(resourceIcon,heroX+14,feet-scale*90-age*24+2,20,20);ctx.restore();
+ }
+ if(!reducedMotion()){
+  const warm=['forge','silverSmelt'].includes(base),points=warm?8:6;
+  for(let i=0;i<points;i++){const a=i*2.39+t*.25,px=warm?dx+dw*.25+Math.sin(a)*dw*.035:w*rng(i,83,key.length),py=warm?dy+dh*.48-((t*9+i*22)%(dh*.19)):dy+dh*(.15+rng(i,84)*.5)+Math.sin(t*.3+i)*8;
+   ctx.globalAlpha=warm?.30:.18;disc(px,py,warm?1.3:.9,warm?'#ffe0a3':'#fff0c9');}ctx.globalAlpha=1;
+ }
+}
+
+function setScene(scene,force=true){clearSkillBonuses();if(!$('skillQuickPicker').classList.contains('hidden'))closeSkillPicker();
+ if(scene==='codex'){showCodex();return}if(!['combat',...SKILL_KEYS].includes(scene))return;if(SKILLS[scene]&&!canUseSkill(scene)){toast('Activity locked',skillLockReason(scene));return;}
+ game.holdSkill=null;closeResourcePicker();game.scene=scene;if(SKILLS[scene])codexDiscover('skill_'+scene);
+ document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===scene));
+ for(const key of ['combat',...SKILL_KEYS])$(key+'Panel').classList.toggle('panel-active',!drawerKind&&key===scene||drawerKind==='gear'&&key==='combat');
+ $('stageWrap').dataset.scene=scene;$('campStrip').classList.toggle('hidden',scene!=='combat');$('announcement').classList.toggle('hidden',scene!=='combat'||game.announcementTime<=0);$('combatTopHUD').classList.toggle('hidden',scene!=='combat');$('bossHud').classList.toggle('hidden',scene!=='combat'||!game.boss);$('joystickZone').classList.toggle('hidden',scene!=='combat');$('dashButton').classList.toggle('hidden',scene!=='combat');
+ const sk=SKILLS[scene];$('ambientCaption').textContent=scene==='combat'?'DEFEAT · DISCOVER · DESCEND':DISCIPLINES[disciplineFor(scene)].name.toUpperCase()+' · HOLD TO PRODUCE';
+ $('skillActionBar').classList.toggle('hidden',scene==='combat');$('arenaBottomActions').classList.toggle('hidden',scene!=='combat');$('quickPause').classList.toggle('hidden',scene!=='combat');updatePauseHud();
+ if(sk){data.lastSkill=scene;codexDiscover('discipline_'+disciplineFor(scene));}
+ $('sceneEyebrow').textContent=scene==='combat'?biomeLabel():'THE LIVING CAMP';$('sceneTitle').textContent=scene==='combat'?biome().name:DISCIPLINES[disciplineFor(scene)].name;
+ $('sceneSubtitle').textContent=scene==='combat'?'Zone '+(zoneNumber()+1)+' · stage '+zoneStage()+'/3 · '+biomeDetail()+' · '+floorModifier():'✋ Hold scene to work · ◷ Idle unlocks on Floor 2';$('floorPill').classList.toggle('hidden',scene!=='combat');
+ $('stageStatus').textContent=scene==='combat'?'ACTIVE DELVE':data.idleJobs?.includes(scene)?'◷ BACKGROUND JOB ACTIVE':'✋ ACTIVE ONLY';$('controlsText').textContent=scene==='combat'?'WASD TO MOVE · SPACE TO DASH':'HOLD THE SCENE TO WORK';
+ if(force){if(scene==='combat'){if(game.status==='ready')intro();else if(game.status==='upgrade')showUpgrade();else if(game.status==='clear')showClearAgain();else if(game.status==='dead')showDeathAgain();else hideOverlay();}else hideOverlay()}
+ resize();refreshUI();
+}
+
+function attack(){
+ if(!game.enemies.length)return false;
+ const p=game.player,style=weaponInfo(),reach=attackReach(),targets=game.enemies.map(e=>({e,d:Math.hypot(e.x-p.x,e.y-p.y)})).filter(o=>o.d<reach+o.e.rad).sort((a,b)=>a.d-b.d);
+ if(!targets.length)return false;
+ const first=targets[0].e,angle=Math.atan2(first.y-p.y,first.x-p.x);
+ p.facing=Math.cos(angle)<0?-1:1;p.attackPose=.38;
+ let damage=attackDamage();
+ if(data.weaponType==='greatsword'&&p.hp<p.maxHp*.5)damage*=1.65;
+ if(isRanged()){
+  const ammo=data.weaponType==='bow'?'arrows':'runes';if((data[ammo]||0)<1){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1')}return false;}data[ammo]--;
+  const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*1.16,y:p.y+18+hand.y*1.16};
+  const number=Math.min(5,1+(game.upgrades.multishot||0));
+  for(let i=0;i<number;i++){
+   const target=targets[Math.min(i,targets.length-1)].e,a=Math.atan2(target.y-origin.y,target.x-origin.x)+(i-(number-1)/2)*.07;
+   game.shots.push({x:origin.x,y:origin.y,vx:Math.cos(a)*(data.weaponType==='bow'?360:295),vy:Math.sin(a)*(data.weaponType==='bow'?360:295),damage:damage*(i===0?1:.35),combatStyle:combatStyle(),life:Math.max(1.4,(reach+35)/(data.weaponType==='bow'?360:295)),pierce:game.upgrades.pierce||0,hits:new Set(),magic:data.weaponType==='staff'});
+  }
+ }else{
+  const maxHits=(data.weaponType==='greatsword'?4:data.weaponType==='polearm'?3:1)+(game.upgrades.cleave||0);
+  const cone=data.weaponType==='greatsword'?1.65:data.weaponType==='polearm'?.68:1.05;
+  let hits=0;
+  for(const t of targets){if(hits>=maxHits)break;
+   const a=Math.atan2(t.e.y-p.y,t.e.x-p.x),delta=Math.atan2(Math.sin(a-angle),Math.cos(a-angle));
+   if(Math.abs(delta)>cone)continue;
+   dealDamage(t.e,damage*(hits? .84:1),p.x,p.y);hits++;
+  }
+  game.swings.push({x:p.x,y:p.y,angle,reach:reach*.94,cone,life:.22,max:.22,style:data.weaponType});
+  burst(p.x+Math.cos(angle)*reach*.48,p.y+Math.sin(angle)*reach*.48,3,'#f8d7a0');
+ }
+ return true;
+}
+function drawPlayer(p){
+ if(p.invuln>0&&!game.menuPaused&&!game.manualPaused&&!reducedMotion()&&Math.sin(game.frame*38)>0)return;
+ if(p.dashTime>0){glow(p.x,p.y-3,64,'#86efdd9a');for(let i=1;i<=3;i++){ctx.save();ctx.globalAlpha=.2/i;ellipse(p.x-p.dashDX*i*21,p.y-p.dashDY*i*21,22,14,'#affff2');ctx.restore()}}
+ DeepwellAvatar.render(ctx,{x:p.x,y:p.y+18,scale:1.16,time:game.frame,pose:'combat',vx:p.vx,vy:p.vy,facing:p.facing,attack:p.attackPose/.38,charge:data.weaponType==='bow'?clamp(1-game.attackTimer/attackCooldown(),0,1):0,hit:p.hitPose/.26,data});
+}
