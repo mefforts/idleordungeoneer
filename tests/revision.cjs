@@ -1,5 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {createRuntime}=require('./runtime.cjs');
+const {testingCodes,withTestingCodes}=require('./code-fixture.cjs');
 function instrumentation(){
  function fresh(floor=1){
   if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();data.floor=floor;data.cleared=floor-1;
@@ -50,7 +51,7 @@ function instrumentation(){
 }
 (async()=>{
  const runtime=await createRuntime(),passed=[],errors=[];
- const html=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+instrumentation.toString()+')();\nresize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
+ const html=withTestingCodes(fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8')).replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+instrumentation.toString()+')();\nresize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
  try{
   const p=await runtime.browser.newPage({viewport:{width:1440,height:1000}});p.setDefaultTimeout(10000);p.on('pageerror',e=>errors.push(e.message));await p.route(runtime.baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));await p.goto(runtime.baseURL);
   for(const direction of [-1,1])for(const vertical of [-65,0,65]){
@@ -63,7 +64,7 @@ function instrumentation(){
   assert.deepEqual(rewards.map(r=>r.earned),[191,293]);assert.ok(rewards.every(r=>Math.abs(r.earned-r.budget.total)<1e-7));passed.push('Real kills, all nine guardians and floor clears produce 191 / 293 baseline gold per zone');
   assert.deepEqual(await p.evaluate(()=>__revision.carry()),{gold:45,remainder:.75});await p.reload();assert.deepEqual(await p.evaluate(()=>__revision.fourth()),{paid:1,gold:46,remainder:0});passed.push('Fractional reward gold carries across saves and reloads without losing or duplicating coins');
   assert.equal(await p.evaluate(()=>__revision.badTravel()),false);await p.evaluate(()=>__deepwell.openDrawer('settings'));assert.equal(await p.locator('#testTravel').count(),0);
-  await p.click('#settingsCodes');await p.fill('#codeInput','max');await p.click('#codeRedeem');
+  await p.click('#settingsCodes');await p.fill('#codeInput',testingCodes.sandbox);await p.click('#codeRedeem');
   let d=await p.evaluate(()=>__deepwell.getState().data);assert.equal(d.devSpeedUnlocked,true);assert.equal(d.devTravelUnlocked,true);assert.ok(d.cleared>=12);assert.ok(await p.locator('#testTravel').isVisible());assert.equal(await p.locator('#testZone option').count(),4);
   for(const [zone,stage]of [[2,2],[4,3],[1,1]]){
    await p.selectOption('#testZone',String(zone));await p.selectOption('#testFloor',String(stage));const gold=await p.evaluate(()=>__deepwell.getState().data.gold);await p.click('#testTravelGo');const state=await p.evaluate(()=>__deepwell.getState());assert.equal(state.data.floor,(zone-1)*3+stage);assert.equal(state.status,'running');assert.equal(state.data.gold,gold,'Travel cannot award clear rewards');
@@ -71,7 +72,7 @@ function instrumentation(){
   }
   await p.click('#drawerClose');assert.ok(await p.locator('#speedControl').isVisible());await p.click('#speedToggle');assert.ok(await p.locator('#speedOptions [data-speed="500"]').isVisible());
   await p.evaluate(()=>__deepwell.save());await p.reload();d=await p.evaluate(()=>__deepwell.getState().data);assert.equal(d.devTravelUnlocked,true);assert.equal(d.devSpeedUnlocked,true);assert.ok(d.cleared>=12);await p.click('#introSkills');await p.click('#quickSettings');assert.ok(await p.locator('#testTravel').isVisible());
-  await p.setViewportSize({width:320,height:844});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);assert.ok((await p.locator('#testTravelGo').boundingBox()).x<320);await p.screenshot({path:path.join(runtime.resultsDir,'revision-test-travel.png')});passed.push('max clears all four authored dungeons, unlocks all speed choices and persistent Zone / Floor travel; ordinary saves cannot use it');
+  await p.setViewportSize({width:320,height:844});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);assert.ok((await p.locator('#testTravelGo').boundingBox()).x<320);await p.screenshot({path:path.join(runtime.resultsDir,'revision-test-travel.png')});passed.push('Sandbox redemption clears all four authored dungeons, unlocks all speed choices and persistent Zone / Floor travel; ordinary saves cannot use it');
   await p.click('#drawerClose');const icons=await p.evaluate(()=>__revision.allIcons());assert.equal(icons.length,106);assert.equal(new Set(icons.map(i=>i.uri)).size,106);assert.ok(icons.every(i=>i.uri.startsWith('data:image/webp;base64,')),'No content entry may fall back to flat vector art');
   const alignment=await p.evaluate(async icons=>{
    const c=document.createElement('canvas');c.width=c.height=192;const ctx=c.getContext('2d',{willReadFrequently:true}),rows=[];

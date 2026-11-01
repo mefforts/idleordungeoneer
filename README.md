@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+A lightweight loading screen appears before the embedded assets arrive and hands over to the intro when the first scene is ready. It supports reduced motion and offers retry if startup fails. [Phone preview](preview-loading-mobile.png) · [Desktop preview](preview-loading.png).
+
 For iPhone and iPad, enable **Settings → Pages → Deploy from a branch → main → /(root)**, then open **https://mefforts.github.io/idleordungeoneer/** in Safari. Use **Share → Add to Home Screen** for a game icon. The root `.nojekyll` marker serves the standalone game without Jekyll processing. The first Pages deployment must finish before the URL works; its result appears under **Actions → pages build and deployment**. Use the in-game save backup/restore when moving between downloaded files and the website.
 
 ![Mobile touch movement and full-size navigation](preview-mobile-controls.png)
@@ -29,7 +31,7 @@ The shop focuses on elemental effects, additional targets/projectiles and themed
 
 **Dungeoneering Mastery** is a separate shared, refundable bank. Guardians grant 1 / 1 / 2 points. Onslaught unlocks spawn settings, Fortune improves seal drops, and Discovery improves rare-material drops. These change dungeon configuration and rewards rather than attack damage or protection. Its HUD shortcut shows unspent Mastery points; Essence remains an enchanting material.
 
-The first guardian unlocks **1× / 2× Delve speed**. Mastery speed affects combat only. The **mefforts** testing code unlocks **separate 1×–500× Delve and Skilling speed controls**. Use the speed pin in a skill scene to accelerate active gathering, crafting and online idle production; its setting stays independent of Delve speed, even after redeeming the code. Existing testing unlocks and **max** include this automatically. Offline earnings and the time to collect active bonuses keep real-time timing. Both speeds start at 1× each launch.
+The first guardian unlocks **1× / 2× Delve speed**. Mastery speed affects combat only. Skilling keeps its own clock; offline earnings and collection windows use real time.
 
 ## Equipment and pacing
 
@@ -141,8 +143,6 @@ Saves retain the `deepwell-prototype-v1` key. Settings provides backup/restore a
 
 Existing power ranks migrate into their saved Zone, and pending choices convert to seals. Earned XP becomes global XP while uncollected orbs stay separate. Old biome Mastery banks are pooled; duplicate allocations are refunded. Migration runs once and archives the old Zone/Mastery record. Equipment, materials, gold and XP caches remain. Older excess equipment ranks and unavailable armor remain archived under the existing tier rules.
 
-The **max** testing code unlocks **Settings → Test travel**, marks all four authored dungeons complete, funds their shops and enables separate 1×–500× Delve and Skilling speed controls. Travel grants no clear reward and retains purchased training in each Zone. Testing unlocks persist; redeem max again on an older testing save to fund the new wallets.
-
 ## Development and validation
 
 Builds are committed to GitHub with the standalone ZIP in `downloads/`. [AGENTS.md](AGENTS.md) describes public-file review and delivery verification. Cloud drafts and website deployments are separate.
@@ -157,8 +157,8 @@ npm run report:balance
 npm run review:ui
 ```
 
-Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. Guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. Mobile controls, navigation and material inventory live in `src/mobile.js` / `src/mobile.css`; themed ability definitions, migration and pricing in `src/zone-abilities.js`. The original engine and compiled standalone output are in `index.html`.
+Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. Guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. The early loading screen lives in `src/loading.*` and `src/loading-runtime.js`. Mobile controls, navigation and material inventory live in `src/mobile.js` / `src/mobile.css`; themed ability definitions, migration and pricing in `src/zone-abilities.js`. The original engine and compiled standalone output are in `index.html`.
 
-Fifteen browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 106 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. Full combat simulations verify the first four Zones and later pacing. Static encounters, biome and jewelry definitions remain guarded by a manifest.
+Sixteen browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 106 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. Full combat simulations verify the first four Zones and later pacing. Startup tests hold back the game download to verify the loading screen actually paints first; they also cover reduced motion, asset readiness and retry. Static encounters, biome and jewelry definitions remain guarded by a manifest.
 
 Generated icon sheets, calibrated regions and alignment metrics live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without altering source art; `npm run art:icons` exports embedded WebP badges. `scripts/export-equipment.py` packs rig textures using Pillow, NumPy and SciPy. Use `CHROMIUM_PATH` for a custom browser. Local test output stays in ignored `test-results/`.

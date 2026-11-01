@@ -1,5 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {createRuntime}=require('./runtime.cjs');
+const {testingCodes,withTestingCodes}=require('./code-fixture.cjs');
 // Clock control and fixtures exist only in this test's HTTP response.
 function instrumentation(){
  function fresh(floor=1){
@@ -23,14 +24,14 @@ function instrumentation(){
 }
 (async()=>{
  const runtime=await createRuntime(),{browser,baseURL,resultsDir}=runtime,errors=[],passed=[],active=[];
- const html=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+instrumentation.toString()+')();resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
+ const html=withTestingCodes(fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8')).replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+instrumentation.toString()+')();resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
  const p=await browser.newPage({viewport:{width:390,height:844}});p.on('pageerror',e=>errors.push(e.message));await p.route(baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));
  try{
   await p.goto(baseURL);await p.evaluate(()=>__testingSpeed.fresh());assert.equal(await p.locator('#speedControl').isVisible(),false);
-  await p.click('#quickSettings');await p.click('#settingsCodes');await p.fill('#codeInput','mefforts');await p.click('#codeRedeem');assert.match(await p.locator('#codeFeedback').innerText(),/Delve & skilling speeds unlocked/);await p.click('#drawerClose');
+  await p.click('#quickSettings');await p.click('#settingsCodes');await p.fill('#codeInput',testingCodes.speed);await p.click('#codeRedeem');assert.match(await p.locator('#codeFeedback').innerText(),/Delve & skilling speeds unlocked/);await p.click('#drawerClose');
   assert.equal(await p.locator('#speedControl').isVisible(),true);await p.click('#speedToggle');assert.equal(await p.locator('#speedOptions [data-speed="500"]').isVisible(),true);await p.click('#speedOptions [data-speed="25"]');assert.equal((await p.evaluate(()=>__testingSpeed.selected())).speed,25);assert.match(await p.locator('#speedToggle').getAttribute('aria-label'),/Skilling speed 25/);
   await p.evaluate(()=>__deepwell.changeScene('combat',false));await p.click('#speedToggle');await p.click('#speedOptions [data-speed="2"]');assert.deepEqual(await p.evaluate(()=>{const s=__testingSpeed.selected();return [s.combatSpeed,s.skillSpeed];}),[2,25]);await p.evaluate(()=>__deepwell.enterActivity('forge'));assert.equal(await p.locator('#speedControl').isVisible(),true);assert.equal((await p.evaluate(()=>__testingSpeed.selected())).speed,25);await p.screenshot({path:path.join(resultsDir,'testing-skilling-speed.png')});
-  passed.push('Redeeming mefforts exposes the 1×–500× Skilling speed control in gathering and crafting scenes');
+  passed.push('A testing redemption exposes the 1×–500× Skilling speed control in gathering and crafting scenes');
   for(const speed of [1,2,5,10,25,50,100,500]){
    const result=await p.evaluate(speed=>__testingSpeed.active(speed,true),speed),expected=1+Math.floor(10*speed/result.interval+1e-9);assert.equal(result.hits,expected,'All gathering cycles complete at '+speed+'×');assert.equal(result.ore,expected*2);assert.ok(Math.abs(result.clock-10000*speed)<.01);assert.ok(Math.abs(result.bonusClock-10)<1e-6);active.push({speed,cycles:result.hits});
   }
@@ -47,9 +48,9 @@ function instrumentation(){
   const oldSave=await p.evaluate(()=>__testingSpeed.offlineSave());await p.addInitScript(seed=>localStorage.setItem('deepwell-prototype-v1',JSON.stringify({...seed,savedAt:Date.now()-14000})),oldSave);await p.reload();const restored=await p.evaluate(()=>__testingSpeed.selected());assert.equal(restored.speed,1);assert.equal(restored.unlocked,true);assert.equal(restored.ore,4);await p.click('#introSkills');assert.equal(await p.locator('#speedControl').isVisible(),true);
   passed.push('An existing speed-unlocked save needs no new code; selected speed resets to 1× at launch and offline earnings use real elapsed time');
   await p.evaluate(()=>__testingSpeed.mastery());assert.equal(await p.locator('#speedControl').isVisible(),false);await p.evaluate(()=>__deepwell.start());assert.equal(await p.locator('#speedControl').isVisible(),true);assert.match(await p.locator('#speedToggle').getAttribute('aria-label'),/Delve speed/);
-  await p.click('#quickSettings');await p.click('#settingsCodes');await p.fill('#codeInput','max');await p.click('#codeRedeem');await p.click('#drawerClose');await p.evaluate(()=>__deepwell.enterActivity('mine'));assert.equal(await p.locator('#speedControl').isVisible(),true);assert.match(await p.locator('#speedToggle').getAttribute('aria-label'),/Skilling speed/);
+  await p.click('#quickSettings');await p.click('#settingsCodes');await p.fill('#codeInput',testingCodes.sandbox);await p.click('#codeRedeem');await p.click('#drawerClose');await p.evaluate(()=>__deepwell.enterActivity('mine'));assert.equal(await p.locator('#speedControl').isVisible(),true);assert.match(await p.locator('#speedToggle').getAttribute('aria-label'),/Skilling speed/);
   for(const viewport of [{width:320,height:844},{width:844,height:390}]){await p.setViewportSize(viewport);assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);const b=await p.locator('#speedToggle').boundingBox();assert.ok(b.x>=0&&b.y>=0&&b.x+b.width<=viewport.width+1&&b.y+b.height<=viewport.height+1);}
-  passed.push('Mastery retains the combat-only control; max includes the testing behavior; skilling controls fit narrow and landscape screens');
+  passed.push('Mastery retains the combat-only control; sandbox redemption includes the testing behavior; skilling controls fit narrow and landscape screens');
   assert.deepEqual(errors,[]);console.log(JSON.stringify({passed,active,idle,errors},null,2));
  }finally{await p.close();await runtime.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

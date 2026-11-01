@@ -29,7 +29,7 @@ function instrumentation(){
   passiveStats(){fresh();const before={dps:weaponDps(),cooldown:attackCooldown(),reach:attackReach(),hp:maxHp()+waveVitality(),crit:waveCritChance()};zoneShopFor().ranks={might:20,haste:20,crit:20,reach:10,vitality:20,swift:10,magnet:10,regen:15,wisdom:10,forage:5};syncZone();return {before,after:{dps:weaponDps(),cooldown:attackCooldown(),reach:attackReach(),hp:maxHp()+waveVitality(),crit:waveCritChance()}};},
   ward(){fresh();game.player.hp=500;game.player.invuln=0;hurt(10);const normal=500-game.player.hp;game.player.hp=500;game.player.invuln=0;zoneShopFor().ranks={ward:1};syncZone();hurt(10);return {normal,ward:500-game.player.hp};},
   masteryOnly(){fresh();const before=weaponDps(),hp=game.player.hp;game.player.invuln=0;hurt(10);const damage=hp-game.player.hp;const m=masteryFor();m.points=m.earned=100;m.fortune=4;m.adaptation=3;m.onslaught=5;game.player.hp=hp;game.player.invuln=0;hurt(10);return {before,after:weaponDps(),damage,masteryDamage:hp-game.player.hp,currency:currencyDropChance(),rare:rareDropChance()};},
-  max(){fillTestingResources();return state();},
+  sandbox(){fillTestingResources();return state();},
   focusBuy(){openZoneShop();document.querySelector('[data-buy-zone="fire"]').focus();},
   bankXp(){fresh();game.gems=[{x:900,y:900,value:100}];checkpointGroundXp();travel(1);const elsewhere=game.gems.length;travel(0);return {elsewhere,gems:game.gems.map(g=>g.value),xp:data.dungeoneeringXp};}
  };
@@ -62,12 +62,12 @@ function instrumentation(){
   passed.push('Retired stat ranks cannot affect combat or be purchased; themed wards reduce damage, all six weapons keep 80 / 160 gear DPS, projectile abilities match real DPS and Mastery stays separate');
   const bank=await p.evaluate(()=>__shopTest.bankXp());assert.deepEqual(bank,{elsewhere:0,gems:[100],xp:0});
   await p.evaluate(()=>__shopTest.fresh());for(const index of [1,-1,NaN])assert.equal(await p.evaluate(index=>__deepwell.buyZoneUpgrade('fire',index),index),false);
-  s=await p.evaluate(()=>__shopTest.max());assert.equal(s.data.devTravelUnlocked,true);assert.equal(s.data.devSpeedUnlocked,true);for(let i=0;i<4;i++)assert.ok(s.data.zoneShops[i].currency>9000000);
+  s=await p.evaluate(()=>__shopTest.sandbox());assert.equal(s.data.devTravelUnlocked,true);assert.equal(s.data.devSpeedUnlocked,true);for(let i=0;i<4;i++)assert.ok(s.data.zoneShops[i].currency>9000000);
   const images=[],names=[];for(let zone=0;zone<4;zone++){await p.evaluate(zone=>__deepwell.openZoneShop(zone),zone);assert.equal(await p.locator('.zone-upgrade').count(),4);assert.equal(await p.locator('[data-shop-category]').count(),0);names.push(...await p.locator('.zone-upgrade h4').allTextContents());images.push(...await p.locator('.zone-upgrade-art img').evaluateAll(images=>images.map(i=>i.src)));}
   assert.equal(new Set(names).size,16);assert.equal(new Set(images).size,16);
   await p.evaluate(()=>__deepwell.openZoneShop(1));await p.click('[data-buy-zone="fire"]');s=await p.evaluate(()=>__shopTest.state());assert.equal(s.data.zoneShops[1].ranks.fire,1);assert.equal(s.data.zoneShops[0].ranks.fire,undefined);
   for(const size of [{width:1440,height:1000},{width:390,height:844},{width:320,height:844},{width:844,height:390}]){await p.setViewportSize(size);await p.locator('#zoneShopView img').evaluateAll(images=>Promise.all(images.map(i=>i.decode())));assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);await p.screenshot({path:path.join(runtime.resultsDir,'zone-abilities-'+size.width+'.png')});}
-  passed.push('Every shop has four distinct themed abilities and unique artwork; locked routes stay locked, max funds shops without ranks, and compact cards fit phone portrait/landscape and desktop');
+  passed.push('Every shop has four distinct themed abilities and unique artwork; locked routes stay locked, sandbox mode funds shops without ranks, and compact cards fit phone portrait/landscape and desktop');
   assert.deepEqual(errors,[]);console.log(JSON.stringify({passed,actual,mastery,errors},null,2));
  }finally{await runtime.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

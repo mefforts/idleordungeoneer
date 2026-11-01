@@ -12,7 +12,7 @@ function fixture(){
     weapons.push({id,name:w.name,tiers});
    }
    data=defaults();normalizeProgression();
-   return {version:'9.3.0',economy:[0,1].map(i=>({zone:i+1,...zoneGoldBudget(i)})),currencies:[0,1,2,3].map(i=>({zone:i+1,...zoneCurrency(i),monsterChance:.04,masteredChance:.056,elite:6,guardians:[12,20,35],firstClearElites:17,expectedFirstClearSeals:(zoneBalance(i).swarmCount-17)*.04+17*6+201})),retiredStats:['might','haste','reach','vitality','crit','swift','magnet','regen','wisdom','forage'],dungeoneeringLevels:Array.from({length:8},(_,i)=>({level:i+1,totalXp:DUNGEONEERING_XP_STEP*i*i})),limits:TIER_LIMITS,promotionCosts:TIER_PROMOTION_COSTS,zones:[0,1,2,3].map(i=>zoneBalance(i)),weapons,armorSets:Object.values(ARMOR_SETS),resources:TIER_RESOURCES.map(key=>({key,name:RESOURCE_LABEL[key],source:RESOURCE_SOURCE[key]})),activities:Object.entries(SKILLS).filter(([,s])=>s.tier===2).map(([id,s])=>({id,...s,activeSeconds:ACTIVE_INTERVAL[id],group:disciplineFor(id)})),zoneAbilities:[0,1,2,3].map(index=>({zone:index+1,name:BIOMES[index].name,abilities:zoneAbilities(index).map(a=>({...a,ranks:Array.from({length:a.max},(_,i)=>({rank:i+1,price:shopUpgradeCost(a.id,index,i),effect:powerSummary(a.id,i+1,index)}))}))}))};
+   return {version:'9.3.1',economy:[0,1].map(i=>({zone:i+1,...zoneGoldBudget(i)})),currencies:[0,1,2,3].map(i=>({zone:i+1,...zoneCurrency(i),monsterChance:.04,masteredChance:.056,elite:6,guardians:[12,20,35],firstClearElites:17,expectedFirstClearSeals:(zoneBalance(i).swarmCount-17)*.04+17*6+201})),retiredStats:['might','haste','reach','vitality','crit','swift','magnet','regen','wisdom','forage'],dungeoneeringLevels:Array.from({length:8},(_,i)=>({level:i+1,totalXp:DUNGEONEERING_XP_STEP*i*i})),limits:TIER_LIMITS,promotionCosts:TIER_PROMOTION_COSTS,zones:[0,1,2,3].map(i=>zoneBalance(i)),weapons,armorSets:Object.values(ARMOR_SETS),resources:TIER_RESOURCES.map(key=>({key,name:RESOURCE_LABEL[key],source:RESOURCE_SOURCE[key]})),activities:Object.entries(SKILLS).filter(([,s])=>s.tier===2).map(([id,s])=>({id,...s,activeSeconds:ACTIVE_INTERVAL[id],group:disciplineFor(id)})),zoneAbilities:[0,1,2,3].map(index=>({zone:index+1,name:BIOMES[index].name,abilities:zoneAbilities(index).map(a=>({...a,ranks:Array.from({length:a.max},(_,i)=>({rank:i+1,price:shopUpgradeCost(a.id,index,i),effect:powerSummary(a.id,i+1,index)}))}))}))};
   }finally{data=original;}
  };
 }
@@ -24,7 +24,7 @@ function fixture(){
   const pacing=path.join(runtime.resultsDir,'zone-pacing.json');r.simulated=fs.existsSync(pacing)?JSON.parse(fs.readFileSync(pacing,'utf8')).simulated:[];
   const f=n=>n.toFixed(1),md=[
    '# Zone progression and balance','',
-   'Build 9.3 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.','',
+   'Build 9.3.1 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.','',
    '## Equipment ceilings','',
    '| Weapon | Iron | Dedicated Iron | Steel | Dedicated Steel |','| --- | ---: | ---: | ---: | ---: |',
    ...r.weapons.map(w=>'| '+w.name+' | '+f(w.tiers[0].normal)+' | '+f(w.tiers[0].dedicated)+' | '+f(w.tiers[1].normal)+' | '+f(w.tiers[1].dedicated)+' |'),'',
@@ -50,7 +50,7 @@ function fixture(){
    '## Global Dungeoneering and Mastery','',
    '| Dungeoneering level | Total XP |','| --- | ---: |',...r.dungeoneeringLevels.map(l=>'| '+l.level+' | '+l.totalXp+' |'),'',
    'Level is 1 + floor(sqrt(total XP / 1600)). XP persists across Zones; each level grants one Mastery point and guardians grant 1 / 1 / 2 points. Ground XP positions and values persist until collected or banked after an encounter. No combat power cards or automatic shopping modals appear.','',
-   'Mastery is shared and refundable. Onslaught controls spawn settings up to 60×, Fortune raises ordinary seal-drop chance by 10% relative per rank, and Discovery raises rare-material chance by 25% relative per rank. Mastery gives no damage/protection. The first guardian unlocks 2× Delve speed, which never speeds up skilling. The mefforts/max codes unlock separate testing speeds; offline earnings and collection windows keep real-time timing.','',
+   'Mastery is shared and refundable. Onslaught controls spawn settings up to 60×, Fortune raises ordinary seal-drop chance by 10% relative per rank, and Discovery raises rare-material chance by 25% relative per rank. Mastery gives no damage/protection. The first guardian unlocks 2× Delve speed, which never speeds up skilling. Offline earnings and collection windows keep real-time timing.','',
    '## Zone 2 resource chain','',
    '| Discipline | Gathering / refining | Uses |','| --- | --- | --- |',
    '| Blacksmithing | Coal; 2 Iron Ore + 1 Coal → 1 Steel Bar | Equipment, promotions and upgrades |',
@@ -61,7 +61,7 @@ function fixture(){
    'All ten advanced activities require clearing Zone 1, including idle and offline work. Source links, tracked recipes and Inventory material links connect gathering back to equipment.','',
    '## Migration and verification','',
    'Retired statistics, abilities absent from a Zone and ranks above its revised maximum refund their original purchase prices to that exact Zone. Retained abilities keep their ranks. A versioned receipt prevents repeated credits. Older power-card saves first pass through the existing global-XP/Mastery migration, then receive any applicable refunds. Equipment, materials, gold, ground XP and Mastery are preserved.','',
-   'Fifteen browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 106 distinct painted Codex entries, boss mechanics and live Zone pacing. Run npm run report:balance to regenerate this file and balance-report.json.',''
+   'Sixteen browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 106 distinct painted Codex entries, boss mechanics and live Zone pacing. Startup checks pause the HTML download to verify first paint, then cover asset readiness, reduced motion and retry. Run npm run report:balance to regenerate this file and balance-report.json.',''
   ].join('\n');
   fs.writeFileSync(path.join(root,'BALANCE.md'),md);fs.writeFileSync(path.join(root,'balance-report.json'),JSON.stringify(r,null,2)+'\n');console.log('Generated themed-ability economy, equipment ceilings, global XP and live Zone pacing.');
  }finally{await runtime.close();}

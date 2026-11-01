@@ -6,6 +6,7 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const { parse } = require('acorn');
 const { chromium } = require('playwright');
+const {withTestingCodes}=require('./code-fixture.cjs');
 const root = path.resolve(__dirname, '..');
 const resultsDir = path.join(root, 'test-results');
 function walk(node, visit) {
@@ -30,7 +31,7 @@ function balanceHashes(html, names) {
 }
 async function createRuntime() {
   fs.mkdirSync(resultsDir, { recursive: true });
-  const html = fs.readFileSync(path.join(root, 'index.html'));
+  const html = Buffer.from(withTestingCodes(fs.readFileSync(path.join(root, 'index.html'),'utf8')));
   const expected = JSON.parse(fs.readFileSync(path.join(__dirname, 'original-balance.json')));
   assert.deepEqual(balanceHashes(html.toString(), Object.keys(expected)), expected, 'Static phase, wave-power, biome and jewelry definitions match the current approved baseline');
   const server = http.createServer((req, res) => {

@@ -1,6 +1,6 @@
 # Zone progression and balance
 
-Build 9.3 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.
+Build 9.3.1 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.
 
 ## Equipment ceilings
 
@@ -89,7 +89,7 @@ Floor overlords use four patterns and final Zone overlords six. Known elite subs
 
 Level is 1 + floor(sqrt(total XP / 1600)). XP persists across Zones; each level grants one Mastery point and guardians grant 1 / 1 / 2 points. Ground XP positions and values persist until collected or banked after an encounter. No combat power cards or automatic shopping modals appear.
 
-Mastery is shared and refundable. Onslaught controls spawn settings up to 60×, Fortune raises ordinary seal-drop chance by 10% relative per rank, and Discovery raises rare-material chance by 25% relative per rank. Mastery gives no damage/protection. The first guardian unlocks 2× Delve speed, which never speeds up skilling. The mefforts/max codes unlock separate testing speeds; offline earnings and collection windows keep real-time timing.
+Mastery is shared and refundable. Onslaught controls spawn settings up to 60×, Fortune raises ordinary seal-drop chance by 10% relative per rank, and Discovery raises rare-material chance by 25% relative per rank. Mastery gives no damage/protection. The first guardian unlocks 2× Delve speed, which never speeds up skilling. Offline earnings and collection windows keep real-time timing.
 
 ## Zone 2 resource chain
 
@@ -107,4 +107,4 @@ All ten advanced activities require clearing Zone 1, including idle and offline 
 
 Retired statistics, abilities absent from a Zone and ranks above its revised maximum refund their original purchase prices to that exact Zone. Retained abilities keep their ranks. A versioned receipt prevents repeated credits. Older power-card saves first pass through the existing global-XP/Mastery migration, then receive any applicable refunds. Equipment, materials, gold, ground XP and Mastery are preserved.
 
-Fifteen browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 106 distinct painted Codex entries, boss mechanics and live Zone pacing. Run npm run report:balance to regenerate this file and balance-report.json.
+Sixteen browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 106 distinct painted Codex entries, boss mechanics and live Zone pacing. Startup checks pause the HTML download to verify first paint, then cover asset readiness, reduced motion and retry. Run npm run report:balance to regenerate this file and balance-report.json.

@@ -4,10 +4,11 @@ const {parse}=require('acorn');
 const root=path.resolve(__dirname,'..');
 const walk=(n,fn)=>{if(!n||typeof n!=='object')return;fn(n);for(const v of Object.values(n)){if(Array.isArray(v))v.forEach(x=>walk(x,fn));else if(v&&typeof v==='object')walk(v,fn)}};
 let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+html=html.replace(/<!-- BEGIN LOADING SCREEN -->[\s\S]*?<!-- END LOADING SCREEN -->\n?/,'').replace(/<style id="loadingStyles">[\s\S]*?<\/style>\n?/,'');
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)],main=scripts.at(-1);
 let source=main[1].replace(/\/\* BEGIN LIVING SKILLS \*\/[\s\S]*?\/\* END LIVING SKILLS \*\/\n?/,'');
 const ast=parse(source,{ecmaVersion:'latest'}),functions=new Map();walk(ast,n=>{if(n.type==='FunctionDeclaration')functions.set(n.id.name,n)});
-const incoming=['systems','arena','equipment-regions','equipment','economy','dungeoneering','zone-progression','testing','presentation','codex','zone-shop','zone-shop-ui','environment-art','environments','encounter-art','encounters','mobile','zone-abilities'].map(name=>fs.readFileSync(path.join(root,'src/'+name+'.js'),'utf8')).join('\n'),incomingAst=parse(incoming,{ecmaVersion:'latest'}),patches=[],helpers=[],overrides=new Map();
+const incoming=['systems','arena','equipment-regions','equipment','economy','dungeoneering','zone-progression','testing','presentation','codex','zone-shop','zone-shop-ui','environment-art','environments','encounter-art','encounters','mobile','zone-abilities','loading'].map(name=>fs.readFileSync(path.join(root,'src/'+name+'.js'),'utf8')).join('\n'),incomingAst=parse(incoming,{ecmaVersion:'latest'}),patches=[],helpers=[],overrides=new Map();
 for(const n of incomingAst.body){const code=incoming.slice(n.start,n.end);if(n.type==='FunctionDeclaration')overrides.set(n.id.name,{node:n,code});else helpers.push(code)}
 for(const [name,{code}] of overrides){if(functions.has(name)){const old=functions.get(name);patches.push({start:old.start,end:old.end,code});}else helpers.push(code)}
 const artFile=path.join(root,'src/equipment-art.json');
@@ -22,7 +23,9 @@ for(const p of patches.sort((a,b)=>b.start-a.start))source=source.slice(0,p.star
 source=source.replace('const ACTIVE_INTERVAL=', '/* BEGIN LIVING SKILLS */\n'+helpers.join('\n\n')+'\n/* END LIVING SKILLS */\nconst ACTIVE_INTERVAL=');
 source=source.replace(/installDungeoneeringUI\(\);(?:installPresentationUI\(\);)?/,'installDungeoneeringUI();installPresentationUI();');
 source=source.replace(/\/\* BEGIN TIER API \*\/[\s\S]*?\/\* END TIER API \*\/\n?/,'');
+source=source.replace(/\nfinishGameLoading\(\);/g,'');
 source=source.replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','/* BEGIN TIER API */\nObject.assign(window.__deepwell,{openZoneShop,buyZoneUpgrade,zoneShopFor,zoneCombatProfile,dungeonProgress,currencyDropChance,rareDropChance,shopUpgradeCost,tier2Unlocked,promoteStyle,styleTier,styleUpgradeCap,canUseSkill,skillLockReason,progressionCaps:()=>TIER_LIMITS,resourceInfo:()=>Object.fromEntries(Object.keys(RESOURCE_LABEL).map(k=>[k,{name:RESOURCE_LABEL[k],source:RESOURCE_SOURCE[k]}])),skillKeys:()=>[...SKILL_KEYS]});\n/* END TIER API */\nresize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
+source=source.replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);\nfinishGameLoading();');
 parse(source,{ecmaVersion:'latest'});
 html=html.slice(0,main.index)+'<script>'+source+'</script>'+html.slice(main.index+main[0].length);
 html=html.replace(/<script>[\s\S]*?<\/script>/,'<script>'+fs.readFileSync(path.join(root,'src/avatar-rig.js'),'utf8')+'</script>');
@@ -33,7 +36,6 @@ const firstScript=html.indexOf('<script>');let markup=html.slice(0,firstScript);
 for(const [key,uri]of Object.entries(icons))if(originalIcons[key]&&uri!==originalIcons[key])markup=markup.replaceAll('src="'+originalIcons[key]+'"','src="'+uri+'"');
 html=markup+html.slice(firstScript);
 html=html.replace(/\/\* BEGIN LIVING SKILLS CSS \*\/[\s\S]*?\/\* END LIVING SKILLS CSS \*\/\n?/,'');
-html=html.replace(/\n+<\/style><\/head>/,'\n</style></head>');
 const styles=['systems','arena','equipment','runestones','zone-progression','presentation','zone-shop','mobile'].map(name=>{
   const filename=path.join(root,'src/'+name+'.css');
   return fs.readFileSync(filename,'utf8').replace(/url\((["']?)(\.\.\/assets\/[^)"']+)\1\)/g,(_,quote,asset)=>{
@@ -41,5 +43,14 @@ const styles=['systems','arena','equipment','runestones','zone-progression','pre
     return 'url("data:'+mime+';base64,'+fs.readFileSync(assetPath).toString('base64')+'")';
   });
 }).join('\n');
-html=html.replace('</style></head>','/* BEGIN LIVING SKILLS CSS */\n@layer presentation;\n'+styles+'\n/* END LIVING SKILLS CSS */\n</style></head>');
+// Put the tiny first-paint screen before the large embedded game styles and art.
+const gameStyle=html.match(/<style(?: id="gameStyles")?>([\s\S]*?)<\/style>/);
+if(!gameStyle)throw Error('Game stylesheet missing');
+html=html.replace(gameStyle[0],'');
+const gameCss=gameStyle[1].trimEnd()+'\n/* BEGIN LIVING SKILLS CSS */\n@layer presentation;\n'+styles+'\n/* END LIVING SKILLS CSS */\n';
+html=html.replace(/<html([^>]*)>/,(_,attrs)=>'<html'+attrs.replace(/ class="game-loading"/g,'')+' class="game-loading">');
+html=html.replace(/<head>\s*/,'<head>\n<style id="loadingStyles">'+fs.readFileSync(path.join(root,'src/loading.css'),'utf8')+'</style>\n').replace(/\s*<\/head>/,'\n</head>');
+const loading=fs.readFileSync(path.join(root,'src/loading.html'),'utf8')+'\n<script id="loadingRuntime">'+fs.readFileSync(path.join(root,'src/loading-runtime.js'),'utf8')+'</script>';
+html=html.replace(/<body>\s*/,'<body>\n<!-- BEGIN LOADING SCREEN -->\n'+loading+'\n<!-- END LOADING SCREEN -->\n<style id="gameStyles">'+gameCss+'</style>\n');
+html=html.replace('<div class="app" id="app">','<div class="app" id="app" inert aria-hidden="true">');
 fs.writeFileSync(path.join(root,'index.html'),html);console.log('Synced Living Skills:',patches.length,'replacements; standalone HTML',Buffer.byteLength(html),'bytes');

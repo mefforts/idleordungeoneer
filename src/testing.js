@@ -1,4 +1,12 @@
 /* Independent testing speed for online skilling; Mastery remains combat-only. */
+// Fingerprints avoid publishing redemption phrases in the client source.
+const REDEEM_CODE_ACTIONS=Object.freeze({"b57595b70c1554f2114cbce213c6d7896a574012b270f9cc848743f630a65efc":"speed","9baf3a40312f39849f46dad1040f2f039f1cffa1238c41e9db675315cfad39b6":"sandbox"});
+async function redeemCodeAction(value){
+ if(!globalThis.crypto?.subtle)return '';
+ const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value.trim().toLowerCase()));
+ const fingerprint=Array.from(new Uint8Array(bytes),byte=>byte.toString(16).padStart(2,'0')).join('');
+ return REDEEM_CODE_ACTIONS[fingerprint]||'';
+}
 function skillingTimeMultiplier(){return data.devSpeedUnlocked?(game.skillSpeed||1):1;}
 function speedControlVisible(){return !!data.devSpeedUnlocked||game.scene==='combat'&&masteryUnlocked();}
 function speedControlName(){return game.scene==='combat'?'Delve speed':'Skilling speed';}

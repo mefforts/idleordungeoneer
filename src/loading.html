@@ -1,0 +1,18 @@
+<section id="loadingScreen" aria-labelledby="loadingTitle">
+  <div class="loading-content">
+    <svg class="loading-crest" viewBox="0 0 96 112" fill="none" aria-hidden="true">
+      <path d="M13 102V48a35 35 0 0 1 70 0v54" fill="#24271f" stroke="#b99b5d" stroke-width="2"/>
+      <path d="M24 102V49a24 24 0 0 1 48 0v53" fill="#111814" stroke="#756345" stroke-width="2"/>
+      <path d="M13 75h11M13 53h11m-6-23 10 7m6-23 4 13m24-13-4 13m20 3-10 7m15 16H72m11 22H72M48 13v12" stroke="#b99b5d" stroke-width="2"/>
+      <path d="M8 103h80M30 103l5-12h26l5 12M35 91l4-9h18l4 9" stroke="#756345" stroke-width="2"/>
+      <path d="M48 39v33m-14-17h28" stroke="#c9e9d0" stroke-opacity=".12"/>
+      <g class="loading-wisp"><path d="m48 42 4 10 10 5-10 4-4 11-4-11-10-4 10-5 4-10Z" fill="#b8dcc4"/><path d="m48 49 2 6 5 2-5 2-2 6-2-6-5-2 5-2 2-6Z" fill="#f6edc9"/></g>
+    </svg>
+    <h1 id="loadingTitle">Idle <em>or</em> Dungeoneer</h1>
+    <div class="loading-divider" aria-hidden="true">◆</div>
+    <p id="loadingStatus" class="loading-status" role="status" aria-live="polite">Loading your adventure…</p>
+    <div class="loading-track" aria-hidden="true"></div>
+    <button type="button" id="loadingRetry" class="loading-retry" hidden>Try again</button>
+    <noscript><style>.loading-status,.loading-track{display:none}</style><p>Enable JavaScript to enter the dungeon.</p></noscript>
+  </div>
+</section>

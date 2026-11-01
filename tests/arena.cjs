@@ -2,6 +2,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const {createRuntime}=require('./runtime.cjs');
+const {testingCodes,withTestingCodes}=require('./code-fixture.cjs');
 
 // Injected only into this test response; the downloadable game has no fixture,
 // immortal player, instant clock, or means of granting itself experience.
@@ -38,7 +39,7 @@ function instrumentation(){
 const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+a.height>b.y;
 (async()=>{
   const runtime=await createRuntime(),{browser,baseURL,resultsDir}=runtime,errors=[],results=[];
-  const html=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
+  const html=withTestingCodes(fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8'));
   const testHtml=html.replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+instrumentation.toString()+')();\nresize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
   async function page(options={}){
     const p=await browser.newPage(options);p.on('pageerror',e=>errors.push(e.message));
@@ -116,7 +117,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     await speed.reload();await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);await speed.evaluate(()=>__deepwell.start());assert.ok(await speed.locator('#speedControl').isVisible());
     await speed.click('#speedToggle');assert.ok(await speed.locator('#speedOptions [data-speed="2"]').isVisible());assert.equal(await speed.locator('#speedOptions [data-speed="5"]').isVisible(),false);
     await speed.click('#speedOptions [data-speed="2"]');assert.equal(await speed.evaluate(()=>__deepwell.getState().devSpeed),2);
-    await speed.click('#quickSettings');await speed.click('#settingsCodes');await speed.fill('#codeInput','mefforts');await speed.click('#codeRedeem');await speed.click('#drawerClose');await speed.click('#speedToggle');await speed.click('#speedOptions [data-speed="25"]');assert.equal(await speed.evaluate(()=>__deepwell.getState().devSpeed),25);
+    await speed.click('#quickSettings');await speed.click('#settingsCodes');await speed.fill('#codeInput',testingCodes.speed);await speed.click('#codeRedeem');await speed.click('#drawerClose');await speed.click('#speedToggle');await speed.click('#speedOptions [data-speed="25"]');assert.equal(await speed.evaluate(()=>__deepwell.getState().devSpeed),25);
     results.push('Mastery unlocks 1×/2× speed; the existing code retains its testing speeds');
     assert.deepEqual(errors,[]);console.log(JSON.stringify({passed:results,simulated,errors},null,2));
   }finally{await runtime.close();}
