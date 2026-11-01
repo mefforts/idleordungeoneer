@@ -86,7 +86,7 @@ function installEquipmentUI(){
     if(bench)openWorkshop(bench.dataset.armorBench,'equipment');
   });
   const armorImage=new Image(),weaponImage=new Image();armorImage.src=iconAsset('equipment-armor-atlas');weaponImage.src=iconAsset('equipment-weapons-atlas');equipmentImages={armor:armorImage,weapons:weaponImage};
-  window.DeepwellEquipmentArt={describe:describeEquipment,paintBody:paintEquipmentBody,paintArm:paintEquipmentArm,paintLeg:paintEquipmentLeg,paintHead:paintEquipmentHead,paintWeapon:paintEquipmentWeapon};
+  window.DeepwellEquipmentArt={describe:describeEquipment,paintBody:paintEquipmentBody,paintArm:paintEquipmentArm,paintLeg:paintEquipmentLeg,paintWorkLeg:paintEquipmentWorkLeg,paintHead:paintEquipmentHead,paintWeapon:paintEquipmentWeapon};
   installTierProgressionUI();refreshEquipmentUI();
 }
 
@@ -115,4 +115,34 @@ function legacyRecipeHtml(group){
   if(group==='artisan')return `<div class="recipe-filter" role="group" aria-label="Jewelry type">${[['all','All jewelry'],['ring','Rings'],['amulet','Amulets']].map(([id,name])=>`<button type="button" data-recipe-cat="${id}" class="${recipeCategory===id?'active':''}" aria-pressed="${recipeCategory===id}">${name}</button>`).join('')}</div><div class="craft-tile-list">${Object.entries(TRINKETS).filter(([id,v])=>recipeCategory==='all'||v.type===recipeCategory).map(([id,t])=>recipeCard('',t.name,t.effect,trinketCost(id),`data-craft-trinket="${id}"`,'MAKE',data.trinkets.includes(id),t.type==='ring'?data.equippedRings.includes(id):data.equippedAmulet===id,t.icon)).join('')}</div><p class="recipe-hint">Four ring slots and one amulet slot. Jewelry bonuses remain shared across combat styles.</p>`;
   if(group==='scavenging')return `<div class="craft-tile-list">${recipeCard('','Prospect Opal','Recover a rough opal. Fragments are also used with cloth to inscribe runes.',stationCost({scraps:12},group),'data-prospect-opal','PROSPECT',false,false,'rough-opal')}</div><p class="recipe-hint">Choose Tools to build a mattock, or take fragments to Warding for runes.</p>`;
   return '';
+}
+
+/* Headwear ends at the neck; collars and shoulders stay with the torso and arms. */
+function paintEquipmentHead(c,d){
+ const a=equipmentRegion(d,'armor');if(!a)return false;const [x,y,w,h]=a.region,id=a.details.armor.id;if(id==='ranged_1')return false;
+ const cap=id==='ranged_2',mage=a.details.style==='magic',crop=cap?[.23,0,.55,.15]:mage?[.24,0,.52,.235]:[.295,0,.41,.23],target=cap?[-17,-84,34,20]:mage?[-19,-82,38,35]:[-17,-82,34,34];
+ c.save();
+ if(a.details.style==='melee'){c.beginPath();c.moveTo(-8,-82);c.lineTo(8,-82);c.quadraticCurveTo(18,-77,17,-65);c.lineTo(13,-49);c.quadraticCurveTo(0,-44,-13,-49);c.lineTo(-17,-65);c.quadraticCurveTo(-18,-77,-8,-82);c.closePath();c.clip();}
+ c.drawImage(a.image,x+w*crop[0],y+h*crop[1],w*crop[2],h*crop[3],...target);c.restore();return true;
+}
+function paintEquipmentLegStrip(c,a,start,end,source,width){
+ const [x,y,w,h]=a.region,dx=end.x-start.x,dy=end.y-start.y,length=Math.hypot(dx,dy);
+ c.save();c.translate(start.x,start.y);c.rotate(Math.atan2(dy,dx)-Math.PI/2);c.beginPath();c.roundRect(-width/2,-2,width,length+4,width*.35);c.clip();c.fillStyle=a.details.style==='melee'?'#44483f':a.details.style==='magic'?(a.details.tier===1?'#65523c':'#3e4c64'):'#6b533a';c.fillRect(-width/2,-2,width,length+4);
+ c.drawImage(a.image,x+w*source[0],y+h*source[1],w*source[2],h*source[3],-width/2,-2,width,length+4);c.restore();
+}
+function paintEquipmentWorkLeg(c,d,side,joints){
+ const a=equipmentRegion(d,'armor');if(!a)return false;const mage=a.details.style==='magic',left=side<0?.20:.49;
+ paintEquipmentLegStrip(c,a,joints.hip,joints.knee,[left,mage?.60:.58,.28,.18],10);
+ paintEquipmentLegStrip(c,a,joints.knee,joints.ankle,[left,mage?.77:.76,.28,.17],8);
+ const [x,y,w,h]=a.region;c.save();c.translate(joints.ankle.x-3,joints.ankle.y);c.drawImage(a.image,x+w*left,y+h*.91,w*.30,h*.09,-7,-4,14,8);c.restore();return true;
+}
+function paintRigSegment(c,a,side,start,end,top,bottom,width){
+ const [x,y,w,h]=a.region,dx=end.x-start.x,dy=end.y-start.y,length=Math.hypot(dx,dy),rotation=Math.atan2(dy,dx)-Math.PI/2,metal=a.details.style==='melee';
+ c.save();c.translate(start.x,start.y);c.rotate(rotation);c.beginPath();c.roundRect(-width/2,-2,width,length+4,width*.4);c.clip();
+ c.fillStyle=metal?'#4e504a':a.details.style==='magic'?(a.details.tier===1?'#66513b':'#39475e'):'#68503b';c.fillRect(-width/2,-2,width,length+4);
+ // Sample uninterrupted fabric for sleeves; headwear and shoulder silhouettes
+ // must never stretch along an arm when its elbow bends.
+ c.drawImage(a.image,x+w*(metal?(side<0?.015:.72):.39),y+h*(metal?top:.30),w*(metal?.265:.22),h*(metal?bottom-top:.12),-width/2,-2,width,length+4);
+ if(!metal){c.strokeStyle=a.details.tier===2&&a.details.style==='magic'?'#96a5b4':'#a48b68';c.lineWidth=.7;c.beginPath();c.moveTo(-width*.4,length-.3);c.lineTo(width*.4,length-.3);c.stroke();}
+ c.restore();
 }

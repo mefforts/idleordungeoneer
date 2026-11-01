@@ -136,9 +136,10 @@ function drawHammer(c){
 }
 // Activity-specific hand tools share the same shoulder pivot and gear layers.
 function drawHatchet(c){c.save();c.translate(0,18);c.rotate(.49);line(c,0,13,0,-39,'#775139',6);line(c,-1,13,-1,-37,'#d3a36e',1.7);path(c,[-2,-39,-16,-46,-26,-38,-19,-24,-3,-27], '#aebfc1',INK,1.5);path(c,[-17,-43,-26,-38,-19,-27,-14,-34],'#e9f0e7','',0);c.restore()}
-function drawFletchingTool(c){c.save();c.translate(0,18);c.rotate(.46);line(c,-7,6,0,-38,'#d5b87e',3);path(c,[-2,-43,2,-45,5,-35,-2,-35],'#e3e8e2',INK,1);line(c,-8,8,6,-4,'#6b513c',4);path(c,[3,-12,7,-17,12,-8,6,-4],'#e1e7e0',INK,1);c.restore()}
-function drawWardTool(c,time){c.save();c.translate(0,18);c.rotate(.16);path(c,[-13,-9,13,-9,12,7,-10,7],'#9b85bc',INK,1.4);path(c,[-10,-7,9,-7,8,4,-8,4],'#c5b0e1','',0);for(let j=0;j<3;j++)line(c,-7, -4+j*3,6,-4+j*3,'#715e9f',1);c.restore()}
-function drawRuneTool(c,time){c.save();c.translate(0,18);c.rotate(.15);path(c,[-14,-14,12,-16,15,8,-12,9],'#667e9d',INK,2);path(c,[-9,-11,8,-12,10,4,-8,5],'#8ac4db','',0);line(c,-2,-9,4,-1,'#d4fcff',2);line(c,4,-1,-5,4,'#d4fcff',1.5);c.restore()}
+function drawFletchingTool(c){c.save();c.translate(0,18);line(c,-5,4,2,-3,'#806044',3.5);path(c,[0,-5,4,-9,10,-5,2,-1],'#cbd7d4',INK,.7);line(c,3,-6,8,-5,'#f0eee0',.8);c.restore()}
+function drawWardTool(c,time){c.save();c.translate(0,18);path(c,[-8,-3,-4,-6,7,-2,4,3,-6,2],'#96724e',INK,.9);line(c,-4,-3,3,0,'#e2d0b4',2.5);line(c,-2,-3,5,-1,'#b8b4d1',1);c.restore()}
+function drawRuneTool(c,time){c.save();c.translate(0,18);line(c,-3,3,7,-9,'#7c6754',2.8);path(c,[5,-9,9,-12,8,-6],'#d1e1df',INK,.5);c.restore()}
+function drawGemTool(c){c.save();c.translate(0,18);line(c,-4,4,6,-8,'#816747',3);path(c,[4,-8,8,-12,9,-6,6,-4],'#c3d2d3',INK,.6);c.restore()}
 function drawMattock(c){c.save();c.translate(0,18);c.rotate(.45);line(c,0,15,0,-38,'#8d6645',5);line(c,-1,13,-1,-37,'#d2ac72',1.2);path(c,[-24,-41,-8,-46,10,-43,22,-34,13,-33,4,-37,-12,-35,-22,-29], '#9ab4bd',INK,1.7);path(c,[-23,-41,-24,-29,-17,-24,-11,-35], '#c2ceca',INK,1.4);c.restore()}
 function drawStyleClothes(c,armor){const g=gearPalette(tier(armor));if(RIG_STYLE==='magic'){path(c,[-11,-43,-4,-39,4,-39,11,-43,15,-30,12,-20,19,-5,9,-2,1,-6,-7,-2,-19,-5,-13,-21,-15,-30],g.mid,INK,1.5);path(c,[-10,-39,-2,-35,-4,-10,-13,-6],g.light,'',0);path(c,[6,-39,12,-31,9,-21,15,-7,6,-7,1,-12,3,-29],g.dark,'',0);line(c,-13,-22,12,-22,g.trim,2.3);path(c,[-3,-31,1,-35,5,-31,1,-25],'#a5e4dd',g.trim,.7);line(c,-14,-7,-8,-5,g.trim,1.3);line(c,7,-5,14,-7,g.trim,1.3);}else{path(c,[-12,-42,-5,-39,4,-39,12,-42,15,-29,11,-20,13,-14,2,-17,-9,-14,-14,-21,-15,-32],g.mid,INK,1.5);path(c,[-11,-40,-3,-36,-5,-22,-12,-19],g.light,'',0);path(c,[6,-39,11,-37,12,-23,6,-21,2,-25],g.dark,'',0);line(c,-10,-37,9,-23,'#d3b886',3);line(c,-13,-22,12,-22,'#71573e',3);path(c,[-2,-25,3,-25,4,-20,-3,-20],g.trim,INK,.8);}}
 function drawBuckler(c,armor){const g=gearPalette(tier(armor));path(c,[-9,-3,1,-8,10,-3,9,12,0,17,-9,10],g.dark,INK,1.7);path(c,[-6,-2,1,-5,7,-2,6,9,0,13,-6,9],g.mid,g.trim,1.2);line(c,0,-2,0,10,g.light,2);ellipse(c,0,3,3,3,g.trim)}
@@ -275,20 +276,42 @@ function armJoints(shoulder,hand,bend=1,length=14){
  const dx=hand.x-shoulder.x,dy=hand.y-shoulder.y,d=Math.max(.01,Math.hypot(dx,dy)),half=d/2,h=Math.sqrt(Math.max(0,length*length-half*half));
  return {shoulder,hand,elbow:{x:shoulder.x+dx/2-dy/d*h*bend,y:shoulder.y+dy/2+dx/d*h*bend}};
 }
+function workPose(pose,phase,working){
+ const t=phase*Math.PI*2,w=working?1:0,s=working?(phase<.18?1-phase/.18:phase<.64?0:Math.pow((phase-.64)/.36,2)):0;
+ const body={x:0,y:-23.5,angle:0},result={body,main:{x:21,y:-28},back:{x:-15,y:-27},angle:.25,headAngle:0,kneeling:false,phase};
+ if(pose==='mine'){body.angle=.07+s*.13;result.main={x:15+s*17,y:-56+s*30};result.angle=-1.15+s*2.15;result.back={x:-10,y:-30};result.headAngle=.05+s*.08;}
+ else if(pose==='smith'){body.angle=.04+s*.12;result.main={x:20+s*6,y:-49+s*24};result.back={x:12,y:-30};result.angle=-.55+s*1.25;result.headAngle=.12;}
+ else if(pose==='wood'){body.angle=.05+s*.18;result.main={x:13+s*18,y:-55+s*25};result.back={x:-11,y:-30};result.angle=-.95+s*2.0;result.headAngle=.06;}
+ else if(pose==='fletch'){body.angle=.09;result.main={x:23+Math.sin(t)*6*w,y:-30+Math.sin(t*2)*w};result.back={x:12,y:-30};result.angle=.12+Math.sin(t)*.1*w;result.headAngle=.15;}
+ else if(pose==='ward'||pose==='cast'){body.angle=.035*Math.sin(t)*w;result.main={x:33+Math.sin(t)*2*w,y:-33+Math.cos(t)*2*w};result.back={x:13-Math.sin(t)*2*w,y:-42-Math.cos(t)*w};result.angle=-.2;result.headAngle=.04;}
+ else if(pose==='rune'){body.angle=.10;result.main={x:28+Math.sin(t)*4*w,y:-31+Math.cos(t)*3*w};result.back={x:12,y:-30};result.angle=.1+Math.sin(t)*.16*w;result.headAngle=.18;}
+ else if(pose==='polish'){body.angle=.13;result.main={x:28+Math.sin(t)*3*w,y:-32+s*5};result.back={x:13,y:-29};result.angle=-.22+s*.4;result.headAngle=.2;}
+ else if(pose==='scavenge'){body.x=-8;body.y=-12;body.angle=.91+Math.sin(t)*.045*w;result.main={x:34+Math.sin(t)*4*w,y:-3-Math.max(0,Math.sin(t))*6*w};result.back={x:7,y:-5};result.angle=0;result.headAngle=.48+Math.sin(t)*.04*w;result.kneeling=true;}
+ if(!working&&['mine','smith','wood'].includes(pose)){result.main={x:22,y:-27};result.angle=.22;}
+ return result;
+}
+function torsoPoint(body,p){const x=p.x,y=p.y+23.5,c=Math.cos(body.angle),s=Math.sin(body.angle);return {x:body.x+x*c-y*s,y:body.y+x*s+y*c};}
 function poseRig(options={}){
  const {pose='idle',time=0,attack=0,action=0,vx=0,vy=0,data={}}=options,weapon=data.weaponType||'sword';
  const walking=pose==='walk'||pose==='combat'&&Math.hypot(vx,vy)>.1,backpedal=pose==='combat'&&vx*(options.facing||1)<-.1,walk=walking?Math.sin(time*10)*(backpedal?-1:1):0;
- const activity=['mine','smith','wood','fletch','ward','rune','scavenge','cast'].includes(pose),a=(pose==='attack'&&attack===0?.65:Math.max(0,Math.min(1,attack))),stroke=a>0?Math.sin(a*Math.PI*.5):0;
+ const activity=['mine','smith','wood','fletch','ward','rune','scavenge','polish','cast'].includes(pose),a=(pose==='attack'&&attack===0?.65:Math.max(0,Math.min(1,attack))),stroke=a>0?Math.sin(a*Math.PI*.5):0;
  let main={x:19,y:-25},back={x:-17,y:-27},angle=.48;
  if(weapon==='polearm'){main={x:15+stroke*2,y:-24-stroke*4};angle=.28+stroke*.42;back={x:main.x+Math.sin(angle)*13,y:main.y-Math.cos(angle)*13};}
  else if(weapon==='greatsword'){main={x:16+stroke*5,y:-25-stroke*4};angle=.42+stroke*1.12;back={x:main.x-Math.sin(angle)*7,y:main.y+Math.cos(angle)*7};}
  else if(weapon==='bow'){const draw=Math.max(0,Math.min(1,((options.charge||0)-.45)/.55)),aim=Math.max(-.8,Math.min(.8,options.aimAngle||0));main={x:8+(24+stroke)*Math.cos(aim),y:-40+(24+stroke)*Math.sin(aim)};angle=aim;back={x:main.x-(12+draw*14)*Math.cos(aim),y:main.y-(12+draw*14)*Math.sin(aim)};}
  else if(weapon==='staff'){main={x:20+stroke*3,y:-25-stroke*3};angle=.24+stroke*.18;back={x:-14+stroke*7,y:-31-stroke*8};}
  else{main={x:19+stroke*10,y:-25-stroke*7};angle=.48+stroke*1.18;}
- if(activity){const work=options.working===false?0:Math.sin(time*((pose==='mine'||pose==='wood'||pose==='scavenge')?4.4:5.4))*.5-action*.35;main={x:21+work*7,y:-26-work*9};back={x:-15,y:-27};angle=.5+work*.9;if(pose==='ward'||pose==='rune'||pose==='cast'){main={x:22,y:-37+Math.sin(time*3)*2};back={x:-16,y:-32};angle=.5;}}
+ const phase=((options.workPhase??time*.22)%1+1)%1,work=workPose(pose,phase,options.working!==false),body=activity?work.body:{x:0,y:-23.5,angle:0};
+ if(activity){main=work.main;back=work.back;angle=work.angle;}
  if(walking&&!a&&!activity){if(weapon==='bow'){main.y+=walk*.6;back.y+=walk*.6;}else{main.y+=walk*1.2;back.y-=walk*1.2;}}
  const bowPoint=(x,y)=>({x:main.x+x*Math.cos(angle)-y*Math.sin(angle),y:main.y+x*Math.sin(angle)+y*Math.cos(angle)});
- return {weapon,activity,walking,backpedal,walk,stroke,angle,main,back,bowUpper:bowPoint(-12,-25),bowLower:bowPoint(-12,25),arrowTip:bowPoint(27,0),frontArm:armJoints({x:12,y:-45},main,-1,14),backArm:armJoints({x:-10,y:-45},back,1,['polearm','greatsword'].includes(weapon)&&!activity?17:weapon==='bow'&&!activity?16:14)};
+ const head={...torsoPoint(body,{x:0,y:-63}),angle:activity?work.headAngle:0};
+ return {weapon,activity,walking,backpedal,walk,stroke,angle,main,back,body,head,kneeling:activity&&work.kneeling,phase,bowUpper:bowPoint(-12,-25),bowLower:bowPoint(-12,25),arrowTip:bowPoint(27,0),frontArm:armJoints(torsoPoint(body,{x:12,y:-45}),main,-1,14),backArm:armJoints(torsoPoint(body,{x:-10,y:-45}),back,1,['polearm','greatsword'].includes(weapon)&&!activity?17:weapon==='bow'&&!activity?16:14)};
+}
+function drawWorkLeg(c,rig,side,data){
+ const hip={x:rig.body.x+side*5,y:rig.body.y},knee={x:side<0?-3:7,y:-2},ankle={x:side<0?-22:-10,y:-2};
+ if(global.DeepwellEquipmentArt?.paintWorkLeg(c,data,side,{hip,knee,ankle}))return;
+ line(c,hip.x,hip.y,knee.x,knee.y,palette.pants,10);line(c,knee.x,knee.y,ankle.x,ankle.y,palette.pants,8);line(c,hip.x-1,hip.y,knee.x-1,knee.y,palette.pantsLight,3);ellipse(c,ankle.x-2,ankle.y,6,3.4,palette.leather,INK,.8);
 }
 function drawRigArm(c,joints,side,data){
  if(global.DeepwellEquipmentArt?.paintArm(c,data,side,0,joints))return;
@@ -304,22 +327,27 @@ function render(c,options={}){
  if(hit>0)c.translate(Math.sin(time*57)*hit*1.4,0);
  if(kit.enchant)drawAura(c,kit.enchant,time);
  if(!kit.armorSet)drawCape(c,tier(armor),time,rig.walk);
- for(const side of [-1,1]){const stride=rig.walking?side*rig.walk*.24:0;if(!art?.paintLeg(c,data,side,stride))drawLeg(c,side,stride,0,time);}
+ for(const side of [-1,1]){const stride=rig.walking?side*rig.walk*.24:0;if(rig.kneeling)drawWorkLeg(c,rig,side,data);else if(!art?.paintLeg(c,data,side,stride))drawLeg(c,side,stride,0,time);}
+ drawRigArm(c,rig.backArm,-1,data);
  // The neck overlaps both the jaw and the collar, including textured outfits.
- path(c,[-4.5,-57,4.5,-57,5.5,-44,-5.5,-44],SKIN_D,'',0);path(c,[-3,-56,2,-56,2.5,-45,-3.5,-45],SKIN,'',0);
- if(!art?.paintBody(c,data,{time,walking:rig.walking,walk:rig.walk}))drawBody(c,0);
- drawRigArm(c,rig.backArm,-1,data);drawRigArm(c,rig.frontArm,1,data);
- if(kit.armorSet){const bare=kit.armorSet==='ranged_1';c.save();c.translate(0,3);c.save();c.translate(0,-63);c.scale(bare?.84:.76,bare?.84:.76);c.translate(0,58);drawHead(c,0,time,rig.walk,!bare);c.restore();art?.paintHead(c,data);c.restore();}else drawHead(c,0,time,rig.walk);
+ const collar=torsoPoint(rig.body,{x:0,y:-47}),jaw={x:rig.head.x-Math.sin(rig.head.angle)*15,y:rig.head.y+Math.cos(rig.head.angle)*15};line(c,collar.x,collar.y,jaw.x,jaw.y,SKIN_D,9);line(c,collar.x-1,collar.y,jaw.x-1,jaw.y,SKIN,6);
+ c.save();c.translate(rig.body.x,rig.body.y);c.rotate(rig.body.angle);c.translate(0,23.5);if(!art?.paintBody(c,data,{time,walking:rig.walking,walk:rig.walk}))drawBody(c,0);c.restore();
+ c.save();c.translate(rig.head.x,rig.head.y);c.rotate(rig.head.angle);c.translate(0,63);
+ if(kit.armorSet){const bare=kit.armorSet==='ranged_1';c.save();c.translate(0,3);c.save();c.translate(0,-63);c.scale(bare?.84:.76,bare?.84:.76);c.translate(0,58);drawHead(c,0,time,rig.walk,!bare);c.restore();art?.paintHead(c,data);c.restore();}else drawHead(c,0,time,rig.walk);c.restore();
+ drawRigArm(c,rig.frontArm,1,data);
  if(rig.activity){
+  if(pose==='scavenge'){c.save();c.translate(-16,-1);c.scale(.55,.55);c.rotate(-Math.PI/2-.45);c.translate(0,-18);drawMattock(c);c.restore();}
+  else{
   c.save();c.translate(rig.main.x,rig.main.y);c.rotate(rig.angle);c.translate(0,-18);
-  if(pose==='scavenge')drawMattock(c);else if(pose==='mine')drawPickaxe(c);else if(pose==='smith')drawHammer(c);else if(pose==='wood')drawHatchet(c);else if(pose==='fletch')drawFletchingTool(c);else if(pose==='ward')drawWardTool(c,time);else if(pose==='rune')drawRuneTool(c,time);else ellipse(c,0,18,5,5,'#8ad9ef');c.restore();
+  if(pose==='mine')drawPickaxe(c);else if(pose==='smith')drawHammer(c);else if(pose==='wood')drawHatchet(c);else if(pose==='fletch')drawFletchingTool(c);else if(pose==='ward')drawWardTool(c,time);else if(pose==='rune')drawRuneTool(c,time);else if(pose==='polish')drawGemTool(c);else ellipse(c,0,18,5,5,'#8ad9ef');c.restore();
+  }
  }else{
   const type=rig.weapon==='shield'?'sword':rig.weapon;
   if(!art?.paintWeapon(c,data,type,{x:rig.main.x,y:rig.main.y,angle:rig.angle})){c.save();c.translate(rig.main.x,rig.main.y-18);drawSword(c,kit.weapon,kit.enchant);c.restore();}
   if(rig.weapon==='shield')art?.paintWeapon(c,data,'shield',{x:rig.back.x-1,y:rig.back.y-2,angle:-.12});
   if(rig.weapon==='bow'){
    c.strokeStyle='#d5c7a6';c.lineWidth=.65;c.beginPath();c.moveTo(rig.bowUpper.x,rig.bowUpper.y);c.lineTo(rig.back.x,rig.back.y);c.lineTo(rig.bowLower.x,rig.bowLower.y);c.stroke();
-   if(options.charge>.45&&(data.arrows||0)>0){line(c,rig.back.x,rig.back.y,rig.arrowTip.x,rig.arrowTip.y,'#b7a077',1);c.save();c.translate(rig.arrowTip.x,rig.arrowTip.y);c.rotate(rig.angle);path(c,[0,0,-6,-2,-6,2],'#c9d4d1','',0);c.restore();}
+   if(options.charge>.45&&((data.arrows||0)>0||(data.ammoCharges?.arrows||0)>0)){line(c,rig.back.x,rig.back.y,rig.arrowTip.x,rig.arrowTip.y,'#b7a077',1);c.save();c.translate(rig.arrowTip.x,rig.arrowTip.y);c.rotate(rig.angle);path(c,[0,0,-6,-2,-6,2],'#c9d4d1','',0);c.restore();}
   }
   if(rig.weapon==='staff'&&options.attack>0){c.save();c.globalAlpha=options.attack*.65;ellipse(c,rig.back.x,rig.back.y,5+rig.stroke*2,5+rig.stroke*2,'#a4cee2');c.restore();}
  }

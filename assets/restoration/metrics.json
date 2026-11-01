@@ -1,0 +1,20 @@
+{
+  "health-drop": {
+    "source": [
+      173,
+      204,
+      761,
+      690
+    ],
+    "bytes": 14414
+  },
+  "codex-health_pickup": {
+    "source": [
+      950,
+      82,
+      1659,
+      790
+    ],
+    "bytes": 20024
+  }
+}

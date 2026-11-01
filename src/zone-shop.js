@@ -115,13 +115,13 @@ function normalizeZone(){normalizeZoneShopProgression();data.zone=zoneSnapshot()
 function syncZone(){data.zone=zoneSnapshot();game.upgrades={...zoneShopFor().ranks};const p=dungeonProgress();game.runLevel=p.level;game.runXp=p.xp;game.requiredXp=p.required;game.pendingLevels=0;checkpointGroundXp();}
 function gainXp(amount){
  if(!Number.isFinite(amount)||amount<=0)return;const before=dungeonProgress().level;data.dungeoneeringXp+=amount;const after=dungeonProgress().level;
- if(after>before){const m=masteryFor();m.points+=after-before;m.earned+=after-before;toast('Dungeoneering '+after,'+'+(after-before)+' Mastery');}
+ if(after>before)toast('Dungeoneering '+after);
  syncZone();
 }
 function showUpgrade(){game.pendingLevels=0;if(game.status==='upgrade')game.status='running';return false;}
 function selectUpgrade(){return false;}
-function showMasteryIntroduction(){if(data.masteryIntroSeen)return;data.masteryIntroSeen=true;save();toast('Mastery unlocked','2× Delve speed');}
-function startFloor(){game.scene='combat';game.manualPaused=game.menuPaused=false;resetRun();game.status='running';hideOverlay();setScene('combat',false);nextPhase();updatePauseHud();refreshUI();}
+function showMasteryIntroduction(){if(data.masteryIntroSeen||!masteryUnlocked())return;data.masteryIntroSeen=true;save();toast('Mastery unlocked','2× Delve speed');}
+function startFloor(){game.scene='combat';game.manualPaused=game.menuPaused=false;resetRun();game.status='running';hideOverlay();setScene('combat',false);nextPhase();updatePauseHud();refreshUI();announceZone2TravelTip();}
 function applyMastery(){
  if(!masteryDraft||!masteryChanged()){masteryClose(true);return;}
  const m=masteryFor(),v=masteryDraft,total=m.points+masterySpent(m),cost=masterySpent(v);if(cost>total)return;
@@ -145,12 +145,13 @@ function onKill(e){
  const b=biome();burst(e.x,e.y,e.boss?18:game.enemies.length>65?2:8,b.accent);game.shake=e.boss?7:1.5;
  const seals=e.boss?ZONE_ABILITY_REWARDS.guardians[e.bossIndex]:e.elite?ZONE_ABILITY_REWARDS.elite:Math.random()<currencyDropChance()?1:0;grantZoneCurrency(seals);
  if(e.boss){
-  const index=e.bossIndex,m=masteryFor(),reward=index===2?2:1;m.points+=reward;m.earned+=reward;
+  const index=e.bossIndex,m=masteryFor(),reward=guardianMasteryReward(e);m.points+=reward;m.earned+=reward;
   grantDelveGold(delveGoldReward('guardian',data.floor,index)*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));data.essence+=index===2?2:1;
   for(let n=0;n<7;n++)game.gems.push({x:e.x+rand(-35,35),y:e.y+rand(-35,35),value:14*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp'))});
-  toast(e.name+' defeated','+'+seals+' '+zoneCurrency().name+' · +'+reward+' Mastery');save();game.boss=null;
-  if(game.status==='running'){finishPhase();showMasteryIntroduction();}else game.transition=.85;
+  toast(e.name+' defeated','+'+seals+' '+zoneCurrency().name+(reward?' · +'+reward+' Mastery':''));save();game.boss=null;
+  if(game.status==='running'){finishPhase();if(reward)showMasteryIntroduction();}else game.transition=.85;
  }else{
+  dropHealth(e);
   if(Math.random()<rareDropChance()){const index=biomeIndex();data.biomeLoot[index]=(data.biomeLoot[index]||0)+1;codexDiscover('loot_'+index);if(game.enemies.length<40)floater(e.x,e.y-26,'◆ '+biomeLootName(),'#d5f4ab');}
   if(e.elite)grantDelveGold(delveGoldReward('elite')*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));
   const xp=(e.elite?2:1)*(8+Math.floor(data.floor/3))*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp'));
@@ -159,12 +160,12 @@ function onKill(e){
  }
 }
 function clearFloor(){
- game.status='clear';game.phase=6;const floor=data.floor,clearedZone=zoneNumber(),award=delveGoldReward('floor',floor),essence=2+Math.floor(floor/2);
- game.lastClearedZone=clearedZone;grantDelveGold(award);data.essence+=essence;codexDiscover('permanent_essence');data.cleared=Math.max(data.cleared,floor);syncZone();
+ game.status='clear';game.phase=6;const floor=data.floor,clearedZone=zoneNumber(),clearedStage=zoneStage(),clearedName=biome().name,award=delveGoldReward('floor',floor),essence=2+Math.floor(floor/2);
+ game.lastClearedZone=clearedZone;game.lastClearedFloor=floor;grantDelveGold(award);data.essence+=essence;codexDiscover('permanent_essence');data.cleared=Math.max(data.cleared,floor);syncZone();
  const frontier=Math.max(1,data.cleared+1),replay=floor<frontier-1,ending=zoneStage()===3;
  data.floor=replay&&ending?floor-2:floor+1;data.zone=zoneSnapshot();game.upgrades={...zoneShopFor().ranks};ensureJobs();if(ending)codexDiscover('biome_'+biomeIndex());save();
- const idle=floor===1&&data.cleared===1||ending&&zoneNumber()+1===10;
- showOverlay('<div class="floor-result"><h2>'+(ending?'Zone cleared':'Floor cleared')+'</h2><p>'+biome().name+' · Floor '+zoneStage()+'</p><div class="floor-rewards"><span>'+artHTML('coins')+'+'+award+'</span><span>'+artHTML('essence')+'+'+essence+'</span></div>'+(idle?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+'Zone Shop</button><button type="button" class="primary-cta" id="nextFloor">Continue'+uiIcon('arrow')+'</button></div>','floor-clear-overlay');
+ const idle=floor===1&&data.cleared===1||ending&&zoneNumber()+1===2;
+ showOverlay('<div class="floor-result"><h2>'+(ending?'Zone cleared':'Floor cleared')+'</h2><p>'+clearedName+' · Floor '+clearedStage+'</p><div class="floor-rewards"><span>'+artHTML('coins')+'+'+award+'</span><span>'+artHTML('essence')+'+'+essence+'</span></div>'+(idle?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+'Zone Shop</button><button type="button" class="primary-cta" id="nextFloor">Continue'+uiIcon('arrow')+'</button></div>','floor-clear-overlay');
  $('nextFloor').onclick=startFloor;$('clearZoneShop').onclick=()=>openZoneShop(clearedZone);if($('selectIdleTask'))$('selectIdleTask').onclick=openIdleHub;refreshUI();
  if(idle)toast('Idle unlocked','Select an idle task');
 }

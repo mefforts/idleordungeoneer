@@ -11,14 +11,15 @@ function bindTouchNavigation(button){
   e.preventDefault();touchNavigationClick={x:e.clientX,y:e.clientY,time:performance.now()};button.focus({preventScroll:true});button.click();
  });
 }
-function resetArenaTouch(){
+function resetArenaTouch(clearTaps=false){
+ if(clearTaps)game.movementTap=null;
  const previous=arenaTouch;arenaTouch=null;
  if(previous){game.joystick.pointer=null;game.joystick.x=game.joystick.y=0;try{if(canvas.hasPointerCapture(previous.pointer))canvas.releasePointerCapture(previous.pointer);}catch(_){}}
  $('arenaTouchGuide')?.classList.add('hidden');
 }
 function moveArenaTouch(e){
  if(!arenaTouch||arenaTouch.pointer!==e.pointerId)return;
- if(!movementDashAllowed()){resetArenaTouch();return;}
+ if(!movementDashAllowed()){resetArenaTouch(true);return;}
  e.preventDefault();e.stopImmediatePropagation();
  let dx=e.clientX-arenaTouch.x,dy=e.clientY-arenaTouch.y,distance=Math.hypot(dx,dy);
  if(distance>48){arenaTouch.x=e.clientX-dx/distance*48;arenaTouch.y=e.clientY-dy/distance*48;dx=e.clientX-arenaTouch.x;dy=e.clientY-arenaTouch.y;distance=48;}
@@ -49,15 +50,15 @@ function installMobileUI(){
  },true);
  canvas.addEventListener('pointermove',moveArenaTouch,true);
  for(const type of ['pointerup','pointercancel','lostpointercapture'])window.addEventListener(type,e=>{if(arenaTouch?.pointer===e.pointerId)resetArenaTouch();},true);
- window.addEventListener('blur',resetArenaTouch);window.addEventListener('resize',resetArenaTouch);
- document.addEventListener('visibilitychange',()=>{if(document.hidden)resetArenaTouch();});
+ window.addEventListener('blur',()=>resetArenaTouch(true));window.addEventListener('resize',()=>resetArenaTouch(true));
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)resetArenaTouch(true);});
  document.addEventListener('pointerdown',e=>{touchNavigationClick=null;if(arenaTouch&&e.target!==canvas&&!e.target.closest('#dashButton'))resetArenaTouch();},true);
  // A compatibility click can be retargeted into a newly opened menu. Consume it
  // before it reaches that menu; new physical presses and keyboard clicks still work.
  document.addEventListener('click',e=>{const previous=touchNavigationClick;if(previous&&e.isTrusted&&e.detail>0&&performance.now()-previous.time<650&&Math.hypot(e.clientX-previous.x,e.clientY-previous.y)<12){touchNavigationClick=null;e.preventDefault();e.stopImmediatePropagation();}},true);
  navigationIcon('delveNav','nav-delve','Delve');navigationIcon('quickGear','nav-inventory','Inventory');navigationIcon('quickShop','zone-shop','Zone Shop');
  navigationIcon('speedToggle','nav-speed');$('speedToggle').querySelector('svg')?.remove();
- for(const id of ['firstWeaponHint','delveNav','quickGear','quickSkills','quickShop','quickCodex','quickSettings','quickPause','speedToggle','dashButton','drawerClose'])bindTouchNavigation($(id));
+ for(const id of ['firstWeaponHint','delveNav','quickGear','quickSkills','quickShop','quickCodex','quickSettings','quickPause','speedToggle','dashButton','drawerClose','activeIdleButton'])bindTouchNavigation($(id));
  $('speedOptions').querySelectorAll('button').forEach(bindTouchNavigation);
  refreshMobileUI();
 }
@@ -96,11 +97,11 @@ function updatePauseHud(){
  const glyph=$('pauseGlyph'),art=manuallyPaused?'nav-play':'nav-pause';if(glyph.dataset.art!==art){glyph.innerHTML=artHTML(art);glyph.dataset.art=art;}
  $('pauseCaption').textContent=manuallyPaused?'RESUME':'PAUSE';
  banner.classList.toggle('hidden',!manuallyPaused||$('app').classList.contains('drawer-open')||!$('overlay').classList.contains('hidden')||tourIndex>=0);
- $('stageWrap').classList.toggle('delve-is-paused',manuallyPaused);if(manuallyPaused)resetArenaTouch();
+ $('stageWrap').classList.toggle('delve-is-paused',manuallyPaused);if(manuallyPaused)resetArenaTouch(true);
 }
 
 function showOverlay(markup,kind=''){
- resetArenaTouch();
+ resetArenaTouch(true);
  const o=$('overlay');if(o.classList.contains('hidden'))modalFocus=document.activeElement;game.holdSkill=null;game.keys={};game.mouseMove.active=false;
  document.body.classList.toggle('mastery-modal-open',kind==='mastery-overlay');document.body.classList.toggle('codex-modal-open',kind==='codex-overlay');o.classList.toggle('mastery-modal',kind==='mastery-overlay');o.classList.toggle('codex-modal',kind==='codex-overlay');o.classList.remove('hidden');o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
  const card=$('overlayCard');card.className='overlay-card '+kind;card.innerHTML=markup;card.tabIndex=-1;const heading=card.querySelector('h2');if(heading){if(!heading.id)heading.id='modalTitle';o.setAttribute('aria-labelledby',heading.id)}

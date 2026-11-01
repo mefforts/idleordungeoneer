@@ -1,0 +1,133 @@
+/* Visible production rewards and a shared, non-overlapping resource row. */
+let workshopInstalled=false;
+const workshopArtImages=new Map();
+function skillGoldYield(key){const base=SKILLS[key]?.goldGain||0;return base?base+(data.skillBoosts?.scavenging?1:0)+base*trinketBonus('gold'):0;}
+function workGoldLabel(key){const amount=skillGoldYield(key);return amount?Number(amount.toFixed(2)).toString():'';}
+function workshopYieldHtml(key){return '<b>+'+skillYield(key)+'</b>'+(SKILLS[key].goldGain?'<span class="work-gold" aria-label="'+workGoldLabel(key)+' Gold per search">'+artHTML('coins')+'<b>+'+workGoldLabel(key)+'</b></span>':'');}
+function installWorkshopUI(){
+ if(workshopInstalled)return;workshopInstalled=true;
+ const row=document.createElement('div');row.id='resourceHud';row.className='resource-hud';row.setAttribute('aria-label','Zone currency and ammunition');$('stageWrap').append(row);
+ for(const id of ['zoneCurrencyHud','ammoNotice'])if($(id))row.append($(id));
+ for(const key of Object.keys(WORKSHOP_ART))workshopPropImage(key);
+}
+function recordWorkshopReward(key,amount,gold,gem){
+ if(!workshopInstalled||game.scene!==key||drawerKind||!$('overlay').classList.contains('hidden'))return;
+ const now=performance.now(),last=game.workReward;
+ if(last&&last.key===key&&now-last.time<180){last.amount+=amount;last.gold+=gold;if(gem)last.gems=(last.gems||0)+1;last.time=now;}
+ else game.workReward={key,amount,gold,gems:gem?1:0,time:now};
+ if(gold){const chip=$('quickGold').parentElement;chip.classList.remove('currency-gain');requestAnimationFrame(()=>chip.classList.add('currency-gain'));}
+ if(now-(game.lastRewardAnnounced||0)>1200){$('skillBonusStatus').textContent='+'+amount+' '+RESOURCE_LABEL[SKILLS[key].resource]+(gold?' · +'+Number(gold.toFixed(2))+' Gold':'');game.lastRewardAnnounced=now;}
+}
+function paintWorkshopReward(anchor){
+ const reward=game.workReward;if(!reward||reward.key!==game.scene)return;
+ const age=(performance.now()-reward.time)/1000;if(age>1.8)return;
+ const fade=age<1.2?1:Math.max(0,(1.8-age)/.6),rise=reducedMotion()?0:Math.min(22,age*15),items=[[SKILLS[reward.key].resource,reward.amount],...(reward.gold?[['gold',Number(reward.gold.toFixed(2))]]:[])];
+ const y=clamp(anchor.y-anchor.height*.68-rise,110,(game.workAreaBottom||game.viewHeight-230)-24),width=items.length*82;ctx.save();ctx.globalAlpha=fade;
+ items.forEach(([key,amount],index)=>{const x=clamp(anchor.x-width/2+index*82,16,game.viewWidth-80),image=presentationResourceImage(key);if(image.complete&&image.naturalWidth)ctx.drawImage(image,x,y-13,25,25);ctx.font='700 15px system-ui';ctx.textAlign='left';ctx.lineWidth=4;ctx.strokeStyle='#151710';ctx.strokeText('+'+amount,x+29,y+5);ctx.fillStyle=key==='gold'?'#f4d287':'#f0e3c7';ctx.fillText('+'+amount,x+29,y+5);});ctx.restore();
+}
+function produce(key,active=false){
+ const skill=SKILLS[key];if(!skill||!canUseSkill(key)||!spendAtStation(skill.cost||{},disciplineFor(key)))return false;
+ const amount=skillYield(key);data[skill.resource]=(data[skill.resource]||0)+amount;let gold=0,found='';
+ if(skill.goldGain){gold=skillGoldYield(key);data.gold+=gold;data.scavengeDry=(data.scavengeDry||0)+1;
+  if(Math.random()<.07+trinketBonus('find')||data.scavengeDry>=20){data.scavengeDry=0;found=skill.tier===2?'garnets':'opals';data[found]++;codexDiscover('resource_'+found);if(active)toast(found==='garnets'?'Garnet found!':'Opal found!','A rough gem for Artisan');}}
+ const xp=active?Math.max(5,Math.floor(skill.gain*.65)):skill.gain;data[skill.xp]=(data[skill.xp]||0)+xp;const group=disciplineOf(key);data[group.xp]=(data[group.xp]||0)+xp;
+ recordWorkshopReward(key,amount,gold,found);codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
+}
+function goToSource(resource){
+ if(resource==='gold'){enterActivity('scavenge');return;}
+ if(resource==='essence'){closeDrawer();setScene('combat',true);toast('Defeat a guardian for essence');return;}
+ const key=RESOURCE_SOURCE[resource];if(!key)return;workshopTier=SKILLS[key].tier||1;
+ if(!canUseSkill(key)){openWorkshop(disciplineFor(key),SKILLS[key].cost?'refine':'gather');toast('Resource locked',skillLockReason(key));return;}
+ enterActivity(key);
+}
+
+const WORKSHOP_THEMES=[{light:'#bed99a',deep:'#527b46',spark:'#e5d79c'},{light:'#f1c082',deep:'#b96835',spark:'#ffe3a1'},{light:'#cfb7ef',deep:'#8060a7',spark:'#e9dcff'},{light:'#a2e3e8',deep:'#4d95b1',spark:'#e5fbff'}];
+function workshopAnimation(key,active,working){
+ const base=SKILLS[key].scene||key,pose={mine:'mine',silverMine:'mine',forge:'smith',silverSmelt:'smith',wood:'wood',fletch:'fletch',ward:'ward',rune:'rune',polish:'polish',scavenge:'scavenge'}[base]||'scavenge';
+ const interval=skillInterval(key,active),elapsed=active?(game.activeClockMs-(game.lastActiveAt?.[key]??game.activeClockMs))/1000:(data.jobTimers[key]||0),phase=working&&!reducedMotion()?Math.min(.9999,Math.max(0,elapsed/interval)):.3;
+ const time=reducedMotion()?0:game.activeClockMs/1000;
+ return {key,base,pose,working,phase,time,workPhase:phase,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
+}
+function workshopGlyph(c,x,y,r,kind,color){
+ c.save();c.translate(x,y);c.strokeStyle=color;c.lineWidth=.7;c.beginPath();
+ if(kind===0){c.moveTo(-r,r);c.quadraticCurveTo(-r,-r,r,-r);c.quadraticCurveTo(r,r,-r,r);c.moveTo(-r,r);c.lineTo(r,-r);}
+ else if(kind===1){c.moveTo(0,-r);c.lineTo(r,r);c.lineTo(-r,r);c.closePath();c.moveTo(-r*.7,0);c.lineTo(r*.7,0);}
+ else if(kind===2){c.moveTo(-r,-r);c.lineTo(r,r);c.moveTo(r,-r);c.lineTo(-r,r);c.moveTo(0,-r*1.3);c.lineTo(0,r*1.3);}
+ else{c.moveTo(0,-r*1.3);c.lineTo(r,0);c.lineTo(0,r*1.3);c.lineTo(-r,0);c.closePath();c.moveTo(-r,0);c.lineTo(r,0);}
+ c.stroke();c.restore();
+}
+function paintWorkshopSceneEffects(frame,anchor,layer){
+ const {pose,working,phase,time,theme,key}=frame,kind=biomeIndex(),rig=DeepwellAvatar.poseRig(frame),magical=['ward','rune'].includes(pose),center=pose==='ward'?{x:24,y:-34}:{x:31,y:-27};
+ ctx.save();ctx.translate(anchor.x,anchor.y);ctx.scale(anchor.scale,anchor.scale);
+ if(layer==='back'){
+  const prop=workshopProp(frame),image=prop&&workshopPropImage(prop.art);if(image?.complete&&image.naturalWidth){const width=Math.min(62,prop.height*image.naturalWidth/image.naturalHeight);ctx.drawImage(image,prop.x-width/2,-prop.height,width,prop.height);}
+  if(magical){const g=ctx.createRadialGradient(center.x,center.y,1,center.x,center.y,29);g.addColorStop(0,theme.light+'35');g.addColorStop(1,theme.light+'00');ctx.fillStyle=g;ctx.beginPath();ctx.arc(center.x,center.y,29,0,Math.PI*2);ctx.fill();
+   ctx.strokeStyle=theme.deep+'b0';ctx.lineWidth=.65;ctx.beginPath();ctx.ellipse(center.x,center.y,23,17,-.2,0,Math.PI*2);ctx.stroke();for(let i=0;i<6;i++){const a=i*Math.PI/3+(working?time*.15:0);workshopGlyph(ctx,center.x+Math.cos(a)*23,center.y+Math.sin(a)*17,2.1,kind,theme.light+'c0');}}
+  ctx.restore();return;
+ }
+ if(pose==='ward'){
+  const hover=working?Math.sin(phase*Math.PI*2)*1.2:0,x=center.x,y=center.y+hover;
+  ctx.fillStyle=SKILLS[key].tier===2?'#94aac6':'#c5b3ce';ctx.strokeStyle='#4e4351';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x-9,y-6);ctx.quadraticCurveTo(x,y-4,x+9,y-6);ctx.lineTo(x+8,y+7);ctx.quadraticCurveTo(x,y+5,x-8,y+7);ctx.closePath();ctx.fill();ctx.stroke();
+  for(let row=0;row<5;row++){ctx.strokeStyle=row%2?theme.light:'#e2d6d7';ctx.lineWidth=.45;ctx.beginPath();ctx.moveTo(x-7,y-4+row*2);ctx.quadraticCurveTo(x,y-2+row*2,x+7,y-4+row*2);ctx.stroke();}
+  if(working){ctx.strokeStyle=theme.light;ctx.lineWidth=.6;for(const [i,hand]of [rig.main,rig.back].entries()){ctx.beginPath();ctx.moveTo(hand.x,hand.y);ctx.bezierCurveTo(hand.x+9,hand.y-13,x-10,y+8,x+(i?6:-6),y+(i?-4:4));ctx.stroke();}workshopGlyph(ctx,x,y,3,kind,'#f6eed9');}
+ }else if(pose==='rune'){
+  ctx.save();ctx.translate(center.x,center.y);ctx.fillStyle='#626d72';ctx.strokeStyle='#263438';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,8,5,-.2,0,Math.PI*2);ctx.fill();ctx.stroke();workshopGlyph(ctx,0,-1,3.1,kind,working?theme.spark:theme.light);if(working){ctx.strokeStyle=theme.light;ctx.lineWidth=.75;ctx.beginPath();ctx.ellipse(0,0,13,8,-.2,-Math.PI/2,-Math.PI/2+Math.PI*2*phase);ctx.stroke();}ctx.restore();
+ }else if(pose==='polish'){
+  const x=25,y=-27;ctx.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';ctx.strokeStyle='#3a4b4c';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x+5,y-1);ctx.lineTo(x+2,y+4);ctx.lineTo(x-4,y+2);ctx.lineTo(x-5,y-2);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#e4eee0';ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x-1,y);ctx.lineTo(x+5,y-1);ctx.moveTo(x-1,y);ctx.lineTo(x+2,y+4);ctx.stroke();
+ }else if(pose==='fletch'){
+  ctx.strokeStyle=SKILLS[key].tier===2?'#b8a27b':'#c5a276';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(13,-26);ctx.lineTo(45,-29);ctx.stroke();ctx.fillStyle='#a6b6ba';ctx.beginPath();ctx.moveTo(45,-31);ctx.lineTo(51,-30);ctx.lineTo(45,-27);ctx.fill();ctx.strokeStyle='#d6d3b8';ctx.lineWidth=1;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(14+i*2,-26);ctx.lineTo(10+i*2,-29);ctx.stroke();}
+ }else if(pose==='scavenge'){
+  for(let i=0;i<5;i++){const x=25+i*4,y=-1+(i%2);ctx.fillStyle=i%2?'#716650':'#8c8067';ctx.beginPath();ctx.moveTo(x-2,y);ctx.lineTo(x-1,y-3-i%2);ctx.lineTo(x+2,y-2);ctx.lineTo(x+3,y+1);ctx.fill();}
+  const reward=game.workReward;if(reward?.key===key&&reward.gold&&performance.now()-reward.time<900){ctx.fillStyle='#dfb766';ctx.beginPath();ctx.ellipse(34,-5,3,1.8,-.2,0,Math.PI*2);ctx.fill();workshopGlyph(ctx,34,-9,2,3,'#fff0bb');}
+ }
+ if(working&&!reducedMotion()){
+  const striking=['mine','smith','wood'].includes(pose),impact=phase<.18||phase>.94;
+  if(!striking||impact){const origin=magical?center:pose==='scavenge'?rig.main:pose==='fletch'?{x:31,y:-28}:pose==='polish'?{x:26,y:-28}:{x:rig.main.x+Math.sin(rig.angle+.56)*36,y:rig.main.y-Math.cos(rig.angle+.56)*36};
+   const count=pose==='smith'?9:pose==='ward'?7:4;for(let i=0;i<count;i++){const age=((striking?phase*5:time*.5)+i/count)%1,a=i*2.399,dist=age*(magical?16:pose==='smith'?18:10);ctx.globalAlpha=(1-age)*.7;ctx.strokeStyle=pose==='smith'?'#f5bf75':magical?theme.light:pose==='wood'||pose==='fletch'?'#c8a16a':pose==='scavenge'?'#b4a080':'#a7b6b7';ctx.lineWidth=pose==='smith'?.7:.9;ctx.beginPath();ctx.moveTo(origin.x+Math.cos(a)*dist,origin.y+Math.sin(a)*dist*.6-age*6);ctx.lineTo(origin.x+Math.cos(a)*(dist+2),origin.y+Math.sin(a)*(dist+2)*.6-age*6);ctx.stroke();}}
+ }
+ ctx.restore();
+}
+
+function workshopPropImage(key){
+ if(!workshopArtImages.has(key)){const image=new Image();image.decoding='async';image.src=WORKSHOP_ART[key].src;workshopArtImages.set(key,image);}return workshopArtImages.get(key);
+}
+function workshopProp(frame){
+ const pose=frame.pose;
+ if(pose==='mine')return {art:frame.key==='coal'?'coal':frame.base==='silverMine'?'silver':'iron',x:58,height:48};
+ if(pose==='smith')return {art:'anvil',x:60,height:36};
+ if(pose==='wood')return {art:'chopping',x:58,height:39};
+ if(pose==='fletch')return {art:'fletching',x:34,height:29};
+ if(pose==='ward')return {art:'warding',x:24,height:15};
+ if(pose==='rune')return {art:'engraving',x:31,height:30};
+ if(pose==='polish')return {art:'jeweling',x:26,height:29};
+ return null;
+}
+function workshopBounds(key){
+ const base=SKILLS[key].scene||key;
+ return base==='scavenge'?{left:-46,right:48}:['mine','silverMine','forge','silverSmelt','wood'].includes(base)?{left:-24,right:90}:base==='fletch'?{left:-24,right:67}:{left:-24,right:62};
+}
+
+function drawProceduralWorkstation(w,h,key){
+ const base=SKILLS[key].scene||key;
+ const t=reducedMotion()?0:game.activeClockMs/1000,top=90,bottom=h-(innerWidth<=760?283:215),available=Math.max(180,bottom-top),scale=Math.min(w/1000,available/520,1.5),x=w/2,y=top+available/2+20;
+ const cacheKey=[key,Math.round(w),Math.round(h),innerWidth<=760].join(':');
+ let surface=roomSceneCache.get(cacheKey);
+ if(!surface){
+  surface=document.createElement('canvas');surface.width=Math.ceil(w);surface.height=Math.ceil(h);
+  // Keep helpers bound to the main context by rendering a cached static layer once.
+  ctx.save();roomArchitecture(w,h,base);ctx.translate(x,y);ctx.scale(scale,scale);ctx.translate(-500,-280);drawRoomSet(base);ctx.restore();
+  surface.getContext('2d').drawImage(canvas,0,0,canvas.width,canvas.height,0,0,surface.width,surface.height);
+  roomSceneCache.set(cacheKey,surface);if(roomSceneCache.size>16)roomSceneCache.delete(roomSceneCache.keys().next().value);
+ }else ctx.drawImage(surface,0,0,w,h);
+ ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.translate(-500,-280);
+ const active=game.holdSkill===key&&!$('skillHold').disabled,working=active||(data.idleJobs.includes(key)&&hasIngredients(skillCost(key)));
+ if(base==='forge'||base==='silverSmelt'){
+  glow(279,351,130,'#e0a15f20');for(let i=0;i<7;i++){const x=241+i*13,y=401,fl=23+Math.sin(t*3+i)*8;ctx.beginPath();ctx.moveTo(x-10,y);ctx.bezierCurveTo(x-18,y-fl,x+7,y-fl-22,x+4,y-fl-38);ctx.bezierCurveTo(x+18,y-fl+4,x+20,y-4,x+9,y);ctx.closePath();ctx.fillStyle=i%2?'#ecb478':'#d98f56';ctx.fill();}
+ }
+ const frame=workshopAnimation(key,active,working),anchor={x:521,y:534,scale:2.18,height:2.18*82};
+ paintWorkshopSceneEffects(frame,anchor,'back');DeepwellAvatar.render(ctx,{...frame,x:anchor.x,y:anchor.y,scale:anchor.scale});paintWorkshopSceneEffects(frame,anchor,'front');
+ ctx.restore();
+ paintWorkshopReward({x:x+21*scale,y:y+254*scale,height:2.18*82*scale});
+ // Local ambient motes are few, slow, and never cover the action bar.
+ if(!reducedMotion())for(let i=0;i<12;i++){const px=rng(i,83,key.length)*w,py=top+((rng(i,84)*available+t*(2+i%3))%available);ctx.globalAlpha=.14;disc(px,py,1,'#ecdbb2');}ctx.globalAlpha=1;
+}

@@ -1,0 +1,101 @@
+{
+  "iron": {
+    "source": [
+      52,
+      25,
+      447,
+      325
+    ],
+    "width": 395,
+    "height": 300,
+    "bytes": 59090
+  },
+  "silver": {
+    "source": [
+      567,
+      24,
+      968,
+      335
+    ],
+    "width": 401,
+    "height": 311,
+    "bytes": 60016
+  },
+  "coal": {
+    "source": [
+      1097,
+      31,
+      1496,
+      334
+    ],
+    "width": 399,
+    "height": 303,
+    "bytes": 41878
+  },
+  "anvil": {
+    "source": [
+      40,
+      351,
+      504,
+      677
+    ],
+    "width": 464,
+    "height": 326,
+    "bytes": 57106
+  },
+  "chopping": {
+    "source": [
+      562,
+      353,
+      951,
+      672
+    ],
+    "width": 389,
+    "height": 319,
+    "bytes": 60326
+  },
+  "fletching": {
+    "source": [
+      1021,
+      385,
+      1513,
+      677
+    ],
+    "width": 480,
+    "height": 285,
+    "bytes": 60448
+  },
+  "warding": {
+    "source": [
+      59,
+      708,
+      469,
+      980
+    ],
+    "width": 410,
+    "height": 272,
+    "bytes": 52982
+  },
+  "engraving": {
+    "source": [
+      530,
+      698,
+      1014,
+      987
+    ],
+    "width": 480,
+    "height": 287,
+    "bytes": 55428
+  },
+  "jeweling": {
+    "source": [
+      1045,
+      695,
+      1519,
+      989
+    ],
+    "width": 474,
+    "height": 294,
+    "bytes": 54776
+  }
+}

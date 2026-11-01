@@ -16,16 +16,18 @@ function movementDashAllowed(){return game.scene==='combat'&&game.status==='runn
 function noteMovementTap(x,y,source,time=performance.now()){
   if(!movementDashAllowed()){game.movementTap=null;return false;}
   const length=Math.hypot(x,y);if(length<.18)return false;x/=length;y/=length;
-  const previous=game.movementTap;game.movementTap={x,y,source,time};
-  if(previous&&previous.source===source&&time-previous.time>=25&&time-previous.time<=285&&x*previous.x+y*previous.y>.7&&game.player.dashCooldown<=0){
-    game.player.vx=x;game.player.vy=y;dash();game.movementTap=null;return true;
+  const previous=game.movementTap,same=previous&&previous.source===source&&time-previous.time>=25&&time-previous.time<=285&&x*previous.x+y*previous.y>.7;
+  const count=same?(previous.count||1)+1:1;game.movementTap={x:same?previous.x:x,y:same?previous.y:y,source,time,count};
+  if(count>=3){
+    game.movementTap=null;if(game.player.dashCooldown>0)return false;
+    game.player.vx=x;game.player.vy=y;dash();return true;
   }
   return false;
 }
 function installDungeoneeringUI(){
   dungeoneeringInstalled=true;
   $('bossHud').insertAdjacentHTML('beforeend','<small id="bossMechanicHint"></small>');
-  $('dashButton').setAttribute('aria-label','Dash: Space, this button, or double tap a movement direction');$('dashButton').title='Double tap a movement direction or press Space to dash';
+  $('dashButton').setAttribute('aria-label','Dash: Space, this button, or triple tap a movement direction');$('dashButton').title='Triple tap a movement direction or press Space to dash';
   document.addEventListener('keydown',e=>{
     if(e.repeat||e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,textarea,select,[contenteditable="true"]'))return;
     const directions={KeyW:[0,-1],ArrowUp:[0,-1],KeyS:[0,1],ArrowDown:[0,1],KeyA:[-1,0],ArrowLeft:[-1,0],KeyD:[1,0],ArrowRight:[1,0]};
@@ -114,7 +116,7 @@ function tickCombat(dt){const p=game.player;game.frame+=dt;game.phaseTime+=dt;ga
  const norm=Math.hypot(dx,dy)||1;dx/=norm;dy/=norm;p.vx=dx;p.vy=dy;if(Math.abs(dx)>.15)p.facing=dx<0?-1:1;const spd=175*(1+trinketBonus('speed'))*(1+styleStats().movePercent/100)*waveSwiftFactor();if(p.dashTime>0){p.x+=p.dashDX*650*dt;p.y+=p.dashDY*650*dt;p.dashTime-=dt;burst(p.x,p.y,1,'#a4e2b2')}else{p.x+=dx*spd*dt;p.y+=dy*spd*dt}
  resolveWorldCollisions(p);tickEncounterObjects(dt);updateCombatAim();
  if(game.upgrades.regen)p.hp=Math.min(p.maxHp,p.hp+(waveRank('regen')*.08)*dt);
- game.attackTimer-=dt;if(game.attackTimer<=0&&attack()){game.attackTimer=attackCooldown()}
+ tickAmmunition(dt);game.attackTimer-=dt;if(game.attackTimer<=0&&attack()){game.attackTimer=attackCooldown()}
  if(game.phase%2===0&&game.phase<6){
   game.spawnTimer-=dt;
   const cap=activeMobCap(),interval=spawnInterval();
@@ -135,10 +137,10 @@ function tickCombat(dt){const p=game.player;game.frame+=dt;game.phaseTime+=dt;ga
    const vx=p.x-e.x,vy=p.y-e.y,dist=Math.hypot(vx,vy)||1;
    if(e.boss||e.elite)tickBossSpecial(e,dt);
    if(!game.enemies.includes(e)||game.status!=='running')continue;
-   const walk=e.cast||e.stagger>0?0:(game.totems||[]).some(t=>t.owner===e)?.35:1;e.x+=vx/dist*e.speed*dt*walk*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);e.y+=vy/dist*e.speed*dt*walk*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);
+   const walk=e.cast||e.stagger>0?0:(game.totems||[]).some(t=>t.owner===e)?.20:1;e.x+=vx/dist*e.speed*dt*walk*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);e.y+=vy/dist*e.speed*dt*walk*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);
    if(!(e.stagger>0)&&dist<e.rad+17&&e.contact<=0){hurt((e.boss?24+data.floor*2:e.elite?17+data.floor*1.5:10+data.floor*1.5)*(e.furyLinked?1.12:1));e.contact=e.boss?.7:.60}
  }
- tickDungeonHazards(dt);
+ tickDungeonHazards(dt);tickHealthDrops(dt);
  for(let i=game.shots.length-1;i>=0;i--){
   const s=game.shots[i];s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
   if(Math.random()<.32&&game.particles.length<180)game.particles.push({x:s.x,y:s.y,vx:-s.vx*.06+rand(-22,22),vy:-s.vy*.06+rand(-22,22),life:.18,max:.18,color:s.magic?'#9ae9ff':'#f9d5a0',rad:rand(1,2.5)});
@@ -176,6 +178,7 @@ function drawCombat(w,h){const b=biome();drawTiles(b,w,h);ctx.save();const jitte
   ctx.strokeStyle='#fff6df';ctx.lineWidth=1.8;ctx.stroke();ctx.restore();
  }
  for(const gem of game.gems){glow(gem.x,gem.y,14,'#8bbce14a');poly([gem.x,gem.y-9,gem.x+6,gem.y-1,gem.x+4,gem.y+9,gem.x-5,gem.y+7,gem.x-7,gem.y-1],'#80d2dd','#33586a',1);poly([gem.x,gem.y-9,gem.x+6,gem.y-1,gem.x,gem.y+1],'#defff2')}
+ paintHealthDrops();
  for(const s of game.shots){
   const a=Math.atan2(s.vy,s.vx);ctx.save();ctx.translate(s.x,s.y);ctx.rotate(a);
   if(s.magic){

@@ -27,7 +27,15 @@ function instrumentation(){
         zoneShopFor(index).ranks={...model.shopRanks};data.arrows=data.runes=100000;projectCombatStyle();let total=0,kills=0;
         for(let floor=0;floor<3;floor++){
           startFloor();game.player.hp=game.player.maxHp=1e9;game.player.invuln=1e8;let steps=0;
-          while(game.status==='running'&&steps++<600000)tickCombat(.04);
+          while(game.status==='running'&&steps++<600000){
+            // Permanent healing streams require counterplay. Approach the caster
+            // along its stream, within melee reach, to intercept while attacking.
+            const stream=(game.totems||[]).find(t=>t.type==='mend'),p=game.player;
+            if(stream){const from=encounterFoot(stream.owner),to=encounterFoot(stream),distance=Math.hypot(to.x-from.x,to.y-from.y),fraction=Math.min(.5,65/Math.max(1,distance)),target={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction-13},dx=target.x-p.x,dy=target.y-p.y;
+              game.joystick.pointer=-1;game.joystick.x=Math.hypot(dx,dy)>4?dx:0;game.joystick.y=Math.hypot(dx,dy)>4?dy:0;
+            }else{game.joystick.pointer=null;game.joystick.x=game.joystick.y=0;}
+            tickCombat(.04);
+          }
           if(game.status!=='clear')throw Error('Simulation did not clear: '+game.status);
           total+=game.runSeconds;kills+=game.runKills;
         }
@@ -92,7 +100,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     await p.reload();await p.click('#introDelve');bank=await p.evaluate(()=>__arenaTest.bank());assert.equal(bank.pending,0);assert.equal(bank.xp,89);assert.equal(bank.gems.length,0);assert.equal(await p.evaluate(()=>__deepwell.getState().status),'running');
     results.push('XP survives time, activity and Zone travel, death, retry and reload; encounter banking awards every point once without opening power choices');
     await p.evaluate(()=>__arenaTest.firstGuardian());assert.equal(await p.locator('#masteryGotIt').count(),0);assert.equal(await p.locator('[data-pick]').count(),0);assert.equal(await p.locator('#overlay').isHidden(),true);
-    results.push('The first-guardian Mastery unlock leaves combat running without a popup');
+    results.push('Ordinary guardians leave combat running without a Mastery or power-choice popup');
     await p.click('#quickGear');assert.ok(await p.locator('#combatReadiness').isVisible());
     assert.equal(await p.locator('#combatWeaponSelector .weapon-option').count(),(await p.evaluate(()=>__deepwell.getState().data.unlockedWeapons)).length);assert.equal(await p.locator('#combatReadiness .loadout-stats>span').count(),4);
     const dps=await p.evaluate(()=>Object.keys(__deepwell.getState().data.styles).map(style=>({style,dps:__deepwell.weaponDps(style==='ranged'?'bow':style==='magic'?'staff':'sword')})));assert.ok(dps.every(row=>row.dps>0));

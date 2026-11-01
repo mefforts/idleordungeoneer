@@ -14,7 +14,7 @@ function clearOwnerMechanics(owner){
  game.totems=(game.totems||[]).filter(t=>t.owner!==owner);owner.furyLinked=false;
  if(game.counterRequest===owner)game.counterRequest=null;
 }
-function combatTargets(){return [...game.enemies,...(game.totems||[])].filter(e=>e.hp>0&&(!e.totem||e.life>0&&game.enemies.includes(e.owner)));}
+function combatTargets(){return game.enemies.filter(enemy=>enemy.hp>0);}
 function encounterFoot(actor){return {x:actor.x,y:actor.y+(actor===game.player?13:actor.totem?18:actor.rad*.65)};}
 function encounterClear(x,y,radius=20){
  return !worldScenery(biomeIndex(),x,y,180,180).some(o=>{
@@ -23,20 +23,22 @@ function encounterClear(x,y,radius=20){
  });
 }
 function encounterPoint(owner,type){
- const p=encounterFoot(game.player),o=encounterFoot(owner),small=game.viewWidth<600;
- const radius=type==='reflect'?(small?86:110):38,w=game.viewWidth,h=game.viewHeight;
+ const p=encounterFoot(game.player),o=encounterFoot(owner),small=game.viewWidth<600,reflect=type==='reflect';
+ const radius=reflect?(small?86:110):38,w=game.viewWidth,h=game.viewHeight;
  const left=game.camX-w/2+radius+14+(data.hudLayout.side==='left'?52:0),right=game.camX+w/2-radius-14-(data.hudLayout.side==='right'?52:0);
  const top=game.camY-h/2+Math.max(radius+14,118),bottom=game.camY+h/2-radius-75;
- const away=Math.atan2(p.y-o.y,p.x-o.x);let best=null,bestScore=Infinity;
- for(let i=0;i<28;i++){
-  const a=away+(i%14)*Math.PI/7,d=type==='reflect'?(i<14?64:90):(i<14?170:225);
-  const x=clamp((type==='reflect'?p.x:o.x)+Math.cos(a)*d,left,Math.max(left,right));
-  const y=clamp((type==='reflect'?p.y:o.y)+Math.sin(a)*d,top,Math.max(top,bottom));
-  const distance=Math.hypot(x-o.x,y-o.y);
-  if(!encounterClear(x,y,type==='reflect'?36:25)||distance<owner.rad+(type==='reflect'?44:85))continue;
-  if(type==='reflect'&&game.enemies.some(e=>e!==owner&&Math.hypot(e.x-x,e.y+e.rad*.65-y)<e.rad+44))continue;
-  if(type!=='reflect'&&!encounterClear((x+o.x)/2,(y+o.y)/2,22))continue;
-  const score=type==='reflect'?Math.abs(Math.hypot(x-p.x,y-p.y)-64):Math.abs(distance-175)+Math.hypot(x-p.x,y-p.y)*.25;
+ const preferred=reflect?(small?250:300):(small?260:320),minimum=reflect?(small?200:230):(small?190:220),away=Math.atan2(p.y-o.y,p.x-o.x);let best=null,bestScore=Infinity;
+ for(let i=0;i<96;i++){
+  const ring=Math.floor(i/24),a=away+(i%24)*Math.PI/12,fromPlayer=reflect&&ring===3,origin=fromPlayer?p:o,d=fromPlayer?145:[preferred,preferred+70,minimum,minimum+40][ring];
+  const x=clamp(origin.x+Math.cos(a)*d,left,Math.max(left,right)),y=clamp(origin.y+Math.sin(a)*d,top,Math.max(top,bottom)),distance=Math.hypot(x-o.x,y-o.y),travel=Math.hypot(x-p.x,y-p.y);
+  if(distance<minimum||!encounterClear(x,y,reflect?36:25))continue;
+  if(reflect){
+   if(travel>365||game.enemies.some(e=>e!==owner&&Math.hypot(e.x-x,e.y+e.rad*.65-y)<e.rad+44))continue;
+  }else{
+   if((game.totems||[]).some(t=>Math.hypot(t.x-x,t.y+18-y)<95))continue;
+   if([.25,.5,.75].some(t=>!encounterClear(o.x+(x-o.x)*t,o.y+(y-o.y)*t,16)))continue;
+  }
+  const score=Math.abs(distance-preferred)+(reflect?travel*.30:travel*.15);
   if(score<bestScore){best={x,y,r:radius};bestScore=score;}
  }
  return best;
@@ -50,12 +52,12 @@ function bossPlan(e){
 function bossMechanicHint(){
  const e=game.boss;if(!e)return '';
  if(e.stagger>0)return 'Reflected · staggered';
- if(e.cast)return e.cast.type==='reflect'?'Center · reflect':e.cast.type==='mend'||e.cast.type==='fury'?'Totem · intercept or break':e.cast.label;
- const totem=(game.totems||[]).find(t=>t.owner===e);
- return totem?(totem.blocked?'Stream intercepted':'Totem · intercept or break'):'';
+ if(e.cast)return e.cast.type==='reflect'?'Center · reflect':e.cast.type==='mend'||e.cast.type==='fury'?'Totem · intercept':e.cast.label;
+ const owned=(game.totems||[]).filter(t=>t.owner===e);
+ return owned.length?(owned.some(t=>t.blocked)?'Stream intercepted':'Totem · intercept'):'';
 }
 function beginBossCast(e){
- const type=bossPlan(e)[(e.mechanicIndex||0)%bossPlan(e).length],theme=DUNGEON_THEMES[e.biome??biomeIndex()];
+ const plan=bossPlan(e),theme=DUNGEON_THEMES[e.biome??biomeIndex()];let type=plan[(e.mechanicIndex||0)%plan.length];
  const active=game.enemies.filter(other=>other.cast),reflect=active.some(other=>other.cast.type==='reflect');
  if(reflect)return false;
  if(game.counterRequest&&!game.enemies.includes(game.counterRequest))game.counterRequest=null;
@@ -65,7 +67,9 @@ function beginBossCast(e){
   if(game.counterRequest!==e||active.length||(game.hazards||[]).some(h=>h.life>0))return false;
  }else if(game.counterRequest||active.length>=2)return false;
  const pendingTotems=active.filter(other=>other.cast.type==='mend'||other.cast.type==='fury').length;
- if((type==='mend'||type==='fury')&&((game.totems||[]).length+pendingTotems>=2||(game.totems||[]).some(t=>t.owner===e)))return false;
+ if((type==='mend'||type==='fury')&&((game.totems||[]).length+pendingTotems>=2||(game.totems||[]).some(t=>t.owner===e&&t.type===type))){
+  for(let skip=1;skip<=plan.length;skip++){const next=plan[((e.mechanicIndex||0)+skip)%plan.length];if(next!=='mend'&&next!=='fury'){e.mechanicIndex=(e.mechanicIndex||0)+skip;return beginBossCast(e);}}return false;
+ }
  const point=['reflect','mend','fury'].includes(type)?encounterPoint(e,type):null;
  if(['reflect','mend','fury'].includes(type)&&!point){if(game.counterRequest===e)game.counterRequest=null;return false;}
  const duration=type==='reflect'?2.8:type==='mend'||type==='fury'?1.4:type==='volley'?1.15:type==='ground'?1.5:1.7;
@@ -95,8 +99,7 @@ function resolveBossCast(e,cast){
  }
  if(cast.type==='mend'||cast.type==='fury'){
   if(!game.enemies.includes(e)||(game.totems||[]).length>=2)return;
-  const hp=zoneBalance().dps*(e.elite?.9:1.4);
-  (game.totems||(game.totems=[])).push({totem:true,type:cast.type,biome:theme,owner:e,x:cast.point.x,y:cast.point.y-18,rad:16,hp,maxHp:hp,life:6,total:6,age:0,blocked:false});return;
+  (game.totems||(game.totems=[])).push({totem:true,type:cast.type,biome:theme,owner:e,x:cast.point.x,y:cast.point.y-18,rad:16,age:0,blocked:false});return;
  }
  if(cast.type==='volley'){
   const count=e.bossIndex===2?(e.boss&&zoneStage()===3?18:14):10,offset=(e.mechanicIndex||0)*.39;
@@ -122,24 +125,19 @@ function tickEncounterObjects(dt){
  const p=game.player;p.rallyTime=Math.max(0,(p.rallyTime||0)-dt);p.mending=false;game.reflectCooldown=Math.max(0,(game.reflectCooldown||0)-dt);
  game.counterEffects=(game.counterEffects||[]).filter(fx=>{fx.life-=dt;return fx.life>0;});
  for(const e of game.enemies)e.furyLinked=false;
- game.totems=(game.totems||[]).filter(t=>t.hp>0&&t.life>0&&game.enemies.includes(t.owner));
+ game.totems=(game.totems||[]).filter(t=>game.enemies.includes(t.owner));
  let healing=0;
  for(const t of game.totems){
-  const elapsed=Math.min(dt,t.life);t.age+=elapsed;t.life-=elapsed;t.blocked=totemInterception(t);
+  const elapsed=dt;t.age+=elapsed;t.blocked=totemInterception(t);
   if(t.type==='mend'){
    if(t.blocked){p.mending=true;healing=Math.max(healing,elapsed);}else t.owner.hp=Math.min(t.owner.maxHp,t.owner.hp+t.owner.maxHp*.008*elapsed);
-  }else if(t.blocked)p.rallyTime=5;else if(t.life>0)t.owner.furyLinked=true;
+  }else if(t.blocked)p.rallyTime=5;else t.owner.furyLinked=true;
  }
- // Duplicate healing streams do not stack. Partial last ticks remain proportional.
+ // Intercepted healing streams do not stack. Totems remain until their caster falls.
  if(healing)p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.02*healing);
- game.totems=game.totems.filter(t=>t.life>0);
 }
-function damageTotem(t,base){
- if(!(game.totems||[]).includes(t)||t.hp<=0)return;
- const damage=base*(Math.random()<waveCritChance()?2:1);t.hp-=damage;
- floater(t.x,t.y-40,Math.round(damage),DUNGEON_THEMES[t.biome].hot);burst(t.x,t.y,3,DUNGEON_THEMES[t.biome].color);
- if(t.hp<=0){game.totems.splice(game.totems.indexOf(t),1);t.owner.furyLinked=false;floater(t.x,t.y-55,'Broken','#f1e6c9');}
-}
+function damageTotem(){return false;}
+
 function reflectAbsorbsShot(s){
  return game.enemies.some(e=>e.cast?.type==='reflect'&&Math.hypot(s.x-e.cast.point.x,s.y-e.cast.point.y)<=e.cast.point.inner);
 }
@@ -183,8 +181,7 @@ function paintTotem(t){
  ellipse(t.x,foot.y,23,7,'#090f1360');
  if(image.complete&&image.naturalWidth)ctx.drawImage(image,t.x-width/2,foot.y-height,width,height);
  else {disc(t.x,foot.y-28,15,theme.dark);encounterLabel(t.type==='mend'?'+':'ϟ',t.x,foot.y-24,theme.hot,22);}
- const y=foot.y-height-7;quad(t.x-19,y,38,4,'#101711');quad(t.x-19,y,38*clamp(t.hp/t.maxHp,0,1),4,t.blocked?'#f3e7b6':theme.color);
- ctx.save();ctx.strokeStyle=theme.hot;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(t.x,foot.y,24,-Math.PI/2,-Math.PI/2+Math.PI*2*clamp(t.life/t.total,0,1));ctx.stroke();ctx.restore();
+
 }
 function paintEncounterLinks(){
  for(const t of game.totems||[]){
@@ -194,7 +191,7 @@ function paintEncounterLinks(){
   line(a.x,a.y,end.x,end.y,7,theme.dark+'c0');line(a.x,a.y,end.x,end.y,3,t.blocked?'#f3e7b6':theme.color);line(a.x,a.y,end.x,end.y,1,theme.hot);
   const steps=reducedMotion()?1:4;for(let i=0;i<steps;i++){const u=reducedMotion()?.5:((game.frame*.7+i/steps)%1);disc(a.x+(end.x-a.x)*u,a.y+(end.y-a.y)*u,2.5,theme.hot);}
   ctx.restore();
-  encounterLabel(t.blocked?'Intercepted':'Intercept / break',t.x,t.y-62,t.blocked?'#f3e7b6':theme.hot);
+  encounterLabel(t.blocked?'Intercepted':'Intercept',t.x,t.y-62,t.blocked?'#f3e7b6':theme.hot);
  }
  for(const e of game.enemies){
   if(e.cast?.type==='reflect'){

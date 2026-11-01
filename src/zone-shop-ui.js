@@ -13,18 +13,18 @@ function installZoneShopPin(){
 }
 function openZoneShop(index=zoneNumber()){shopZone=Math.max(0,Math.min(9999,Math.floor(Number(index)||0)));shopSignature='';if(zoneShopUnlocked(shopZone))for(const ability of zoneAbilities(shopZone))codexDiscover(ability.codex);openDrawer('shop');}
 function openDrawer(kind){
- resetArenaTouch();clearSkillBonuses();if(!$('skillQuickPicker').classList.contains('hidden'))closeSkillPicker();closeResourcePicker();drawerFocus=drawerKind?drawerFocus:document.activeElement;hideOverlay();drawerKind=kind;
+ resetArenaTouch(true);clearSkillBonuses();if(!$('skillQuickPicker').classList.contains('hidden'))closeSkillPicker();closeResourcePicker();drawerFocus=drawerKind?drawerFocus:document.activeElement;hideOverlay();drawerKind=kind;
  game.menuPaused=true;game.holdSkill=null;game.keys={};game.mouseMove.active=false;game.joystick.x=game.joystick.y=0;
  $('app').classList.add('drawer-open');$('gameDrawer').setAttribute('aria-hidden','false');updatePauseHud();
- $('drawerTitle').textContent={skills:'Skills',gear:'Inventory',settings:'Settings',shop:'Zone Shop'}[kind]||'Menu';$('drawerKicker').textContent='';
- $('consolidatedSkills').classList.toggle('hidden',kind!=='skills');$('settingsView').classList.toggle('hidden',kind!=='settings');$('zoneShopView')?.classList.toggle('hidden',kind!=='shop');$('combatPanel').classList.toggle('panel-active',kind==='gear');
+ $('drawerTitle').textContent={skills:'Skills',gear:'Inventory',settings:'Settings',shop:'Zone Shop',delve:'Delve'}[kind]||'Menu';$('drawerKicker').textContent='';
+ $('consolidatedSkills').classList.toggle('hidden',kind!=='skills');$('settingsView').classList.toggle('hidden',kind!=='settings');$('zoneShopView')?.classList.toggle('hidden',kind!=='shop');$('delveTravelView')?.classList.toggle('hidden',kind!=='delve');$('combatPanel').classList.toggle('panel-active',kind==='gear');
  for(const key of SKILL_KEYS)$(key+'Panel').classList.remove('panel-active');$('idleManager').classList.toggle('hidden',kind!=='skills');
- if(kind==='skills')renderDisciplineDrawer();else if(kind==='gear')renderArmory();else if(kind==='settings')renderSettingsDrawer();else if(kind==='shop')renderZoneShop();
+ if(kind==='skills')renderDisciplineDrawer();else if(kind==='gear')renderArmory();else if(kind==='settings')renderSettingsDrawer();else if(kind==='shop')renderZoneShop();else if(kind==='delve')renderDelveTravel();
  $('drawerClose').focus({preventScroll:true});refreshPolishUI();
 }
-function closeDrawer(){
+function closeDrawer(resumeSkill=true){
  game.pendingIdleSkill='';const old=drawerKind,open=!!old;$('app').classList.remove('drawer-open');$('gameDrawer').setAttribute('aria-hidden','true');drawerKind='';game.menuPaused=!!game.manualPaused;game.holdSkill=null;game.keys={};updatePauseHud();save();
- if(open&&data.skillAutoReturn&&SKILLS[data.lastSkill])setScene(data.lastSkill,false);
+ if(open&&resumeSkill&&data.skillAutoReturn&&SKILLS[data.lastSkill])setScene(data.lastSkill,false);
  if(open&&drawerFocus?.isConnected)drawerFocus.focus({preventScroll:true});
  if(open&&game.scene==='combat'&&game.status==='ready')intro();else if(old==='shop'&&game.scene==='combat'&&game.status==='clear')showClearAgain();
 }

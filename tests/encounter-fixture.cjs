@@ -31,19 +31,20 @@ function encounterFixture(){
    const base=bossAttackDamage(e);tickEncounterObjects(1);const unblocked={hp:e.hp,player:p.hp,damage:bossAttackDamage(e),rally:p.rallyTime};
    intercept(t);tickEncounterObjects(1);const blocked={hp:e.hp,player:p.hp,damage:bossAttackDamage(e),rally:p.rallyTime,blocked:t.blocked};
    p.x=500;p.y=500;tickEncounterObjects(1);const resumed={hp:e.hp,player:p.hp,damage:bossAttackDamage(e)};
-   damageTotem(t,t.maxHp*2);tickEncounterObjects(5.01);
+   onKill(e);tickEncounterObjects(5.01);
    return {base,unblocked,blocked,resumed,expired:{rally:p.rallyTime,nodes:game.totems.length,damage:bossAttackDamage(e)},kills:game.runKills};
   },
   healingEdges(){
-   const t=node(),p=game.player;intercept(t);p.hp=999;t.life=.1;tickEncounterObjects(1);
-   const capped=p.hp;const t2={...t,life:1,hp:t.maxHp};game.totems=[t2,{...t2}];p.hp=500;tickEncounterObjects(.5);
-   const double=p.hp;game.totems=[{...t2,life:.1}];p.hp=500;tickEncounterObjects(1);return {capped,double,partial:p.hp};
+   const t=node(),p=game.player;intercept(t);p.hp=999;tickEncounterObjects(1);
+   const capped=p.hp;const t2={...t};game.totems=[t2,{...t2}];p.hp=500;tickEncounterObjects(.5);
+   const double=p.hp;game.totems=[{...t2}];p.hp=500;tickEncounterObjects(1);return {capped,double,single:p.hp};
   },
   hitTotem(weapon){
-   const t=node('fury'),e=t.owner,p=game.player;t.hp=1;data.weaponType=weapon;data.arrows=data.runes=100;data.unlockedWeapons=Object.keys(WEAPON_TYPES);projectCombatStyle();
-   p.x=t.x-30;p.y=t.y;p.aimTarget=e;const before={kills:game.runKills,gold:data.gold,xp:data.dungeoneeringXp,seals:zoneShopFor().currency,points:masteryFor().points};
-   updateCombatAim();const attacked=attack();for(let i=0;i<100&&game.totems.includes(t);i++)tickCombat(.02);
-   return {attacked,remaining:game.totems.length,enemy:e.hp,phase:game.phase,before,after:{kills:game.runKills,gold:data.gold,xp:data.dungeoneeringXp,seals:zoneShopFor().currency,points:masteryFor().points}};
+   const t=node('fury'),e=t.owner,p=game.player;data.weaponType=weapon;data.arrows=data.runes=100;data.unlockedWeapons=Object.keys(WEAPON_TYPES);projectCombatStyle();
+   e.x=t.x+60;e.y=t.y;e.hp=e.maxHp=1000;p.x=t.x+30;p.y=t.y;p.aimTarget=t;tickEncounterObjects(.02);
+   const before={kills:game.runKills,gold:data.gold,xp:data.dungeoneeringXp,seals:zoneShopFor().currency,points:masteryFor().points},enemyBefore=e.hp;
+   updateCombatAim();const attacked=attack();for(let i=0;i<100&&e.hp===enemyBefore;i++)tickCombat(.02);const direct=damageTotem(t,1e9);
+   return {attacked,remaining:game.totems.length,targetable:combatTargets().includes(t),direct,enemy:e.hp,enemyBefore,phase:game.phase,before,after:{kills:game.runKills,gold:data.gold,xp:data.dungeoneeringXp,seals:zoneShopFor().currency,points:masteryFor().points}};
   },
   rally(weapon){
    fresh();const e=owner(0),p=game.player;data.weaponType=weapon;data.arrows=data.runes=100;projectCombatStyle();p.rallyTime=5;p.x=e.x-35;p.y=e.y;e.hp=e.maxHp=100000;
@@ -65,9 +66,10 @@ function encounterFixture(){
   },
   nodeBudget(){
    const t=node('mend'),a=owner(1,true),b=owner(1,true);a.x=-90;b.x=90;a.mechanicIndex=b.mechanicIndex=1;
-   const first=beginBossCast(a),second=beginBossCast(b);tickBossSpecial(a,1.5);const count=game.totems.length;
-   for(const n of game.totems)n.life=.01;tickEncounterObjects(.02);return {first,second,count,expired:game.totems.length,targets:combatTargets().filter(e=>e.totem).length};
+   const first=beginBossCast(a),second=beginBossCast(b),secondType=b.cast?.type;tickBossSpecial(a,1.5);tickBossSpecial(b,1.5);const count=game.totems.length;
+   tickEncounterObjects(60);const remaining=game.totems.length,targets=combatTargets().filter(e=>e.totem).length;damageTotem(game.totems[0],1e9);const afterDamage=game.totems.length;onKill(game.totems.find(node=>node.owner.elite).owner);return {first,second,secondType,count,remaining,targets,afterDamage,afterCasterDeath:game.totems.length};
   },
+  dual(){fresh(0,3);const e=owner(2);const a=cast(e,'fury');tickBossSpecial(e,a.total+.01);const b=cast(e,'mend');tickBossSpecial(e,b.total+.01);const types=game.totems.map(t=>t.type);e.mechanicIndex=bossPlan(e).indexOf('fury');const next=beginBossCast(e);return {types,next,attack:e.cast?.type,count:game.totems.length};},
   assets(){return {count:Object.keys(ENCOUNTER_ART).length,unique:new Set(Object.values(ENCOUNTER_ART).map(a=>a.src)).size,loaded:[...encounterImages.values()].every(image=>image.complete&&image.naturalWidth>200&&image.naturalHeight>300)};},
   cleanup(which){
    const t=node('fury');game.player.rallyTime=5;game.counterRequest=t.owner;
@@ -76,9 +78,9 @@ function encounterFixture(){
   },
   timing(speed,context='combat'){
    const t=node('mend');game.player.x=500;game.player.y=500;game.player.invuln=1e8;t.owner.castCooldown=1e6;game.devSpeed=speed;game.skillSpeed=1;game.menuPaused=context==='pause';game.scene=context==='skill'?'mine':'combat';
-   for(let i=0;i<10;i++)update(.02);game.menuPaused=true;return {life:t.life,combat:game.runSeconds,skill:game.activeClockMs};
+   for(let i=0;i<10;i++)update(.02);game.menuPaused=true;return {age:t.age,exists:game.totems.includes(t),combat:game.runSeconds,skill:game.activeClockMs};
   },
-  placement(kind,stage,offset=0,side='right'){fresh(kind,stage);data.hudLayout.side=side;applyHudLayout();game.player.x=game.camX=offset;game.player.y=game.camY=offset;const e=owner(0);e.x=offset;e.y=offset-150;const c=cast(e,'reflect');return {point:c.point,clear:encounterClear(c.point.x,c.point.y,36),camX:game.camX,camY:game.camY,w:game.viewWidth,h:game.viewHeight};},
+  placement(kind,stage,offset=0,side='right',type='reflect',gap=150){fresh(kind,stage);data.hudLayout.side=side;applyHudLayout();game.player.x=game.camX=offset;game.player.y=game.camY=offset;const e=owner(type==='reflect'?0:2);e.x=offset;e.y=offset-gap;const c=cast(e,type),foot=encounterFoot(e),p=encounterFoot(game.player);return {point:c.point,distance:Math.hypot(c.point.x-foot.x,c.point.y-foot.y),travel:Math.hypot(c.point.x-p.x,c.point.y-p.y),clear:encounterClear(c.point.x,c.point.y,type==='reflect'?36:25),camX:game.camX,camY:game.camY,w:game.viewWidth,h:game.viewHeight};},
   async ready(){await Promise.all(Object.keys(ENCOUNTER_ART).map(k=>encounterImage(['overgrowth','embervault','crypt','rift'].indexOf(k.split('-')[0]),k.split('-')[1]).decode()));},
   show(kind,type='reflect',multi=false){
    fresh(kind,multi?3:1);data.idleNoticeSlots=2;data.idleFirstAssigned=true;game.frame=3;game.player.hp=game.player.maxHp=138;game.player.hp=102;
@@ -87,7 +89,7 @@ function encounterFixture(){
     game.phase=4;game.phaseTarget=zoneBalance().targets[4];
     for(let i=0;i<3;i++){const e=owner(i,true);[e.x,e.y]=points[i];}
     cast(game.enemies[0],'reflect');
-    const e=game.enemies[1],point=encounterPoint(e,'mend');if(point)game.totems.push({totem:true,type:'mend',biome:kind,owner:e,x:point.x,y:point.y-18,rad:16,hp:100,maxHp:100,life:4,total:6,age:2,blocked:false});game.boss=null;
+    const e=game.enemies[1],point=encounterPoint(e,'mend');if(point)game.totems.push({totem:true,type:'mend',biome:kind,owner:e,x:point.x,y:point.y-18,rad:16,age:2,blocked:false});game.boss=null;
    }else{
     const e=owner(type==='mend'?2:0);e.x=-65;e.y=-140;e.hp=740;
     const c=cast(e,type);

@@ -27,11 +27,13 @@ Ordinary monsters rarely drop seals: **4% chance of one**. Elites guarantee **6*
 
 The shop focuses on elemental effects, additional targets/projectiles and themed protection. Ordinary damage, speed, health, critical chance, gold, XP and similar purchases have been removed. Earlier ranks that are no longer available, including ranks above revised limits, refund their exact original cost to their original Zone wallet once. Retained abilities, equipment and progression are preserved. Existing equipment and jewelry provide their established statistics.
 
-**Dungeoneering level and XP are global and persistent.** Level 2 needs 1,600 total XP; level 3 needs 6,400. Progress slows at higher levels, with one Mastery point per level. Leveling and the first Mastery unlock leave combat running. XP orbs never expire: positions and values survive activity changes, retries and returning to a Zone. Encounter completion collects the remaining XP exactly once.
+**Dungeoneering level and XP are global and persistent.** Level 2 needs 1,600 total XP; level 3 needs 6,400. Progress slows at higher levels; levels do not grant Mastery points. Leveling leaves combat running. XP orbs never expire: positions and values survive activity changes, retries and returning to a Zone. Encounter completion collects the remaining XP exactly once.
 
-**Dungeoneering Mastery** is a separate shared, refundable bank. Guardians grant 1 / 1 / 2 points. Onslaught unlocks spawn settings, Fortune improves seal drops, and Discovery improves rare-material drops. These change dungeon configuration and rewards rather than attack damage or protection. Its HUD shortcut shows unspent Mastery points; Essence remains an enchanting material.
+**Dungeoneering Mastery** is a separate shared, refundable bank. The final boss of each Zone grants 2 points. The Zone 1, Floor 1 final boss also grants 2 points on your first victory; that early reward cannot be repeated. Onslaught unlocks spawn settings, Fortune improves seal drops, and Discovery improves rare-material drops. These change dungeon configuration and rewards rather than attack damage or protection. Its HUD shortcut shows unspent Mastery points; Essence remains an enchanting material.
 
-The first guardian unlocks **1× / 2× Delve speed**. Mastery speed affects combat only. Skilling keeps its own clock; offline earnings and collection windows use real time.
+That first Floor 1 victory unlocks **1× / 2× Delve speed**. Mastery speed affects combat only. Skilling keeps its own clock; offline earnings and collection windows use real time.
+
+Press **Delve while delving** to choose any previously cleared floor or return to your frontier. Each Zone shows its recommended DPS. Travel restarts the chosen floor and keeps equipment, materials, ammunition charge, Zone purchases and cached XP. Entering **Zone 2, Floor 1** gives a one-time reminder about replay travel and the newly unlocked second idle slot. [Phone selector](preview-delve-mobile.png).
 
 ## Equipment and pacing
 
@@ -77,17 +79,19 @@ New creatures scuttle, sway, hop, prowl or hover, with reduced-motion support. T
 
 Gameplay uses outlined information and isolated controls with transparent backing. Delve, Inventory, Skills, Zone Shop, Codex, Settings, Pause and unlocked speed occupy a circular icon rail. The dungeon entrance, satchel, wisp and raised play/pause medallions use over 90% of each button’s space. **Settings → Navigation** selects either side and reorders pins with dragging or arrows. Titles sit at the top center, health/XP on the left, and warnings/messages below them. The message icon reopens the latest 40 notices.
 
-Menus use warm stone, leather and brass. Carved runestone buttons and headers keep hard corners; painted medallions frame the icons. All **106 collection entries** have distinct artwork. Tooltips, native buttons, focus restoration and accessible labels support keyboard and touch navigation. Detailed explanations stay in the Codex.
+Menus use warm stone, leather and brass. Carved runestone buttons and headers keep hard corners; painted medallions frame the icons. All **107 collection entries** have distinct artwork. Tooltips, native buttons, focus restoration and accessible labels support keyboard and touch navigation. Detailed explanations stay in the Codex.
 
 **Inventory** shows the worn set, actual Zone DPS, health, attack speed and reach. Touch anywhere on a weapon’s main card or an owned armor card to equip it; the separate book button opens details. Weapons, armor, jewelry and materials have their own tabs. Materials show live quantities and link to their source; style training expands when needed. Books return you to the same recipe, shop, search or unapplied Mastery allocation.
 
 ## Gathering and crafting
 
+Scavenging cards show their gold yield alongside fragments or salvage. Each search gives a visible material-and-coin receipt, and gold recipe costs lead directly to Scavenging. Work surfaces, hand tools and separate head/torso/arm joints keep each activity grounded; kneeling searches, hammer strikes, knife carving, woven cloth, rune tracing and gem cutting have distinct motion. Warding effects follow the current Zone’s palette. [Scavenging](preview-scavenging-mobile.png) · [Gold rewards](preview-skilling-rewards.png) · [Warding](preview-warding.png) · [Armor poses](preview-workshop-poses.png).
+
 A small link below the idle-unlock notice guides new players to craft a stronger weapon. It stays until their first weapon craft or refinement, then remains dismissed across reloads.
 
 **Skills** organizes each discipline into Gather, Refine, Equipment and Tools. Hold the work control, scene or Space. Active material bonuses can be tapped, dragged over, or collected with Enter/Space while focused. Forge sparks, twigs, glistens and similar crafting bonuses advance the cycle by **35%**, while still consuming ingredients. A second finger can collect bonuses while the first keeps working.
 
-Resource costs link to their sources, and tracked recipes follow you back to the crafting bench. Every skill hub and activity has a direct **Idle** button. The first slot unlocks at **Zone 1, Floor 2**, with a notice linking directly to Skills. The second opens at Zone 10. Assigned tasks continue during combat and menus, with up to eight hours offline; missing ingredients pause refining.
+Resource costs link to their sources, and tracked recipes follow you back to the crafting bench. Every skill hub and activity has a direct **Idle** button. With one slot, choosing another task switches it immediately. With two slots, an empty slot is used first; if both are occupied, choose which task to replace without stopping it first. The first slot unlocks at **Zone 1, Floor 2**, with a notice linking directly to Skills. The second opens when you clear Zone 1 and enter Zone 2. Assigned tasks continue during combat and menus, with up to eight hours offline; missing ingredients pause refining.
 
 Crafted pickaxes, hatchets and mattocks equip automatically, appear in gathering scenes, work **8% faster actively**, and add one material to gathering bonuses. Each station has five upgrades, each granting **2% ingredient conservation and 3% work speed**. Conservation carries between crafts until it saves a whole ingredient; viewing costs never consumes that credit.
 
@@ -105,6 +109,8 @@ All 20 activities support their appropriate scenes, active bonuses and visible t
 
 ## Weapons and armor
 
+Each arrow supplies **10 seconds of bow firing time**, and each rune **10 seconds of staff casting time**. Loaded time stays while waiting for a target, paused, skilling or using the other weapon, and survives reloads. Delve speed scales this combat clock. The HUD shows reserve items and loaded seconds beside the Zone seal counter. [Phone HUD](preview-ammunition-mobile.png).
+
 One weapon selects your Melee, Ranged or Magic style. Each style has separate refinement, speed, reach, enchantment and proficiency. Iron caps at refinement **10**, speed/reach **5**, reinforcement **5** and enchantment **2**. Steel caps at **20 / 10 / 10 / 4**. Clear Zone 1, reach refinement 10 and crafting level 10, then pay a Steel promotion to open the next ranks for that style.
 
 Combat proficiency grants up to **3% damage** and matching crafting levels up to **5%** more. Equipment-only dedicated limits are approximately **86 / 173 DPS**. Zone elemental upgrades work with every combat style.
@@ -116,23 +122,29 @@ Armor equips independently of the weapon. Warrior, Ranger and Mage each have two
 Guardians combine area-themed projectiles, ground strikes and beams with three kinds of counterplay:
 
 - **Reflect wards:** enter the pale shield at the center before its ring completes. Return **12% of the caster’s maximum HP** and stagger it for **1.6 seconds**. The surrounding ring is dangerous; escaping the whole mark is also safe. The core absorbs hostile projectiles during the warning.
-- **Healing totems:** stand in the stream between totem and guardian to divert **2% of your maximum HP per second**. Left alone, it restores **0.8% of the guardian’s maximum HP per second** for six seconds.
+- **Healing totems:** stand in the stream between totem and guardian to divert **2% of your maximum HP per second**. Left alone, it restores **0.8% of the guardian’s maximum HP per second** until its caster falls.
 - **Power totems:** an uninterrupted stream gives its guardian **12% stronger attacks**. Intercept it for **10% more hit damage**, refreshed for five seconds. This conditional bonus never changes permanent equipment or Zone training.
 
-Totems can be destroyed with any weapon. Move close to focus attacks on one, including when a bow or staff is already tracking a guardian. Totems give no loot, XP or wave credit; streams and intercepted bonuses do not stack. Encounter objects clear on defeat, retry and floor transitions. Menus and skilling pause their combat clock.
+Totems are **untargetable** and have no countdown or health bar. Stand in a stream to divert its benefit; defeating the caster removes its totems. A caster can sustain one healing and one power totem, with at most two active across the encounter. Stream bonuses do not stack. Encounter objects clear on defeat, retry and floor transitions. Menus and skilling pause their combat clock.
 
 The first guardian uses three distinct patterns, the second four. Floor overlords use four; the Zone’s final overlord uses all six and attacks faster below 40% health. Up to two attacks can wind up together. A reflect mark reserves a clear cast window and waits for existing ground hazards to expire. Marks avoid scenery and occupied enemy positions when placed.
 
 Known guardians return as smaller elite echoes: **up to one per wave on Floor 1, two on Floor 2 and three on Floor 3**. Different known guardians are favored before repeats. Echoes replace ordinary wave enemies, retain reduced pattern sets and grant seals/gold without duplicate Mastery or Essence.
 
+Totems prefer 320 world units from their caster on desktop and 260 on narrow screens, with minimum gaps of 220 / 190. Reflect centers prefer 300 / 250, stay at least 230 / 200 away from their caster and within 365 of the player. Placements avoid scenery and the navigation rail; stream corridors are checked along their length.
+
 Each area has its own painted reflect ward, healing totem and power totem, alongside its themed attack effects: green briars and spring blossoms, amber basalt and furnaces, violet soul fonts and grave idols, or cyan starwells and prisms. Source art and export metrics are in `assets/encounters/`; `npm run art:encounters` rebuilds embedded sprites, and `npm run review:encounters` captures all twelve mechanics in combat. Full descriptions stay in guardian Codex entries. Burn retains visible flames and orange damage numbers.
+
+## Healing drops
+
+Ordinary monsters have a **5% chance** to drop a heart mote restoring **5% maximum HP**. Elites always drop a larger mote restoring **25%**. Walk near one while hurt to draw it in. Motes wait at full health and stay through waves, menus and skilling on the same floor; starting or retrying a floor clears them. Healing is capped at maximum HP. [Phone preview](preview-healing-mobile.png).
 
 ## Controls and saves
 
 | Action | Controls |
 | --- | --- |
 | Move | Touch anywhere in the arena and drag; release to stop. WASD/arrows and mouse also work |
-| Dash | Two short drags in the same direction, double tap a movement key, Space or Dash |
+| Dash | Three short drags in the same direction, triple tap a movement key, Space or Dash |
 | Work | Hold work control, scene or Space |
 | Collect active bonus | Tap, drag, Enter/Space on focused bonus |
 | Skills / Inventory / Codex / Zone Shop | G / E / C / B |
@@ -157,8 +169,8 @@ npm run report:balance
 npm run review:ui
 ```
 
-Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. Guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. The early loading screen lives in `src/loading.*` and `src/loading-runtime.js`. Mobile controls, navigation and material inventory live in `src/mobile.js` / `src/mobile.css`; themed ability definitions, migration and pricing in `src/zone-abilities.js`. The original engine and compiled standalone output are in `index.html`.
+Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. Guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. Work animations, gold receipts and painted foreground props live in `src/workshop.*` / `src/workshop-art.js`; ammunition timing in `src/ammunition.js`; Mastery milestones and healing drops in `src/restoration.js`. The early loading screen lives in `src/loading.*` and `src/loading-runtime.js`. Mobile controls, navigation and material inventory live in `src/mobile.js` / `src/mobile.css`; themed ability definitions, migration and pricing in `src/zone-abilities.js`. The original engine and compiled standalone output are in `index.html`.
 
-Sixteen browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 106 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. Full combat simulations verify the first four Zones and later pacing. Startup tests hold back the game download to verify the loading screen actually paints first; they also cover reduced motion, asset readiness and retry. Static encounters, biome and jewelry definitions remain guarded by a manifest.
+Twenty browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 107 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. Full combat simulations verify the first four Zones and later pacing. Startup tests hold back the game download to verify the loading screen actually paints first; they also cover reduced motion, asset readiness and retry. Static encounters, biome and jewelry definitions remain guarded by a manifest.
 
 Generated icon sheets, calibrated regions and alignment metrics live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without altering source art; `npm run art:icons` exports embedded WebP badges. `scripts/export-equipment.py` packs rig textures using Pillow, NumPy and SciPy. Use `CHROMIUM_PATH` for a custom browser. Local test output stays in ignored `test-results/`.

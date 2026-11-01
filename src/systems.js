@@ -40,7 +40,7 @@ function normalizeProgression(){
   data.skillsNudgeSeen=!!data.skillsNudgeSeen||data.unlockedWeapons?.length>1;
   data.idleNoticeSlots=Math.min(2,finiteRank(data.idleNoticeSlots));data.idleFirstAssigned=!!data.idleFirstAssigned||data.idleJobs?.some(Boolean)||false;
   if(data.idleJobs?.filter(Boolean).length>=idleSlotsUnlocked()&&idleSlotsUnlocked()>0)data.idleNoticeSlots=idleSlotsUnlocked();
-  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();projectCombatStyle();
+  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();projectCombatStyle();
 }
 
 function stationRank(group){return data.stationLevels?.[group]||0;}
@@ -177,6 +177,7 @@ function bindWorkshop(host){
   host.querySelectorAll('[data-style-upgrade]').forEach(b=>b.onclick=()=>{const [id,kind]=b.dataset.styleUpgrade.split(':');if(craftStyleUpgrade(id,kind)&&data.craftGoal==='upgrade:'+id+':'+kind)data.craftGoal='';renderDisciplineDrawer();});
   host.querySelectorAll('[data-unified-upgrade]').forEach(b=>b.onclick=()=>upgradeSkill(b.dataset.unifiedUpgrade));
   host.querySelectorAll('[data-track-goal]').forEach(b=>b.onclick=()=>trackGoal(b.dataset.trackGoal));
+  host.querySelectorAll('button').forEach(bindTouchNavigation);
 }
 function prospectOpal(){if(!spendAtStation({scraps:12},'scavenging'))return false;data.opals++;data.scavengingXp=(data.scavengingXp||0)+12;codexDiscover('resource_opals');toast('Opal recovered!','Relic fragments → one rough opal');save();renderDisciplineDrawer();refreshUI();return true;}
 function makeTrinket(id){
@@ -236,6 +237,7 @@ function assignIdleSkill(key){
   const limit=idleSlotsUnlocked();if(!limit){toast('Idle unlocks at Zone 1 · Floor 2','Clear Floor 1. You can always gather and craft actively.');return false;}
   ensureJobs();const existing=data.idleJobs.indexOf(key);if(existing>=0){setIdleJob(existing,'');renderDisciplineDrawer();return true;}
   const empty=data.idleJobs.findIndex(k=>!k);if(empty>=0){setIdleJob(empty,key);renderDisciplineDrawer();return true;}
+  if(limit===1){setIdleJob(0,key);renderDisciplineDrawer();return true;}
   game.pendingIdleSkill=key;openWorkshop(disciplineFor(key),SKILLS[key].cost?'refine':'gather');renderDisciplineDrawer();$('consolidatedSkills').querySelector('[data-replace-idle]')?.focus({preventScroll:true});return false;
 }
 function setIdleJob(slot,key){
