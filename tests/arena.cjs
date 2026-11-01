@@ -21,11 +21,11 @@ function instrumentation(){
       const original={gainXp,earnStyleXp,burst,floater};
       gainXp=()=>{};earnStyleXp=()=>{};burst=()=>{};floater=()=>{};
       try{
-        const model=zoneBalance(index);data=defaults();data.floor=index*3+1;data.cleared=index*3;
+        const model=zoneBalance(index);data=defaults();data.floor=zoneStart(index);data.cleared=zoneStart(index)-1;
         data.weaponType=weapon;data.unlockedWeapons=Object.keys(WEAPON_TYPES);data.onboardingDone=data.masteryIntroSeen=true;normalizeProgression();
         const style=combatStyle();data.styles[style].tier=model.gearTier;data.styles[style].weapon=model.weaponRank;data.styles[style].speed=model.speedRank;data.styles[style].xp=80*(model.proficiency-1)**2;
         zoneShopFor(index).ranks={...model.shopRanks};data.arrows=data.runes=100000;projectCombatStyle();let total=0,kills=0;
-        for(let floor=0;floor<3;floor++){
+        for(let floor=0;floor<model.floors;floor++){
           startFloor();game.player.hp=game.player.maxHp=1e9;game.player.invuln=1e8;let steps=0;
           while(game.status==='running'&&steps++<600000){
             // Permanent healing streams require counterplay. Approach the caster
@@ -113,7 +113,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     for(const i of [0,1,2,3,8,14]){
       const sim=await p.evaluate(i=>__arenaTest.simulate(i),i);simulated.push(sim);
       assert.ok(Math.abs(sim.seconds-sim.targetSeconds)<sim.targetSeconds*.12,'Actual zone '+(i+1)+' combat remains near target: '+sim.seconds);
-      assert.equal(sim.kills,models[i].swarmCount+9);
+      assert.equal(sim.kills,models[i].swarmCount+3*models[i].floors);
     }
     fs.writeFileSync(path.join(resultsDir,'zone-pacing.json'),JSON.stringify({models,simulated},null,2));
     results.push('Full live combat simulation, including every spawn, hit, critical, approach and boss, verifies the first four zones and the long-term plateau');

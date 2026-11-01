@@ -7,7 +7,7 @@ function normalizeMasteryMilestones(){
 }
 function guardianMasteryReward(enemy){
  if(!enemy.boss||enemy.elite||enemy.bossIndex!==2)return 0;
- if(zoneStage()===3)return 2;
+ if(isZoneFinal())return 2;
  if(data.floor===1&&!data.earlyMasteryClaimed){data.earlyMasteryClaimed=true;return 2;}
  return 0;
 }

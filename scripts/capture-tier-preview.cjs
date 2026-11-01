@@ -6,7 +6,7 @@ const {createRuntime}=require('../tests/runtime.cjs');
   const initial=await runtime.browser.newPage();await initial.goto(runtime.baseURL);const seed=await initial.evaluate(()=>__deepwell.getState().data);await initial.close();
   const context=await runtime.browser.newContext({viewport:{width:1560,height:1240}});
   await context.addInitScript(d=>{
-   d.floor=4;d.cleared=3;d.onboardingDone=d.tutorialSeen=d.masteryIntroSeen=d.skillsNudgeSeen=true;
+   d.floor=zoneStart(1);d.cleared=zoneEnd(0);d.onboardingDone=d.tutorialSeen=d.masteryIntroSeen=d.skillsNudgeSeen=true;
    for(const k of ['blacksmithXp','woodworkingXp','wardingSkillXp'])d[k]=8000;
    for(const k of ['ore','bars','logs','cloth','scraps','coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth'])d[k]=120;
    d.gold=391;d.arrows=d.runes=240;d.ownedArmor=['melee_1','melee_2','ranged_1','ranged_2','magic_1','magic_2'];d.equippedArmor='melee_2';d.equipmentVersion=1;d.tierProgressionVersion=1;

@@ -32,7 +32,7 @@ function fillTestingResources(){
  for(const skill of Object.values(SKILLS))keys.add(skill.resource);
  for(const key of keys)data[key]=Math.max(SANDBOX_RESOURCE_CAP,Number(data[key])||0);
  if(!data.devSpeedUnlocked)game.skillSpeed=1;data.devSpeedUnlocked=true;data.devTravelUnlocked=true;
- data.cleared=Math.max(data.cleared,BIOMES.length*3);
+ data.cleared=Math.max(data.cleared,zoneEnd(BIOMES.length-1));
  if(!data.biomeLoot||typeof data.biomeLoot!=='object')data.biomeLoot={};
  for(let i=0;i<BIOMES.length;i++){
   data.biomeLoot[i]=Math.max(SANDBOX_RESOURCE_CAP,Number(data.biomeLoot[i])||0);
@@ -51,13 +51,14 @@ function refreshTestTravel(){
  const root=$('settingsView');if(!root||drawerKind!=='settings')return;
  let host=$('testTravel');if(!data.devTravelUnlocked){host?.remove();return;}
  if(!host){host=document.createElement('section');host.id='testTravel';host.className='test-travel';root.querySelector('.settings-save')?.before(host);if(!host.isConnected)root.append(host);}
- const count=Math.min(1000,Math.max(BIOMES.length,Math.ceil(data.cleared/3),zoneNumber()+1));
- host.innerHTML='<div class="compact-section-title"><h3>Test travel</h3></div><div class="test-route"><label for="testZone">Zone<select id="testZone">'+Array.from({length:count},(_,i)=>'<option value="'+(i+1)+'" '+(i===zoneNumber()?'selected':'')+'>'+(i+1)+' · '+BIOMES[i%BIOMES.length].name+'</option>').join('')+'</select></label><label for="testFloor">Floor<select id="testFloor">'+[1,2,3].map(n=>'<option '+(n===zoneStage()?'selected':'')+'>'+n+'</option>').join('')+'</select></label><button type="button" id="testTravelGo" aria-label="Restart selected zone and floor" data-hint="Restart selected floor">'+uiIcon('arrow')+'</button></div>';
+ const count=Math.min(1000,Math.max(BIOMES.length,zoneForFloor(Math.max(1,data.cleared))+1,zoneNumber()+1));
+ host.innerHTML='<div class="compact-section-title"><h3>Test travel</h3></div><div class="test-route"><label for="testZone">Zone<select id="testZone">'+Array.from({length:count},(_,i)=>'<option value="'+(i+1)+'" '+(i===zoneNumber()?'selected':'')+'>'+(i+1)+' · '+BIOMES[i%BIOMES.length].name+'</option>').join('')+'</select></label><label for="testFloor">Floor<select id="testFloor">'+Array.from({length:zoneFloorCount()},(_,i)=>i+1).map(n=>'<option '+(n===zoneStage()?'selected':'')+'>'+n+'</option>').join('')+'</select></label><button type="button" id="testTravelGo" aria-label="Restart selected zone and floor" data-hint="Restart selected floor">'+uiIcon('arrow')+'</button></div>';
+ $('testZone').onchange=()=>{const count=zoneFloorCount(Number($('testZone').value)-1);$('testFloor').innerHTML=Array.from({length:count},(_,i)=>'<option>'+(i+1)+'</option>').join('');};
  $('testTravelGo').onclick=()=>testTravelTo(Number($('testZone').value),Number($('testFloor').value));
 }
 function testTravelTo(zone,stage){
- if(!data.devTravelUnlocked||!Number.isInteger(zone)||zone<1||zone>1000||![1,2,3].includes(stage))return false;
- const floor=(zone-1)*3+stage;checkpointGroundXp();closeDrawer();hideOverlay();
+ if(!data.devTravelUnlocked||!Number.isInteger(zone)||zone<1||zone>1000||!Number.isInteger(stage)||stage<1||stage>zoneFloorCount(zone-1))return false;
+ const floor=floorAtZone(zone-1,stage);checkpointGroundXp();closeDrawer();hideOverlay();
  data.cleared=Math.max(data.cleared,floor);data.floor=floor;data.zone=emptyZone();masteryDraft=null;
  resetRun();game.manualPaused=game.menuPaused=false;setScene('combat',false);startFloor();save();
  toast('Zone '+zone+' · Floor '+stage);return true;

@@ -1,5 +1,5 @@
 {
-  "version": "9.4.0",
+  "version": "9.6.0",
   "economy": [
     {
       "zone": 1,
@@ -31,8 +31,9 @@
         20,
         35
       ],
-      "firstClearElites": 17,
-      "expectedFirstClearSeals": 316.72
+      "firstClearGuardianEchoes": 26,
+      "expectedRareElites": 3.7046519505803044,
+      "expectedFirstClearSeals": 526.4397256254585
     },
     {
       "zone": 2,
@@ -46,8 +47,9 @@
         20,
         35
       ],
-      "firstClearElites": 17,
-      "expectedFirstClearSeals": 323.92
+      "firstClearGuardianEchoes": 56,
+      "expectedRareElites": 5.308262904657494,
+      "expectedFirstClearSeals": 1056.9972469117588
     },
     {
       "zone": 3,
@@ -61,8 +63,9 @@
         20,
         35
       ],
-      "firstClearElites": 17,
-      "expectedFirstClearSeals": 331.12
+      "firstClearGuardianEchoes": 116,
+      "expectedRareElites": 5.971876628694306,
+      "expectedFirstClearSeals": 2095.752384707018
     },
     {
       "zone": 4,
@@ -76,8 +79,9 @@
         20,
         35
       ],
-      "firstClearElites": 17,
-      "expectedFirstClearSeals": 338.32
+      "firstClearGuardianEchoes": 116,
+      "expectedRareElites": 8.323839553118095,
+      "expectedFirstClearSeals": 2116.9700837365835
     }
   ],
   "retiredStats": [
@@ -174,6 +178,7 @@
       "index": 0,
       "minutes": 10,
       "seconds": 600,
+      "floors": 5,
       "weaponRank": 10,
       "speedRank": 5,
       "proficiency": 1,
@@ -184,22 +189,23 @@
       "cooldown": 0.7999999999999999,
       "dps": 80,
       "targets": [
+        14,
+        0,
         24,
         0,
-        40,
-        0,
-        56,
+        34,
         0
       ],
       "swarmCount": 360,
       "spawnSeconds": 0.9166666666666666,
-      "hpScale": 1.5132170062877064,
-      "forecastSeconds": 599.8465303957188
+      "hpScale": 1.2594220723037632,
+      "forecastSeconds": 599.5966115901587
     },
     {
       "index": 1,
       "minutes": 20,
       "seconds": 1200,
+      "floors": 10,
       "weaponRank": 20,
       "speedRank": 10,
       "proficiency": 1,
@@ -210,22 +216,23 @@
       "cooldown": 0.7333333333333334,
       "dps": 160,
       "targets": [
-        36,
+        11,
         0,
-        60,
+        18,
         0,
-        84,
+        25,
         0
       ],
       "swarmCount": 540,
       "spawnSeconds": 1.2222222222222223,
-      "hpScale": 5.339036397604524,
-      "forecastSeconds": 1199.2799625850328
+      "hpScale": 3.2637818698056966,
+      "forecastSeconds": 1199.7454689029712
     },
     {
       "index": 2,
       "minutes": 30,
       "seconds": 1800,
+      "floors": 20,
       "weaponRank": 20,
       "speedRank": 10,
       "proficiency": 1,
@@ -236,22 +243,23 @@
       "cooldown": 0.7333333333333334,
       "dps": 160,
       "targets": [
-        48,
+        7,
         0,
-        80,
+        12,
         0,
-        112,
+        17,
         0
       ],
       "swarmCount": 720,
       "spawnSeconds": 1.3750000000000002,
-      "hpScale": 6.39279358134012,
-      "forecastSeconds": 1798.6599927437637
+      "hpScale": 2.9751928897633677,
+      "forecastSeconds": 1799.9723742146678
     },
     {
       "index": 3,
       "minutes": 35,
       "seconds": 2100,
+      "floors": 20,
       "weaponRank": 20,
       "speedRank": 10,
       "proficiency": 1,
@@ -262,19 +270,200 @@
       "cooldown": 0.7333333333333334,
       "dps": 160,
       "targets": [
-        60,
+        9,
         0,
-        100,
+        15,
         0,
-        140,
+        21,
         0
       ],
       "swarmCount": 900,
       "spawnSeconds": 1.2833333333333334,
-      "hpScale": 6.06326813900986,
-      "forecastSeconds": 2100.4355816326524
+      "hpScale": 3.148458745565039,
+      "forecastSeconds": 2099.9824978165925
     }
   ],
+  "zoneDepths": [
+    {
+      "zone": 1,
+      "floors": 5,
+      "start": 1,
+      "end": 5,
+      "names": [
+        "Woodland Edge",
+        "Rooted Ruins",
+        "Thornwood Crossing",
+        "The Sunken Courtyard",
+        "The Elder Grove"
+      ],
+      "ordinaryForms": 8,
+      "eliteForms": 8
+    },
+    {
+      "zone": 2,
+      "floors": 10,
+      "start": 6,
+      "end": 15,
+      "names": [
+        "Ashen Approach",
+        "Coalroad",
+        "The Cinder Gates",
+        "Broken Bellows",
+        "The Old Foundry",
+        "The Slagworks",
+        "Furnace Walk",
+        "Obsidian Descent",
+        "The Crucible",
+        "The Molten Heart"
+      ],
+      "ordinaryForms": 10,
+      "eliteForms": 10
+    },
+    {
+      "zone": 3,
+      "floors": 20,
+      "start": 16,
+      "end": 35,
+      "names": [
+        "Forgotten Graves",
+        "The Mourning Path",
+        "Hollow Steps",
+        "The Candle Gallery",
+        "The Ossuary",
+        "The Silent Court",
+        "The Burial Vaults",
+        "The Bone Orchard",
+        "The Shrouded Hall",
+        "The Reliquary",
+        "The Unlit Chapel",
+        "The Wailing Passage",
+        "The Pale Cloister",
+        "The Sunken Tombs",
+        "The Crowned Dead",
+        "The Last Procession",
+        "The Royal Crypt",
+        "The Soul Gate",
+        "The Sovereign’s Antechamber",
+        "The Sovereign’s Sanctum"
+      ],
+      "ordinaryForms": 12,
+      "eliteForms": 12
+    },
+    {
+      "zone": 4,
+      "floors": 20,
+      "start": 36,
+      "end": 55,
+      "names": [
+        "The Fractured Approach",
+        "The Shardway",
+        "Falling Stars",
+        "The Hollow Orbit",
+        "The Prism Steps",
+        "The Silver Crossing",
+        "Starlit Ruins",
+        "The Broken Observatory",
+        "The Moonless Court",
+        "The Celestial Vault",
+        "The Turning Sky",
+        "The Still Constellation",
+        "The Astral Causeway",
+        "The Dark Meridian",
+        "The Unbound Spire",
+        "The Shattered Horizon",
+        "The Last Star",
+        "The Eventide Gate",
+        "The Unmade Approach",
+        "The Unmade Threshold"
+      ],
+      "ordinaryForms": 12,
+      "eliteForms": 12
+    }
+  ],
+  "rareElites": {
+    "chance": 0.015,
+    "healthMultiplier": 3.5,
+    "maximumPerWave": 1,
+    "friendlyFireFraction": 0.35,
+    "lifesteal": 0.005,
+    "boons": {
+      "fervor": {
+        "name": "Battle Fervor",
+        "seconds": 45,
+        "damage": 1.18,
+        "description": "+18% hit damage",
+        "color": "#e8b07c"
+      },
+      "windstep": {
+        "name": "Windstep",
+        "seconds": 40,
+        "attackSpeed": 1.15,
+        "movement": 1.12,
+        "description": "+15% attack speed · +12% movement",
+        "color": "#a8ded7"
+      },
+      "stoneguard": {
+        "name": "Stoneguard",
+        "seconds": 60,
+        "protection": 0.8,
+        "regen": 0.003,
+        "description": "20% less damage · 0.3% HP / s",
+        "color": "#c7d6a6"
+      }
+    },
+    "forms": [
+      [
+        "Thorncrown Mossling",
+        "Elder Moss Beetle",
+        "Antlered Sapling",
+        "Crowncap",
+        "Briar Alpha",
+        "Ancient Root Crawler",
+        "Ancient Shellback",
+        "Thorncrest Viper"
+      ],
+      [
+        "Cinderheart Emberling",
+        "Ashhorn Imp",
+        "Molten Slag Beetle",
+        "Soot Revenant",
+        "Furnace Alpha",
+        "Obsidian Ravager",
+        "Cindercrest Drake",
+        "Ironbound Construct",
+        "Blazewing Moth",
+        "Molten Wyrm"
+      ],
+      [
+        "Pale Shade",
+        "Crowned Thrall",
+        "Mourning Moth",
+        "Ossuary Scarab",
+        "Stitched Shroudling",
+        "Grave Haunter",
+        "Ossuary Jackal",
+        "Crowned Bone Knight",
+        "Sepulchral Ooze",
+        "Candle Regent",
+        "Mourning Crown",
+        "Dreadwing"
+      ],
+      [
+        "Prismatic Riftling",
+        "Astral Shardstalker",
+        "Crown Jelly",
+        "Eclipse Moth",
+        "Void Alpha",
+        "Unbound Wisp",
+        "Crowned Void Ray",
+        "Prismatic Colossus",
+        "Starspine Urchin",
+        "Crescent Serpent",
+        "Rift Harrier",
+        "Starbound Watcher"
+      ]
+    ]
+  },
   "weapons": [
     {
       "id": "sword",
@@ -1355,48 +1544,48 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 639.3599999999757,
-      "kills": 369,
+      "seconds": 581.8800000000322,
+      "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
     },
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1301.600000000223,
-      "kills": 549,
+      "seconds": 1222.3200000000722,
+      "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
     },
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1936.3999999999787,
-      "kills": 729,
+      "seconds": 1933.8400000000784,
+      "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 1800
     },
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2254.879999999689,
-      "kills": 909,
+      "seconds": 2177.0400000001146,
+      "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2100
     },
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2555.4799999994157,
-      "kills": 909,
+      "seconds": 2520.520000000146,
+      "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
     },
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2567.5199999994047,
-      "kills": 909,
+      "seconds": 2483.8800000001447,
+      "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
     }

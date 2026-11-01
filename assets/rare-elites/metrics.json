@@ -1,0 +1,706 @@
+{
+  "overgrowth-0": {
+    "source": [
+      14,
+      14,
+      220,
+      259
+    ],
+    "width": 218,
+    "height": 257,
+    "bytes": 34398
+  },
+  "overgrowth-1": {
+    "source": [
+      242,
+      49,
+      504,
+      263
+    ],
+    "width": 274,
+    "height": 226,
+    "bytes": 34968
+  },
+  "overgrowth-2": {
+    "source": [
+      508,
+      9,
+      758,
+      274
+    ],
+    "width": 262,
+    "height": 277,
+    "bytes": 50120
+  },
+  "overgrowth-3": {
+    "source": [
+      773,
+      39,
+      1003,
+      283
+    ],
+    "width": 242,
+    "height": 256,
+    "bytes": 33524
+  },
+  "overgrowth-4": {
+    "source": [
+      1011,
+      46,
+      1277,
+      267
+    ],
+    "width": 278,
+    "height": 233,
+    "bytes": 38504
+  },
+  "overgrowth-5": {
+    "source": [
+      1270,
+      52,
+      1526,
+      272
+    ],
+    "width": 268,
+    "height": 232,
+    "bytes": 35372
+  },
+  "embervault-0": {
+    "source": [
+      10,
+      287,
+      240,
+      505
+    ],
+    "width": 242,
+    "height": 230,
+    "bytes": 31038
+  },
+  "embervault-1": {
+    "source": [
+      257,
+      267,
+      466,
+      505
+    ],
+    "width": 221,
+    "height": 250,
+    "bytes": 30616
+  },
+  "embervault-2": {
+    "source": [
+      474,
+      291,
+      764,
+      503
+    ],
+    "width": 302,
+    "height": 224,
+    "bytes": 32110
+  },
+  "embervault-3": {
+    "source": [
+      776,
+      276,
+      991,
+      524
+    ],
+    "width": 227,
+    "height": 260,
+    "bytes": 29850
+  },
+  "embervault-4": {
+    "source": [
+      1014,
+      278,
+      1261,
+      513
+    ],
+    "width": 259,
+    "height": 247,
+    "bytes": 35728
+  },
+  "embervault-5": {
+    "source": [
+      1270,
+      303,
+      1527,
+      504
+    ],
+    "width": 269,
+    "height": 213,
+    "bytes": 26924
+  },
+  "crypt-0": {
+    "source": [
+      20,
+      527,
+      229,
+      751
+    ],
+    "width": 221,
+    "height": 236,
+    "bytes": 26198
+  },
+  "crypt-1": {
+    "source": [
+      245,
+      502,
+      482,
+      768
+    ],
+    "width": 249,
+    "height": 278,
+    "bytes": 33292
+  },
+  "crypt-2": {
+    "source": [
+      465,
+      512,
+      763,
+      754
+    ],
+    "width": 310,
+    "height": 254,
+    "bytes": 39492
+  },
+  "crypt-3": {
+    "source": [
+      748,
+      559,
+      1030,
+      752
+    ],
+    "width": 294,
+    "height": 205,
+    "bytes": 30224
+  },
+  "crypt-4": {
+    "source": [
+      1043,
+      535,
+      1279,
+      757
+    ],
+    "width": 248,
+    "height": 234,
+    "bytes": 28648
+  },
+  "crypt-5": {
+    "source": [
+      1288,
+      520,
+      1521,
+      758
+    ],
+    "width": 245,
+    "height": 250,
+    "bytes": 32428
+  },
+  "rift-0": {
+    "source": [
+      16,
+      747,
+      235,
+      1006
+    ],
+    "width": 231,
+    "height": 271,
+    "bytes": 33526
+  },
+  "rift-1": {
+    "source": [
+      247,
+      785,
+      517,
+      1008
+    ],
+    "width": 282,
+    "height": 235,
+    "bytes": 30578
+  },
+  "rift-2": {
+    "source": [
+      529,
+      748,
+      733,
+      1011
+    ],
+    "width": 216,
+    "height": 275,
+    "bytes": 33854
+  },
+  "rift-3": {
+    "source": [
+      743,
+      758,
+      997,
+      1002
+    ],
+    "width": 266,
+    "height": 256,
+    "bytes": 38614
+  },
+  "rift-4": {
+    "source": [
+      999,
+      769,
+      1281,
+      1016
+    ],
+    "width": 294,
+    "height": 259,
+    "bytes": 37824
+  },
+  "rift-5": {
+    "source": [
+      1290,
+      766,
+      1520,
+      1007
+    ],
+    "width": 242,
+    "height": 253,
+    "bytes": 31358
+  },
+  "codex-rare_elites": {
+    "source": [
+      242,
+      13,
+      714,
+      474
+    ],
+    "width": 192,
+    "height": 192,
+    "bytes": 20440
+  },
+  "codex-elite_boon_fervor": {
+    "source": [
+      819,
+      12,
+      1291,
+      476
+    ],
+    "width": 192,
+    "height": 192,
+    "bytes": 20062
+  },
+  "codex-elite_boon_windstep": {
+    "source": [
+      242,
+      515,
+      714,
+      984
+    ],
+    "width": 192,
+    "height": 192,
+    "bytes": 20428
+  },
+  "codex-elite_boon_stoneguard": {
+    "source": [
+      819,
+      515,
+      1291,
+      984
+    ],
+    "width": 192,
+    "height": 192,
+    "bytes": 20736
+  },
+  "creature:overgrowth-shellback": {
+    "source": [
+      17,
+      57,
+      202,
+      217
+    ],
+    "width": 197,
+    "height": 172,
+    "bytes": 20490
+  },
+  "elite:overgrowth-6": {
+    "source": [
+      210,
+      16,
+      429,
+      220
+    ],
+    "width": 231,
+    "height": 216,
+    "bytes": 27184
+  },
+  "creature:overgrowth-leaf-viper": {
+    "source": [
+      443,
+      56,
+      622,
+      215
+    ],
+    "width": 191,
+    "height": 171,
+    "bytes": 20628
+  },
+  "elite:overgrowth-7": {
+    "source": [
+      639,
+      17,
+      819,
+      216
+    ],
+    "width": 192,
+    "height": 211,
+    "bytes": 28732
+  },
+  "creature:embervault-coal-drake": {
+    "source": [
+      839,
+      70,
+      1025,
+      215
+    ],
+    "width": 198,
+    "height": 157,
+    "bytes": 16940
+  },
+  "elite:embervault-6": {
+    "source": [
+      1040,
+      12,
+      1239,
+      219
+    ],
+    "width": 211,
+    "height": 219,
+    "bytes": 25246
+  },
+  "creature:embervault-foundry-construct": {
+    "source": [
+      13,
+      243,
+      192,
+      420
+    ],
+    "width": 191,
+    "height": 189,
+    "bytes": 21122
+  },
+  "elite:embervault-7": {
+    "source": [
+      205,
+      222,
+      418,
+      420
+    ],
+    "width": 225,
+    "height": 210,
+    "bytes": 26520
+  },
+  "creature:embervault-ember-moth": {
+    "source": [
+      430,
+      258,
+      620,
+      420
+    ],
+    "width": 202,
+    "height": 174,
+    "bytes": 20430
+  },
+  "elite:embervault-8": {
+    "source": [
+      628,
+      240,
+      821,
+      419
+    ],
+    "width": 205,
+    "height": 191,
+    "bytes": 25710
+  },
+  "creature:embervault-slag-wyrm": {
+    "source": [
+      841,
+      265,
+      1035,
+      419
+    ],
+    "width": 206,
+    "height": 166,
+    "bytes": 19472
+  },
+  "elite:embervault-9": {
+    "source": [
+      1048,
+      221,
+      1244,
+      425
+    ],
+    "width": 208,
+    "height": 216,
+    "bytes": 27998
+  },
+  "creature:crypt-tomb-jackal": {
+    "source": [
+      31,
+      446,
+      208,
+      628
+    ],
+    "width": 189,
+    "height": 194,
+    "bytes": 20040
+  },
+  "elite:crypt-6": {
+    "source": [
+      230,
+      426,
+      420,
+      629
+    ],
+    "width": 202,
+    "height": 215,
+    "bytes": 22762
+  },
+  "creature:crypt-bone-knight": {
+    "source": [
+      434,
+      462,
+      620,
+      625
+    ],
+    "width": 198,
+    "height": 175,
+    "bytes": 19154
+  },
+  "elite:crypt-7": {
+    "source": [
+      633,
+      424,
+      828,
+      653
+    ],
+    "width": 207,
+    "height": 241,
+    "bytes": 26772
+  },
+  "creature:crypt-grave-ooze": {
+    "source": [
+      855,
+      471,
+      1022,
+      628
+    ],
+    "width": 179,
+    "height": 169,
+    "bytes": 17374
+  },
+  "elite:crypt-8": {
+    "source": [
+      1045,
+      436,
+      1242,
+      627
+    ],
+    "width": 209,
+    "height": 203,
+    "bytes": 27430
+  },
+  "creature:crypt-candle-wraith": {
+    "source": [
+      29,
+      634,
+      213,
+      834
+    ],
+    "width": 196,
+    "height": 212,
+    "bytes": 17836
+  },
+  "elite:crypt-9": {
+    "source": [
+      233,
+      626,
+      413,
+      836
+    ],
+    "width": 192,
+    "height": 222,
+    "bytes": 22350
+  },
+  "creature:crypt-grave-fungus": {
+    "source": [
+      450,
+      678,
+      604,
+      833
+    ],
+    "width": 166,
+    "height": 167,
+    "bytes": 15054
+  },
+  "elite:crypt-10": {
+    "source": [
+      634,
+      638,
+      821,
+      832
+    ],
+    "width": 199,
+    "height": 206,
+    "bytes": 25910
+  },
+  "creature:crypt-soul-bat": {
+    "source": [
+      839,
+      672,
+      1027,
+      835
+    ],
+    "width": 200,
+    "height": 175,
+    "bytes": 17438
+  },
+  "elite:crypt-11": {
+    "source": [
+      1038,
+      641,
+      1250,
+      835
+    ],
+    "width": 224,
+    "height": 206,
+    "bytes": 24698
+  },
+  "creature:rift-void-ray": {
+    "source": [
+      21,
+      863,
+      209,
+      1015
+    ],
+    "width": 200,
+    "height": 164,
+    "bytes": 15752
+  },
+  "elite:rift-6": {
+    "source": [
+      229,
+      851,
+      429,
+      1027
+    ],
+    "width": 212,
+    "height": 188,
+    "bytes": 25086
+  },
+  "creature:rift-star-golem": {
+    "source": [
+      440,
+      852,
+      620,
+      1032
+    ],
+    "width": 192,
+    "height": 192,
+    "bytes": 20896
+  },
+  "elite:rift-7": {
+    "source": [
+      630,
+      838,
+      830,
+      1031
+    ],
+    "width": 212,
+    "height": 205,
+    "bytes": 28010
+  },
+  "creature:rift-astral-urchin": {
+    "source": [
+      861,
+      879,
+      1017,
+      1027
+    ],
+    "width": 168,
+    "height": 160,
+    "bytes": 16228
+  },
+  "elite:rift-8": {
+    "source": [
+      1041,
+      838,
+      1241,
+      1047
+    ],
+    "width": 212,
+    "height": 221,
+    "bytes": 22046
+  },
+  "creature:rift-astral-serpent": {
+    "source": [
+      27,
+      1049,
+      204,
+      1225
+    ],
+    "width": 189,
+    "height": 188,
+    "bytes": 19558
+  },
+  "elite:rift-9": {
+    "source": [
+      236,
+      1021,
+      427,
+      1232
+    ],
+    "width": 203,
+    "height": 223,
+    "bytes": 28138
+  },
+  "creature:rift-rift-strider": {
+    "source": [
+      444,
+      1051,
+      619,
+      1230
+    ],
+    "width": 187,
+    "height": 191,
+    "bytes": 14728
+  },
+  "elite:rift-10": {
+    "source": [
+      630,
+      1036,
+      862,
+      1239
+    ],
+    "width": 244,
+    "height": 215,
+    "bytes": 21690
+  },
+  "creature:rift-watcher": {
+    "source": [
+      865,
+      1067,
+      1014,
+      1214
+    ],
+    "width": 161,
+    "height": 159,
+    "bytes": 15102
+  },
+  "elite:rift-11": {
+    "source": [
+      1053,
+      1034,
+      1233,
+      1235
+    ],
+    "width": 192,
+    "height": 213,
+    "bytes": 22444
+  }
+}

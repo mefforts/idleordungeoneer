@@ -11,7 +11,7 @@ function reviewFixture(){
    data.weaponType='staff';data.equippedArmor='magic_1';projectCombatStyle();equipmentTab=materials?'materials':'weapons';openDrawer('gear');renderEquipmentTab();refreshUI();
   },
   shop(kind){
-   __mobileTest.fresh(true);data.floor=kind*3+1;data.cleared=Math.max(9,data.floor-1);normalizeZone();resetRun();game.scene='combat';game.status='running';game.menuPaused=true;
+   __mobileTest.fresh(true);data.floor=zoneStart(kind);data.cleared=Math.max(9,data.floor-1);normalizeZone();resetRun();game.scene='combat';game.status='running';game.menuPaused=true;
    zoneShopFor().currency=83;zoneShopFor().earned=120;zoneShopFor().ranks={[zoneAbilities()[0].id]:2,ward:1};syncZone();openZoneShop();refreshUI();
   }
  };

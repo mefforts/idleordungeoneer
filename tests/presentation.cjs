@@ -8,7 +8,7 @@ function instrumentation() {
   window.__presentationTest = {
     fresh() {
       if(codexSession)closeCodex();
-      closeDrawer();hideOverlay();data=defaults();data.floor=4;data.cleared=3;
+      closeDrawer();hideOverlay();data=defaults();data.floor=zoneStart(1);data.cleared=zoneEnd(0);
       data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=data.zone2SkillsAnnounced=true;
       data.ownedArmor=['melee_1','magic_1'];data.equippedArmor='melee_1';
       data.equipmentVersion=data.tierProgressionVersion=1;

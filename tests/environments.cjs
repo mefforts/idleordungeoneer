@@ -2,7 +2,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const {createRuntime,balanceHashes}=require('./runtime.cjs');
 function instrumentation(){
  function fresh(kind=0,stage=1){
-  if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();data.floor=kind*3+stage;data.cleared=data.floor-1;data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=data.zone2SkillsAnnounced=true;
+  if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();data.floor=floorAtZone(kind,sampleFloorStage(kind,stage));data.cleared=data.floor-1;data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=data.zone2SkillsAnnounced=true;
   normalizeProgression();normalizeZone();ensureJobs();resetRun();game.scene='combat';game.status='running';game.menuPaused=game.manualPaused=true;game.phase=0;game.phaseTarget=1e9;game.eliteAt=1e9;game.player.x=game.player.y=0;game.enemies=[];game.frame=2;setScene('combat',false);refreshUI();
  }
  function stats(e){return {x:e.x,y:e.y,rad:e.rad,hp:e.hp,maxHp:e.maxHp,speed:e.speed,contact:e.contact,boss:e.boss,bossIndex:e.bossIndex};}
@@ -10,7 +10,7 @@ function instrumentation(){
   async assets(){await Promise.all(Object.keys(ENVIRONMENT_ART).map(key=>environmentImage(key).decode()));await Promise.all([creatureImage.decode(),propImage.decode(),groundImage.decode()]);return Object.entries(ENVIRONMENT_ART).map(([key,art])=>({key,width:art.width,height:art.height,src:art.src}));},
   layout(kind,stage){fresh(kind,stage);const objects=worldScenery(kind,0,0,6500,6500);return {props:[...new Set(objects.filter(o=>!o.decal).map(o=>o.index))].sort((a,b)=>a-b),decals:[...new Set(objects.filter(o=>o.decal).map(o=>o.index))].sort(),sample:worldScenery(kind,240,-200,1100,800),cache:environmentCells.size,wrongKind:objects.some(o=>o.kind!==kind)};},
   repeat(){const a=JSON.stringify(worldScenery(biomeIndex(),240,-200,1100,800));environmentCells.clear();return a===JSON.stringify(worldScenery(biomeIndex(),240,-200,1100,800));},
-  spawnMix(kind,stage){fresh(kind,stage);const counts=[0,0,0,0,0,0];for(let i=0;i<1200;i++){game.phaseSpawned=i;const e=spawnEnemy();counts[e.visualType]++;game.enemies=[];}return counts;},
+  spawnMix(kind,stage){fresh(kind,stage);const counts=Array(ENVIRONMENT_ZONES[kind].monsters.length).fill(0);for(let i=0;i<1200;i++){game.phaseSpawned=i;const e=spawnEnemy();counts[e.visualType]++;game.enemies=[];}return counts;},
   statsAndPoses(kind){
    fresh(kind);const random=Math.random;Math.random=()=>.37;let base,e;try{base=spawnBaseEnemy();game.enemies=[];e=spawnEnemy();}finally{Math.random=random;}
    const original=stats(e),sizes=[],poses=[];e.x=0;e.y=30;e.rad=15;e.hp=e.maxHp=100;e.lastHitAt=-10;e.frozen=0;e.wobble=0;game.player.x=-300;game.enemies=[e];
@@ -33,13 +33,13 @@ function instrumentation(){
  const html=raw.replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+instrumentation.toString()+')();resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
  const p=await browser.newPage({viewport:{width:1440,height:900}});p.on('pageerror',e=>errors.push(e.message));await p.route(baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));
  try{
-  await p.goto(baseURL);const assets=await p.evaluate(()=>__environmentTest.assets());assert.equal(assets.length,72);assert.equal(new Set(assets.map(a=>a.src)).size,72);
+  await p.goto(baseURL);const assets=await p.evaluate(()=>__environmentTest.assets());assert.equal(assets.length,90);assert.equal(new Set(assets.map(a=>a.src)).size,90);
   const bounds=await p.evaluate(async assets=>{const c=document.createElement('canvas'),out=[];for(const a of assets){const im=new Image();im.src=a.src;await im.decode();c.width=im.width;c.height=im.height;const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(im,0,0);const d=g.getImageData(0,0,c.width,c.height).data;let solid=0,edge=0;for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++){const alpha=d[(y*c.width+x)*4+3];if(alpha>80)solid++;if((x===0||y===0||x===c.width-1||y===c.height-1)&&alpha>0)edge++;}out.push({key:a.key,solid,edge,width:c.width,height:c.height});}return out;},assets);
   assert.ok(bounds.every(a=>a.solid>1500&&a.width>60&&a.height>60));assert.ok(bounds.filter(a=>!a.key.includes('-floor-')).every(a=>a.edge===0),'Every sprite has a transparent gutter; no atlas neighbors or cropped edges');
   passed.push('72 unique embedded images decode offline: 32 scenery, 20 monsters, 12 ground details and 8 floor textures; all sprites have clean transparent borders');
   const layouts=[],mixes=[],renders=[];for(let kind=0;kind<4;kind++)for(let stage=1;stage<=3;stage++){
    const layout=await p.evaluate(({kind,stage})=>__environmentTest.layout(kind,stage),{kind,stage});assert.deepEqual(layout.props,Array.from({length:12},(_,i)=>i));assert.deepEqual(layout.decals,[0,1,2]);assert.equal(layout.wrongKind,false);assert.ok(layout.cache<=4096);assert.equal(await p.evaluate(()=>__environmentTest.repeat()),true);layouts.push(JSON.stringify(layout.sample));
-   const counts=await p.evaluate(({kind,stage})=>__environmentTest.spawnMix(kind,stage),{kind,stage});assert.ok(counts.every(n=>n>0));mixes.push({kind,stage,counts});
+   const counts=await p.evaluate(({kind,stage})=>__environmentTest.spawnMix(kind,stage),{kind,stage});assert.ok(counts.slice(0,stage===3?counts.length:6).every(n=>n>0));mixes.push({kind,stage,counts});
    const frame=await p.evaluate(({kind,stage})=>__environmentTest.screenshot(kind,stage),{kind,stage});renders.push(frame.canvas);await p.screenshot({path:path.join(resultsDir,'environment-check-'+kind+'-'+stage+'.png')});
   }
   assert.equal(new Set(layouts).size,12);assert.equal(new Set(renders).size,12);
@@ -50,6 +50,6 @@ function instrumentation(){
   passed.push('Twenty-four regular-monster looks retain combat values, animate distinctly and honor reduced motion; scenery uses foot collisions and fades around the player or enemies');
   await p.setViewportSize({width:390,height:844});await p.evaluate(()=>__environmentTest.screenshot(2,3));assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
   passed.push('New art renders on phone layouts; equipment, loot, existing bosses and encounter definitions retain their baseline hashes');
-  assert.deepEqual(errors,[]);console.log(JSON.stringify({passed,newAssets:assets.length,totalZoneAssets:108,mixes,fade,errors},null,2));
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({passed,newAssets:assets.length,totalZoneAssets:168,mixes,fade,errors},null,2));
  }finally{await p.close();await runtime.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

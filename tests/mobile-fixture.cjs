@@ -3,7 +3,7 @@ function mobileFixture(){
  window.__mobileTest={
   fresh(gear=false){
    resetArenaTouch();if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();
-   if(gear){data.floor=4;data.cleared=3;data.unlockedWeapons=Object.keys(WEAPON_TYPES);data.ownedArmor=Object.keys(ARMOR_SETS);data.equippedArmor='melee_1';data.equipmentVersion=data.tierProgressionVersion=1;}
+   if(gear){data.floor=zoneStart(1);data.cleared=zoneEnd(0);data.unlockedWeapons=Object.keys(WEAPON_TYPES);data.ownedArmor=Object.keys(ARMOR_SETS);data.equippedArmor='melee_1';data.equipmentVersion=data.tierProgressionVersion=1;}
    data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=true;normalizeProgression();normalizeZone();ensureJobs();seedCodex();resetRun();
    game.scene='combat';game.status='running';game.manualPaused=game.menuPaused=false;game.keys={};game.mouseMove.active=false;game.player.invuln=1e9;game.phase=1;game.phaseTarget=1e9;game.transition=0;game.attackTimer=1e9;game.enemies=[];game.boss=null;game.devSpeed=game.skillSpeed=1;equipmentTab='weapons';tourIndex=-1;
    setScene('combat',false);$('toastStack').replaceChildren();refreshUI();

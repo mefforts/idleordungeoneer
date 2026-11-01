@@ -38,7 +38,7 @@ function environmentImage(key){
  return environmentImages.get(key);
 }
 function primeEnvironment(kind){
- if(environmentPrimed.has(kind))return;environmentPrimed.add(kind);const prefix=ENVIRONMENT_ZONES[kind].key+'-';
+ if(environmentPrimed.has(kind))return;primeRareElites(kind);environmentPrimed.add(kind);const prefix=ENVIRONMENT_ZONES[kind].key+'-';
  for(const key of Object.keys(ENVIRONMENT_ART))if(key.startsWith(prefix))environmentImage(key);
 }
 function environmentPick(weights,value){
@@ -54,7 +54,7 @@ function environmentProp(kind,index){
  const n=index-4;return {art:zone.key+'-'+zone.scenery[n],height:zone.heights[n],rx:zone.rx[n],ry:zone.ry[n]};
 }
 function environmentCell(kind,gx,gy){
- const stage=zoneStage()-1,seed=zoneNumber()*17+stage*41,key=[zoneNumber(),kind,stage,gx,gy].join(':');
+ const stage=zoneVisualBand()-1,seed=zoneNumber()*17+zoneStage()*41,key=[zoneNumber(),kind,zoneStage(),gx,gy].join(':');
  if(environmentCells.has(key))return environmentCells.get(key);
  const result=[],x=gx*260+130+(rng(gx,gy,seed+40)-.5)*84,y=gy*260+130+(rng(gx,gy,seed+88)-.5)*84;
  if(Math.hypot(x,y)>=180&&rng(gx,gy,kind+seed+63)>=.32){
@@ -83,7 +83,7 @@ function drawEnvironmentDecals(objects){
  const zone=ENVIRONMENT_ZONES[biomeIndex()];
  for(const o of objects){if(!o.decal)continue;const image=environmentImage(zone.key+'-'+zone.decals[o.index]);if(!image?.complete||!image.naturalWidth)continue;
   const width=92*o.s,height=width*image.naturalHeight/image.naturalWidth;
-  ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.angle);ctx.globalAlpha=.48+(zoneStage()-1)*.06;ctx.drawImage(image,-width/2,-height/2,width,height);ctx.restore();
+  ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.angle);ctx.globalAlpha=.48+(zoneVisualBand()-1)*.06;ctx.drawImage(image,-width/2,-height/2,width,height);ctx.restore();
  }
 }
 function scenerySprite(o,kind){
@@ -97,7 +97,7 @@ function scenerySprite(o,kind){
  ctx.save();ctx.globalAlpha=fade;ellipse(o.x+1,o.y,width*.29,Math.min(9,height*.06),'#09151d38');ctx.drawImage(image,sx,sy,sw,sh,o.x-width/2,o.y-height+3,width,height);ctx.restore();
 }
 function drawTiles(b,w,h){
- const kind=biomeIndex(),stage=zoneStage(),key=kind+':'+stage,zone=ENVIRONMENT_ZONES[kind];
+ const kind=biomeIndex(),stage=zoneVisualBand(),key=kind+':'+stage,zone=ENVIRONMENT_ZONES[kind];
  primeEnvironment(kind);quad(0,0,w,h,['#2c4438','#3e3834','#343b48','#294854'][kind]);
  const image=stage===1?groundImage:environmentImage(zone.key+'-floor-'+stage);
  if(!image?.complete||!image.naturalWidth){drawFallbackTerrain(b,w,h);return;}
@@ -114,7 +114,7 @@ function drawTiles(b,w,h){
 }
 function assignEnemyAppearance(e){
  if(e.boss||e.elite)return;
- const kind=e.biome??biomeIndex();e.visualType=environmentPick(ENVIRONMENT_MOB_WEIGHTS[zoneStage()-1],rng(e.x*.01,e.y*.01,kind*71+(e.wobble||0)*11+game.phaseSpawned+game.runKills));e.name=ENVIRONMENT_ZONES[kind].monsters[e.visualType];
+ const kind=e.biome??biomeIndex();e.visualType=environmentPick(creatureWeights(kind),rng(e.x*.01,e.y*.01,kind*71+(e.wobble||0)*11+game.phaseSpawned+game.runKills));e.name=ENVIRONMENT_ZONES[kind].monsters[e.visualType];
 }
 function environmentMobSize(e){
  const kind=e.biome??biomeIndex(),variant=e.visualType||0,base=Math.max(46,e.rad*3.8);

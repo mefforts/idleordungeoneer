@@ -7,7 +7,7 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
   const p=await runtime.browser.newPage({viewport:{width:1440,height:1000}});p.on('pageerror',e=>errors.push(e.message));await p.route(runtime.baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));await p.goto(runtime.baseURL);await p.evaluate(()=>__encounterTest.ready());
   assert.deepEqual(await p.evaluate(()=>__encounterTest.assets()),{count:12,unique:12,loaded:true});
   for(const position of ['center','ring','outside']){
-   const r=await p.evaluate(position=>__encounterTest.reflect(position),position);assert.deepEqual(r.during,{hp:r.before.hp,enemy:r.before.enemy});
+   const r=await p.evaluate(position=>__encounterTest.reflect(position),position);assert.deepEqual(r.during,{hp:r.before.hp,enemy:r.before.enemy});assert.equal(r.warning,1.9);
    if(position==='center'){assert.equal(r.after.enemy,880);assert.equal(r.after.hp,r.before.hp);assert.equal(r.after.stagger,1.6);assert.equal(r.after.burn,0);}else{assert.equal(r.after.enemy,1000);assert.equal(r.after.hp<r.before.hp,position==='ring');}
    assert.equal(r.repeated,r.after.enemy,'A resolved counter cannot deal damage twice');
   }
@@ -20,7 +20,8 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
    assert.equal(r.blocked.blocked,true);assert.deepEqual(r.expired,{rally:0,nodes:0,damage:r.base});assert.equal(r.kills,1);
   }
   const edges=await p.evaluate(()=>__encounterTest.healingEdges());assert.deepEqual(edges,{capped:1000,double:510,single:520});
-  passed.push('Healing and power streams divert to the player only on interception; healing clamps and never stacks, buffs expire after leaving a stream and caster defeat ends its streams');
+  for(let kind=0;kind<4;kind++){const r=await p.evaluate(kind=>__encounterTest.proximity(kind),kind);assert.equal(r.inside.linked,true,'Off-axis proximity must link');assert.equal(r.near.linked,true);assert.equal(r.outside.linked,false);assert.ok(r.inside.distance<r.casterDistance&&r.outside.distance>r.casterDistance);}
+  passed.push('Totems choose an off-axis player when closer than their caster, return to the caster outside that radius, never stack healing, and end their streams with the caster');
   for(const weapon of ['sword','shield','polearm','greatsword','bow','staff']){
    const r=await p.evaluate(weapon=>__encounterTest.hitTotem(weapon),weapon);assert.equal(r.attacked,true,weapon);assert.equal(r.remaining,1,weapon);assert.equal(r.targetable,false);assert.equal(r.direct,false);assert.ok(r.enemy<r.enemyBefore,weapon+' attacks the caster while intercepting');assert.equal(r.phase,1);assert.deepEqual(r.after,r.before,weapon+' node must not produce loot, XP, Mastery or wave kills');
    const boost=await p.evaluate(weapon=>__encounterTest.rally(weapon),weapon);assert.ok(Math.abs(boost.damage-boost.base*1.1)<1e-7,weapon+' gets only 10% conditional damage');assert.equal(boost.base,boost.profile);
@@ -33,7 +34,7 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
   const known=await p.evaluate(()=>__encounterTest.elites(3,[false,true,false]));assert.deepEqual(known.types,[1,1,1]);
   passed.push('Later floors substitute two or three simultaneous known elites, favor different guardians, keep wave totals and rewards intact, and never introduce an unseen boss');
   const schedule=await p.evaluate(()=>__encounterTest.scheduling());assert.deepEqual(schedule,{third:false,counterWait:false,reserved:true,offenseWait:false,hazardWait:false,reflection:true,noOverlap:false,absorbed:true,notAbsorbed:false,active:1});
-  const budget=await p.evaluate(()=>__encounterTest.nodeBudget());assert.deepEqual(budget,{first:true,second:true,secondType:'ground',count:2,remaining:2,targets:0,afterDamage:2,afterCasterDeath:1});
+  const budget=await p.evaluate(()=>__encounterTest.nodeBudget());assert.deepEqual(budget,{first:true,second:true,secondType:'shield',count:2,remaining:2,targets:0,afterDamage:2,afterCasterDeath:1});
   assert.deepEqual(await p.evaluate(()=>__encounterTest.dual()),{types:['fury','mend'],next:true,attack:'beam',count:2});
   passed.push('Permanent untargetable totems remain after a minute, leave with their caster, support both stream types, and advance duplicate/full slots to another attack without freezing the boss');
   for(const which of ['owner','reset','phase','death','next']){const r=await p.evaluate(which=>__encounterTest.cleanup(which),which);assert.equal(r.nodes,0);assert.equal(r.request,false);assert.equal(r.casts,0);if(which!=='owner')assert.equal(r.rally,0);}
@@ -42,7 +43,7 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
   passed.push('Owner death, phase change, retry and defeat clean encounter objects; menus and skilling pause them while Delve speed scales only their combat clock');
   for(const width of [320,390,844,1440]){
    await p.setViewportSize({width,height:width===844?390:844});
-   for(const side of ['left','right'])for(let kind=0;kind<4;kind++)for(const offset of [0,400,900])for(const type of ['reflect','mend','fury']){const r=await p.evaluate(({kind,offset,side,type})=>__encounterTest.placement(kind,3,offset,side,type),{kind,offset,side,type});assert.ok(r.clear);assert.ok(r.distance>=(width<600?(type==='reflect'?200:190):(type==='reflect'?230:220)));if(type==='reflect')assert.ok(r.travel<=365);assert.ok(r.point.x-r.point.r>=r.camX-r.w/2+(side==='left'?52:0));assert.ok(r.point.x+r.point.r<=r.camX+r.w/2-(side==='right'?52:0));assert.ok(r.point.y-r.point.r>=r.camY-r.h/2);assert.ok(r.point.y+r.point.r<=r.camY+r.h/2);}
+   for(const side of ['left','right'])for(let kind=0;kind<4;kind++)for(const offset of [0,400,900])for(const type of ['reflect','mend','fury']){const r=await p.evaluate(({kind,offset,side,type})=>__encounterTest.placement(kind,3,offset,side,type),{kind,offset,side,type});assert.ok(r.clear);assert.ok(r.distance>=(width<600?(type==='reflect'?200:190):(type==='reflect'?230:220)));if(type==='reflect')assert.ok(r.travel<=300);assert.ok(r.point.x-r.point.r>=r.camX-r.w/2+(side==='left'?52:0));assert.ok(r.point.x+r.point.r<=r.camX+r.w/2-(side==='right'?52:0));assert.ok(r.point.y-r.point.r>=r.camY-r.h/2);assert.ok(r.point.y+r.point.r<=r.camY+r.h/2);}
   }
   passed.push('Reflect centers and totems keep their larger caster gaps, remain on screen and clear of scenery in every area at 320, 390, 844 and 1440 pixels, including landscape and distant world coordinates');
   assert.deepEqual(errors,[]);console.log(JSON.stringify({passed,errors},null,2));

@@ -45,7 +45,7 @@ function equipArmor(id,crafted=false){
 }
 function makeArmor(id){
   const a=ARMOR_SETS[id];if(!a||data.ownedArmor.includes(id))return false;
-  if(a.tier===2&&!tier2Unlocked()){toast('Steel-tier armor unlocks in Zone 2','Clear all three floors of Zone 1 first.');return false;}
+  if(a.tier===2&&!tier2Unlocked()){toast('Steel-tier armor unlocks in Zone 2','Clear Zone 1 first.');return false;}
   if(levelRange(data[DISCIPLINES[a.group].xp]||0).lvl<a.level){toast('Training needed',DISCIPLINES[a.group].name+' level '+a.level+' unlocks '+a.name+'.');return false;}
   if(!spendAtStation(a.cost,a.group)){toast('Materials needed','Track this armor recipe to gather its ingredients.');return false;}
   data.ownedArmor.push(id);data[DISCIPLINES[a.group].xp]+=40*a.tier;codexDiscover('armor_set_'+id);equipArmor(id,true);

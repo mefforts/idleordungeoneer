@@ -2,12 +2,12 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const {createRuntime}=require('./runtime.cjs');
 function instrumentation(){
  function fresh(zone=0){
-  resetArenaTouch();if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();data.floor=zone*3+1;data.cleared=data.floor-1;data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=true;
+  resetArenaTouch();if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();data.floor=zoneStart(zone);data.cleared=data.floor-1;data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=true;
   normalizeProgression();normalizeZone();ensureJobs();resetRun();game.status='running';game.scene='combat';game.menuPaused=game.manualPaused=true;game.keys={};game.holdSkill=null;game.enemies=[];game.phase=0;game.phaseTarget=1e9;game.phaseSpawned=1e9;game.spawnTimer=1e9;game.attackTimer=1e9;game.transition=0;game.player.invuln=1e9;setScene('combat',false);refreshUI();
  }
  function enemy(extra={}){const e={x:0,y:30,rad:12,hp:1e7,maxHp:1e7,speed:0,wobble:0,contact:99,frozen:0,biome:biomeIndex(),...extra};game.enemies.push(e);return e;}
  function state(){return {data:JSON.parse(JSON.stringify(data)),dps:weaponDps(),hp:game.player.hp,maxHp:game.player.maxHp,level:dungeonProgress(),status:game.status,pending:game.pendingLevels};}
- function travel(zone){checkpointGroundXp();data.floor=zone*3+1;data.cleared=Math.max(data.cleared,data.floor-1);normalizeZone();resetRun();game.status='running';game.phase=0;game.phaseTarget=1e9;game.menuPaused=game.manualPaused=true;hideOverlay();refreshUI();}
+ function travel(zone){checkpointGroundXp();data.floor=zoneStart(zone);data.cleared=Math.max(data.cleared,data.floor-1);normalizeZone();resetRun();game.status='running';game.phase=0;game.phaseTarget=1e9;game.menuPaused=game.manualPaused=true;hideOverlay();refreshUI();}
  window.__shopTest={fresh,state,travel,
   fund(zone=0,amount=100000){grantZoneCurrency(amount,zone);refreshUI();},
   kill(random=.1,extra={}){const old=Math.random;Math.random=()=>random;try{onKill(enemy(extra));}finally{Math.random=old;}return state();},

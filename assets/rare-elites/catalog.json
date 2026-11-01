@@ -1,0 +1,24 @@
+{
+  "zoneFloors": [
+    5,
+    10,
+    20,
+    20
+  ],
+  "families": [
+    8,
+    10,
+    12,
+    12
+  ],
+  "ordinaryCreatureForms": 42,
+  "eliteCreatureForms": 42,
+  "newOrdinarySprites": 18,
+  "eliteSprites": 42,
+  "medallions": 4,
+  "sourceAtlases": [
+    "creatures.png",
+    "depth-expansion.png",
+    "medallions.png"
+  ]
+}

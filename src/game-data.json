@@ -671,5 +671,79 @@
       "name": "Guardian’s Bounty",
       "description": "+4% guardian and elite gold per rank"
     }
-  ]
+  ],
+  "TRINKETS": {
+    "leech": {
+      "name": "Opal Leech Ring",
+      "type": "ring",
+      "effect": "Steal 0.5% of damage as HP",
+      "tag": "LIFESTEAL",
+      "bonus": "leech",
+      "value": 0.005,
+      "icon": "ring-leech"
+    },
+    "coin": {
+      "name": "Opal Coin Ring",
+      "type": "ring",
+      "effect": "+10% gold",
+      "tag": "GOLD",
+      "bonus": "gold",
+      "value": 0.1,
+      "icon": "ring-coin"
+    },
+    "scholar": {
+      "name": "Opal Scholar Ring",
+      "type": "ring",
+      "effect": "+10% delve XP",
+      "tag": "XP",
+      "bonus": "xp",
+      "value": 0.1,
+      "icon": "ring-scholar"
+    },
+    "reach": {
+      "name": "Opal Reach Ring",
+      "type": "ring",
+      "effect": "+30 pickup radius",
+      "tag": "PICKUP",
+      "bonus": "pickup",
+      "value": 30,
+      "icon": "ring-reach"
+    },
+    "vigor": {
+      "name": "Opal Vigor Amulet",
+      "type": "amulet",
+      "effect": "+20 maximum HP",
+      "tag": "HEALTH",
+      "bonus": "hp",
+      "value": 20,
+      "icon": "amulet-vigor"
+    },
+    "guard": {
+      "name": "Opal Guard Amulet",
+      "type": "amulet",
+      "effect": "6% less damage taken",
+      "tag": "DEFENSE",
+      "bonus": "guard",
+      "value": 0.06,
+      "icon": "amulet-guard"
+    },
+    "haste": {
+      "name": "Opal Haste Amulet",
+      "type": "amulet",
+      "effect": "+6% movement speed",
+      "tag": "SPEED",
+      "bonus": "speed",
+      "value": 0.06,
+      "icon": "amulet-haste"
+    },
+    "fortune": {
+      "name": "Opal Fortune Amulet",
+      "type": "amulet",
+      "effect": "+2% rare finds",
+      "tag": "FORTUNE",
+      "bonus": "find",
+      "value": 0.02,
+      "icon": "amulet-fortune"
+    }
+  }
 }

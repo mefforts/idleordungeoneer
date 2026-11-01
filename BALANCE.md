@@ -1,6 +1,6 @@
 # Zone progression and balance
 
-Build 9.4 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.
+Build 9.6 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.
 
 ## Equipment ceilings
 
@@ -36,12 +36,12 @@ First ranks cost 8–24 seals before Zone scaling. Ordinary ranks grow by 1.65×
 
 | Zone | Currency | Expected seals / first clear |
 | --- | --- | ---: |
-| 1 | Verdant Seals | 316.72 |
-| 2 | Ember Seals | 323.92 |
-| 3 | Soul Seals | 331.12 |
-| 4 | Rift Seals | 338.32 |
+| 1 | Verdant Seals | 526.44 |
+| 2 | Ember Seals | 1057.00 |
+| 3 | Soul Seals | 2095.75 |
+| 4 | Rift Seals | 2116.97 |
 
-Ordinary monsters have a 4% chance of one seal. Elites guarantee 6 seals; guardians guarantee 12 / 20 / 35. A first clear permits 17 elite substitutions across the three floors; replaying with all guardians already known permits 18. The table includes the first-clear substitutions at baseline Fortune. More than 95% of expected first-clear seals come from elites and guardians. Fortune rank 4 changes ordinary-monster chance to 5.6%, while guardian and elite chunks remain fixed.
+Ordinary monsters have a 4% chance of one seal. Elites guarantee 6 seals; guardians guarantee 12 / 20 / 35. Guardian echoes substitute ordinary enemies, up to one / two / three per wave in the early / middle / deep floors. First-clear counts depend on the authored Zone depth. The table includes first-clear guardian echoes and expected rare elites at baseline Fortune. Rare elites have a 1.5% chance after the first three wave spawns, capped at one per wave. More than 95% of expected first-clear seals come from elites and guardians. Fortune rank 4 changes ordinary-monster chance to 5.6%, while guardian and elite chunks remain fixed.
 
 | Zone | Guardian gold | Floor caches | Baseline gold without elites |
 | --- | ---: | ---: | ---: |
@@ -61,18 +61,35 @@ Ordinary monsters drop no gold. Elites give 2 / 2.8 gold in Zones 1 / 2. Existin
 
 References now use completed Iron / Steel equipment at base proficiency, with no required Zone abilities. Health forecasts retain the 10 / 20 / 30-minute targets and the later 35–40-minute plateau. Movement, deaths, preparation and menus extend play time; abilities and successful counters can shorten it. Future equipment tiers remain unauthored.
 
-- Live Zone 1 simulation: **10.7 min**, 369 defeats, 80.0 reference DPS.
-- Live Zone 2 simulation: **21.7 min**, 549 defeats, 160.0 reference DPS.
-- Live Zone 3 simulation: **32.3 min**, 729 defeats, 160.0 reference DPS.
-- Live Zone 4 simulation: **37.6 min**, 909 defeats, 160.0 reference DPS.
-- Live Zone 9 simulation: **42.6 min**, 909 defeats, 160.0 reference DPS.
-- Live Zone 15 simulation: **42.8 min**, 909 defeats, 160.0 reference DPS.
+- Live Zone 1 simulation: **9.7 min**, 375 defeats, 80.0 reference DPS.
+- Live Zone 2 simulation: **20.4 min**, 570 defeats, 160.0 reference DPS.
+- Live Zone 3 simulation: **32.2 min**, 780 defeats, 160.0 reference DPS.
+- Live Zone 4 simulation: **36.3 min**, 960 defeats, 160.0 reference DPS.
+- Live Zone 9 simulation: **42.0 min**, 960 defeats, 160.0 reference DPS.
+- Live Zone 15 simulation: **41.4 min**, 960 defeats, 160.0 reference DPS.
 
-Live tests use actual spawning, damage, approach, guardian mechanics and transitions at 40 ms steps. Only incoming damage and XP progression are suppressed in the isolated fixture. They move into healing streams near the caster to counter permanent healing, and do not deliberately seek reflect marks. Attack-cadence rounding contributes to the difference from the forecast.
+Live tests use actual spawning, damage, approach, guardian mechanics and transitions at 40 ms steps. Only incoming damage and XP progression are suppressed in the isolated fixture. They approach healing totems to divert permanent healing, and do not deliberately seek reflect marks. Attack-cadence rounding contributes to the difference from the forecast.
 
 ## Guardian counterplay
 
-Floor overlords use four patterns and final Zone overlords six. Known elite substitutions are capped at one / two / three per wave on Floors 1 / 2 / 3. Reflecting returns 12% maximum caster HP and staggers for 1.6 seconds. A healing stream restores 0.8% guardian HP per second until its caster is defeated, or 2% player HP when intercepted. Power streams add 12% guardian attack damage, or 10% conditional player hit damage for five seconds when intercepted. Stream bonuses do not stack. Totems are untargetable and have no expiry or health bar. They remain until the caster is defeated; only stream interception diverts their benefit. One of each type per caster and at most two total remain active. They grant no loot/XP and never count as wave defeats.
+Floor overlords use four patterns and final Zone overlords six. Known elite substitutions are capped at one / two / three per wave on early / middle / deep floors. Reflect warnings last 1.9 seconds, with centers within 300 units of the player. Reflecting returns 12% maximum caster HP and staggers for 1.6 seconds. A healing stream restores 0.8% guardian HP per second until its caster is defeated, or 2% player HP when the player is nearer to the totem than its caster. Power streams add 12% guardian attack damage, or 10% conditional player hit damage for five seconds when the player is nearer to the totem than its caster. Stream bonuses do not stack. Totems are untargetable and have no expiry or health bar. They remain until the caster is defeated; the player draws their benefit whenever closer to the totem than its caster, without needing to stand in its path. One of each type per caster and at most two total remain active. They grant no loot/XP and never count as wave defeats.
+
+## Authored Zone depths
+
+| Zone | Floors | Ordinary / elite families |
+| --- | ---: | ---: |
+| 1 | 5 | 8 / 8 |
+| 2 | 10 | 10 / 10 |
+| 3 | 20 | 12 / 12 |
+| 4 | 20 | 12 / 12 |
+
+There are 55 named floors. Terrain changes across early, middle and deep bands, with a different deterministic scenery layout on every floor. New creature families enter the mix gradually. Combat health and spawn budgets are calibrated per Zone; gold and guardian XP remain spread across the Zone rather than multiplying with floor count. Three-floor saves retain their previously reached Zones and migrate once.
+
+## Rare elites and timed blessings
+
+Each of the 42 ordinary creature appearances has a painted rare elite form with 3.5× health. Roles add 1.1-second locked charges and sweeps, fixed ricochet paths with visible banks and a six-second lifetime, and eight-second shields reducing an allied elite’s weapon damage taken by 35%. Shielders cannot be shielded; pending casts reserve their targets to prevent chains. A rare elite can appear alongside guardian echoes. Its optional spoils offer Battle Fervor (+18% hit damage, 45s), Windstep (+15% attack speed and +12% movement, 40s), or Stoneguard (20% less damage and 0.3% max HP/s, 60s). One blessing can be active; choosing another replaces it. Combat time, including Delve speed, advances duration; menus, pause and skilling do not. Leaving its exact Zone ends a blessing. Unclaimed spoils persist.
+
+Enemy sweeps, charges, beams and ground eruptions deal 35% of maximum HP to ordinary monsters once per cast, including overlapping marks. Elites, guardians and totems are immune. These hits grant normal kill rewards without player lifesteal, critical hits, enchantments or weapon effects. The Opal Leech Ring now returns 0.5% of actual direct-hit health removed; overkill grants no extra healing.
 
 ## Global Dungeoneering and Mastery
 
@@ -109,4 +126,4 @@ Clearing Zone 1 unlocks the second idle slot and a replay-travel tip. All ten ad
 
 Retired statistics, abilities absent from a Zone and ranks above its revised maximum refund their original purchase prices to that exact Zone. Retained abilities keep their ranks. A versioned receipt prevents repeated credits. Older power-card saves first pass through the existing global-XP/Mastery migration, then receive any applicable refunds. Equipment, materials, gold, ground XP and Mastery are preserved.
 
-Twenty browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 107 distinct painted Codex entries, boss mechanics and live Zone pacing. Startup checks pause the HTML download to verify first paint, then cover asset readiness, reduced motion and retry. Run npm run report:balance to regenerate this file and balance-report.json.
+Twenty-two browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 111 distinct painted Codex entries, boss mechanics and live Zone pacing. Startup checks pause the HTML download to verify first paint, then cover asset readiness, reduced motion and retry. Run npm run report:balance to regenerate this file and balance-report.json.

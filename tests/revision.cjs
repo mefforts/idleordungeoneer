@@ -17,9 +17,9 @@ function instrumentation(){
    const shot=game.shots[0];game.keys={};game.manualPaused=game.menuPaused=true;return {facing,rows,shot:{vx:shot.vx,vy:shot.vy},playerX:game.player.x};
   },
   rewardRun(zone){
-   fresh(zone*3+1);game.upgrades={};const start=data.gold,model=zoneBalance(zone);
-   for(let stage=0;stage<3;stage++){
-    data.floor=zone*3+stage+1;normalizeZone();game.status='test';game.phaseTarget=1e9;
+   fresh(zoneStart(zone));game.upgrades={};const start=data.gold,model=zoneBalance(zone);
+   for(let stage=0;stage<zoneFloorCount(zone);stage++){
+    data.floor=floorAtZone(zone,stage+1);normalizeZone();game.status='test';game.phaseTarget=1e9;
     for(let phase=0;phase<6;phase++){
      game.phase=phase;game.phaseKills=0;
      const count=phase%2?1:model.targets[phase];
@@ -65,21 +65,21 @@ function instrumentation(){
   assert.deepEqual(await p.evaluate(()=>__revision.carry()),{gold:45,remainder:.75});await p.reload();assert.deepEqual(await p.evaluate(()=>__revision.fourth()),{paid:1,gold:46,remainder:0});passed.push('Fractional reward gold carries across saves and reloads without losing or duplicating coins');
   assert.equal(await p.evaluate(()=>__revision.badTravel()),false);await p.evaluate(()=>__deepwell.openDrawer('settings'));assert.equal(await p.locator('#testTravel').count(),0);
   await p.click('#settingsCodes');await p.fill('#codeInput',testingCodes.sandbox);await p.click('#codeRedeem');
-  let d=await p.evaluate(()=>__deepwell.getState().data);assert.equal(d.devSpeedUnlocked,true);assert.equal(d.devTravelUnlocked,true);assert.ok(d.cleared>=12);assert.ok(await p.locator('#testTravel').isVisible());assert.equal(await p.locator('#testZone option').count(),4);
+  let d=await p.evaluate(()=>__deepwell.getState().data);assert.equal(d.devSpeedUnlocked,true);assert.equal(d.devTravelUnlocked,true);assert.ok(d.cleared>=55);assert.ok(await p.locator('#testTravel').isVisible());assert.equal(await p.locator('#testZone option').count(),4);
   for(const [zone,stage]of [[2,2],[4,3],[1,1]]){
-   await p.selectOption('#testZone',String(zone));await p.selectOption('#testFloor',String(stage));const gold=await p.evaluate(()=>__deepwell.getState().data.gold);await p.click('#testTravelGo');const state=await p.evaluate(()=>__deepwell.getState());assert.equal(state.data.floor,(zone-1)*3+stage);assert.equal(state.status,'running');assert.equal(state.data.gold,gold,'Travel cannot award clear rewards');
+   await p.selectOption('#testZone',String(zone));await p.selectOption('#testFloor',String(stage));const gold=await p.evaluate(()=>__deepwell.getState().data.gold);await p.click('#testTravelGo');const state=await p.evaluate(()=>__deepwell.getState());assert.equal(state.data.floor,[1,6,16,36][zone-1]+stage-1);assert.equal(state.status,'running');assert.equal(state.data.gold,gold,'Travel cannot award clear rewards');
    await p.click('#quickSettings');
   }
   await p.click('#drawerClose');assert.ok(await p.locator('#speedControl').isVisible());await p.click('#speedToggle');assert.ok(await p.locator('#speedOptions [data-speed="500"]').isVisible());
-  await p.evaluate(()=>__deepwell.save());await p.reload();d=await p.evaluate(()=>__deepwell.getState().data);assert.equal(d.devTravelUnlocked,true);assert.equal(d.devSpeedUnlocked,true);assert.ok(d.cleared>=12);await p.click('#introSkills');await p.click('#quickSettings');assert.ok(await p.locator('#testTravel').isVisible());
+  await p.evaluate(()=>__deepwell.save());await p.reload();d=await p.evaluate(()=>__deepwell.getState().data);assert.equal(d.devTravelUnlocked,true);assert.equal(d.devSpeedUnlocked,true);assert.ok(d.cleared>=55);await p.click('#introSkills');await p.click('#quickSettings');assert.ok(await p.locator('#testTravel').isVisible());
   await p.setViewportSize({width:320,height:844});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);assert.ok((await p.locator('#testTravelGo').boundingBox()).x<320);await p.screenshot({path:path.join(runtime.resultsDir,'revision-test-travel.png')});passed.push('Sandbox redemption clears all four authored dungeons, unlocks all speed choices and persistent Zone / Floor travel; ordinary saves cannot use it');
-  await p.click('#drawerClose');const icons=await p.evaluate(()=>__revision.allIcons());assert.equal(icons.length,107);assert.equal(new Set(icons.map(i=>i.uri)).size,107);assert.ok(icons.every(i=>i.uri.startsWith('data:image/webp;base64,')),'No content entry may fall back to flat vector art');
+  await p.click('#drawerClose');const icons=await p.evaluate(()=>__revision.allIcons());assert.equal(icons.length,111);assert.equal(new Set(icons.map(i=>i.uri)).size,111);assert.ok(icons.every(i=>i.uri.startsWith('data:image/webp;base64,')),'No content entry may fall back to flat vector art');
   const alignment=await p.evaluate(async icons=>{
    const c=document.createElement('canvas');c.width=c.height=192;const ctx=c.getContext('2d',{willReadFrequently:true}),rows=[];
    for(const icon of icons){const image=new Image();image.src=icon.uri;await image.decode();ctx.clearRect(0,0,192,192);ctx.drawImage(image,0,0,192,192);const d=ctx.getImageData(0,0,192,192).data;let l=192,t=192,r=0,b=0;
     for(let y=0;y<192;y++)for(let x=0;x<192;x++)if(d[(y*192+x)*4+3]>128){l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}const seen=new Uint8Array(192*192),queue=[96*192+96];seen[queue[0]]=1;let connected=0,total=0;for(let j=3;j<d.length;j+=4)if(d[j]>128)total++;for(let q=0;q<queue.length;q++){const pos=queue[q];if(d[pos*4+3]<=128)continue;connected++;for(const next of [pos-192,pos+192,...(pos%192?[pos-1]:[]),...(pos%192<191?[pos+1]:[])])if(next>=0&&next<seen.length&&!seen[next]){seen[next]=1;queue.push(next);}}rows.push({id:icon.id,dx:Math.abs((l+r)/2-95.5),dy:Math.abs((t+b)/2-95.5),width:r-l+1,height:b-t+1,detached:total-connected});
    }return rows;
-  },icons);assert.ok(alignment.every(i=>i.dx<=2&&i.dy<=2&&i.width>=170&&i.height>=170&&i.detached<=10),JSON.stringify(alignment.filter(i=>i.dx>2||i.dy>2||i.width<170||i.height<170)));passed.push('All 107 Codex entries have distinct painted, loaded, uniformly centered medallions');
+  },icons);assert.ok(alignment.every(i=>i.dx<=2&&i.dy<=2&&i.width>=170&&i.height>=170&&i.detached<=10),JSON.stringify(alignment.filter(i=>i.dx>2||i.dy>2||i.width<170||i.height<170)));passed.push('All 111 Codex entries have distinct painted, loaded, uniformly centered medallions');
   assert.deepEqual(errors,[]);fs.writeFileSync(path.join(runtime.resultsDir,'revision-results.json'),JSON.stringify({passed,rewards,errors},null,2)+'\n');console.log(JSON.stringify({passed,rewards,errors},null,2));
  }finally{await runtime.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

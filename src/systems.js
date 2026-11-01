@@ -22,6 +22,7 @@ const styleForWeapon = id => id==='bow'?'ranged':id==='staff'?'magic':'melee';
 const combatStyle = () => styleForWeapon(data.weaponType);
 const finiteRank = n => Math.max(0, Math.min(100000, Math.floor(Number(n)||0)));
 function normalizeProgression(){
+  normalizeZoneLayout();
   const legacy={weapon:finiteRank(data.weapon),armor:finiteRank(data.armor),enchant:finiteRank(data.enchant)};
   const old=data.styles&&typeof data.styles==='object'?data.styles:{};
   data.styles=Object.fromEntries(Object.keys(STYLE_DEFS).map(id=>{
@@ -40,7 +41,7 @@ function normalizeProgression(){
   data.skillsNudgeSeen=!!data.skillsNudgeSeen||data.unlockedWeapons?.length>1;
   data.idleNoticeSlots=Math.min(2,finiteRank(data.idleNoticeSlots));data.idleFirstAssigned=!!data.idleFirstAssigned||data.idleJobs?.some(Boolean)||false;
   if(data.idleJobs?.filter(Boolean).length>=idleSlotsUnlocked()&&idleSlotsUnlocked()>0)data.idleNoticeSlots=idleSlotsUnlocked();
-  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();projectCombatStyle();
+  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
 }
 
 function stationRank(group){return data.stationLevels?.[group]||0;}

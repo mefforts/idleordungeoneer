@@ -17,7 +17,7 @@ function instrumentation(){
       game.holdSkill=null;const out={ore:data.ore,clock:game.activeClockMs,combat:game.runSeconds};game.manualPaused=game.menuPaused=true;return out;
     },
     boss(theme,stage,index){
-      fresh(theme*3+stage);game.phase=index*2;nextPhase();const boss=game.boss;
+      fresh(floorAtZone(theme,sampleFloorStage(theme,stage)));game.phase=index*2;nextPhase();const boss=game.boss;
       boss.x=boss.y=0;game.player.x=0;game.player.y=170;game.player.hp=game.player.maxHp=500;game.player.invuln=1e8;return bossPlan(boss);
     },
     projectiles(theme){this.boss(theme,1,0);beginBossCast(game.boss);tickBossSpecial(game.boss,1.2);return game.hostileShots.map(s=>({biome:s.biome,damage:s.damage}));},
@@ -85,7 +85,7 @@ function instrumentation(){
     const burn=await p.evaluate(()=>__dungeonTest.burn());assert.equal(burn.first.rate,.2);assert.equal(burn.second.rank,2);assert.equal(burn.second.rate,.4);assert.ok(Math.abs(burn.second.damage-.24)<1e-6);assert.ok(burn.second.floaters.some(t=>/Venom/.test(t)));
     await p.evaluate(()=>__dungeonTest.fireChoices());const fire=p.locator('.zone-upgrade').filter({has:p.locator('[data-buy-zone="fire"]')});assert.match(await fire.innerText(),/Rank 1/);assert.match(await fire.innerText(),/2%/);assert.match(await fire.innerText(),/4%/);await fire.locator('[data-buy-zone]').click();assert.equal(await p.evaluate(()=>__deepwell.getState().upgrades.fire),2);await p.click('#drawerClose');
     passed.push('Burn ticks remain visible; purchased rank two doubles its damage and the Zone Shop shows exact current / next effects');
-    const rewards=await p.evaluate(()=>__dungeonTest.rewards());assert.equal(rewards.gold,53);assert.equal(rewards.level,1);assert.ok(Math.abs(rewards.xp-98)<1e-6);const capped=await p.evaluate(()=>__dungeonTest.capped());assert.deepEqual(capped,{gold:45,pending:0,status:'running'});passed.push('Retired stat ranks cannot increase guardian XP or gold; obsolete choice calls cannot open a popup or grant duplicate rewards');
+    const rewards=await p.evaluate(()=>__dungeonTest.rewards());assert.equal(rewards.gold,49);assert.equal(rewards.level,1);assert.ok(Math.abs(rewards.xp-58.8)<1e-6);const capped=await p.evaluate(()=>__dungeonTest.capped());assert.deepEqual(capped,{gold:45,pending:0,status:'running'});passed.push('Retired stat ranks cannot increase guardian XP or gold; obsolete choice calls cannot open a popup or grant duplicate rewards');
     const early=[];for(const id of ['sword','shield','polearm','greatsword','bow','staff']){const result=await p.evaluate(id=>__dungeonTest.bestEarlyDps(id),id);assert.ok(result.dps<result.target,'Three early purchases should stay below ideal DPS: '+id);early.push(result);}
     passed.push('The first three ability purchases stay below Zone 1’s recommended DPS across every weapon');
     await p.evaluate(()=>__dungeonTest.plain());await p.keyboard.down('d');await p.keyboard.up('d');assert.equal((await p.evaluate(()=>__deepwell.getState())).dashCooldown,0);await p.waitForTimeout(80);await p.keyboard.down('d');await p.keyboard.up('d');assert.equal((await p.evaluate(()=>__deepwell.getState())).dashCooldown,0);await p.waitForTimeout(80);await p.keyboard.down('d');await p.keyboard.up('d');assert.ok((await p.evaluate(()=>__deepwell.getState())).dashCooldown>2.7);

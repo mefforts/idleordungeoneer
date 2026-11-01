@@ -1,12 +1,12 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {createRuntime}=require('./runtime.cjs');
 function instrumentation(){
- function fresh(zone2=false){data=defaults();data.floor=zone2?4:1;data.cleared=zone2?3:0;data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=true;normalizeProgression();resetRun();hideOverlay();closeDrawer();game.status='ready';game.manualPaused=game.menuPaused=false;refreshUI();}
+ function fresh(zone2=false){data=defaults();data.floor=zone2?zoneStart(1):1;data.cleared=zone2?zoneEnd(0):0;data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=true;normalizeProgression();resetRun();hideOverlay();closeDrawer();game.status='ready';game.manualPaused=game.menuPaused=false;refreshUI();}
  function rich(){for(const key of Object.keys(RESOURCE_LABEL))data[key]=100000;for(const key of Object.values(DISCIPLINES).map(g=>g.xp))data[key]=8000;}
  window.__tierTest={
   fresh,rich,
   locked(){fresh();rich();const before=data.coal;return {produce:produce('coal',true),idle:setIdleJob(0,'coal'),promote:promoteStyle('melee'),armor:makeArmor('melee_2'),entry:enterActivity('coal'),before,after:data.coal};},
-  clearZone(){fresh();data.floor=3;data.cleared=2;normalizeZone();game.phase=5;nextPhase();return {floor:data.floor,cleared:data.cleared,open:tier2Unlocked(),announced:data.zone2SkillsAnnounced};},
+  clearZone(){fresh();data.floor=zoneEnd(0);data.cleared=zoneEnd(0)-1;normalizeZone();game.phase=5;nextPhase();return {floor:data.floor,cleared:data.cleared,open:tier2Unlocked(),announced:data.zone2SkillsAnnounced};},
   materials(){fresh(true);rich();data.stationLevels=Object.fromEntries(Object.keys(DISCIPLINES).map(k=>[k,0]));data.stationCredits={};for(const k of Object.keys(DISCIPLINES))data.stationCredits[k]={};
    const keys=['ore','coal','steelBars','willowLogs','cloth','runicCloth','ancientSalvage','ancientFragments','arrows','runes','garnets','cutGarnets'];
    const changes=[];for(const key of ['steelSmelt','cleanAncient','aetherWeave','steelFletch','greaterRune','garnetCut']){const before=Object.fromEntries(keys.map(k=>[k,data[k]])),made=produce(key,true);changes.push({key,made,delta:Object.fromEntries(keys.map(k=>[k,data[k]-before[k]]).filter(([,n])=>n))});}return changes;},
@@ -30,7 +30,7 @@ function instrumentation(){
   const p=await runtime.browser.newPage({viewport:{width:1440,height:1000}});p.on('pageerror',e=>errors.push(e.message));
   await p.route(runtime.baseURL+'/**',route=>route.fulfill({contentType:'text/html; charset=utf-8',body:html}));await p.goto(runtime.baseURL);
   const locked=await p.evaluate(()=>__tierTest.locked());assert.deepEqual([locked.produce,locked.idle,locked.promote,locked.armor,locked.entry],[false,false,false,false,false]);assert.equal(locked.before,locked.after);
-  const clear=await p.evaluate(()=>__tierTest.clearZone());assert.deepEqual(clear,{floor:4,cleared:3,open:true,announced:true});passed.push('A real final-floor completion unlocks Zone 2; resources, idle assignment, armor and promotion are blocked before it');
+  const clear=await p.evaluate(()=>__tierTest.clearZone());assert.deepEqual(clear,{floor:6,cleared:5,open:true,announced:true});passed.push('A real final-floor completion unlocks Zone 2; resources, idle assignment, armor and promotion are blocked before it');
   const costs=await p.evaluate(()=>__tierTest.materials());assert.deepEqual(costs.map(c=>c.delta),[
    {ore:-2,coal:-1,steelBars:1},{ancientSalvage:-2,ancientFragments:2},{willowLogs:-1,cloth:-2,runicCloth:2},{steelBars:-1,willowLogs:-2,arrows:12},{runicCloth:-2,ancientFragments:-2,runes:10},{garnets:-1,cutGarnets:1}
   ]);assert.ok(costs.every(c=>c.made>0));passed.push('All six new refining recipes consume their exact cross-skill ingredients and produce real equipment materials / ammunition');

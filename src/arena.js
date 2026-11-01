@@ -38,8 +38,8 @@ function announce(msg,seconds=2){
 }
 
 function zoneEnemyHp(boss=false,bossIndex=0,variance=1){
-  const model=zoneBalance(),base=boss?[160,230,360][bossIndex]*(bossIndex===2?(zoneStage()===3?3.2:1.75):1):30+game.phase*4;
-  return base*Math.pow(1.14,zoneStage()-1)*model.hpScale*(boss?1:variance);
+  const model=zoneBalance(),base=boss?[160,230,360][bossIndex]*(bossIndex===2?(isZoneFinal()?3.2:1.75):1):30+game.phase*4;
+  return base*Math.pow(1.14,combatDepth()-zoneNumber()*3-1)*model.hpScale*(boss?1:variance);
 }
 
 function bonusPosition(){
@@ -91,7 +91,7 @@ function installArenaUI(){installZoneShopPin();
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('speedOptions').classList.contains('hidden')){e.preventDefault();e.stopImmediatePropagation();$('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');$('speedToggle').focus();}},true);
 }
 function resetRun(){
- game.healthDrops=[];
+ game.healthDrops=[];game.rareEliteSpawned=false;
  resetArenaTouch();
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
  normalizeZone();checkpointGroundXp();const p=game.player;

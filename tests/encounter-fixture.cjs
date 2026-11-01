@@ -1,7 +1,7 @@
 // This fixture is injected into browser responses only, never the shipped game.
 function encounterFixture(){
  function fresh(kind=0,stage=1){
-  closeDrawer();hideOverlay();data=defaults();data.floor=kind*3+stage;data.cleared=data.floor-1;
+  closeDrawer();hideOverlay();data=defaults();data.floor=floorAtZone(kind,sampleFloorStage(kind,stage));data.cleared=data.floor-1;
   data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=data.skillsNudgeSeen=true;data.zone2SkillsAnnounced=true;
   normalizeProgression();normalizeZone();resetRun();game.scene='combat';game.status='running';game.menuPaused=true;game.manualPaused=false;game.keys={};game.mouseMove.active=false;game.joystick.pointer=null;
   game.phase=1;game.phaseTarget=40;game.attackTimer=1e6;game.transition=0;game.devSpeed=game.skillSpeed=1;game.holdSkill=null;game.lastJobsAt=Date.now();game.activeClockMs=0;
@@ -24,7 +24,7 @@ function encounterFixture(){
    const before={hp:p.hp,enemy:e.hp,kills:game.runKills,points:masteryFor().points};
    tickBossSpecial(e,c.total-.05);const during={hp:p.hp,enemy:e.hp};tickBossSpecial(e,.06);
    const after={hp:p.hp,enemy:e.hp,stagger:e.stagger,kills:game.runKills,points:masteryFor().points,alive:game.enemies.includes(e),burn:e.burn||0};
-   resolveBossCast(e,c);return {before,during,after,repeated:e.hp,point:c.point};
+   resolveBossCast(e,c);return {before,during,after,repeated:e.hp,point:c.point,warning:c.total};
   },
   streams(type){
    const t=node(type),e=t.owner,p=game.player;e.hp=500;p.hp=500;p.x=500;p.y=500;
@@ -38,6 +38,11 @@ function encounterFixture(){
    const t=node(),p=game.player;intercept(t);p.hp=999;tickEncounterObjects(1);
    const capped=p.hp;const t2={...t};game.totems=[t2,{...t2}];p.hp=500;tickEncounterObjects(.5);
    const double=p.hp;game.totems=[{...t2}];p.hp=500;tickEncounterObjects(1);return {capped,double,single:p.hp};
+  },
+  proximity(kind=0){
+   const t=node('mend',kind),a=encounterFoot(t),b=encounterFoot(t.owner),dx=b.x-a.x,dy=b.y-a.y,distance=Math.hypot(dx,dy),p=game.player;
+   const at=factor=>{p.x=a.x-dy*factor;p.y=a.y+dx*factor-13;tickEncounterObjects(.01);return {linked:t.blocked,distance:Math.hypot(encounterFoot(p).x-a.x,encounterFoot(p).y-a.y)};};
+   return {casterDistance:distance,inside:at(.8),outside:at(1.05),near:at(.2)};
   },
   hitTotem(weapon){
    const t=node('fury'),e=t.owner,p=game.player;data.weaponType=weapon;data.arrows=data.runes=100;data.unlockedWeapons=Object.keys(WEAPON_TYPES);projectCombatStyle();
