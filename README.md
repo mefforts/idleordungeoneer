@@ -4,9 +4,9 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. Playing needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
-![Open gameplay](polish-combat.png)
+![Expanded zone scenery](preview-environments.png)
 
-[Zone Shop](polish-shop.png) · [Phone shop](polish-mobile-shop.png) · [Skills](polish-mobile-gather.png) · [Equipment](polish-equipment.png) · [Codex](polish-reading.png)
+[Floor progression](preview-floor-progression.png) · [Phone environment](preview-environments-mobile.png) · [Zone Shop](polish-shop.png) · [Phone shop](polish-mobile-shop.png) · [Skills](polish-mobile-gather.png) · [Equipment](polish-equipment.png) · [Codex](polish-reading.png)
 
 ## Persistent Zone training
 
@@ -50,6 +50,25 @@ Early shop ranks are affordable. High ranks cost sharply more seals and can exce
 References assume sustained single-target combat with modest shop ranks. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Later equipment progression remains reserved.
 
 Ordinary monsters drop **no gold**. Baseline clears pay **191 gold in Zone 1 / 293 in Zone 2**, mainly from guardians and floor caches, before elites and jewelry. Scavenging remains another gold source. Fractional rewards survive reload; existing balances and crafting costs are preserved.
+
+## Zone scenery and creatures
+
+The four authored Zones now have **27 visual assets each, up from 9**: **108 total**, including **72 new illustrations**. Gear, loot, combat values and encounters retain their previous definitions.
+
+| Per Zone | Before | Now |
+| --- | ---: | ---: |
+| Scenery objects | 4 | 12 |
+| Regular creature appearances | 1 | 6 |
+| Guardian appearances | 3 | 3 |
+| Ground textures | 1 | 3 |
+| Ground-detail patches | 0 | 3 |
+| Total | 9 | 27 |
+
+Each floor changes the terrain, scenery mix and regular-creature mix gradually. Overgrowth moves from woodland to rooted ruins and the Elder Grove; Embervault from ash to the foundry and molten heart; the Crypt from graves to vaults and the Sovereign’s sanctum; the Rift from fractured approaches to starlit ruins and the Unmade threshold. Ground litter groups around larger landmarks, and starting areas retain open walking space. Later Zones that repeat a biome receive their own seeded layout.
+
+New creatures scuttle, sway, hop, prowl or hover, with reduced-motion support. Their appearance does not change wave health, speed, rewards or boss mechanics. Scenery uses foot-level collision and fades when it would hide the player or nearby enemies. Ground details stay beneath characters and telegraphs. Zone Codex pages list the floors and creatures.
+
+[Compare all twelve floor scenes](preview-floor-progression.png). Source sheets, sprite-isolation metrics and the asset catalog are in `assets/environments/`. `npm run art:environments` exports transparent WebP cutouts and terrain textures into `src/environment-art.js`; `npm run review:environments` captures the actual game renderer. Runtime placement, floor palettes and creature animation are in `src/environments.js`.
 
 ## Minimal runestone interface
 
@@ -127,6 +146,6 @@ npm run review:ui
 
 Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. The original engine and compiled standalone output are in `index.html`.
 
-Twelve browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 108 distinct painted collection icons. Full combat simulations verify the first four Zones and later pacing. Static encounters, biome and jewelry definitions remain guarded by a manifest.
+Thirteen browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 108 distinct painted collection icons. Full combat simulations verify the first four Zones and later pacing. Static encounters, biome and jewelry definitions remain guarded by a manifest.
 
 Generated icon sheets, calibrated regions and alignment metrics live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without altering source art; `npm run art:icons` exports embedded WebP badges. `scripts/export-equipment.py` packs rig textures using Pillow, NumPy and SciPy. Use `CHROMIUM_PATH` for a custom browser. Local test output stays in ignored `test-results/`.

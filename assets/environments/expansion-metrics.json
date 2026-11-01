@@ -1,0 +1,794 @@
+{
+  "overgrowth-twisted-oak": {
+    "source": [
+      13,
+      16,
+      354,
+      349
+    ],
+    "width": 353,
+    "height": 345,
+    "bytes": 69272
+  },
+  "overgrowth-hollow-stump": {
+    "source": [
+      343,
+      39,
+      628,
+      345
+    ],
+    "width": 297,
+    "height": 318,
+    "bytes": 45190
+  },
+  "overgrowth-fallen-log": {
+    "source": [
+      631,
+      110,
+      981,
+      340
+    ],
+    "width": 362,
+    "height": 242,
+    "bytes": 48262
+  },
+  "overgrowth-rooted-menhir": {
+    "source": [
+      996,
+      9,
+      1243,
+      374
+    ],
+    "width": 259,
+    "height": 377,
+    "bytes": 44610
+  },
+  "overgrowth-ferns": {
+    "source": [
+      14,
+      368,
+      333,
+      651
+    ],
+    "width": 331,
+    "height": 295,
+    "bytes": 57724
+  },
+  "overgrowth-mushrooms": {
+    "source": [
+      343,
+      401,
+      626,
+      632
+    ],
+    "width": 295,
+    "height": 243,
+    "bytes": 38736
+  },
+  "overgrowth-root-tangle": {
+    "source": [
+      629,
+      356,
+      952,
+      653
+    ],
+    "width": 335,
+    "height": 309,
+    "bytes": 62056
+  },
+  "overgrowth-moss-plinth": {
+    "source": [
+      953,
+      432,
+      1246,
+      647
+    ],
+    "width": 305,
+    "height": 227,
+    "bytes": 35638
+  },
+  "overgrowth-moss-beetle": {
+    "source": [
+      20,
+      715,
+      334,
+      952
+    ],
+    "width": 326,
+    "height": 249,
+    "bytes": 34972
+  },
+  "overgrowth-sapling": {
+    "source": [
+      366,
+      649,
+      593,
+      951
+    ],
+    "width": 239,
+    "height": 314,
+    "bytes": 40626
+  },
+  "overgrowth-capling": {
+    "source": [
+      644,
+      717,
+      878,
+      946
+    ],
+    "width": 246,
+    "height": 241,
+    "bytes": 25658
+  },
+  "overgrowth-bramble-hound": {
+    "source": [
+      932,
+      713,
+      1236,
+      961
+    ],
+    "width": 316,
+    "height": 260,
+    "bytes": 41848
+  },
+  "overgrowth-root-crawler": {
+    "source": [
+      23,
+      982,
+      312,
+      1224
+    ],
+    "width": 301,
+    "height": 254,
+    "bytes": 37802
+  },
+  "overgrowth-root-carpet": {
+    "source": [
+      312,
+      993,
+      632,
+      1218
+    ],
+    "width": 332,
+    "height": 237,
+    "bytes": 44992
+  },
+  "overgrowth-fallen-leaves": {
+    "source": [
+      634,
+      1015,
+      956,
+      1222
+    ],
+    "width": 334,
+    "height": 219,
+    "bytes": 45186
+  },
+  "overgrowth-moss-mosaic": {
+    "source": [
+      952,
+      996,
+      1245,
+      1218
+    ],
+    "width": 305,
+    "height": 234,
+    "bytes": 38280
+  },
+  "embervault-furnace": {
+    "source": [
+      26,
+      35,
+      344,
+      322
+    ],
+    "width": 330,
+    "height": 299,
+    "bytes": 43012
+  },
+  "embervault-coal-cart": {
+    "source": [
+      351,
+      81,
+      622,
+      321
+    ],
+    "width": 283,
+    "height": 252,
+    "bytes": 34624
+  },
+  "embervault-iron-pipes": {
+    "source": [
+      661,
+      33,
+      928,
+      334
+    ],
+    "width": 279,
+    "height": 313,
+    "bytes": 32834
+  },
+  "embervault-basalt-columns": {
+    "source": [
+      973,
+      34,
+      1231,
+      328
+    ],
+    "width": 270,
+    "height": 306,
+    "bytes": 31838
+  },
+  "embervault-slag-heap": {
+    "source": [
+      19,
+      435,
+      341,
+      643
+    ],
+    "width": 334,
+    "height": 220,
+    "bytes": 33248
+  },
+  "embervault-chimney": {
+    "source": [
+      351,
+      349,
+      620,
+      659
+    ],
+    "width": 281,
+    "height": 322,
+    "bytes": 34156
+  },
+  "embervault-foundry-wall": {
+    "source": [
+      642,
+      429,
+      959,
+      637
+    ],
+    "width": 329,
+    "height": 220,
+    "bytes": 30892
+  },
+  "embervault-ember-monolith": {
+    "source": [
+      992,
+      349,
+      1236,
+      654
+    ],
+    "width": 256,
+    "height": 317,
+    "bytes": 33744
+  },
+  "embervault-ash-imp": {
+    "source": [
+      50,
+      676,
+      278,
+      944
+    ],
+    "width": 240,
+    "height": 280,
+    "bytes": 27478
+  },
+  "embervault-slag-beetle": {
+    "source": [
+      347,
+      740,
+      623,
+      945
+    ],
+    "width": 288,
+    "height": 217,
+    "bytes": 28194
+  },
+  "embervault-soot-wisp": {
+    "source": [
+      678,
+      669,
+      900,
+      961
+    ],
+    "width": 234,
+    "height": 304,
+    "bytes": 28214
+  },
+  "embervault-furnace-hound": {
+    "source": [
+      945,
+      704,
+      1224,
+      935
+    ],
+    "width": 291,
+    "height": 243,
+    "bytes": 30072
+  },
+  "embervault-obsidian-crawler": {
+    "source": [
+      48,
+      1016,
+      302,
+      1208
+    ],
+    "width": 266,
+    "height": 204,
+    "bytes": 22736
+  },
+  "embervault-ash-patch": {
+    "source": [
+      348,
+      1035,
+      611,
+      1205
+    ],
+    "width": 275,
+    "height": 182,
+    "bytes": 31490
+  },
+  "embervault-cooled-slag": {
+    "source": [
+      642,
+      1037,
+      914,
+      1205
+    ],
+    "width": 284,
+    "height": 180,
+    "bytes": 27078
+  },
+  "embervault-foundry-paving": {
+    "source": [
+      939,
+      1031,
+      1221,
+      1207
+    ],
+    "width": 294,
+    "height": 188,
+    "bytes": 29920
+  },
+  "crypt-sarcophagus": {
+    "source": [
+      16,
+      90,
+      302,
+      312
+    ],
+    "width": 298,
+    "height": 234,
+    "bytes": 33566
+  },
+  "crypt-mausoleum": {
+    "source": [
+      329,
+      9,
+      618,
+      314
+    ],
+    "width": 301,
+    "height": 317,
+    "bytes": 40322
+  },
+  "crypt-dead-tree": {
+    "source": [
+      642,
+      12,
+      932,
+      326
+    ],
+    "width": 302,
+    "height": 326,
+    "bytes": 43670
+  },
+  "crypt-grave-cluster": {
+    "source": [
+      971,
+      109,
+      1239,
+      338
+    ],
+    "width": 280,
+    "height": 241,
+    "bytes": 30360
+  },
+  "crypt-bone-heap": {
+    "source": [
+      13,
+      466,
+      308,
+      629
+    ],
+    "width": 307,
+    "height": 175,
+    "bytes": 26694
+  },
+  "crypt-candles": {
+    "source": [
+      356,
+      342,
+      603,
+      634
+    ],
+    "width": 259,
+    "height": 304,
+    "bytes": 32050
+  },
+  "crypt-fallen-effigy": {
+    "source": [
+      632,
+      460,
+      961,
+      633
+    ],
+    "width": 341,
+    "height": 185,
+    "bytes": 31816
+  },
+  "crypt-soul-urn": {
+    "source": [
+      996,
+      338,
+      1226,
+      632
+    ],
+    "width": 242,
+    "height": 306,
+    "bytes": 29534
+  },
+  "crypt-bone-thrall": {
+    "source": [
+      48,
+      658,
+      286,
+      937
+    ],
+    "width": 250,
+    "height": 291,
+    "bytes": 29668
+  },
+  "crypt-grave-moth": {
+    "source": [
+      353,
+      660,
+      593,
+      920
+    ],
+    "width": 252,
+    "height": 272,
+    "bytes": 37070
+  },
+  "crypt-bone-scarab": {
+    "source": [
+      643,
+      754,
+      929,
+      938
+    ],
+    "width": 298,
+    "height": 196,
+    "bytes": 27228
+  },
+  "crypt-shroudling": {
+    "source": [
+      976,
+      678,
+      1238,
+      932
+    ],
+    "width": 274,
+    "height": 266,
+    "bytes": 30264
+  },
+  "crypt-grave-crawler": {
+    "source": [
+      33,
+      973,
+      288,
+      1220
+    ],
+    "width": 267,
+    "height": 259,
+    "bytes": 30310
+  },
+  "crypt-bone-scatter": {
+    "source": [
+      335,
+      1076,
+      608,
+      1228
+    ],
+    "width": 285,
+    "height": 164,
+    "bytes": 26670
+  },
+  "crypt-funerary-mosaic": {
+    "source": [
+      633,
+      1036,
+      935,
+      1232
+    ],
+    "width": 314,
+    "height": 208,
+    "bytes": 35342
+  },
+  "crypt-grave-mist": {
+    "source": [
+      970,
+      1028,
+      1235,
+      1223
+    ],
+    "width": 277,
+    "height": 207,
+    "bytes": 27616
+  },
+  "rift-crystal-arch": {
+    "source": [
+      16,
+      29,
+      324,
+      322
+    ],
+    "width": 320,
+    "height": 305,
+    "bytes": 44666
+  },
+  "rift-armillary": {
+    "source": [
+      370,
+      37,
+      610,
+      317
+    ],
+    "width": 252,
+    "height": 292,
+    "bytes": 33194
+  },
+  "rift-astral-obelisk": {
+    "source": [
+      699,
+      21,
+      881,
+      327
+    ],
+    "width": 194,
+    "height": 318,
+    "bytes": 21566
+  },
+  "rift-shard-cluster": {
+    "source": [
+      977,
+      95,
+      1234,
+      316
+    ],
+    "width": 269,
+    "height": 233,
+    "bytes": 27170
+  },
+  "rift-star-dais": {
+    "source": [
+      12,
+      405,
+      319,
+      627
+    ],
+    "width": 319,
+    "height": 234,
+    "bytes": 38216
+  },
+  "rift-broken-bridge": {
+    "source": [
+      340,
+      383,
+      649,
+      597
+    ],
+    "width": 321,
+    "height": 226,
+    "bytes": 33452
+  },
+  "rift-split-column": {
+    "source": [
+      688,
+      339,
+      915,
+      629
+    ],
+    "width": 239,
+    "height": 302,
+    "bytes": 27114
+  },
+  "rift-moon-marker": {
+    "source": [
+      971,
+      345,
+      1226,
+      623
+    ],
+    "width": 267,
+    "height": 290,
+    "bytes": 28846
+  },
+  "rift-shard-crawler": {
+    "source": [
+      34,
+      669,
+      302,
+      966
+    ],
+    "width": 280,
+    "height": 309,
+    "bytes": 27734
+  },
+  "rift-astral-jelly": {
+    "source": [
+      364,
+      653,
+      579,
+      918
+    ],
+    "width": 227,
+    "height": 277,
+    "bytes": 30266
+  },
+  "rift-star-moth": {
+    "source": [
+      670,
+      667,
+      907,
+      906
+    ],
+    "width": 249,
+    "height": 251,
+    "bytes": 26612
+  },
+  "rift-void-hound": {
+    "source": [
+      963,
+      691,
+      1231,
+      918
+    ],
+    "width": 280,
+    "height": 239,
+    "bytes": 28480
+  },
+  "rift-rift-wisp": {
+    "source": [
+      42,
+      963,
+      285,
+      1208
+    ],
+    "width": 255,
+    "height": 257,
+    "bytes": 32476
+  },
+  "rift-crystal-scatter": {
+    "source": [
+      357,
+      1015,
+      600,
+      1176
+    ],
+    "width": 255,
+    "height": 173,
+    "bytes": 18850
+  },
+  "rift-star-mosaic": {
+    "source": [
+      638,
+      1009,
+      978,
+      1205
+    ],
+    "width": 352,
+    "height": 208,
+    "bytes": 35526
+  },
+  "rift-astral-dust": {
+    "source": [
+      976,
+      1021,
+      1222,
+      1187
+    ],
+    "width": 258,
+    "height": 178,
+    "bytes": 22352
+  },
+  "overgrowth-floor-2": {
+    "source": [
+      5,
+      5,
+      439,
+      439
+    ],
+    "width": 434,
+    "height": 434,
+    "bytes": 103870
+  },
+  "overgrowth-floor-3": {
+    "source": [
+      5,
+      449,
+      439,
+      882
+    ],
+    "width": 434,
+    "height": 433,
+    "bytes": 108912
+  },
+  "embervault-floor-2": {
+    "source": [
+      449,
+      5,
+      882,
+      439
+    ],
+    "width": 433,
+    "height": 434,
+    "bytes": 93020
+  },
+  "embervault-floor-3": {
+    "source": [
+      449,
+      449,
+      882,
+      882
+    ],
+    "width": 433,
+    "height": 433,
+    "bytes": 96208
+  },
+  "crypt-floor-2": {
+    "source": [
+      892,
+      5,
+      1325,
+      439
+    ],
+    "width": 433,
+    "height": 434,
+    "bytes": 100300
+  },
+  "crypt-floor-3": {
+    "source": [
+      892,
+      449,
+      1325,
+      882
+    ],
+    "width": 433,
+    "height": 433,
+    "bytes": 99424
+  },
+  "rift-floor-2": {
+    "source": [
+      1335,
+      5,
+      1769,
+      439
+    ],
+    "width": 434,
+    "height": 434,
+    "bytes": 101820
+  },
+  "rift-floor-3": {
+    "source": [
+      1335,
+      449,
+      1769,
+      882
+    ],
+    "width": 434,
+    "height": 433,
+    "bytes": 102030
+  }
+}

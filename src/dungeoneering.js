@@ -135,12 +135,12 @@ function spawnEnemy(boss=false,bossIndex=0){
     const known=(data.seenElites[biomeIndex()]||[]).map((seen,i)=>seen?i:-1).filter(i=>i>=0);
     if(known.length){e.elite=true;e.bossIndex=known[Math.floor(Math.random()*known.length)];e.name=biome().boss[e.bossIndex]+' Echo';e.rad=23;e.hp=e.maxHp=zoneEnemyHp(false,0)*2.8;e.speed*=.82;e.castCooldown=.7;game.waveEliteSpawned=true;}
   }
-  return e;
+  assignEnemyAppearance(e);return e;
 }
 function drawMob(e,b){
   if(e.elite){drawBoss(e,b);return;}
-  if(!paintCreature(e,0,Math.max(46,e.rad*3.8))){drawFallbackMob(e,b);return;}
-  if(e.hp<e.maxHp){const y=e.y-e.rad*3;quad(e.x-15,y,30,4,'#102934');quad(e.x-15,y,30*clamp(e.hp/e.maxHp,0,1),4,'#d8c594');}
+  if(!paintEnvironmentMob(e)){drawFallbackMob(e,b);return;}
+  if(e.hp<e.maxHp){const y=e.y+e.rad*.85-environmentMobSize(e).height-8;quad(e.x-15,y,30,4,'#102934');quad(e.x-15,y,30*clamp(e.hp/e.maxHp,0,1),4,'#d8c594');}
 }
 function tickCombat(dt){const p=game.player;game.frame+=dt;game.phaseTime+=dt;game.runSeconds+=dt;p.invuln=Math.max(0,p.invuln-dt);p.dashCooldown=Math.max(0,p.dashCooldown-dt);
  p.attackPose=Math.max(0,p.attackPose-dt);p.hitPose=Math.max(0,p.hitPose-dt);let dx=(game.keys.KeyD||game.keys.ArrowRight?1:0)-(game.keys.KeyA||game.keys.ArrowLeft?1:0),dy=(game.keys.KeyS||game.keys.ArrowDown?1:0)-(game.keys.KeyW||game.keys.ArrowUp?1:0);
@@ -193,10 +193,10 @@ function tickCombat(dt){const p=game.player;game.frame+=dt;game.phaseTime+=dt;ga
 
 function drawCombat(w,h){const b=biome();drawTiles(b,w,h);ctx.save();const jitter=game.shake>0&&!reducedMotion()?rand(-game.shake,game.shake):0;ctx.translate(w/2-game.camX+jitter,h/2-game.camY+jitter);
  const kind=Math.floor((data.floor-1)/3)%4;
- const worldObjects=worldScenery(kind,game.camX,game.camY,w,h);
+ const worldObjects=worldScenery(kind,game.camX,game.camY,w,h);drawEnvironmentDecals(worldObjects);
  const entries=game.enemies.map(e=>({y:e.y+e.rad*.65,enemy:e}));
  entries.push({y:game.player.y+15,player:true});
- for(const o of worldObjects)entries.push({y:o.y,scenery:o});
+ for(const o of worldObjects)if(!o.decal)entries.push({y:o.y,scenery:o});
  entries.sort((a,b)=>a.y-b.y);
  for(const item of entries){if(item.player)drawPlayer(game.player);else if(item.scenery)scenerySprite(item.scenery,kind);else if(item.enemy.boss||item.enemy.elite)drawBoss(item.enemy,b);else drawMob(item.enemy,b)}
  paintThreatTelegraphs();for(const enemy of game.enemies)paintBurningEnemy(enemy);
