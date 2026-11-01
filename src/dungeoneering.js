@@ -87,7 +87,7 @@ function drawBoss(e,b){
 function flushBurnDamage(e){
   if((e.burnVisualDamage||0)<=0)return;
   const amount=e.burnVisualDamage;e.burnVisualDamage=0;e.burnVisualTimer=0;
-  if(game.floaters.length<110)floater(e.x,e.y-29,Number(amount.toFixed(1))+' Burn','#ffc273');
+  if(game.floaters.length<110)floater(e.x,e.y-29,Number(amount.toFixed(1))+((e.biome??biomeIndex())===0?' Venom':' Burn'),(e.biome??biomeIndex())===0?'#b7ed8b':'#ffc273');
 }
 function tickBurn(e,dt){
   if(!(e.burn>0))return false;
@@ -98,6 +98,7 @@ function tickBurn(e,dt){
 }
 function paintBurningEnemy(e){
   if(!(e.burn>0))return;
+  if((e.biome??biomeIndex())===0){glow(e.x,e.y,Math.max(20,e.rad*1.5),'#87c95a35');for(let i=0;i<3;i++){const offset=reducedMotion()?0:(game.frame*.8+i*.34)%1;disc(e.x+Math.sin(i*2.4)*e.rad*.65,e.y-8-offset*20,2.5,'#a4dc738f');}return;}
   glow(e.x,e.y,Math.max(20,e.rad*1.5),'#e3973e35');
   for(let i=0;i<3;i++){const a=i*2.1,offset=reducedMotion()?0:Math.sin(game.frame*8+i)*3,x=e.x+Math.cos(a)*e.rad*.7,y=e.y-8+offset;poly([x-4,y+6,x-5,y-2,x,y-14,x+2,y-5,x+5,y-9,x+4,y+6],'#e98b46aa');line(x,y+3,x,y-5,1.6,'#ffe0a4');}
 }
@@ -188,8 +189,8 @@ function drawCombat(w,h){const b=biome();drawTiles(b,w,h);ctx.save();const jitte
   ctx.restore();
  }
  for(const arc of game.arcs){
- const x0=arc.x,y0=arc.y,x1=arc.tx,y1=arc.ty,n=7;ctx.save();ctx.shadowColor='#8dceff';ctx.shadowBlur=18;
- for(let layer=0;layer<2;layer++){ctx.beginPath();ctx.moveTo(x0,y0);for(let j=1;j<n;j++){const u=j/n;const nx=x0+(x1-x0)*u+Math.sin(j*13+game.frame*53)*8,ny=y0+(y1-y0)*u+Math.cos(j*19+game.frame*42)*8;ctx.lineTo(nx,ny)}ctx.lineTo(x1,y1);ctx.strokeStyle=layer?'#f0ffff':'#64b5f2';ctx.lineWidth=layer?1.7:6;ctx.stroke()}ctx.restore();
+ const x0=arc.x,y0=arc.y,x1=arc.tx,y1=arc.ty,n=7;ctx.save();ctx.shadowColor=arc.color||'#8dceff';ctx.shadowBlur=18;
+ for(let layer=0;layer<2;layer++){ctx.beginPath();ctx.moveTo(x0,y0);for(let j=1;j<n;j++){const u=j/n;const nx=x0+(x1-x0)*u+Math.sin(j*13+game.frame*53)*8,ny=y0+(y1-y0)*u+Math.cos(j*19+game.frame*42)*8;ctx.lineTo(nx,ny)}ctx.lineTo(x1,y1);ctx.strokeStyle=layer?'#f0ffff':arc.color||'#64b5f2';ctx.lineWidth=layer?1.7:6;ctx.stroke()}ctx.restore();
  }
  for(const shot of game.hostileShots)paintDungeonProjectile(shot);
  for(const o of game.particles){ctx.globalAlpha=clamp(o.life/o.max,0,1);disc(o.x,o.y,o.rad,o.color)}ctx.globalAlpha=1;
@@ -211,11 +212,11 @@ function dealDamage(enemy,base,fromX,fromY,sourceStyle=combatStyle()){
   if(waveRank('frost')){enemy.frozen=Math.max(enemy.frozen||0,1+waveRank('frost')*.1);enemy.frostRank=waveRank('frost');}
   if(waveRank('storm')&&Math.random()<waveRank('storm')*.04){
    const t=game.enemies.find(o=>o!==enemy&&Math.hypot(o.x-enemy.x,o.y-enemy.y)<145);
-   if(t){game.arcs.push({x:enemy.x,y:enemy.y,tx:t.x,ty:t.y,life:.23});t.lastDamageStyle=sourceStyle;t.hp-=damage*(.20+.03*waveRank('storm'));if(t.hp<=0)onKill(t)}
+   if(t){game.arcs.push({x:enemy.x,y:enemy.y,tx:t.x,ty:t.y,life:.23,color:DUNGEON_THEMES[biomeIndex()].color});t.lastDamageStyle=sourceStyle;t.hp-=damage*(.20+.03*waveRank('storm'));if(t.hp<=0)onKill(t)}
   }
   if(waveRank('nova')&&damage>attackDamage()*1.8){
    for(const t of game.enemies.filter(o=>o!==enemy&&Math.hypot(o.x-enemy.x,o.y-enemy.y)<65).slice(0,Math.min(5,1+Math.floor(waveRank('nova')/3)))){t.hp-=damage*(.06+.02*waveRank('nova'));if(t.hp<=0)onKill(t)}
-   burst(enemy.x,enemy.y,11,'#ffbd69');
+   burst(enemy.x,enemy.y,11,DUNGEON_THEMES[biomeIndex()].color);
   }
  }
  if(enemy.hp<=0&&game.enemies.includes(enemy))onKill(enemy);

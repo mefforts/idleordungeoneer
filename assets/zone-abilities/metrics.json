@@ -1,0 +1,162 @@
+{
+  "zone-ability-0-fire": {
+    "source": [
+      206,
+      0,
+      455,
+      245
+    ],
+    "bytes": 28520,
+    "size": 256
+  },
+  "zone-ability-0-frost": {
+    "source": [
+      484,
+      0,
+      734,
+      244
+    ],
+    "bytes": 30366,
+    "size": 256
+  },
+  "zone-ability-0-cleave": {
+    "source": [
+      801,
+      0,
+      1052,
+      245
+    ],
+    "bytes": 29340,
+    "size": 256
+  },
+  "zone-ability-0-ward": {
+    "source": [
+      1080,
+      0,
+      1330,
+      244
+    ],
+    "bytes": 31188,
+    "size": 256
+  },
+  "zone-ability-1-fire": {
+    "source": [
+      206,
+      246,
+      455,
+      494
+    ],
+    "bytes": 31150,
+    "size": 256
+  },
+  "zone-ability-1-nova": {
+    "source": [
+      484,
+      247,
+      735,
+      494
+    ],
+    "bytes": 32072,
+    "size": 256
+  },
+  "zone-ability-1-pierce": {
+    "source": [
+      800,
+      246,
+      1052,
+      494
+    ],
+    "bytes": 31494,
+    "size": 256
+  },
+  "zone-ability-1-ward": {
+    "source": [
+      1080,
+      246,
+      1330,
+      494
+    ],
+    "bytes": 31032,
+    "size": 256
+  },
+  "zone-ability-2-storm": {
+    "source": [
+      206,
+      496,
+      456,
+      743
+    ],
+    "bytes": 27950,
+    "size": 256
+  },
+  "zone-ability-2-frost": {
+    "source": [
+      483,
+      496,
+      735,
+      744
+    ],
+    "bytes": 31668,
+    "size": 256
+  },
+  "zone-ability-2-nova": {
+    "source": [
+      800,
+      495,
+      1052,
+      743
+    ],
+    "bytes": 31928,
+    "size": 256
+  },
+  "zone-ability-2-ward": {
+    "source": [
+      1080,
+      495,
+      1331,
+      744
+    ],
+    "bytes": 30456,
+    "size": 256
+  },
+  "zone-ability-3-storm": {
+    "source": [
+      206,
+      745,
+      456,
+      995
+    ],
+    "bytes": 27844,
+    "size": 256
+  },
+  "zone-ability-3-multishot": {
+    "source": [
+      481,
+      745,
+      736,
+      997
+    ],
+    "bytes": 27508,
+    "size": 256
+  },
+  "zone-ability-3-cleave": {
+    "source": [
+      798,
+      745,
+      1053,
+      996
+    ],
+    "bytes": 29488,
+    "size": 256
+  },
+  "zone-ability-3-ward": {
+    "source": [
+      1080,
+      745,
+      1331,
+      994
+    ],
+    "bytes": 30138,
+    "size": 256
+  }
+}

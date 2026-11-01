@@ -7,11 +7,11 @@ let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)],main=scripts.at(-1);
 let source=main[1].replace(/\/\* BEGIN LIVING SKILLS \*\/[\s\S]*?\/\* END LIVING SKILLS \*\/\n?/,'');
 const ast=parse(source,{ecmaVersion:'latest'}),functions=new Map();walk(ast,n=>{if(n.type==='FunctionDeclaration')functions.set(n.id.name,n)});
-const incoming=['systems','arena','equipment-regions','equipment','economy','dungeoneering','zone-progression','testing','presentation','codex','zone-shop','zone-shop-ui','environment-art','environments','encounter-art','encounters'].map(name=>fs.readFileSync(path.join(root,'src/'+name+'.js'),'utf8')).join('\n'),incomingAst=parse(incoming,{ecmaVersion:'latest'}),patches=[],helpers=[],overrides=new Map();
+const incoming=['systems','arena','equipment-regions','equipment','economy','dungeoneering','zone-progression','testing','presentation','codex','zone-shop','zone-shop-ui','environment-art','environments','encounter-art','encounters','mobile','zone-abilities'].map(name=>fs.readFileSync(path.join(root,'src/'+name+'.js'),'utf8')).join('\n'),incomingAst=parse(incoming,{ecmaVersion:'latest'}),patches=[],helpers=[],overrides=new Map();
 for(const n of incomingAst.body){const code=incoming.slice(n.start,n.end);if(n.type==='FunctionDeclaration')overrides.set(n.id.name,{node:n,code});else helpers.push(code)}
 for(const [name,{code}] of overrides){if(functions.has(name)){const old=functions.get(name);patches.push({start:old.start,end:old.end,code});}else helpers.push(code)}
 const artFile=path.join(root,'src/equipment-art.json');
-const icons={...JSON.parse(fs.readFileSync(path.join(root,'src/systems-icons.json'),'utf8')),...(fs.existsSync(artFile)?JSON.parse(fs.readFileSync(artFile,'utf8')):{}),...JSON.parse(fs.readFileSync(path.join(root,'src/zone2-art.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/painted-icons.json'),'utf8'))};
+const icons={...JSON.parse(fs.readFileSync(path.join(root,'src/systems-icons.json'),'utf8')),...(fs.existsSync(artFile)?JSON.parse(fs.readFileSync(artFile,'utf8')):{}),...JSON.parse(fs.readFileSync(path.join(root,'src/zone2-art.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/painted-icons.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/navigation-icons.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/zone-ability-icons.json'),'utf8'))};
 let originalIcons={};walk(ast,n=>{if(n.type==='VariableDeclarator'&&n.id.name==='SVG_FILES')originalIcons=JSON.parse(source.slice(n.init.start,n.init.end));});
 const gameData=JSON.parse(fs.readFileSync(path.join(root,'src/game-data.json'),'utf8'));
 const progressionInitializers={attackDamage:'()=>zoneCombatProfile(data.weaponType).damage',emptyZone:'()=>zoneSnapshot()'};
@@ -34,7 +34,7 @@ for(const [key,uri]of Object.entries(icons))if(originalIcons[key]&&uri!==origina
 html=markup+html.slice(firstScript);
 html=html.replace(/\/\* BEGIN LIVING SKILLS CSS \*\/[\s\S]*?\/\* END LIVING SKILLS CSS \*\/\n?/,'');
 html=html.replace(/\n+<\/style><\/head>/,'\n</style></head>');
-const styles=['systems','arena','equipment','runestones','zone-progression','presentation','zone-shop'].map(name=>{
+const styles=['systems','arena','equipment','runestones','zone-progression','presentation','zone-shop','mobile'].map(name=>{
   const filename=path.join(root,'src/'+name+'.css');
   return fs.readFileSync(filename,'utf8').replace(/url\((["']?)(\.\.\/assets\/[^)"']+)\1\)/g,(_,quote,asset)=>{
     const assetPath=path.resolve(path.dirname(filename),asset),mime=path.extname(assetPath)==='.svg'?'image/svg+xml':'image/webp';

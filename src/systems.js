@@ -40,7 +40,7 @@ function normalizeProgression(){
   data.skillsNudgeSeen=!!data.skillsNudgeSeen||data.unlockedWeapons?.length>1;
   data.idleNoticeSlots=Math.min(2,finiteRank(data.idleNoticeSlots));data.idleFirstAssigned=!!data.idleFirstAssigned||data.idleJobs?.some(Boolean)||false;
   if(data.idleJobs?.filter(Boolean).length>=idleSlotsUnlocked()&&idleSlotsUnlocked()>0)data.idleNoticeSlots=idleSlotsUnlocked();
-  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();normalizeZoneShopProgression();projectCombatStyle();
+  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();projectCombatStyle();
 }
 
 function stationRank(group){return data.stationLevels?.[group]||0;}

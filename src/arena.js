@@ -1,7 +1,7 @@
 /* Open Arena: unobtrusive HUD, persistent experience and measured zone pacing. */
 const ARENA_PINS = [
   {id:'delve',element:'delveNav',name:'Delve'},
-  {id:'gear',element:'quickGear',name:'Equipment'},
+  {id:'gear',element:'quickGear',name:'Inventory'},
   {id:'skills',element:'quickSkills',name:'Skills'},
   {id:'shop',element:'quickShop',name:'Zone Shop'},
   {id:'codex',element:'quickCodex',name:'Codex'},
@@ -91,6 +91,7 @@ function installArenaUI(){installZoneShopPin();
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('speedOptions').classList.contains('hidden')){e.preventDefault();e.stopImmediatePropagation();$('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');$('speedToggle').focus();}},true);
 }
 function resetRun(){
+ resetArenaTouch();
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
  normalizeZone();checkpointGroundXp();const p=game.player;
  p.x=p.y=0;p.hp=maxHp()+waveVitality();p.maxHp=p.hp;

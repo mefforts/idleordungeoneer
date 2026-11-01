@@ -1,27 +1,29 @@
 # Idle or Dungeoneer
 
-**[Download the latest game (ZIP)](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)** — extract it and open `index.html` in a modern browser.
+**[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest game (ZIP)](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)** — extract it and open `index.html` in a modern browser.
 
-The game, environments, creatures, equipment and icons are embedded in one HTML file. Playing needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
+The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
 For iPhone and iPad, enable **Settings → Pages → Deploy from a branch → main → /(root)**, then open **https://mefforts.github.io/idleordungeoneer/** in Safari. Use **Share → Add to Home Screen** for a game icon. The root `.nojekyll` marker serves the standalone game without Jekyll processing. The first Pages deployment must finish before the URL works; its result appears under **Actions → pages build and deployment**. Use the in-game save backup/restore when moving between downloaded files and the website.
 
-![Guardian counterplay](preview-counterplay.png)
+![Mobile touch movement and full-size navigation](preview-mobile-controls.png)
 
-[Counterplay themes](preview-encounter-themes.png) · [Healing stream](preview-totems.png) · [Phone elite group](preview-encounters-mobile.png) · [Floor progression](preview-floor-progression.png) · [Phone environment](preview-environments-mobile.png) · [Zone Shop](polish-shop.png) · [Phone shop](polish-mobile-shop.png) · [Skills](polish-mobile-gather.png) · [Equipment](polish-equipment.png) · [Codex](polish-reading.png)
+[Inventory](preview-inventory-mobile.png) · [Materials](preview-inventory-materials.png) · [Zone abilities](preview-zone-abilities-mobile.png) · [Intro](preview-intro-mobile.png) · [Counterplay themes](preview-encounter-themes.png) · [Healing stream](preview-totems.png) · [Phone elite group](preview-encounters-mobile.png) · [Floor progression](preview-floor-progression.png) · [Phone environment](preview-environments-mobile.png) · [Desktop Zone Shop](preview-zone-abilities.png) · [Skills](polish-mobile-gather.png) · [Codex](polish-reading.png)
 
-## Persistent Zone training
+## Zone abilities
 
-Combat no longer offers temporary power cards. Ordinary monsters have a **40% chance to drop one Zone seal**; elites guarantee **3**, and guardians **8 / 12 / 20**. Open the **Zone Shop** using its rail pin, your seal counter or **B**. Each Zone has a separate wallet and section, with illustrated currency, upgrade ranks, current/next effects, prices and actual DPS previews.
+Each Zone Shop offers **four themed abilities**, with sixteen distinct illustrations and Codex entries across the four environments. Open the **wisp pin**, your seal counter or **B**. Each exact Zone keeps its own wallet and purchased ranks, even when later Zones repeat an environment.
 
-| Zone | Currency |
+| Zone | Abilities |
 | --- | --- |
-| The Overgrowth | Verdant Seals |
-| Embervault | Ember Seals |
-| Hollow Crypt | Soul Seals |
-| Astral Rift | Rift Seals |
+| The Overgrowth | Briar Venom · Grasping Roots · Bramble Sweep · Barkskin |
+| Embervault | Cinderbrand · Slagburst · Searing Shot · Basalt Guard |
+| Hollow Crypt | Soul Chain · Grave Chill · Soulburst · Bone Ward |
+| Astral Rift | Arc Rift · Mirrorcast · Phase Sweep · Astral Ward |
 
-Purchased ranks persist through defeat, travel, replay and reload. They apply only in their exact Zone; even later Zones that repeat an environment have separate wallets and ranks. Future shops can be previewed before unlocking them. Books open detailed upgrade rules without making a purchase.
+Ordinary monsters rarely drop seals: **4% chance of one**. Elites guarantee **6**, and guardians **12 / 20 / 35**. Most seals come from these larger fights. Fortune Mastery raises the regular drop chance to **5.6%** at rank four.
+
+The shop focuses on elemental effects, additional targets/projectiles and themed protection. Ordinary damage, speed, health, critical chance, gold, XP and similar purchases have been removed. Earlier ranks that are no longer available, including ranks above revised limits, refund their exact original cost to their original Zone wallet once. Retained abilities, equipment and progression are preserved. Existing equipment and jewelry provide their established statistics.
 
 **Dungeoneering level and XP are global and persistent.** Level 2 needs 1,600 total XP; level 3 needs 6,400. Progress slows at higher levels, with one Mastery point per level. Leveling and the first Mastery unlock leave combat running. XP orbs never expire: positions and values survive activity changes, retries and returning to a Zone. Encounter completion collects the remaining XP exactly once.
 
@@ -29,18 +31,15 @@ Purchased ranks persist through defeat, travel, replay and reload. They apply on
 
 The first guardian unlocks **1× / 2× Delve speed**. Mastery speed affects combat only. The **mefforts** testing code unlocks **separate 1×–500× Delve and Skilling speed controls**. Use the speed pin in a skill scene to accelerate active gathering, crafting and online idle production; its setting stays independent of Delve speed, even after redeeming the code. Existing testing unlocks and **max** include this automatically. Offline earnings and the time to collect active bonuses keep real-time timing. Both speeds start at 1× each launch.
 
-## Equipment, shops and pacing
+## Equipment and pacing
 
 | Build | Zone 1 / Iron | Zone 2 / Steel |
 | --- | ---: | ---: |
 | Maximum equipment, base proficiency | 80 DPS | 160 DPS |
-| Shop training with an unrefined weapon | ~87 DPS | ~174 DPS |
-| Ordinary combined build | ~98 DPS | ~198 DPS |
-| Recommended build budget | 100 DPS | 200 DPS |
+| Dedicated equipment training | ~86 DPS | ~173 DPS |
+| Single-target soft budget | 100 DPS | 200 DPS |
 
-The shop example uses Heavy Strikes 7, Quick Hands 3 and Keen Edge 3. Crafted equipment and Heavy Strikes offer alternative damage paths: the stronger increase applies fully, plus 15% of the weaker. Above the Zone’s build budget, additional calculated single-target DPS contributes at 25%. The same adjustment applies to actual attacks, so the HUD and purchase previews show the damage you receive.
-
-Early shop ranks are affordable. High ranks cost sharply more seals and can exceed the recommended range. Skilling remains a viable optional path with finite equipment upgrades, style proficiency and small crafting-level bonuses. Conditional effects and extra targets can add damage beyond the single-target figure.
+Weapon refinement, attack-speed training, proficiency and matching crafting levels provide core damage. Above the Zone’s single-target budget, each extra calculated DPS contributes at 25%; real hit damage uses the same adjustment. Conditional elemental damage and additional targets can add more. Abilities have finite ranks and increasingly expensive prices.
 
 | Zone | Target at 1× | Reference DPS |
 | --- | --- | ---: |
@@ -49,7 +48,7 @@ Early shop ranks are affordable. High ranks cost sharply more seals and can exce
 | 3 | ~30 minutes | Current Steel reference |
 | 4+ | ~35–40 minutes | Current Steel reference |
 
-References assume sustained single-target combat with modest shop ranks. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Later equipment progression remains reserved.
+References use complete Iron / Steel equipment at base proficiency, with no required Zone abilities. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Later equipment progression remains reserved.
 
 Ordinary monsters drop **no gold**. Baseline clears pay **191 gold in Zone 1 / 293 in Zone 2**, mainly from guardians and floor caches, before elites and jewelry. Scavenging remains another gold source. Fractional rewards survive reload; existing balances and crafting costs are preserved.
 
@@ -74,13 +73,15 @@ New creatures scuttle, sway, hop, prowl or hover, with reduced-motion support. T
 
 ## Minimal runestone interface
 
-Gameplay uses outlined information and isolated controls with transparent backing. Delve, Equipment, Skills, Zone Shop, Codex, Settings, Pause and unlocked speed occupy a circular icon rail. **Settings → Navigation** selects either side and reorders pins with dragging or arrows. Titles sit at the top center, health/XP on the left, and warnings/messages below them. The message icon reopens the latest 40 notices.
+Gameplay uses outlined information and isolated controls with transparent backing. Delve, Inventory, Skills, Zone Shop, Codex, Settings, Pause and unlocked speed occupy a circular icon rail. The dungeon entrance, satchel, wisp and raised play/pause medallions use over 90% of each button’s space. **Settings → Navigation** selects either side and reorders pins with dragging or arrows. Titles sit at the top center, health/XP on the left, and warnings/messages below them. The message icon reopens the latest 40 notices.
 
-Menus use warm stone, leather and brass. Carved runestone buttons and headers keep hard corners; painted medallions frame the icons. All **108 collection entries** have distinct artwork. Tooltips, native buttons, focus restoration and accessible labels support keyboard and touch navigation. Detailed explanations stay in the Codex.
+Menus use warm stone, leather and brass. Carved runestone buttons and headers keep hard corners; painted medallions frame the icons. All **106 collection entries** have distinct artwork. Tooltips, native buttons, focus restoration and accessible labels support keyboard and touch navigation. Detailed explanations stay in the Codex.
 
-**Equipment** shows the worn set, actual Zone DPS, health, attack speed and reach. Owned weapons can be compared directly. Armor and jewelry have separate tabs; style training expands when needed. Books return you to the same recipe, shop, search or unapplied Mastery allocation.
+**Inventory** shows the worn set, actual Zone DPS, health, attack speed and reach. Touch anywhere on a weapon’s main card or an owned armor card to equip it; the separate book button opens details. Weapons, armor, jewelry and materials have their own tabs. Materials show live quantities and link to their source; style training expands when needed. Books return you to the same recipe, shop, search or unapplied Mastery allocation.
 
 ## Gathering and crafting
+
+A small link below the idle-unlock notice guides new players to craft a stronger weapon. It stays until their first weapon craft or refinement, then remains dismissed across reloads.
 
 **Skills** organizes each discipline into Gather, Refine, Equipment and Tools. Hold the work control, scene or Space. Active material bonuses can be tapped, dragged over, or collected with Enter/Space while focused. Forge sparks, twigs, glistens and similar crafting bonuses advance the cycle by **35%**, while still consuming ingredients. A second finger can collect bonuses while the first keeps working.
 
@@ -128,11 +129,11 @@ Each area has its own painted reflect ward, healing totem and power totem, along
 
 | Action | Controls |
 | --- | --- |
-| Move | WASD, arrows, drag the arena, touch joystick |
-| Dash | Double tap a direction, Space in combat, Dash button |
+| Move | Touch anywhere in the arena and drag; release to stop. WASD/arrows and mouse also work |
+| Dash | Two short drags in the same direction, double tap a movement key, Space or Dash |
 | Work | Hold work control, scene or Space |
 | Collect active bonus | Tap, drag, Enter/Space on focused bonus |
-| Skills / Equipment / Codex / Zone Shop | G / E / C / B |
+| Skills / Inventory / Codex / Zone Shop | G / E / C / B |
 | Return to delve | D or Delve pin |
 | Close menu / pause | Escape |
 
@@ -156,8 +157,8 @@ npm run report:balance
 npm run review:ui
 ```
 
-Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. Guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. The original engine and compiled standalone output are in `index.html`.
+Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. Guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. Mobile controls, navigation and material inventory live in `src/mobile.js` / `src/mobile.css`; themed ability definitions, migration and pricing in `src/zone-abilities.js`. The original engine and compiled standalone output are in `index.html`.
 
-Fourteen browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 108 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Full combat simulations verify the first four Zones and later pacing. Static encounters, biome and jewelry definitions remain guarded by a manifest.
+Fifteen browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 106 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. Full combat simulations verify the first four Zones and later pacing. Static encounters, biome and jewelry definitions remain guarded by a manifest.
 
 Generated icon sheets, calibrated regions and alignment metrics live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without altering source art; `npm run art:icons` exports embedded WebP badges. `scripts/export-equipment.py` packs rig textures using Pillow, NumPy and SciPy. Use `CHROMIUM_PATH` for a custom browser. Local test output stays in ignored `test-results/`.

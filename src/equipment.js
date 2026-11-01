@@ -56,7 +56,7 @@ function chooseWeapon(id){
   if(!data.unlockedWeapons.includes(id)){
     if(weaponCraftLevel(id)<WEAPON_LEVELS[id]){toast('Training needed',DISCIPLINES[STYLE_DEFS[styleForWeapon(id)].group].name+' level '+WEAPON_LEVELS[id]+' unlocks this weapon.');return false;}
     if(!spendAtStation({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},STYLE_DEFS[styleForWeapon(id)].group))return false;
-    data.unlockedWeapons.push(id);codexDiscover('weapon_'+id);toast(weaponDisplayName(id)+' crafted!','One weapon equipped. Your worn armor stays equipped.');
+    data.unlockedWeapons.push(id);data.firstWeaponCrafted=true;codexDiscover('weapon_'+id);toast(weaponDisplayName(id)+' crafted!','One weapon equipped. Your worn armor stays equipped.');
   }
   data.weaponType=id;projectCombatStyle();inspectedStyle=combatStyle();styleBench=combatStyle();
   game.player.maxHp=maxHp()+waveVitality();game.player.hp=Math.min(game.player.hp,game.player.maxHp);game.attackTimer=Math.max(game.attackTimer,.45);save();refreshUI();return true;
@@ -74,7 +74,7 @@ function refreshEquipmentUI(){
     const frame=$(id).closest('.equipment-row')?.querySelector('.equipment-icon');
     if(frame&&frame.dataset.art!==(art||'empty')){frame.innerHTML=art?artHTML(art):'<span aria-hidden="true">◇</span>';frame.dataset.art=art||'empty';}
   }
-  const host=$('armorEquipment');if(host){const signature=JSON.stringify([data.equippedArmor,data.ownedArmor,data.styles]);if(host.dataset.signature!==signature){host.innerHTML=armorEquipmentHtml();host.dataset.signature=signature;if(focusKey)host.querySelector('[data-focus-key="'+focusKey+'"]')?.focus({preventScroll:true});}}
+  const host=$('armorEquipment');if(host){const signature=JSON.stringify([data.equippedArmor,data.ownedArmor,data.styles]);if(host.dataset.signature!==signature){host.innerHTML=armorEquipmentHtml();host.querySelectorAll('button').forEach(bindTouchNavigation);host.dataset.signature=signature;if(focusKey)host.querySelector('[data-focus-key="'+focusKey+'"]')?.focus({preventScroll:true});}}
 }
 function installEquipmentUI(){
   equipmentInstalled=true;

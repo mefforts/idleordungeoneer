@@ -62,14 +62,14 @@ function normalizeZoneShopProgression(){
   for(const [id,rank]of Object.entries(value.ranks||{}))if(Object.hasOwn(UPGRADE_CAPS,id))ranks[id]=Math.max(0,Math.min(UPGRADE_CAPS[id],Math.floor(Number(rank)||0)));
   data.zoneShops[key]={currency,earned:Math.max(currency,Math.min(1e12,Math.floor(Number(value.earned)||0))),ranks};
  }
- normalizeGlobalMastery();
+ normalizeGlobalMastery();normalizeZoneAbilities();
 }
 function masteryFor(){return data.dungeonMastery||normalizeGlobalMastery();}
 function masteryUnlocked(){return masteryFor().earned>0;}
 function masteryNewDraft(){return {biome:-1,...masteryFor()};}
-function currencyDropChance(){return Math.min(.8,.4*(1+.1*masteryFor().fortune));}
+
 function rareDropChance(){return Math.min(.30,.015*(1+.25*masteryFor().adaptation)+trinketBonus('find'));}
-function zoneUpgradeRank(id,index=zoneNumber(),ranks){const source=ranks||zoneShopFor(index).ranks;return Math.min(UPGRADE_CAPS[id]||0,Math.max(0,Math.floor(Number(source[id])||0)));}
+
 function waveRank(id,source){return zoneUpgradeRank(id,zoneNumber(),source);}
 function waveDamageFactor(){return 1;}
 function waveHasteFactor(){return 1+.015*waveRank('haste');}
@@ -97,21 +97,14 @@ function weaponDps(id=data.weaponType,options={}){
  return zoneCombatProfile(id,{rank:data.styles[style].weapon+(options.next?1:0)}).dps;
 }
 function attackCooldown(){return zoneCombatProfile().cooldown;}
-function shopUpgradeCost(id,index=zoneNumber(),rank=zoneUpgradeRank(id,index)){
- if(!Object.hasOwn(UPGRADE_CAPS,id)||rank>=UPGRADE_CAPS[id])return null;
- const scale=1+.15*Math.min(index,10);let cost;
- if(id==='might')cost=rank<SHOP_MIGHT_COSTS.length?SHOP_MIGHT_COSTS[rank]:480*Math.pow(2.1,rank-9);
- else if(['multishot','cleave','pierce'].includes(id))cost=SHOP_BASE_COST[id]*Math.pow(6,rank);
- else cost=SHOP_BASE_COST[id]*Math.pow(1.65,Math.min(rank,4))*Math.pow(2.35,Math.max(0,rank-4));
- return Math.ceil(cost*scale);
-}
+
 function grantZoneCurrency(amount,index=zoneNumber()){
- amount=Math.max(0,Math.floor(Number(amount)||0));if(!amount)return 0;const b=zoneShopFor(index);b.currency+=amount;b.earned+=amount;if(!data.zoneShopIntroduced){data.zoneShopIntroduced=true;toast('Zone Shop','Spend '+zoneCurrency(index).name+' on training');}codexDiscover('zone_currency_'+(index%4));
+ amount=Math.max(0,Math.floor(Number(amount)||0));if(!amount)return 0;const b=zoneShopFor(index);b.currency+=amount;b.earned+=amount;if(!data.zoneShopIntroduced){data.zoneShopIntroduced=true;toast('Zone Shop','Unlock abilities with '+zoneCurrency(index).name);}codexDiscover('zone_currency_'+(index%4));
  const node=$('zoneCurrencyHud');if(node){node.classList.remove('currency-gain');requestAnimationFrame(()=>node.classList.add('currency-gain'));}return amount;
 }
 function buyZoneUpgrade(id,index=shopZone){
  if(!zoneShopUnlocked(index))return false;const b=zoneShopFor(index),cost=shopUpgradeCost(id,index);if(cost===null||b.currency<cost)return false;
- const old=game.player.maxHp,previous=b.ranks[id]||0;b.currency-=cost;b.ranks[id]=(b.ranks[id]||0)+1;codexDiscover('upgrade_'+id);
+ const old=game.player.maxHp,previous=b.ranks[id]||0;b.currency-=cost;b.ranks[id]=(b.ranks[id]||0)+1;codexDiscover(zoneAbility(id,index).codex);
  if(index===zoneNumber()){
   game.upgrades={...b.ranks};if(id==='fire'&&previous)for(const enemy of game.enemies)if(enemy.burn>0){enemy.burnDps*=b.ranks.fire/previous;enemy.burn+=.1;}game.player.maxHp=maxHp()+waveVitality();game.player.hp=Math.min(game.player.maxHp,game.player.hp+Math.max(0,game.player.maxHp-old));
  }
@@ -139,8 +132,8 @@ function applyMastery(){
 }
 function hurt(amount){const p=game.player;p.hitPose=.26;if(game.status!=='running'||p.invuln>0)return;const damage=amount*(1-styleStats().guardPercent/100)*(1-trinketBonus('guard'))*(1-.02*waveRank('ward'))*(data.weaponType==='shield'?.72:1);p.hp-=damage;p.invuln=.47;game.shake=6;floater(p.x,p.y-31,'-'+Math.ceil(damage),'#ffb5a5');burst(p.x,p.y,5,'#fa8b87');if(p.hp<=0){p.hp=0;die();}}
 function powerSummary(id,rank,index=zoneNumber()){
- const r=Math.max(0,Math.min(UPGRADE_CAPS[id]||0,rank));
- const flat={haste:'+'+(r*1.5).toFixed(1)+'% attack speed',cleave:'+'+r+' melee targets',reach:'+'+r*3+'% melee reach',ward:r*2+'% protection',vitality:'+'+r*5+' HP',crit:(5+r*1.5).toFixed(1)+'% critical chance',multishot:r+' extra projectiles · 15% damage each',pierce:r+' pierces · 84% damage retained',storm:r*4+'% chain chance · '+(20+r*3)+'% chain damage',fire:r?(r*2)+'% hit damage / s · '+(2.5+r*.1).toFixed(1)+'s':'No burn',frost:r?(5+r*2)+'% slow · '+(1+r*.1).toFixed(1)+'s':'No slow',nova:r?Math.min(5,1+Math.floor(r/3))+' targets · '+(6+r*2)+'% critical splash':'No nova',swift:'+'+r*2+'% movement',magnet:'+'+r*12+' pickup range',regen:(r*.08).toFixed(2)+' HP / s',wisdom:'+'+r*3+'% Dungeoneering XP',forage:'+'+r*4+'% guardian / elite gold'};
+ const r=Math.max(0,Math.min(zoneAbilityCap(id,index),rank));
+ const flat={haste:'+'+(r*1.5).toFixed(1)+'% attack speed',cleave:r?'+'+r+' melee target'+(r===1?'':'s'):'No cleave',reach:'+'+r*3+'% melee reach',ward:r*2+'% protection',vitality:'+'+r*5+' HP',crit:(5+r*1.5).toFixed(1)+'% critical chance',multishot:r?'+'+r+' projectile'+(r===1?'':'s')+' · 15% damage':'No echoes',pierce:r?'+'+r+' pierce'+(r===1?'':'s')+' · 84% damage':'No pierce',storm:r?r*4+'% chain chance · '+(20+r*3)+'% damage':'No chain',fire:r?(r*2)+'% hit damage / s · '+(2.5+r*.1).toFixed(1)+'s':index%4===0?'No venom':'No burn',frost:r?(5+r*2)+'% slow · '+(1+r*.1).toFixed(1)+'s':'No slow',nova:r?Math.min(5,1+Math.floor(r/3))+' targets · '+(6+r*2)+'% critical splash':'No nova',swift:'+'+r*2+'% movement',magnet:'+'+r*12+' pickup range',regen:(r*.08).toFixed(2)+' HP / s',wisdom:'+'+r*3+'% Dungeoneering XP',forage:'+'+r*4+'% guardian / elite gold'};
  if(id==='might')return Math.round((14*WEAPON_TYPES[data.weaponType].power/WEAPON_TYPES[data.weaponType].cooldown*1.05)+(.8*shopBudget(index)-14*WEAPON_TYPES[data.weaponType].power/WEAPON_TYPES[data.weaponType].cooldown*1.05)*SHOP_TRAINING[r])+' training DPS';return flat[id]||'';
 }
 function powerCompact(id,rank){return powerSummary(id,rank);}
@@ -150,7 +143,7 @@ function powerGain(id){return powerIncrement(id,zoneUpgradeRank(id));}
 function onKill(e){
  if(!game.enemies.includes(e))return;clearOwnerMechanics(e);flushBurnDamage(e);game.enemies.splice(game.enemies.indexOf(e),1);earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;
  const b=biome();burst(e.x,e.y,e.boss?18:game.enemies.length>65?2:8,b.accent);game.shake=e.boss?7:1.5;
- const seals=e.boss?[8,12,20][e.bossIndex]:e.elite?3:Math.random()<currencyDropChance()?1:0;grantZoneCurrency(seals);
+ const seals=e.boss?ZONE_ABILITY_REWARDS.guardians[e.bossIndex]:e.elite?ZONE_ABILITY_REWARDS.elite:Math.random()<currencyDropChance()?1:0;grantZoneCurrency(seals);
  if(e.boss){
   const index=e.bossIndex,m=masteryFor(),reward=index===2?2:1;m.points+=reward;m.earned+=reward;
   grantDelveGold(delveGoldReward('guardian',data.floor,index)*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));data.essence+=index===2?2:1;
@@ -178,12 +171,12 @@ function clearFloor(){
 function expectedAttacks(hp,damage,crit=.05){const n=Math.max(1,Math.ceil(hp/damage-1e-9));let previous=0,current=1;for(let i=2;i<=n;i++){const next=1+(1-crit)*current+crit*previous;previous=current;current=next;}return current;}
 function zoneBalance(index=zoneNumber()){
  index=Math.max(0,Math.floor(Number(index)||0));if(ZONE_BALANCE_CACHE.has(index))return ZONE_BALANCE_CACHE.get(index);
- const minutes=index===0?10:index===1?20:index===2?30:Math.min(40,35+index-3),gearTier=index===0?1:2,weaponRank=index===0?6:index===1?14:20,speedRank=index===0?3:index===1?6:10;
+ const minutes=index===0?10:index===1?20:index===2?30:Math.min(40,35+index-3),gearTier=index===0?1:2,weaponRank=index===0?10:20,speedRank=index===0?5:10;
  const base=14/.88*1.05,first=80/1.1,second=160/1.2,gear=(weaponRank<=10?base+(first-base)*weaponRank/10:first+(second-first)*(weaponRank-10)/10)*(1+speedRank*.02);
- const training=base+(.8*shopBudget(index)-base)*SHOP_TRAINING[5],core=base+Math.max(gear-base,training-base)+.15*Math.min(gear-base,training-base),crit=.08,cooldown=.88/(1+speedRank*.02)/1.03;
- const raw=core*1.03*(1+crit)/1.05,dps=raw<=shopBudget(index)?raw:shopBudget(index)+(raw-shopBudget(index))*.25,hit=dps*cooldown/(1+crit);
+ const core=gear,crit=.05,cooldown=.88/(1+speedRank*.02);
+ const raw=core*(1+crit)/1.05,dps=raw<=shopBudget(index)?raw:shopBudget(index)+(raw-shopBudget(index))*.25,hit=dps*cooldown/(1+crit);
  const counts=[SWARM_TARGETS[0],SWARM_TARGETS[2],SWARM_TARGETS[4]].map(n=>Math.round(n*.4*Math.min(2.5,1+index*.5))),targets=[counts[0],0,counts[1],0,counts[2],0],swarmCount=counts.reduce((a,b)=>a+b,0)*3;
- const model={index,minutes,seconds:minutes*60,weaponRank,speedRank,proficiency:1,gearTier,shopRanks:{might:5,haste:2,crit:2},crit,hit,cooldown,dps,targets,swarmCount,spawnSeconds:minutes*60*.55/swarmCount,hpScale:1};
+ const model={index,minutes,seconds:minutes*60,weaponRank,speedRank,proficiency:1,gearTier,shopRanks:{},crit,hit,cooldown,dps,targets,swarmCount,spawnSeconds:minutes*60*.55/swarmCount,hpScale:1};
  const forecast=scale=>{let seconds=18*.72;for(let floor=0;floor<3;floor++)for(let phase=0;phase<6;phase++){const boss=phase%2===1,base=boss?[160,230,360][Math.floor(phase/2)]*(phase===5?(floor===2?3.2:1.75):1):30+phase*4,hp=base*Math.pow(1.14,floor)*scale;if(boss)seconds+=expectedAttacks(hp,hit,crit)*cooldown+1.5;else{let attacks=0;for(let sample=0;sample<21;sample++)attacks+=expectedAttacks(hp*(.9+sample*.01),hit,crit)/21;seconds+=Math.max(targets[phase]*attacks*cooldown,(targets[phase]-1)*model.spawnSeconds+1.5);}}return seconds;};
  let lo=.001,hi=1;while(forecast(hi)<model.seconds)hi*=2;for(let n=0;n<38;n++){const mid=(lo+hi)/2;if(forecast(mid)<model.seconds)lo=mid;else hi=mid;}
  model.hpScale=(lo+hi)/2;model.forecastSeconds=forecast(model.hpScale);ZONE_BALANCE_CACHE.set(index,model);return model;

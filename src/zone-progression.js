@@ -125,7 +125,7 @@ function craftStyleUpgrade(id,kind){
  const s=data.styles[id],cap=styleUpgradeCap(id,kind);if(s[kind]>=cap){toast(TIER_LIMITS[styleTier(id)].name+' limit reached',styleTier(id)===1?'Clear Zone 1 and upgrade this style to Steel for the next tier.':'This is the current Steel upgrade limit.');return false;}
  if(kind==='armor'&&!data.ownedArmor.some(key=>ARMOR_SETS[key]?.style===id)){toast('Craft an armor set first','Choose a '+ARMOR_STYLES[id].label+' set above.');return false;}
  if(!spendAtStation(styleUpgradeBase(id,kind),upgradeGroup(id,kind)))return false;
- const oldMax=game.player.maxHp;s[kind]++;projectCombatStyle();game.player.maxHp=maxHp()+waveVitality();
+ const oldMax=game.player.maxHp;s[kind]++;if(kind==='weapon')data.firstWeaponCrafted=true;projectCombatStyle();game.player.maxHp=maxHp()+waveVitality();
  if(kind==='armor'&&armorLoadout()?.style===id)game.player.hp=Math.min(game.player.maxHp,game.player.hp+Math.max(0,game.player.maxHp-oldMax));
  if(kind==='enchant')codexDiscover('permanent_enchant');
  toast(STYLE_DEFS[id].name+' '+{weapon:'refinement',armor:'reinforcement',enchant:'enchantment',speed:'attack speed',reach:'reach'}[kind]+' '+s[kind]+' / '+cap,'Permanent '+STYLE_DEFS[id].name+' progression · '+TIER_LIMITS[styleTier(id)].name+' tier');
@@ -188,7 +188,7 @@ function refreshTierProgressionUI(){
  }
 }
 
-function defaults(){return {tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
+function defaults(){return {tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,firstWeaponCrafted:false,zoneAbilityVersion:0,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
 
 function drawWorkstationScene(w,h,key){
  const base=SKILLS[key].scene||key,advanced={coal:[0,0],willow:[1,0],ancientScavenge:[0,1],cleanAncient:[0,1],garnetSearch:[1,1],garnetCut:[1,1]}[key];
@@ -217,7 +217,7 @@ function drawWorkstationScene(w,h,key){
  }
 }
 
-function setScene(scene,force=true){clearSkillBonuses();if(!$('skillQuickPicker').classList.contains('hidden'))closeSkillPicker();
+function setScene(scene,force=true){resetArenaTouch();clearSkillBonuses();if(!$('skillQuickPicker').classList.contains('hidden'))closeSkillPicker();
  if(scene==='codex'){showCodex();return}if(!['combat',...SKILL_KEYS].includes(scene))return;if(SKILLS[scene]&&!canUseSkill(scene)){toast('Activity locked',skillLockReason(scene));return;}
  game.holdSkill=null;closeResourcePicker();game.scene=scene;if(SKILLS[scene])codexDiscover('skill_'+scene);
  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===scene));

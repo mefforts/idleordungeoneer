@@ -6,7 +6,7 @@ const {createRuntime}=require('./runtime.cjs');
  try{
   const initial=await browser.newPage();await initial.goto(baseURL);const base=await initial.evaluate(()=>__deepwell.getState().data);await initial.close();
   async function profile(patch={},viewport={width:1440,height:1000},fixedRandom=false){
-   const c=await browser.newContext({viewport});const seed={...base,onboardingDone:true,tutorialSeen:true,savedAt:Date.now(),...patch};if((patch.zone||patch.mastery)&&patch.zoneShopVersion===undefined)seed.zoneShopVersion=0;if(patch.styles===null&&patch.equipmentVersion===undefined)seed.equipmentVersion=0;
+   const c=await browser.newContext({viewport});const seed={...base,onboardingDone:true,tutorialSeen:true,savedAt:Date.now(),...patch};if((patch.zone||patch.mastery)&&patch.zoneShopVersion===undefined){seed.zoneShopVersion=0;seed.zoneAbilityVersion=0;}if(patch.styles===null&&patch.equipmentVersion===undefined)seed.equipmentVersion=0;
    await c.addInitScript(({seed,fixedRandom})=>{if(!sessionStorage.getItem('systems-seeded')){localStorage.setItem('deepwell-prototype-v1',JSON.stringify(seed));sessionStorage.setItem('systems-seeded','1');}if(fixedRandom)Math.random=()=>.01;},{seed,fixedRandom});
    const p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));await p.route(baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','window.__systemsCompleteFloor=()=>clearFloor();resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);')}));await p.goto(baseURL);await p.waitForFunction(()=>window.__deepwell);return {c,p};
   }
@@ -65,7 +65,7 @@ const {createRuntime}=require('./runtime.cjs');
    passed.push('Every skill hub has direct Idle buttons; two occupied slots use an explicit replacement chooser; no dropdown is required');await c.close();
   }
   {
-   const {c,p}=await profile({gold:150});await p.click('#introDelve');await p.waitForTimeout(200);assert.ok(await p.locator('#skillsNudge').isVisible());await p.click('#skillsNudgeOpen');assert.equal(await p.locator('#drawerTitle').innerText(),'Skills');assert.equal(await p.locator('[data-workshop-view="equipment"]').getAttribute('aria-pressed'),'true');assert.equal((await p.evaluate(()=>__deepwell.getState())).data.skillsNudgeSeen,true);passed.push('The first 150 gold produces a dismissible Skills/weapon invitation');await c.close();
+   const {c,p}=await profile({gold:150});await p.click('#introDelve');await p.waitForTimeout(200);assert.ok(await p.locator('#firstWeaponHint').isVisible());await p.click('#firstWeaponHint');assert.equal(await p.locator('#drawerTitle').innerText(),'Skills');assert.equal(await p.locator('[data-workshop-view="equipment"]').getAttribute('aria-pressed'),'true');assert.equal((await p.evaluate(()=>__deepwell.getState())).data.firstWeaponCrafted,false);passed.push('New players retain the small first-weapon Skills link at 150 gold until they actually craft or refine');await c.close();
   }
   {
    const {c,p}=await profile({styles:null,weapon:10,armor:5,weaponType:'greatsword',unlockedWeapons:['sword','greatsword'],masteryIntroSeen:true,mastery:{0:{points:0,earned:15,onslaught:5,intensity:5,fortune:0,adaptation:0}},zone:{index:0,upgrades:{might:6,haste:6,cleave:4,ward:4,vitality:5,regen:4},level:99,xp:0,required:1000000}});
@@ -81,10 +81,10 @@ const {createRuntime}=require('./runtime.cjs');
    passed.push('All ten activities have loaded, collectable, correctly bounded bonus artwork');await c.close();
   }
   {
-   const {c,p}=await profile({gold:150},{width:390,height:844});await p.click('#introDelve');await p.waitForTimeout(200);const n=await p.locator('#skillsNudge').boundingBox(),j=await p.locator('#joystickZone').boundingBox(),d=await p.locator('#dashButton').boundingBox();assert.ok(n.y+n.height<j.y);assert.ok(n.y+n.height<d.y);passed.push('Mobile gold guidance leaves the joystick and dash unobstructed');await c.close();
+   const {c,p}=await profile({gold:150},{width:390,height:844});await p.click('#introDelve');await p.waitForTimeout(200);const n=await p.locator('#firstWeaponHint').boundingBox(),d=await p.locator('#dashButton').boundingBox();assert.equal(await p.locator('#joystickZone').isVisible(),false);assert.ok(n.y+n.height<d.y);passed.push('Mobile weapon guidance leaves drag movement and dash unobstructed');await c.close();
   }
   for(const weapon of ['sword','bow','staff']){
-   const {c,p}=await profile({styles:null,armor:40,weaponType:weapon,unlockedWeapons:['sword','bow','staff'],arrows:500,runes:500,masteryIntroSeen:true,mastery:{0:{points:0,earned:15,onslaught:5,intensity:5,fortune:0,adaptation:0}},zone:{index:0,upgrades:{storm:1},level:1,xp:0,required:1000000}},undefined,true);
+   const {c,p}=await profile({styles:null,floor:7,cleared:6,weapon:10,armor:40,weaponType:weapon,unlockedWeapons:['sword','bow','staff'],arrows:500,runes:500,masteryIntroSeen:true,mastery:{0:{points:0,earned:15,onslaught:5,intensity:5,fortune:0,adaptation:0}},zone:{index:2,upgrades:{storm:1},level:1,xp:0,required:1000000}},undefined,true);
    await p.click('#introDelve');await p.waitForFunction(()=>__deepwell.getState().effectCounts.lightning>0,null,{timeout:10000});await p.waitForFunction(()=>__deepwell.getState().data.styles[__deepwell.getState().combatStyle].xp>0,null,{timeout:10000});const st=await p.evaluate(()=>__deepwell.getState());assert.equal(st.upgrades.storm,1);assert.ok(st.data.styles[st.combatStyle].xp>0);for(const id of ['melee','ranged','magic'].filter(x=>x!==st.combatStyle))assert.equal(st.data.styles[id].xp,0);await c.close();
   }
   passed.push('Real melee, ranged and magic attacks all trigger purchased Zone chain lightning; combat proficiency credits the wielded style');

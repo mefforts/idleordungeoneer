@@ -1,0 +1,92 @@
+{
+  "nav-delve": {
+    "source": [
+      22,
+      11,
+      499,
+      484
+    ],
+    "bounds": [
+      7,
+      7,
+      249,
+      249
+    ],
+    "diameterFraction": 0.9453125
+  },
+  "nav-inventory": {
+    "source": [
+      528,
+      11,
+      1008,
+      485
+    ],
+    "bounds": [
+      7,
+      7,
+      249,
+      249
+    ],
+    "diameterFraction": 0.9453125
+  },
+  "zone-shop": {
+    "source": [
+      1037,
+      10,
+      1516,
+      485
+    ],
+    "bounds": [
+      7,
+      7,
+      249,
+      249
+    ],
+    "diameterFraction": 0.9453125
+  },
+  "nav-play": {
+    "source": [
+      19,
+      505,
+      499,
+      980
+    ],
+    "bounds": [
+      7,
+      7,
+      249,
+      249
+    ],
+    "diameterFraction": 0.9453125
+  },
+  "nav-pause": {
+    "source": [
+      531,
+      506,
+      1011,
+      981
+    ],
+    "bounds": [
+      7,
+      7,
+      249,
+      249
+    ],
+    "diameterFraction": 0.9453125
+  },
+  "nav-speed": {
+    "source": [
+      1037,
+      507,
+      1516,
+      981
+    ],
+    "bounds": [
+      7,
+      7,
+      249,
+      249
+    ],
+    "diameterFraction": 0.9453125
+  }
+}
