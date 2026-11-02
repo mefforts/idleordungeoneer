@@ -123,6 +123,8 @@ The player has a compact, illustrated 2D style: expressive faces, crisp outlines
 
 The same rig serves combat, gathering, crafting, appearance previews and inventory portraits. Free hands rest below the waist; two-handed tools and weapons share calibrated grips. Work has continuous anticipation, strikes and recovery, plus distinct carving, weaving, engraving, gem working and kneeling searches. Starting and stopping blend smoothly. Saved appearance choices retain their colors and styles. [Outfits](preview-player-sets.png) · [Motion phases](preview-player-actions.png) · [Mining on phone](preview-player-mining-mobile.png) · [Weaving](preview-player-warding.png) · [Animation recording](preview-player-motion.webm). [CHARACTER_ART.md](CHARACTER_ART.md) describes the assets and attachment system.
 
+[Motion reel](preview-player-motion-overview.mp4) · [Live work scenes](preview-player-live-skills.mp4) · [Animated work loops](preview-player-work-loops.gif). These recordings show the current renderer at 1× animation speed. The close-up reel covers movement, all six weapon families and all eight work families; the scene reel includes starting and releasing work.
+
 ## Guardians and elites
 
 Guardians combine area-themed projectiles, ground strikes and beams with three kinds of counterplay:

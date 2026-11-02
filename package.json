@@ -26,7 +26,8 @@
     "review:depths": "node scripts/review-depths.cjs",
     "art:player": "python3 scripts/export-player.py && node scripts/export-player-parts.cjs",
     "review:player": "node scripts/review-player.cjs",
-    "art:player-icons": "node scripts/export-player-icons.cjs"
+    "art:player-icons": "node scripts/export-player-icons.cjs",
+    "review:motion": "node scripts/review-player-motion.cjs"
   },
   "devDependencies": {
     "acorn": "8.19.0",
