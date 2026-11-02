@@ -1,27 +1,29 @@
 # Player art and animation
 
-The player uses 88 transparent painted textures: 14 base-body/hand parts, six hairstyles, 60 armor parts across the six existing sets, and eight work tools. Original source sheets, individual WebP sprites, isolation metrics and measured limb axes live in `assets/player/`. Runtime textures are embedded in `src/player-art.js`.
+The player uses an original illustrated 2D style with compact proportions, expressive eyes, bold outlines and two or three shading tones. Travel tunics, plain iron/steel armor, ranger leathers and linen/wool robes keep simple shapes. The renderer draws these shapes directly, so joint surfaces remain continuous as a limb bends.
+
+There are **42 independent SVG parts**: six physical slots for travel clothing and each of the six existing armor sets. Eight transparent WebP work tools complete the 50-asset catalog in `assets/player/parts/`. Warding uses a weaving shuttle; Artisan uses a jeweler’s chisel. The other six tools and all existing weapon illustrations retain their artwork. Only the eight tools need image decoding at entry.
 
 | Physical slot | Attachment | Parts |
 | --- | --- | --- |
 | Head | Neck and independent head joint | Face, hair, helmet or hood |
-| Shoulders | Each upper-arm root | Mirrored shoulder caps |
-| Chest | Torso | Chest, upper sleeves, forearm sleeves |
-| Legs | Pelvis and knee joints | Separate thigh and shin panels |
-| Boots | Each ankle | Boot |
-| Gloves | Each wrist | Relaxed hand or closed grip; base hands also have a weaving gesture |
+| Shoulders | Each upper-arm root | Mirrored cloth sleeves or shoulder caps |
+| Chest | Torso and arm bones | Tunic, breastplate or robe, with sleeves and bracers |
+| Legs | Pelvis and knee joints | Continuous trousers or robe panels |
+| Boots | Each ankle | Plain leather or reinforced boot |
+| Gloves | Each wrist | Relaxed hand, closed grip or weaving gesture |
 
-A set resolves these slots together. The renderer also accepts `parts` overrides for future equipment combinations, for example `parts: {head: 'base', shoulders: 'melee_1'}`. It validates the corresponding textures before using an override. Equipment ownership, recipes and combat statistics remain in the existing equipment system.
+A set resolves these slots together. `parts` overrides can mix them independently, for example `parts: {head: 'base', shoulders: 'melee_1'}`. Unknown overrides fall back to the worn set. Equipment ownership, recipes, statistics and saved appearance identifiers stay in the existing equipment system.
 
-`src/avatar-rig.js` is a stateless pose and rendering module. Coordinates use a foot origin, positive Y downward, with a standing character about 100 units high. Arm segments measure 20 / 19.5 units; leg segments measure 19 / 18. Targets are constrained to reach before solving elbows and knees. Kneeling preserves both leg lengths and ground contact. The pelvis stays level while the torso leans. Head rotation is independent of the shoulder roots.
+`src/avatar-rig.js` owns both the poses and vector artwork. Coordinates use a foot origin, positive Y downward, with a standing figure about 117 units high. Arm segments measure 20 / 19.5 units; leg segments measure 19 / 18. Reach constraints precede the elbow and knee solve. Kneeling preserves leg lengths and ground contact. The pelvis stays level while the torso leans. Shoulders follow the upper arms independently of the head.
 
-Two-handed placement solves both shoulder reach limits while preserving a shared grip offset on the weapon or tool. Bowstring, nock and aim points share the same axis. Hands follow the forearm orientation; closed grip sprites render over the held shaft. Tool grip positions are calibrated to each handle, including the offset hatchet shaft.
+Each limb has one outlined silhouette across both bones, with clipped shadows and separate sleeves, bracers, knee panels and boots. The far upper arm sits behind the torso. Its forearm moves in front when reaching across the body; the near arm remains in front. The head covers shoulder roots. Hands follow the forearm angle, with opposite thumb orientations for the near and far sides. Closed grips draw over the held shaft. The entire assembled figure mirrors when facing left.
 
-Each limb texture has two measured bind points and a material width. `scripts/measure-player-binds.py` measures its painted axis without changing the source pixels. The renderer aligns that axis to the bone and overlaps the material at joints. It excludes the item illustration's hollow end caps from the joint surface. Full-outfit silhouettes are never used as limb textures.
+Two-handed placement solves both shoulder reach limits while preserving a shared grip offset on the weapon or tool. Bowstring, nock and aim points share the same axis. Tool grips are calibrated to each handle, including the offset hatchet shaft. The Artisan’s free hand supports the work below the chisel.
 
-Work clips provide anticipation, strike and recovery, or continuous carving, weaving, engraving, filing and searching motions. Starting and stopping work blend over 180 / 240 ms. Animation is separate from the production cycle. The visual rate caps at 2.5× for readability at high testing speeds; resource production retains the full Skilling time multiplier. Dungeoneering speed does not enter this clock. Reduced motion uses stable working poses.
+Work clips retain anticipation, strike and recovery, plus continuous carving, weaving, engraving, gem working and searching motions. Starting and stopping blend over 180 / 240 ms. Animation is separate from production. The visual rate caps at 2.5× for readability; resource production retains the full Skilling time multiplier. Dungeoneering speed does not enter this clock. Reduced motion uses stable working poses.
 
-The same rig renders combat, all 20 skill activities, appearance previews and inventory portraits. Saved hair, eye, clothing and skin choices retain their identifiers and colors. Base clothing variants use their own layered details; armor replaces the relevant physical parts.
+Combat, all 20 skill activities, appearance previews and inventory portraits share this rig. Saved hair, eye, clothing and skin choices retain their identifiers and colors. Six hair shapes and four eye styles use the same face anchors.
 
 To rebuild assets and matching portraits:
 
@@ -34,4 +36,6 @@ npm test
 npm run review:player
 ```
 
-`tests/player-rig.cjs` checks more than 5,000 poses, fixed segment lengths, exact grips, rest positions, cyclic motion, action blending and visible head/body connections. Existing suites cover real attacks, ammunition, resource costs, input, saves and mobile layouts. [Outfits](preview-player-sets.png), [motion phases](preview-player-actions.png), [mining](preview-player-mining-mobile.png), [weaving](preview-player-warding.png) and a [live animation recording](preview-player-motion.webm) show the actual renderer.
+`scripts/export-player-parts.cjs` records the live `drawPart` API to SVG, keeping exported parts and runtime art in agreement. `scripts/export-player.py` isolates the tools from their transparent source sheets. Catalogs, SVG metrics and tool crop metrics are stored beside the assets. Runtime tool data is embedded in `src/player-art.js`; vector body art stays in the rig.
+
+`tests/player-rig.cjs` checks more than 5,000 poses, fixed segment lengths, exact grips, resting positions, cyclic motion, action blending, visible body connections and decoding of every exported SVG. Existing suites cover real attacks, ammunition, resource costs, input, saves and mobile layouts. [Outfits](preview-player-sets.png), [motion phases](preview-player-actions.png), [mining](preview-player-mining-mobile.png), [weaving](preview-player-warding.png) and a [live recording](preview-player-motion.webm) show the actual renderer.

@@ -1,6 +1,6 @@
 {
   "name": "idle-or-dungeoneer",
-  "version": "9.7.0",
+  "version": "9.8.0",
   "private": true,
   "description": "A standalone fantasy RPG with a minimal runestone HUD, linked crafting and a readable Codex.",
   "scripts": {
@@ -24,7 +24,7 @@
     "art:rare-elites": "python3 scripts/export-rare-elites.py",
     "review:rare-elites": "node scripts/review-rare-elites.cjs",
     "review:depths": "node scripts/review-depths.cjs",
-    "art:player": "python3 scripts/export-player.py",
+    "art:player": "python3 scripts/export-player.py && node scripts/export-player-parts.cjs",
     "review:player": "node scripts/review-player.cjs",
     "art:player-icons": "node scripts/export-player-icons.cjs"
   },

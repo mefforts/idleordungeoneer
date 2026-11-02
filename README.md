@@ -119,9 +119,9 @@ The Opal Leech Ring starts at **0.5%** lifesteal. Armor equips independently of 
 
 ## Player and animation
 
-The player uses **88 separate painted textures** for the base body, six hairstyles, six armor sets, grip hands and eight work tools. Head, shoulders, chest, legs, boots and gloves follow separate joints. Free hands rest below the waist; two-handed tools and weapons share calibrated grips. The same rig serves combat, gathering, crafting, appearance previews and inventory portraits.
+The player has a compact, illustrated 2D style: expressive faces, crisp outlines, simple shading and plain starter clothing. **42 vector parts** cover travel clothes and the six existing armor sets, with independent head, shoulder, chest, leg, boot and glove attachments. Arms and legs have continuous outlines across their joints. Near and far arms use separate layers, with inward-facing thumbs and forearms that can cross the chest. The eight work tools include a weaving shuttle and jeweler’s chisel; weapon art keeps its existing detail.
 
-Work has continuous anticipation, strikes and recovery, plus distinct carving, weaving, engraving, filing and kneeling searches. Starting and stopping blend smoothly. Saved appearance choices retain their colors and styles. [Outfits](preview-player-sets.png) · [Motion phases](preview-player-actions.png) · [Mining on phone](preview-player-mining-mobile.png) · [Weaving](preview-player-warding.png) · [Animation recording](preview-player-motion.webm). [CHARACTER_ART.md](CHARACTER_ART.md) describes the assets and attachment system.
+The same rig serves combat, gathering, crafting, appearance previews and inventory portraits. Free hands rest below the waist; two-handed tools and weapons share calibrated grips. Work has continuous anticipation, strikes and recovery, plus distinct carving, weaving, engraving, gem working and kneeling searches. Starting and stopping blend smoothly. Saved appearance choices retain their colors and styles. [Outfits](preview-player-sets.png) · [Motion phases](preview-player-actions.png) · [Mining on phone](preview-player-mining-mobile.png) · [Weaving](preview-player-warding.png) · [Animation recording](preview-player-motion.webm). [CHARACTER_ART.md](CHARACTER_ART.md) describes the assets and attachment system.
 
 ## Guardians and elites
 

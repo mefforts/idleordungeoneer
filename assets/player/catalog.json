@@ -1,32 +1,13 @@
 {
-  "version": 1,
-  "bodyParts": [
+  "version": 2,
+  "style": "illustrated-2d",
+  "physicalSlots": [
     "head",
+    "shoulders",
     "chest",
-    "upperarm",
-    "forearm",
-    "hand",
-    "thigh",
-    "shin",
-    "boot",
-    "shoulder",
-    "waist",
-    "neck",
-    "cuff",
-    "grip",
-    "reach"
-  ],
-  "armorParts": [
-    "head",
-    "shoulder",
-    "chest",
-    "thigh",
-    "shin",
-    "boot",
-    "upperarm",
-    "forearm",
-    "hand",
-    "grip"
+    "legs",
+    "boots",
+    "gloves"
   ],
   "armorSets": [
     "melee_1",
@@ -36,24 +17,14 @@
     "magic_1",
     "magic_2"
   ],
-  "physicalSlots": [
-    "head",
-    "shoulders",
-    "chest",
-    "legs",
-    "boots",
-    "gloves"
-  ],
   "hairstyles": 6,
+  "vectorParts": 42,
   "tools": 8,
-  "sprites": 88,
-  "coordinateSystem": "Foot origin; upright bind pose; shared shoulder, elbow, knee and wrist sockets",
+  "assets": 50,
+  "coordinateSystem": "Foot origin; shared shoulders, elbows, knees, wrists and ankles",
+  "renderer": "src/avatar-rig.js",
   "sourceSheets": [
-    "body.png",
-    "hair.png",
-    "armor-iron.png",
-    "armor-steel.png",
     "tools.png",
-    "grips.png"
+    "ward-artisan.png"
   ]
 }

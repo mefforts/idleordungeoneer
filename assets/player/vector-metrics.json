@@ -1,0 +1,548 @@
+[
+  {
+    "key": "base-head",
+    "slot": "head",
+    "set": "base",
+    "viewBox": [
+      -31,
+      -38,
+      62,
+      68
+    ],
+    "paths": 45,
+    "bytes": 7651
+  },
+  {
+    "key": "base-shoulders",
+    "slot": "shoulders",
+    "set": "base",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 3,
+    "bytes": 570
+  },
+  {
+    "key": "base-chest",
+    "slot": "chest",
+    "set": "base",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 10,
+    "bytes": 1690
+  },
+  {
+    "key": "base-legs",
+    "slot": "legs",
+    "set": "base",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 10,
+    "bytes": 2525
+  },
+  {
+    "key": "base-boots",
+    "slot": "boots",
+    "set": "base",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 5,
+    "bytes": 822
+  },
+  {
+    "key": "base-gloves",
+    "slot": "gloves",
+    "set": "base",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
+    "key": "armor-melee_1-head",
+    "slot": "head",
+    "set": "melee_1",
+    "viewBox": [
+      -31,
+      -38,
+      62,
+      68
+    ],
+    "paths": 38,
+    "bytes": 6258
+  },
+  {
+    "key": "armor-melee_1-shoulders",
+    "slot": "shoulders",
+    "set": "melee_1",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 4,
+    "bytes": 718
+  },
+  {
+    "key": "armor-melee_1-chest",
+    "slot": "chest",
+    "set": "melee_1",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 16,
+    "bytes": 2535
+  },
+  {
+    "key": "armor-melee_1-legs",
+    "slot": "legs",
+    "set": "melee_1",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 22,
+    "bytes": 4514
+  },
+  {
+    "key": "armor-melee_1-boots",
+    "slot": "boots",
+    "set": "melee_1",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 7,
+    "bytes": 1109
+  },
+  {
+    "key": "armor-melee_1-gloves",
+    "slot": "gloves",
+    "set": "melee_1",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
+    "key": "armor-melee_2-head",
+    "slot": "head",
+    "set": "melee_2",
+    "viewBox": [
+      -31,
+      -38,
+      62,
+      68
+    ],
+    "paths": 38,
+    "bytes": 6258
+  },
+  {
+    "key": "armor-melee_2-shoulders",
+    "slot": "shoulders",
+    "set": "melee_2",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 4,
+    "bytes": 718
+  },
+  {
+    "key": "armor-melee_2-chest",
+    "slot": "chest",
+    "set": "melee_2",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 16,
+    "bytes": 2535
+  },
+  {
+    "key": "armor-melee_2-legs",
+    "slot": "legs",
+    "set": "melee_2",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 22,
+    "bytes": 4514
+  },
+  {
+    "key": "armor-melee_2-boots",
+    "slot": "boots",
+    "set": "melee_2",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 7,
+    "bytes": 1109
+  },
+  {
+    "key": "armor-melee_2-gloves",
+    "slot": "gloves",
+    "set": "melee_2",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
+    "key": "armor-ranged_1-head",
+    "slot": "head",
+    "set": "ranged_1",
+    "viewBox": [
+      -31,
+      -38,
+      62,
+      68
+    ],
+    "paths": 38,
+    "bytes": 6389
+  },
+  {
+    "key": "armor-ranged_1-shoulders",
+    "slot": "shoulders",
+    "set": "ranged_1",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 4,
+    "bytes": 718
+  },
+  {
+    "key": "armor-ranged_1-chest",
+    "slot": "chest",
+    "set": "ranged_1",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 12,
+    "bytes": 2039
+  },
+  {
+    "key": "armor-ranged_1-legs",
+    "slot": "legs",
+    "set": "ranged_1",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 14,
+    "bytes": 3097
+  },
+  {
+    "key": "armor-ranged_1-boots",
+    "slot": "boots",
+    "set": "ranged_1",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 7,
+    "bytes": 1158
+  },
+  {
+    "key": "armor-ranged_1-gloves",
+    "slot": "gloves",
+    "set": "ranged_1",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
+    "key": "armor-ranged_2-head",
+    "slot": "head",
+    "set": "ranged_2",
+    "viewBox": [
+      -31,
+      -38,
+      62,
+      68
+    ],
+    "paths": 38,
+    "bytes": 6389
+  },
+  {
+    "key": "armor-ranged_2-shoulders",
+    "slot": "shoulders",
+    "set": "ranged_2",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 4,
+    "bytes": 718
+  },
+  {
+    "key": "armor-ranged_2-chest",
+    "slot": "chest",
+    "set": "ranged_2",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 12,
+    "bytes": 2039
+  },
+  {
+    "key": "armor-ranged_2-legs",
+    "slot": "legs",
+    "set": "ranged_2",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 14,
+    "bytes": 3097
+  },
+  {
+    "key": "armor-ranged_2-boots",
+    "slot": "boots",
+    "set": "ranged_2",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 7,
+    "bytes": 1158
+  },
+  {
+    "key": "armor-ranged_2-gloves",
+    "slot": "gloves",
+    "set": "ranged_2",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
+    "key": "armor-magic_1-head",
+    "slot": "head",
+    "set": "magic_1",
+    "viewBox": [
+      -31,
+      -38,
+      62,
+      68
+    ],
+    "paths": 38,
+    "bytes": 6389
+  },
+  {
+    "key": "armor-magic_1-shoulders",
+    "slot": "shoulders",
+    "set": "magic_1",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 4,
+    "bytes": 718
+  },
+  {
+    "key": "armor-magic_1-chest",
+    "slot": "chest",
+    "set": "magic_1",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 12,
+    "bytes": 2027
+  },
+  {
+    "key": "armor-magic_1-legs",
+    "slot": "legs",
+    "set": "magic_1",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 12,
+    "bytes": 2912
+  },
+  {
+    "key": "armor-magic_1-boots",
+    "slot": "boots",
+    "set": "magic_1",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 5,
+    "bytes": 822
+  },
+  {
+    "key": "armor-magic_1-gloves",
+    "slot": "gloves",
+    "set": "magic_1",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
+    "key": "armor-magic_2-head",
+    "slot": "head",
+    "set": "magic_2",
+    "viewBox": [
+      -31,
+      -38,
+      62,
+      68
+    ],
+    "paths": 38,
+    "bytes": 6389
+  },
+  {
+    "key": "armor-magic_2-shoulders",
+    "slot": "shoulders",
+    "set": "magic_2",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 4,
+    "bytes": 718
+  },
+  {
+    "key": "armor-magic_2-chest",
+    "slot": "chest",
+    "set": "magic_2",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 12,
+    "bytes": 2027
+  },
+  {
+    "key": "armor-magic_2-legs",
+    "slot": "legs",
+    "set": "magic_2",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 12,
+    "bytes": 2912
+  },
+  {
+    "key": "armor-magic_2-boots",
+    "slot": "boots",
+    "set": "magic_2",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 5,
+    "bytes": 822
+  },
+  {
+    "key": "armor-magic_2-gloves",
+    "slot": "gloves",
+    "set": "magic_2",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  }
+]

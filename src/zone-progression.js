@@ -155,7 +155,7 @@ function refreshTierProgressionUI(){
  if(!tierProgressionInstalled)return;
  if(tier2Unlocked()&&!data.zone2SkillsAnnounced){data.zone2SkillsAnnounced=true;toast('Zone 2 skilling unlocked','Coal and steel · willow · ancient salvage · garnets · runic cloth. Visit Skills to continue each discipline.');}
  const key=game.scene;if(SKILLS[key]?.tier===2){
-  $('activeTool').textContent=({steelSmelt:'Smithing hammer',steelFletch:'Fletching knife',aetherWeave:'Warding spindle',greaterRune:'Engraving burin',garnetCut:'Jeweler’s file'})[key]||TOOL_DEFS[toolForSkill(key)]?.name||'Prospecting mattock';
+  $('activeTool').textContent=({steelSmelt:'Smithing hammer',steelFletch:'Fletching knife',aetherWeave:'Weaving shuttle',greaterRune:'Engraving burin',garnetCut:'Jeweler’s chisel'})[key]||TOOL_DEFS[toolForSkill(key)]?.name||'Prospecting mattock';
  }
 }
 
