@@ -1,5 +1,15 @@
 /* Touch movement, full-sized navigation art and material inventory. */
 let arenaTouch=null,mobileInstalled=false,touchNavigationClick=null;
+function installGameplaySelectionGuard(){
+ const stage=$('stageWrap');
+ // Menus and native editing/copy controls keep their browser behavior. New
+ // copyable controls inside the stage can opt out with data-native-selection.
+ const native='input,textarea,select,[contenteditable]:not([contenteditable="false"]),[data-native-selection],#overlay,#tourPanel,#resourcePicker,#skillQuickPicker,#settingsExport,#settingsImport,#settingsImportFile';
+ for(const type of ['selectstart','contextmenu','dragstart'])stage.addEventListener(type,e=>{
+  const target=e.target instanceof Element?e.target:e.target.parentElement;
+  if(target&&!target.closest(native))e.preventDefault();
+ });
+}
 function bindTouchNavigation(button){
  if(!button||button.dataset.touchNavigation)return;button.dataset.touchNavigation='1';let press=null;
  button.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'){press=null;return;}press={pointer:e.pointerId,x:e.clientX,y:e.clientY,moved:false};});
@@ -37,6 +47,7 @@ function navigationIcon(id,art,label){
 }
 function installMobileUI(){
  if(mobileInstalled)return;mobileInstalled=true;
+ installGameplaySelectionGuard();
  $('stageWrap').insertAdjacentHTML('beforeend','<div id="arenaTouchGuide" class="arena-touch-guide hidden" aria-hidden="true"><i></i></div>');
  $('idleWarning').insertAdjacentHTML('afterend','<button type="button" id="firstWeaponHint" class="first-weapon-hint hidden">Craft a stronger weapon in <span>Skills ›</span></button>');
  $('firstWeaponHint').onclick=()=>{const style=combatStyle();openWorkshop(STYLE_DEFS[style].group,'equipment');document.querySelector('[data-style-upgrade="'+style+':weapon"]')?.closest('article')?.scrollIntoView({block:'center'});};

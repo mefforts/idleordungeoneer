@@ -1,3 +1,10 @@
+/* Keep Safari holds on the game instead of opening selection or image callouts.
+   Leave scrolling to menus; only continuous game inputs consume touch gestures. */
+#stageWrap{touch-action:auto}
+#stageWrap,#stageWrap *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#gameCanvas,#skillHold,#joystickZone,[data-skill-bonus]{touch-action:none}
+#stageWrap :is(input,textarea,select,[contenteditable]:not([contenteditable="false"]),[data-native-selection],#overlay,#tourPanel,#resourcePicker,#skillQuickPicker,#settingsExport,#settingsImport,#settingsImportFile),
+#stageWrap :is(input,textarea,select,[contenteditable]:not([contenteditable="false"]),[data-native-selection],#overlay,#tourPanel,#resourcePicker,#skillQuickPicker,#settingsExport,#settingsImport,#settingsImportFile) *{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 /* The painted medallion itself is the button surface. */
 @layer presentation{.player-ui .hud-actions.icon-rail :is(#delveNav,#quickGear,#quickSkills,#quickShop,#quickCodex,#quickSettings,#quickPause,#speedToggle){padding:0!important;border:0!important;border-image:none!important;background:none!important;box-shadow:none!important}}
 .player-ui .hud-actions.icon-rail .hud-icon,.player-ui .hud-actions.icon-rail #speedToggle{padding:0!important;border:0!important;background:none!important;box-shadow:none!important;overflow:visible}

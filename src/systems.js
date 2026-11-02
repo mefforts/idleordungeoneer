@@ -110,6 +110,9 @@ function noteSkillEngagement(key){
 function clearSkillBonuses(){
   const s=bonusState();s.nodes=[];s.lastInput=-100;s.pointers.clear();$('skillBonusLayer')?.replaceChildren();
 }
+function resetSkillHold(){
+  game.holdSkill=null;game.workPointerId=null;$('skillHold')?.classList.remove('is-holding');
+}
 function bonusEligible(){return !!SKILLS[game.scene]&&!drawerKind&&$('overlay').classList.contains('hidden')&&$('resourcePicker').classList.contains('hidden')&&!game.customizing&&!document.hidden;}
 
 function spawnSkillBonus(){
@@ -229,8 +232,9 @@ function installSystemsUI(){inspectedStyle=combatStyle();styleBench=combatStyle(
   $('skillsNudgeOpen').onclick=()=>{data.skillsNudgeSeen=true;save();openWorkshop('blacksmithing','equipment');};$('skillsNudgeDismiss').onclick=()=>{data.skillsNudgeSeen=true;save();refreshSystemsUI();};
   window.addEventListener('pointerdown',e=>{if(!bonusEligible())return;const node=e.target.closest('[data-skill-bonus]'),work=e.target===canvas||e.target.closest('#skillHold');if(!node&&!work)return;noteSkillEngagement(game.scene);const s=bonusState();s.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(work)game.workPointerId=e.pointerId;if(node){e.preventDefault();claimSkillBonus(node.dataset.skillBonus);}},true);
   window.addEventListener('pointermove',claimBonusesAlongPointer,true);
-  for(const type of ['pointerup','pointercancel','lostpointercapture'])window.addEventListener(type,e=>bonusState().pointers.delete(e.pointerId),true);
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)clearSkillBonuses();});window.addEventListener('blur',clearSkillBonuses);window.addEventListener('resize',clearSkillBonuses);refreshSystemsUI();
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])window.addEventListener(type,e=>{bonusState().pointers.delete(e.pointerId);if(game.workPointerId===e.pointerId)resetSkillHold();},true);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){resetSkillHold();clearSkillBonuses();}});
+  for(const type of ['blur','resize','pagehide'])window.addEventListener(type,()=>{resetSkillHold();clearSkillBonuses();});refreshSystemsUI();
 }
 
 function assignIdleSkill(key){
