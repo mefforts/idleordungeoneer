@@ -36,13 +36,13 @@ function fillTestingResources(){
  if(!data.biomeLoot||typeof data.biomeLoot!=='object')data.biomeLoot={};
  for(let i=0;i<BIOMES.length;i++){
   data.biomeLoot[i]=Math.max(SANDBOX_RESOURCE_CAP,Number(data.biomeLoot[i])||0);
-  const b=zoneShopFor(i);b.currency=Math.max(b.currency,SANDBOX_RESOURCE_CAP);b.earned=Math.max(b.earned,b.currency);codexDiscover('zone_currency_'+i);
+  const b=zoneShopFor(i);b.currency=Math.max(b.currency,SANDBOX_RESOURCE_CAP);b.earned=Math.max(b.earned,b.currency);codexDiscover('zone_shop');
   const m=masteryFor();m.points=Math.max(m.points,9999);m.earned=Math.max(m.earned,9999);
   if(!data.seenElites)data.seenElites={};data.seenElites[i]=[true,true,true];
   codexDiscover('biome_'+i);codexDiscover('loot_'+i);
   for(let b=0;b<3;b++)codexDiscover('boss_'+i+'_'+b);
  }
- for(const key of new Set([...Object.keys(data.zoneShops),String(zoneNumber())])){const b=zoneShopFor(Number(key));b.currency=Math.max(b.currency,SANDBOX_RESOURCE_CAP);b.earned=Math.max(b.earned,b.currency);}
+ for(const key of new Set([...Object.keys(data.legacyZoneShops||{}),String(zoneNumber())])){const b=zoneShopFor(Number(key));b.currency=Math.max(b.currency,SANDBOX_RESOURCE_CAP);b.earned=Math.max(b.earned,b.currency);}
  data.masteryIntroSeen=true;data.zone2SkillsAnnounced=true;
  for(const key of keys)if(CODEX_ITEMS.some(v=>v.id==='resource_'+key))codexDiscover('resource_'+key);
  save();refreshUI();refreshTestTravel();

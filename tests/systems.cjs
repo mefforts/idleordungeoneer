@@ -69,7 +69,7 @@ const {createRuntime}=require('./runtime.cjs');
   }
   {
    const {c,p}=await profile({styles:null,weapon:10,armor:5,weaponType:'greatsword',unlockedWeapons:['sword','greatsword'],masteryIntroSeen:true,mastery:{0:{points:0,earned:15,onslaught:5,intensity:5,fortune:0,adaptation:0}},zone:{index:0,upgrades:{might:6,haste:6,cleave:4,ward:4,vitality:5,regen:4},level:99,xp:0,required:1000000}});
-   await p.click('#introDelve');await p.evaluate(()=>__systemsCompleteFloor());await p.waitForSelector('#selectIdleTask',{timeout:20000});assert.equal((await p.evaluate(()=>__deepwell.getState())).data.cleared,1);await p.click('#selectIdleTask');assert.equal(await p.locator('#drawerTitle').innerText(),'Skills');await p.locator('[data-idle-skill="mine"]').first().click();assert.equal((await p.evaluate(()=>__deepwell.getState())).data.idleJobs[0],'mine');
+   await p.click('#introDelve');await p.evaluate(()=>__systemsCompleteFloor());await p.waitForSelector('#selectIdleTask',{timeout:20000});assert.match(await p.locator('.progression-tip').innerText(),/second.*Zone 2/);assert.equal((await p.evaluate(()=>__deepwell.getState())).data.cleared,1);await p.click('#selectIdleTask');assert.equal(await p.locator('#drawerTitle').innerText(),'Skills');await p.locator('[data-idle-skill="mine"]').first().click();assert.equal((await p.evaluate(()=>__deepwell.getState())).data.idleJobs[0],'mine');
    passed.push('Actually clearing Floor 1 shows Select an idle task, which opens Skills and starts an idle task directly');await c.close();
   }
   {
@@ -83,12 +83,12 @@ const {createRuntime}=require('./runtime.cjs');
   {
    const {c,p}=await profile({gold:150},{width:390,height:844});await p.click('#introDelve');await p.waitForTimeout(200);const n=await p.locator('#firstWeaponHint').boundingBox(),d=await p.locator('#dashButton').boundingBox();assert.equal(await p.locator('#joystickZone').isVisible(),false);assert.ok(n.y+n.height<d.y);passed.push('Mobile weapon guidance leaves drag movement and dash unobstructed');await c.close();
   }
-  // Starter damage leaves targets alive long enough to exercise hit effects, even with guaranteed critical hits.
+  // A half-refined weapon can kill Zone 3 targets while exercising hit effects, even with guaranteed critical hits.
   for(const weapon of ['sword','bow','staff']){
-   const {c,p}=await profile({styles:null,floor:16,cleared:15,weapon:0,armor:40,weaponType:weapon,unlockedWeapons:['sword','bow','staff'],arrows:500,runes:500,masteryIntroSeen:true,mastery:{0:{points:0,earned:15,onslaught:5,intensity:5,fortune:0,adaptation:0}},zone:{index:2,upgrades:{storm:1},level:1,xp:0,required:1000000}},undefined,true);
+   const {c,p}=await profile({styles:null,floor:16,cleared:15,weapon:5,armor:40,weaponType:weapon,unlockedWeapons:['sword','bow','staff'],arrows:500,runes:500,masteryIntroSeen:true,mastery:{0:{points:0,earned:15,onslaught:5,intensity:5,fortune:0,adaptation:0}},dungeonShopVersion:1,dungeonShops:{deepwell:{currency:0,earned:10,ranks:{storm:1}}},zone:{index:2,upgrades:{},level:1,xp:0,required:1000000}},undefined,true);
    await p.click('#introDelve');await p.waitForFunction(()=>__deepwell.getState().effectCounts.lightning>0,null,{timeout:10000});await p.waitForFunction(()=>__deepwell.getState().data.styles[__deepwell.getState().combatStyle].xp>0,null,{timeout:10000});const st=await p.evaluate(()=>__deepwell.getState());assert.equal(st.upgrades.storm,1);assert.ok(st.data.styles[st.combatStyle].xp>0);for(const id of ['melee','ranged','magic'].filter(x=>x!==st.combatStyle))assert.equal(st.data.styles[id].xp,0);await c.close();
   }
-  passed.push('Real melee, ranged and magic attacks all trigger purchased Zone chain lightning; combat proficiency credits the wielded style');
+  passed.push('Real melee, ranged and magic attacks all trigger purchased Dungeon chain lightning; combat proficiency credits the wielded style');
   assert.deepEqual(errors,[]);console.log(JSON.stringify({passed,errors},null,2));
  }finally{await runtime.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

@@ -12,7 +12,7 @@ function encounterFixture(){
   const e=spawnEnemy(true,index);e.boss=!elite;e.elite=elite;e.name=biome().boss[index]+(elite?' Echo':'');e.x=0;e.y=-150;e.hp=e.maxHp=1000;e.speed=0;e.contact=1e6;e.castCooldown=1e6;
   if(!elite)game.boss=e;return e;
  }
- function cast(e,type){e.mechanicIndex=bossPlan(e).indexOf(type);if(e.mechanicIndex<0)throw Error('Unavailable pattern: '+type);if(!beginBossCast(e))throw Error('Cast deferred: '+type);return e.cast;}
+ function cast(e,type){e.phaseQueue=[type];if(!beginBossCast(e))throw Error('Cast deferred: '+type);return e.cast;}
  function intercept(t){const a=encounterFoot(t),b=encounterFoot(t.owner);game.player.x=(a.x+b.x)/2;game.player.y=(a.y+b.y)/2-13;}
  function node(type='mend',kind=0){fresh(kind,3);const e=owner(2);const c=cast(e,type);tickBossSpecial(e,c.total+.01);return game.totems[0];}
  window.__encounterTest={
@@ -74,7 +74,7 @@ function encounterFixture(){
    const first=beginBossCast(a),second=beginBossCast(b),secondType=b.cast?.type;tickBossSpecial(a,1.5);tickBossSpecial(b,1.5);const count=game.totems.length;
    tickEncounterObjects(60);const remaining=game.totems.length,targets=combatTargets().filter(e=>e.totem).length;damageTotem(game.totems[0],1e9);const afterDamage=game.totems.length;onKill(game.totems.find(node=>node.owner.elite).owner);return {first,second,secondType,count,remaining,targets,afterDamage,afterCasterDeath:game.totems.length};
   },
-  dual(){fresh(0,3);const e=owner(2);const a=cast(e,'fury');tickBossSpecial(e,a.total+.01);const b=cast(e,'mend');tickBossSpecial(e,b.total+.01);const types=game.totems.map(t=>t.type);e.mechanicIndex=bossPlan(e).indexOf('fury');const next=beginBossCast(e);return {types,next,attack:e.cast?.type,count:game.totems.length};},
+  dual(){fresh(0,3);const e=owner(2);const a=cast(e,'fury');tickBossSpecial(e,a.total+.01);const b=cast(e,'mend');tickBossSpecial(e,b.total+.01);const types=game.totems.map(t=>t.type);e.phaseQueue=['fury'];const next=beginBossCast(e);return {types,next,attack:e.cast?.type,count:game.totems.length};},
   assets(){return {count:Object.keys(ENCOUNTER_ART).length,unique:new Set(Object.values(ENCOUNTER_ART).map(a=>a.src)).size,loaded:[...encounterImages.values()].every(image=>image.complete&&image.naturalWidth>200&&image.naturalHeight>300)};},
   cleanup(which){
    const t=node('fury');game.player.rallyTime=5;game.counterRequest=t.owner;

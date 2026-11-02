@@ -1,129 +1,149 @@
-# Zone progression and balance
+# Dungeon progression and balance
 
-Build 9.9 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.
+Build 10.0 replaces individual Zone Shops with a permanent Dungeon Shop. All current Zones belong to The First Descent. The data model can assign future Zones to a new Dungeon with a separate wallet and purchases. Equipment, global Dungeoneering and Mastery retain their own roles.
 
 ## Equipment ceilings
 
-| Weapon | Iron | Dedicated Iron | Steel | Dedicated Steel |
-| --- | ---: | ---: | ---: | ---: |
-| Arming Sword | 80.0 | 86.4 | 160.0 | 172.8 |
-| Sword & Shield | 80.0 | 86.4 | 160.0 | 172.8 |
-| Halberd | 80.0 | 86.4 | 160.0 | 172.8 |
-| Greatsword | 80.0 | 86.4 | 160.0 | 172.8 |
-| Hunting Bow | 80.0 | 86.4 | 160.0 | 172.8 |
-| Focus Staff | 80.0 | 86.2 | 160.0 | 171.9 |
+| Weapon | Style | Iron | Dedicated Iron | Steel | Dedicated Steel |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Arming Sword | Melee | 80.0 | 86.4 | 160.0 | 172.8 |
+| Sword & Shield | Melee | 80.0 | 86.4 | 160.0 | 172.8 |
+| Halberd | Melee | 80.0 | 86.4 | 160.0 | 172.8 |
+| Greatsword | Melee | 80.0 | 86.4 | 160.0 | 172.8 |
+| Hunting Bow | Ranged | 80.0 | 86.4 | 160.0 | 172.8 |
+| Focus Staff | Mage | 80.0 | 86.2 | 160.0 | 171.9 |
 
-Figures use maximum refinement and speed, 5% base critical chance and matching robes for Magic. Proficiency adds up to 3% damage and matching crafting levels up to 5%. Iron refinement ends at 10, speed/reach at 5, reinforcement at 5 and enchantment at 2. Steel ends at 20 / 10 / 10 / 4. One weapon and one independent armor set are equipped at a time.
+These figures use maximum refinement and speed, 5% base critical chance and matching robes for Mage. Proficiency adds up to 3% damage and matching crafting levels up to 5%. Iron refinement ends at 10, speed/reach at 5, reinforcement at 5 and enchantment at 2. Steel ends at 20 / 10 / 10 / 4. Equipment recipes, jewelry and material costs remain unchanged.
 
-Above 100 DPS in Zone 1 or 200 DPS in later Zones, each additional calculated point of single-target DPS contributes 0.25 actual DPS. Actual attack damage uses the same adjustment. Cleaves, elemental chains, damage over time and conditional bonuses are separate. Mirrorcast contributes 15% damage per additional projectile, and its direct projectile damage is included in the displayed figure.
+Above 100 single-target DPS in Zone 1 or 200 in later Zones, each additional calculated DPS contributes 0.25 actual DPS. Live primary damage uses the same adjustment. Ranged extra arrows contribute 15% each and are included in that figure. Conditional effects, burns, chains, ricochets, secondary targets and temporary blessings are additional.
 
-Clear Zone 1, reach refinement 10 and matching crafting level 10, then pay a Steel promotion recipe to unlock refinement 11–20. Recipes, jewelry and material costs remain unchanged.
+## Dungeon Shop
 
-## Zone abilities
+| Perk | Dungeoneering | Maximum rank | First price |
+| --- | ---: | ---: | ---: |
+| Ember Edge | 1 | 5 | 6 |
+| Winter Thread | 1 | 3 | 6 |
+| Soul Conductor | 1 | 4 | 8 |
+| Fracture | 1 | 3 | 8 |
+| Dungeon Ward | 1 | 4 | 8 |
+| Battle Geometry · changes by style | 1 | 3 | 10 |
+| Echo Arts · changes by style | 1 | 3 | 12 |
+| Spellbreaker | 1 | 3 | 10 |
+| Cold Verdict | 3 | 3 | 14 |
+| Returning Power · changes by style | 5 | 3 | 18 |
+| Gravitation | 8 | 3 | 22 |
+| Mirrorcraft | 12 | 3 | 26 |
 
-| Zone | Abilities |
-| --- | --- |
-| The Overgrowth | Briar Venom (8) · Grasping Roots (5) · Bramble Sweep (3) · Barkskin (5) |
-| The Embervault | Cinderbrand (8) · Slagburst (5) · Searing Shot (3) · Basalt Guard (5) |
-| The Hollow Crypt | Soul Chain (5) · Grave Chill (5) · Soulburst (5) · Bone Ward (5) |
-| The Astral Rift | Arc Rift (5) · Mirrorcast (3) · Phase Sweep (3) · Astral Ward (5) |
+Eight perks are available at level 1. More unlock at levels 3, 5, 8 and 12. Costs grow by 2.8× per rank, rounded upward; every exact rank price is in balance-report.json. Purchased ranks apply across all Zones in the same Dungeon. Traditional flat damage, speed, health, critical chance, gold, XP and regeneration are reserved for other systems.
 
-Each number is the maximum rank. Effects use existing combat mechanics: venom/burn on hit, slowing, melee cleaves, projectile piercing, extra projectiles, chains, critical splashes and damage reduction. Themed artwork, names, DoT colors and effect colors match the area. Each ability has its own illustrated Codex entry.
+| Shared purchase | Melee | Mage | Ranged |
+| --- | --- | --- | --- |
+| Battle Geometry | Each rank adds one sweep target and 12% melee reach. | Projectiles seek targets, prioritizing elites and bosses. Each rank improves steering. | Projectiles pierce one more target per rank, keeping 84% damage after each. |
+| Echo Arts | A hit can send a weak blade into another nearby target. | Projectiles ricochet to another enemy per rank, keeping 70% damage. | Fire one extra arrow per rank, each dealing 15% damage. |
+| Returning Power | Occasional hits throw a blade that returns to you. | Occasional spells release an orb that returns to you. | Occasional shots release an arrow that returns to you. |
 
-First ranks cost 8–24 seals before Zone scaling. Ordinary ranks grow by 1.65× through rank five, then 2.35×; cleave, piercing and additional projectiles cost 6× more each rank. The exact prices and effects are included for all sixteen abilities in balance-report.json. The shop contains no ordinary weapon damage, attack speed, health, critical chance, gold, XP, movement, pickup or regeneration purchases. Existing jewelry remains the source of its established stat bonuses.
+The shop displays the equipped style and explains that these effects change when switching weapon. Every purchase has an effect for all three styles.
 
-## Seals and gold
+## Dungeon Sigils and gold
 
-| Zone | Currency | Expected seals / first clear |
-| --- | --- | ---: |
-| 1 | Verdant Seals | 526.44 |
-| 2 | Ember Seals | 1057.00 |
-| 3 | Soul Seals | 2095.75 |
-| 4 | Rift Seals | 2116.97 |
+| Zone | Expected Sigils / first clear |
+| --- | ---: |
+| 1 | 36.80 |
+| 2 | 69.34 |
+| 3 | 131.37 |
+| 4 | 134.25 |
 
-Ordinary monsters have a 4% chance of one seal. Elites guarantee 6 seals; guardians guarantee 12 / 20 / 35. Guardian echoes substitute ordinary enemies, up to one / two / three per wave in the early / middle / deep floors. First-clear counts depend on the authored Zone depth. The table includes first-clear guardian echoes and expected rare elites at baseline Fortune. Rare elites have a 1.5% chance after the first three wave spawns, capped at one per wave. More than 95% of expected first-clear seals come from elites and guardians. Fortune rank 4 changes ordinary-monster chance to 5.6%, while guardian and elite chunks remain fixed.
+Ordinary enemies have a 0.3% chance of one Sigil, rising to 0.42% at Fortune 4. Other elites have a 35% chance of one. Rare creatures guarantee one. Guardians grant 1 / 1 / 2, with another 3 from the final overlord of each Zone. Summoned enemies and totems grant no rewards or wave progress. The estimate includes first-clear known-elite substitutions and expected rare spawns, without requiring an ability purchase.
 
 | Zone | Guardian gold | Floor caches | Baseline gold without elites |
 | --- | ---: | ---: | ---: |
 | 1 | 126 | 65 | 191 |
 | 2 | 189 | 104 | 293 |
 
-Ordinary monsters drop no gold. Elites give 2 / 2.8 gold in Zones 1 / 2. Existing gold jewelry modifies combat income; whole gold is paid using a saved fractional remainder. Scavenging and skilling remain additional sources. Retired shop gold/XP ranks no longer apply.
+Ordinary kills grant no gold unless Golden Hunt is active. Existing gold jewelry modifies normal combat income. Fractional gold persists. Scavenging remains a separate source.
 
-## Pacing
+## Pacing and counterplay
 
-| Zone | Target at 1× | Reference DPS | Refinement | Speed |
-| --- | --- | ---: | ---: | ---: |
-| 1 | ~10 min | 80.0 | 10 | 5 |
-| 2 | ~20 min | 160.0 | 20 | 10 |
-| 3 | ~30 min | 160.0 | 20 | 10 |
-| 4 | ~35 min | 160.0 | 20 | 10 |
+| Zone | Forecast at 1× | Reference DPS |
+| --- | --- | ---: |
+| 1 | ~10 min | 80.0 |
+| 2 | ~20 min | 160.0 |
+| 3 | ~30 min | 160.0 |
+| 4 | ~35 min | 160.0 |
 
-References now use completed Iron / Steel equipment at base proficiency, with no required Zone abilities. Health forecasts retain the 10 / 20 / 30-minute targets and the later 35–40-minute plateau. Movement, deaths, preparation and menus extend play time; abilities and successful counters can shorten it. Future equipment tiers remain unauthored.
+- Live Zone 1: **9.5 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **20.3 min**, 570 rewarded defeats, 160.0 reference DPS.
+- Live Zone 3: **31.0 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **36.0 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **41.1 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 15: **41.4 min**, 960 rewarded defeats, 160.0 reference DPS.
 
-- Live Zone 1 simulation: **9.7 min**, 375 defeats, 80.0 reference DPS.
-- Live Zone 2 simulation: **20.5 min**, 570 defeats, 160.0 reference DPS.
-- Live Zone 3 simulation: **32.5 min**, 780 defeats, 160.0 reference DPS.
-- Live Zone 4 simulation: **35.9 min**, 960 defeats, 160.0 reference DPS.
-- Live Zone 9 simulation: **41.8 min**, 960 defeats, 160.0 reference DPS.
-- Live Zone 15 simulation: **41.6 min**, 960 defeats, 160.0 reference DPS.
+The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It moves to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 
-Live tests use actual spawning, damage, approach, guardian mechanics and transitions at 40 ms steps. Only incoming damage and XP progression are suppressed in the isolated fixture. They approach healing totems to divert permanent healing, and do not deliberately seek reflect marks. Attack-cadence rounding contributes to the difference from the forecast.
+Bosses have 12% more health than the previous baseline and change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until destroyed or their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
 
-## Guardian counterplay
+## Warning language and ability library
 
-Floor overlords use four patterns and final Zone overlords six. Known elite substitutions are capped at one / two / three per wave on early / middle / deep floors. Reflect warnings last 1.9 seconds, with centers within 300 units of the player. Reflecting returns 12% maximum caster HP and staggers for 1.6 seconds. A healing stream restores 0.8% guardian HP per second until its caster is defeated, or 2% player HP when the player is nearer to the totem than its caster. Power streams add 12% guardian attack damage, or 10% conditional player hit damage for five seconds when the player is nearer to the totem than its caster. Stream bonuses do not stack. Totems are untargetable and have no expiry or health bar. They remain until the caster is defeated; the player draws their benefit whenever closer to the totem than its caster, without needing to stand in its path. One of each type per caster and at most two total remain active. They grant no loot/XP and never count as wave defeats.
+| Color | Meaning |
+| --- | --- |
+| Red | Dangerous to the player only |
+| Violet | Dangerous to player and other monsters |
+| Gold / white center | Stand in the center to reflect |
+| Teal | Safe area or an intercepted benefit |
+| Blue | Shield; remove its source / Royal Guards |
 
-## Authored Zone depths
+Colors are reinforced by outlines, shapes and labels. Violet attacks deal 35% ordinary, 12% elite or 2.5% boss maximum HP before shields, once per cast; the caster is immune. These hits cannot trigger player lifesteal, enchantment or weapon procs.
 
-| Zone | Floors | Ordinary / elite families |
-| --- | ---: | ---: |
-| 1 | 5 | 8 / 8 |
-| 2 | 10 | 10 / 10 |
-| 3 | 20 | 12 / 12 |
-| 4 | 20 | 12 / 12 |
+The encounter library now has 28 patterns: the ten existing attacks plus the following eighteen. Final guardians use a broad rotation and forced phase attacks.
 
-There are 55 named floors. Terrain changes across early, middle and deep bands, with a different deterministic scenery layout on every floor. New creature families enter the mix gradually. Combat health and spawn budgets are calibrated per Zone; gold and guardian XP remain spread across the Zone rather than multiplying with floor count. Three-floor saves retain their previously reached Zones and migrate once.
+- **Rebounding Barrage**: Three rings · gaps rotate · violet shots rebound.
+- **Growing Stars**: Projectiles grow · leave a wider gap.
+- **Homeward Blades**: Red blades turn home · watch the return path.
+- **Crossfire**: Violet cross · lure enemies into the lanes.
+- **Spiral Barrage**: Rotating gaps · keep moving.
+- **Threefold Ruin**: Three red quarters · enter the teal quarter.
+- **Marching Ruin**: Red lanes strike in numbered order.
+- **Outer Ruin**: Teal center · red outer ring.
+- **Inner Ruin**: Red center · move outside.
+- **Closing Jaws**: Two violet sweeps · use the gap.
+- **Calling Spire**: Destroy the spire · stop its reinforcements.
+- **Royal Calling**: Destroy the crowned spire · it calls elites.
+- **Royal Guard**: Blue shield · defeat both guards.
+- **Hungry Mirror**: Gold center reflects · a missed mirror heals the boss.
+- **Marked Ground**: Red marks lock on cast · step between them.
+- **Siphon Tether**: Break the red tether · move beyond the ring.
+- **Orbital Blades**: Red blades orbit then fly outward.
+- **Ruinous Rush**: Violet charge leaves a burning trail.
 
-## Rare elites and timed blessings
+Rebounding Barrage fires three spaced rings that bounce off the marked arena bounds. Growing Stars expand from radius 6 to at most 23. Homeward Blades turn back toward their caster after 1.25s. A successful reflect returns 12% maximum HP and staggers for 1.6s; a missed Hungry Mirror restores 5% boss HP. Royal Guards reduce boss damage taken by 70% until both are defeated. Major arena attacks and reflect warnings do not overlap other casts; projectile rings remain visible and their center can be protected by a reflect ward.
 
-Each of the 42 ordinary creature appearances has a painted rare elite form with 3.5× health. Roles add 1.1-second locked charges and sweeps, fixed ricochet paths with visible banks and a six-second lifetime, and eight-second shields reducing an allied elite’s weapon damage taken by 35%. Shielders cannot be shielded; pending casts reserve their targets to prevent chains. A rare elite can appear alongside guardian echoes. Its optional spoils offer Battle Fervor (+18% hit damage, 45s), Windstep (+15% attack speed and +12% movement, 40s), or Stoneguard (20% less damage and 0.3% max HP/s, 60s). One blessing can be active; choosing another replaces it. Combat time, including Delve speed, advances duration; menus, pause and skilling do not. Leaving its exact Zone ends a blessing. Unclaimed spoils persist.
+## Stackable blessings and healing
 
-Enemy sweeps, charges, beams and ground eruptions deal 35% of maximum HP to ordinary monsters once per cast, including overlapping marks. Elites, guardians and totems are immune. These hits grant normal kill rewards without player lifesteal, critical hits, enchantments or weapon effects. The Opal Leech Ring now returns 0.5% of actual direct-hit health removed; overkill grants no extra healing.
+Rare creatures always leave a blessing choice. Other non-summoned elites leave one 35% of the time. Walk over spoils to pause combat and choose A/B/C by click, touch or keys 1/2/3. Movement and Escape cannot select or dismiss it; Skip explicitly discards it. Choice contents are fixed when dropped and persist through reload.
 
-## Global Dungeoneering and Mastery
+| Blessing | Duration | Effect |
+| --- | ---: | --- |
+| Battle Fervor | 45s | +18% hit damage |
+| Windstep | 40s | +15% attack speed · +12% movement |
+| Stonebreaker | 60s | +25% damage to elites and bosses |
+| Totem Silence | 45s | Disable every enemy totem while this blessing lasts |
+| Stillworld | 40s | All enemy movement is halved, including charges |
+| Golden Hunt | 50s | Each non-summoned kill grants 1 extra gold |
+| Plentiful Hunt | 50s | Each non-summoned kill grants 1 material from this Zone |
+| Chain Reaction | 45s | Hits have a 22% chance to arc to another enemy |
+| Momentum | 45s | +10% hit damage · +8% attack speed |
+| Long Reach | 50s | +25% attack reach for Melee, Mage and Ranged |
 
-| Dungeoneering level | Total XP |
-| --- | ---: |
-| 1 | 0 |
-| 2 | 1600 |
-| 3 | 6400 |
-| 4 | 14400 |
-| 5 | 25600 |
-| 6 | 40000 |
-| 7 | 57600 |
-| 8 | 78400 |
+Different blessings and repeated copies stack with independent combat timers. Damage, attack speed, reach and movement multipliers multiply; extra gold/material rewards add. Menus, pause and skilling freeze timers. Blessings carry across Zones in the same Dungeon. Secondary proc attacks do not recursively trigger more procs. No new blessing heals.
 
-Level is 1 + floor(sqrt(total XP / 1600)). XP persists across Zones; levels grant no Mastery points. Zone final bosses grant 2 points. The Zone 1, Floor 1 final boss also grants 2 once, unlocking early speed access. Ground XP positions and values persist until collected or banked after an encounter. No combat power cards or automatic shopping modals appear.
+Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 55% chance of 12%; rares have a 70% chance of 15%. Intercepted healing restores 0.35% player maximum HP per second, with a finite 15% lifetime reserve per healing totem. Once depleted it still blocks the caster’s healing. An uninterrupted stream restores 0.4% caster maximum HP per second. Healing streams do not stack. The lifesteal ring remains at 0.5% of actual health removed.
 
-Mastery is shared and refundable. Onslaught controls spawn settings up to 60×, Fortune raises ordinary seal-drop chance by 10% relative per rank, and Discovery raises rare-material chance by 25% relative per rank. Mastery gives no damage/protection. The first Zone 1, Floor 1 final victory unlocks 2× Delve speed, which never speeds up skilling. Offline earnings and collection windows keep real-time timing.
+## Persistent progression and migration
 
-Each arrow or rune supplies 10 seconds of firing time. Only the wielded ranged weapon with an in-range target drains its charge; waiting, pause, skilling, other weapons and reload retain it. Ordinary health drops: 5% chance, heal 5% maximum HP. Elite echoes guarantee a 25% heal. Motes remain through waves on a floor and wait at full health.
+Dungeoneering XP is shared across Zones. Level 2 needs 1,600 total XP; level 3 needs 6,400. Levels unlock shop choices and grant no Mastery points. Only Zone-final overlords grant 2 Mastery, except the first victory over Zone 1 Floor 1’s overlord, which also grants 2 once and opens 2× Delve speed. Mastery never accelerates skilling; its own future speed perk remains separate. Ammunition still supplies ten seconds of firing per arrow or rune.
 
-## Zone 2 resource chain
+The first idle-slot tip explains that the next slot unlocks at Zone 2. Crafting the first upgraded weapon gives a refinement / Warding enchantment tip. Floor travel, equipment, 55 authored floors and 42 ordinary / 42 rare creature forms are preserved.
 
-| Discipline | Gathering / refining | Uses |
-| --- | --- | --- |
-| Blacksmithing | Coal; 2 Iron Ore + 1 Coal → 1 Steel Bar | Equipment, promotions and upgrades |
-| Woodworking | Willow; 2 Willow + 1 Steel Bar → 12 arrows | Ranger gear, ammunition and Runic Cloth |
-| Scavenging | Ancient Salvage; 2 salvage → 2 fragments | Refinement, robes and runes |
-| Warding | 2 Warded Cloth + 1 Willow → 2 Runic Cloth; 2 Runic Cloth + 2 Ancient Fragments → 10 runes | Armor and ammunition |
-| Artisan | Rough Garnet → Cut Garnet | Promotions, robes and enchantments |
+Old Zone wallets and the full historical price of every purchased rank are refunded at 25 seals per Sigil. Fractional credit is retained and a versioned receipt prevents a second refund. Original Zone ledgers are archived in the save. Earlier progression first passes through the existing XP / Mastery migration. Gold, materials, equipment, cached XP and Mastery are preserved. A legacy active blessing becomes one entry in the stacking collection.
 
-Clearing Zone 1 unlocks the second idle slot and a replay-travel tip. All ten advanced activities require clearing Zone 1, including idle and offline work. Source links, tracked recipes and Inventory material links connect gathering back to equipment.
-
-## Migration and verification
-
-Retired statistics, abilities absent from a Zone and ranks above its revised maximum refund their original purchase prices to that exact Zone. Retained abilities keep their ranks. A versioned receipt prevents repeated credits. Older power-card saves first pass through the existing global-XP/Mastery migration, then receive any applicable refunds. Equipment, materials, gold, ground XP and Mastery are preserved.
-
-Twenty-three browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 111 distinct painted Codex entries, boss mechanics and live Zone pacing. Startup checks pause the HTML download to verify first paint, then cover asset readiness, reduced motion and retry. Run npm run report:balance to regenerate this file and balance-report.json.
+Run npm test for the browser suites, including 72 new-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.

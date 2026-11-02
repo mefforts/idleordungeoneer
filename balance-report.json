@@ -1,5 +1,12 @@
 {
-  "version": "9.9.0",
+  "version": "10.0.0",
+  "dungeons": [
+    {
+      "id": "deepwell",
+      "name": "The First Descent",
+      "firstZone": 0
+    }
+  ],
   "economy": [
     {
       "zone": 1,
@@ -21,81 +28,431 @@
   "currencies": [
     {
       "zone": 1,
-      "name": "Verdant Seals",
-      "art": "currency-overgrowth",
-      "monsterChance": 0.04,
-      "masteredChance": 0.056,
-      "elite": 6,
+      "name": "Dungeon Sigils",
+      "art": "currency-rift",
+      "monsterChance": 0.003,
+      "eliteChance": 0.35,
+      "elite": 1,
+      "rare": 1,
       "guardians": [
-        12,
-        20,
-        35
+        1,
+        1,
+        2
       ],
+      "zoneFinalBonus": 3,
+      "masteredMonsterChance": 0.0042,
       "firstClearGuardianEchoes": 26,
       "expectedRareElites": 3.7046519505803044,
-      "expectedFirstClearSeals": 526.4397256254585
+      "expectedFirstClearSigils": 36.79553799472856
     },
     {
       "zone": 2,
-      "name": "Ember Seals",
-      "art": "currency-embervault",
-      "monsterChance": 0.04,
-      "masteredChance": 0.056,
-      "elite": 6,
+      "name": "Dungeon Sigils",
+      "art": "currency-rift",
+      "monsterChance": 0.003,
+      "eliteChance": 0.35,
+      "elite": 1,
+      "rare": 1,
       "guardians": [
-        12,
-        20,
-        35
+        1,
+        1,
+        2
       ],
+      "zoneFinalBonus": 3,
+      "masteredMonsterChance": 0.0042,
       "firstClearGuardianEchoes": 56,
       "expectedRareElites": 5.308262904657494,
-      "expectedFirstClearSeals": 1056.9972469117588
+      "expectedFirstClearSigils": 69.34433811594351
     },
     {
       "zone": 3,
-      "name": "Soul Seals",
-      "art": "currency-crypt",
-      "monsterChance": 0.04,
-      "masteredChance": 0.056,
-      "elite": 6,
+      "name": "Dungeon Sigils",
+      "art": "currency-rift",
+      "monsterChance": 0.003,
+      "eliteChance": 0.35,
+      "elite": 1,
+      "rare": 1,
       "guardians": [
-        12,
-        20,
-        35
+        1,
+        1,
+        2
       ],
+      "zoneFinalBonus": 3,
+      "masteredMonsterChance": 0.0042,
       "firstClearGuardianEchoes": 116,
       "expectedRareElites": 5.971876628694306,
-      "expectedFirstClearSeals": 2095.752384707018
+      "expectedFirstClearSigils": 131.36596099880822
     },
     {
       "zone": 4,
-      "name": "Rift Seals",
+      "name": "Dungeon Sigils",
       "art": "currency-rift",
-      "monsterChance": 0.04,
-      "masteredChance": 0.056,
-      "elite": 6,
+      "monsterChance": 0.003,
+      "eliteChance": 0.35,
+      "elite": 1,
+      "rare": 1,
       "guardians": [
-        12,
-        20,
-        35
+        1,
+        1,
+        2
       ],
+      "zoneFinalBonus": 3,
+      "masteredMonsterChance": 0.0042,
       "firstClearGuardianEchoes": 116,
       "expectedRareElites": 8.323839553118095,
-      "expectedFirstClearSeals": 2116.9700837365835
+      "expectedFirstClearSigils": 134.25086803445873
     }
   ],
-  "retiredStats": [
-    "might",
-    "haste",
-    "reach",
-    "vitality",
-    "crit",
-    "swift",
-    "magnet",
-    "regen",
-    "wisdom",
-    "forage"
+  "dungeonPerks": [
+    {
+      "id": "fire",
+      "name": "Ember Edge",
+      "max": 5,
+      "base": 6,
+      "level": 1,
+      "icon": "1-fire",
+      "description": "Every style ignites its target with a small burn.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 6
+        },
+        {
+          "rank": 2,
+          "price": 17
+        },
+        {
+          "rank": 3,
+          "price": 48
+        },
+        {
+          "rank": 4,
+          "price": 132
+        },
+        {
+          "rank": 5,
+          "price": 369
+        }
+      ]
+    },
+    {
+      "id": "frost",
+      "name": "Winter Thread",
+      "max": 3,
+      "base": 6,
+      "level": 1,
+      "icon": "0-frost",
+      "description": "Every style chills the enemies it hits.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 6
+        },
+        {
+          "rank": 2,
+          "price": 17
+        },
+        {
+          "rank": 3,
+          "price": 48
+        }
+      ]
+    },
+    {
+      "id": "storm",
+      "name": "Soul Conductor",
+      "max": 4,
+      "base": 8,
+      "level": 1,
+      "icon": "2-storm",
+      "description": "Hits can arc to another nearby enemy.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 8
+        },
+        {
+          "rank": 2,
+          "price": 23
+        },
+        {
+          "rank": 3,
+          "price": 63
+        },
+        {
+          "rank": 4,
+          "price": 176
+        }
+      ]
+    },
+    {
+      "id": "nova",
+      "name": "Fracture",
+      "max": 3,
+      "base": 8,
+      "level": 1,
+      "icon": "1-nova",
+      "description": "Critical hits splash nearby enemies.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 8
+        },
+        {
+          "rank": 2,
+          "price": 23
+        },
+        {
+          "rank": 3,
+          "price": 63
+        }
+      ]
+    },
+    {
+      "id": "ward",
+      "name": "Dungeon Ward",
+      "max": 4,
+      "base": 8,
+      "level": 1,
+      "icon": "3-ward",
+      "description": "A small ward reduces incoming damage throughout this Dungeon.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 8
+        },
+        {
+          "rank": 2,
+          "price": 23
+        },
+        {
+          "rank": 3,
+          "price": 63
+        },
+        {
+          "rank": 4,
+          "price": 176
+        }
+      ]
+    },
+    {
+      "id": "technique",
+      "name": "Battle Geometry",
+      "max": 3,
+      "base": 10,
+      "level": 1,
+      "icon": "0-cleave",
+      "adaptive": true,
+      "styles": {
+        "Melee": {
+          "name": "Wide Sweep",
+          "description": "Each rank adds one sweep target and 12% melee reach."
+        },
+        "Ranged": {
+          "name": "Piercing Flight",
+          "description": "Projectiles pierce one more target per rank, keeping 84% damage after each."
+        },
+        "Mage": {
+          "name": "Guided Hex",
+          "description": "Projectiles seek targets, prioritizing elites and bosses. Each rank improves steering."
+        }
+      },
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 10
+        },
+        {
+          "rank": 2,
+          "price": 28
+        },
+        {
+          "rank": 3,
+          "price": 79
+        }
+      ]
+    },
+    {
+      "id": "echo",
+      "name": "Echo Arts",
+      "max": 3,
+      "base": 12,
+      "level": 1,
+      "icon": "3-multishot",
+      "adaptive": true,
+      "styles": {
+        "Melee": {
+          "name": "Echoing Cut",
+          "description": "A hit can send a weak blade into another nearby target."
+        },
+        "Ranged": {
+          "name": "Many Arrows",
+          "description": "Fire one extra arrow per rank, each dealing 15% damage."
+        },
+        "Mage": {
+          "name": "Rebounding Spell",
+          "description": "Projectiles ricochet to another enemy per rank, keeping 70% damage."
+        }
+      },
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 12
+        },
+        {
+          "rank": 2,
+          "price": 34
+        },
+        {
+          "rank": 3,
+          "price": 95
+        }
+      ]
+    },
+    {
+      "id": "disrupt",
+      "name": "Spellbreaker",
+      "max": 3,
+      "base": 10,
+      "level": 1,
+      "icon": "2-frost",
+      "description": "Hits can briefly disable enemy totems. One disruption can occur every eight seconds.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 10
+        },
+        {
+          "rank": 2,
+          "price": 28
+        },
+        {
+          "rank": 3,
+          "price": 79
+        }
+      ]
+    },
+    {
+      "id": "shatter",
+      "name": "Cold Verdict",
+      "max": 3,
+      "base": 14,
+      "level": 3,
+      "icon": "2-nova",
+      "description": "Defeating a chilled enemy releases a small damaging burst.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 14
+        },
+        {
+          "rank": 2,
+          "price": 40
+        },
+        {
+          "rank": 3,
+          "price": 110
+        }
+      ]
+    },
+    {
+      "id": "return",
+      "name": "Returning Power",
+      "max": 3,
+      "base": 18,
+      "level": 5,
+      "icon": "3-storm",
+      "adaptive": true,
+      "styles": {
+        "Melee": {
+          "name": "Returning Slash",
+          "description": "Occasional hits throw a blade that returns to you."
+        },
+        "Ranged": {
+          "name": "Returning Shaft",
+          "description": "Occasional shots release an arrow that returns to you."
+        },
+        "Mage": {
+          "name": "Returning Orb",
+          "description": "Occasional spells release an orb that returns to you."
+        }
+      },
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 18
+        },
+        {
+          "rank": 2,
+          "price": 51
+        },
+        {
+          "rank": 3,
+          "price": 142
+        }
+      ]
+    },
+    {
+      "id": "vortex",
+      "name": "Gravitation",
+      "max": 3,
+      "base": 22,
+      "level": 8,
+      "icon": "0-ward",
+      "description": "Kills draw nearby ordinary enemies together, setting up area attacks.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 22
+        },
+        {
+          "rank": 2,
+          "price": 62
+        },
+        {
+          "rank": 3,
+          "price": 173
+        }
+      ]
+    },
+    {
+      "id": "prism",
+      "name": "Mirrorcraft",
+      "max": 3,
+      "base": 26,
+      "level": 12,
+      "icon": "3-cleave",
+      "description": "Successful reflect wards return extra damage and briefly disrupt the caster’s totems.",
+      "styles": null,
+      "ranks": [
+        {
+          "rank": 1,
+          "price": 26
+        },
+        {
+          "rank": 2,
+          "price": 73
+        },
+        {
+          "rank": 3,
+          "price": 204
+        }
+      ]
+    }
   ],
+  "migration": {
+    "legacySealsPerSigil": 25,
+    "refund": "Unspent seals plus the full historical price of all purchased ranks",
+    "fractionalCredit": true
+  },
   "dungeoneeringLevels": [
     {
       "level": 1,
@@ -128,6 +485,22 @@
     {
       "level": 8,
       "totalXp": 78400
+    },
+    {
+      "level": 9,
+      "totalXp": 102400
+    },
+    {
+      "level": 10,
+      "totalXp": 129600
+    },
+    {
+      "level": 11,
+      "totalXp": 160000
+    },
+    {
+      "level": 12,
+      "totalXp": 193600
     }
   ],
   "limits": {
@@ -384,7 +757,9 @@
     "chance": 0.015,
     "healthMultiplier": 3.5,
     "maximumPerWave": 1,
-    "friendlyFireFraction": 0.35,
+    "blessingChance": 1,
+    "otherEliteBlessingChance": 0.35,
+    "stacking": true,
     "lifesteal": 0.005,
     "boons": {
       "fervor": {
@@ -403,12 +778,61 @@
         "color": "#a8ded7"
       },
       "stoneguard": {
-        "name": "Stoneguard",
+        "name": "Stonebreaker",
         "seconds": 60,
-        "protection": 0.8,
-        "regen": 0.003,
-        "description": "20% less damage · 0.3% HP / s",
+        "eliteDamage": 1.25,
+        "description": "+25% damage to elites and bosses",
         "color": "#c7d6a6"
+      },
+      "silence": {
+        "name": "Totem Silence",
+        "seconds": 45,
+        "disableTotems": 1,
+        "description": "Disable every enemy totem while this blessing lasts",
+        "color": "#c3abf4"
+      },
+      "quagmire": {
+        "name": "Stillworld",
+        "seconds": 40,
+        "enemyMovement": 0.5,
+        "description": "All enemy movement is halved, including charges",
+        "color": "#a8dcf2"
+      },
+      "bounty": {
+        "name": "Golden Hunt",
+        "seconds": 50,
+        "goldPerKill": 1,
+        "description": "Each non-summoned kill grants 1 extra gold",
+        "color": "#f2d282"
+      },
+      "harvest": {
+        "name": "Plentiful Hunt",
+        "seconds": 50,
+        "resourcePerKill": 1,
+        "description": "Each non-summoned kill grants 1 material from this Zone",
+        "color": "#aeda93"
+      },
+      "cascade": {
+        "name": "Chain Reaction",
+        "seconds": 45,
+        "chainChance": 0.22,
+        "description": "Hits have a 22% chance to arc to another enemy",
+        "color": "#a9c3f3"
+      },
+      "momentum": {
+        "name": "Momentum",
+        "seconds": 45,
+        "damage": 1.1,
+        "attackSpeed": 1.08,
+        "description": "+10% hit damage · +8% attack speed",
+        "color": "#e9a985"
+      },
+      "longarm": {
+        "name": "Long Reach",
+        "seconds": 50,
+        "range": 1.25,
+        "description": "+25% attack reach for Melee, Mage and Ranged",
+        "color": "#d1dca9"
       }
     },
     "forms": [
@@ -464,10 +888,162 @@
       ]
     ]
   },
+  "encounters": {
+    "patterns": 28,
+    "expanded": {
+      "ringchain": {
+        "name": "Rebounding Barrage",
+        "seconds": 1.6,
+        "hint": "Three rings · gaps rotate · violet shots rebound"
+      },
+      "bloom": {
+        "name": "Growing Stars",
+        "seconds": 1.5,
+        "hint": "Projectiles grow · leave a wider gap"
+      },
+      "return": {
+        "name": "Homeward Blades",
+        "seconds": 1.5,
+        "hint": "Red blades turn home · watch the return path"
+      },
+      "crossfire": {
+        "name": "Crossfire",
+        "seconds": 1.5,
+        "hint": "Violet cross · lure enemies into the lanes"
+      },
+      "spiral": {
+        "name": "Spiral Barrage",
+        "seconds": 1.6,
+        "hint": "Rotating gaps · keep moving"
+      },
+      "sunder": {
+        "name": "Threefold Ruin",
+        "seconds": 2.8,
+        "hint": "Three red quarters · enter the teal quarter"
+      },
+      "gauntlet": {
+        "name": "Marching Ruin",
+        "seconds": 1.7,
+        "hint": "Red lanes strike in numbered order"
+      },
+      "donut": {
+        "name": "Outer Ruin",
+        "seconds": 1.8,
+        "hint": "Teal center · red outer ring"
+      },
+      "nova": {
+        "name": "Inner Ruin",
+        "seconds": 1.6,
+        "hint": "Red center · move outside"
+      },
+      "pincer": {
+        "name": "Closing Jaws",
+        "seconds": 1.8,
+        "hint": "Two violet sweeps · use the gap"
+      },
+      "summon": {
+        "name": "Calling Spire",
+        "seconds": 1.7,
+        "hint": "Destroy the spire · stop its reinforcements"
+      },
+      "eliteSummon": {
+        "name": "Royal Calling",
+        "seconds": 2,
+        "hint": "Destroy the crowned spire · it calls elites"
+      },
+      "bastion": {
+        "name": "Royal Guard",
+        "seconds": 2,
+        "hint": "Blue shield · defeat both guards"
+      },
+      "reversal": {
+        "name": "Hungry Mirror",
+        "seconds": 1.9,
+        "hint": "Gold center reflects · a missed mirror heals the boss"
+      },
+      "minefield": {
+        "name": "Marked Ground",
+        "seconds": 1.8,
+        "hint": "Red marks lock on cast · step between them"
+      },
+      "tether": {
+        "name": "Siphon Tether",
+        "seconds": 2.6,
+        "hint": "Break the red tether · move beyond the ring"
+      },
+      "orbit": {
+        "name": "Orbital Blades",
+        "seconds": 1.8,
+        "hint": "Red blades orbit then fly outward"
+      },
+      "eruptionTrail": {
+        "name": "Ruinous Rush",
+        "seconds": 1.5,
+        "hint": "Violet charge leaves a burning trail"
+      }
+    },
+    "colors": {
+      "danger": {
+        "color": "#f16d68",
+        "hot": "#ffe2d8",
+        "dark": "#52272a"
+      },
+      "friendly": {
+        "color": "#c887ff",
+        "hot": "#f3ddff",
+        "dark": "#432756"
+      },
+      "reflect": {
+        "color": "#edcb76",
+        "hot": "#fff5d5",
+        "dark": "#51452c"
+      },
+      "safe": {
+        "color": "#6ce0bc",
+        "hot": "#d4fff0",
+        "dark": "#214940"
+      },
+      "shield": {
+        "color": "#79bdff",
+        "hot": "#e4f3ff",
+        "dark": "#233e63"
+      }
+    },
+    "bossHealthMultiplier": 1.12,
+    "phases": [
+      0.75,
+      0.4
+    ],
+    "friendlyFire": {
+      "ordinary": 0.35,
+      "elite": 0.12,
+      "boss": 0.025
+    },
+    "summons": {
+      "maximum": 8,
+      "maximumElites": 3,
+      "maximumSpires": 2,
+      "rewards": false
+    },
+    "healing": {
+      "chance": 0.02,
+      "ordinary": 0.03,
+      "elite": 0.12,
+      "eliteChance": 0.55,
+      "rare": 0.15,
+      "rareChance": 0.7
+    },
+    "healingStream": {
+      "playerPerSecond": 0.0035,
+      "playerLifetimeReserve": 0.15,
+      "ownerPerSecond": 0.004
+    }
+  },
   "weapons": [
     {
       "id": "sword",
       "name": "Arming Sword",
+      "style": "Melee",
       "tiers": [
         {
           "tier": 1,
@@ -492,6 +1068,7 @@
     {
       "id": "shield",
       "name": "Sword & Shield",
+      "style": "Melee",
       "tiers": [
         {
           "tier": 1,
@@ -516,6 +1093,7 @@
     {
       "id": "polearm",
       "name": "Halberd",
+      "style": "Melee",
       "tiers": [
         {
           "tier": 1,
@@ -540,6 +1118,7 @@
     {
       "id": "greatsword",
       "name": "Greatsword",
+      "style": "Melee",
       "tiers": [
         {
           "tier": 1,
@@ -564,6 +1143,7 @@
     {
       "id": "bow",
       "name": "Hunting Bow",
+      "style": "Ranged",
       "tiers": [
         {
           "tier": 1,
@@ -588,6 +1168,7 @@
     {
       "id": "staff",
       "name": "Focus Staff",
+      "style": "Mage",
       "tiers": [
         {
           "tier": 1,
@@ -646,7 +1227,7 @@
     },
     {
       "id": "ranged_1",
-      "name": "Plain Ranger Leathers",
+      "name": "Plain Ranged Leathers",
       "style": "ranged",
       "group": "woodworking",
       "tier": 1,
@@ -663,7 +1244,7 @@
     },
     {
       "id": "ranged_2",
-      "name": "Cured Ranger Leathers",
+      "name": "Cured Ranged Leathers",
       "style": "ranged",
       "group": "woodworking",
       "tier": 2,
@@ -960,591 +1541,11 @@
       "group": "artisan"
     }
   ],
-  "zoneAbilities": [
-    {
-      "zone": 1,
-      "name": "The Overgrowth",
-      "abilities": [
-        {
-          "id": "fire",
-          "name": "Briar Venom",
-          "max": 8,
-          "base": 8,
-          "art": "zone-ability-0-fire",
-          "codex": "zone_ability_0_fire",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 8,
-              "effect": "2% hit damage / s · 2.6s"
-            },
-            {
-              "rank": 2,
-              "price": 14,
-              "effect": "4% hit damage / s · 2.7s"
-            },
-            {
-              "rank": 3,
-              "price": 22,
-              "effect": "6% hit damage / s · 2.8s"
-            },
-            {
-              "rank": 4,
-              "price": 36,
-              "effect": "8% hit damage / s · 2.9s"
-            },
-            {
-              "rank": 5,
-              "price": 60,
-              "effect": "10% hit damage / s · 3.0s"
-            },
-            {
-              "rank": 6,
-              "price": 140,
-              "effect": "12% hit damage / s · 3.1s"
-            },
-            {
-              "rank": 7,
-              "price": 328,
-              "effect": "14% hit damage / s · 3.2s"
-            },
-            {
-              "rank": 8,
-              "price": 770,
-              "effect": "16% hit damage / s · 3.3s"
-            }
-          ]
-        },
-        {
-          "id": "frost",
-          "name": "Grasping Roots",
-          "max": 5,
-          "base": 8,
-          "art": "zone-ability-0-frost",
-          "codex": "zone_ability_0_frost",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 8,
-              "effect": "7% slow · 1.1s"
-            },
-            {
-              "rank": 2,
-              "price": 14,
-              "effect": "9% slow · 1.2s"
-            },
-            {
-              "rank": 3,
-              "price": 22,
-              "effect": "11% slow · 1.3s"
-            },
-            {
-              "rank": 4,
-              "price": 36,
-              "effect": "13% slow · 1.4s"
-            },
-            {
-              "rank": 5,
-              "price": 60,
-              "effect": "15% slow · 1.5s"
-            }
-          ]
-        },
-        {
-          "id": "cleave",
-          "name": "Bramble Sweep",
-          "max": 3,
-          "base": 18,
-          "melee": true,
-          "art": "zone-ability-0-cleave",
-          "codex": "zone_ability_0_cleave",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 18,
-              "effect": "+1 melee target"
-            },
-            {
-              "rank": 2,
-              "price": 108,
-              "effect": "+2 melee targets"
-            },
-            {
-              "rank": 3,
-              "price": 648,
-              "effect": "+3 melee targets"
-            }
-          ]
-        },
-        {
-          "id": "ward",
-          "name": "Barkskin",
-          "max": 5,
-          "base": 8,
-          "art": "zone-ability-0-ward",
-          "codex": "zone_ability_0_ward",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 8,
-              "effect": "2% protection"
-            },
-            {
-              "rank": 2,
-              "price": 14,
-              "effect": "4% protection"
-            },
-            {
-              "rank": 3,
-              "price": 22,
-              "effect": "6% protection"
-            },
-            {
-              "rank": 4,
-              "price": 36,
-              "effect": "8% protection"
-            },
-            {
-              "rank": 5,
-              "price": 60,
-              "effect": "10% protection"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "zone": 2,
-      "name": "The Embervault",
-      "abilities": [
-        {
-          "id": "fire",
-          "name": "Cinderbrand",
-          "max": 8,
-          "base": 8,
-          "art": "zone-ability-1-fire",
-          "codex": "zone_ability_1_fire",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 10,
-              "effect": "2% hit damage / s · 2.6s"
-            },
-            {
-              "rank": 2,
-              "price": 16,
-              "effect": "4% hit damage / s · 2.7s"
-            },
-            {
-              "rank": 3,
-              "price": 26,
-              "effect": "6% hit damage / s · 2.8s"
-            },
-            {
-              "rank": 4,
-              "price": 42,
-              "effect": "8% hit damage / s · 2.9s"
-            },
-            {
-              "rank": 5,
-              "price": 69,
-              "effect": "10% hit damage / s · 3.0s"
-            },
-            {
-              "rank": 6,
-              "price": 161,
-              "effect": "12% hit damage / s · 3.1s"
-            },
-            {
-              "rank": 7,
-              "price": 377,
-              "effect": "14% hit damage / s · 3.2s"
-            },
-            {
-              "rank": 8,
-              "price": 885,
-              "effect": "16% hit damage / s · 3.3s"
-            }
-          ]
-        },
-        {
-          "id": "nova",
-          "name": "Slagburst",
-          "max": 5,
-          "base": 8,
-          "art": "zone-ability-1-nova",
-          "codex": "zone_ability_1_nova",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 10,
-              "effect": "1 targets · 8% critical splash"
-            },
-            {
-              "rank": 2,
-              "price": 16,
-              "effect": "1 targets · 10% critical splash"
-            },
-            {
-              "rank": 3,
-              "price": 26,
-              "effect": "2 targets · 12% critical splash"
-            },
-            {
-              "rank": 4,
-              "price": 42,
-              "effect": "2 targets · 14% critical splash"
-            },
-            {
-              "rank": 5,
-              "price": 69,
-              "effect": "2 targets · 16% critical splash"
-            }
-          ]
-        },
-        {
-          "id": "pierce",
-          "name": "Searing Shot",
-          "max": 3,
-          "base": 18,
-          "ranged": true,
-          "art": "zone-ability-1-pierce",
-          "codex": "zone_ability_1_pierce",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 21,
-              "effect": "+1 pierce · 84% damage"
-            },
-            {
-              "rank": 2,
-              "price": 125,
-              "effect": "+2 pierces · 84% damage"
-            },
-            {
-              "rank": 3,
-              "price": 746,
-              "effect": "+3 pierces · 84% damage"
-            }
-          ]
-        },
-        {
-          "id": "ward",
-          "name": "Basalt Guard",
-          "max": 5,
-          "base": 8,
-          "art": "zone-ability-1-ward",
-          "codex": "zone_ability_1_ward",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 10,
-              "effect": "2% protection"
-            },
-            {
-              "rank": 2,
-              "price": 16,
-              "effect": "4% protection"
-            },
-            {
-              "rank": 3,
-              "price": 26,
-              "effect": "6% protection"
-            },
-            {
-              "rank": 4,
-              "price": 42,
-              "effect": "8% protection"
-            },
-            {
-              "rank": 5,
-              "price": 69,
-              "effect": "10% protection"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "zone": 3,
-      "name": "The Hollow Crypt",
-      "abilities": [
-        {
-          "id": "storm",
-          "name": "Soul Chain",
-          "max": 5,
-          "base": 10,
-          "art": "zone-ability-2-storm",
-          "codex": "zone_ability_2_storm",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 13,
-              "effect": "4% chain chance · 23% damage"
-            },
-            {
-              "rank": 2,
-              "price": 22,
-              "effect": "8% chain chance · 26% damage"
-            },
-            {
-              "rank": 3,
-              "price": 36,
-              "effect": "12% chain chance · 29% damage"
-            },
-            {
-              "rank": 4,
-              "price": 59,
-              "effect": "16% chain chance · 32% damage"
-            },
-            {
-              "rank": 5,
-              "price": 97,
-              "effect": "20% chain chance · 35% damage"
-            }
-          ]
-        },
-        {
-          "id": "frost",
-          "name": "Grave Chill",
-          "max": 5,
-          "base": 8,
-          "art": "zone-ability-2-frost",
-          "codex": "zone_ability_2_frost",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 11,
-              "effect": "7% slow · 1.1s"
-            },
-            {
-              "rank": 2,
-              "price": 18,
-              "effect": "9% slow · 1.2s"
-            },
-            {
-              "rank": 3,
-              "price": 29,
-              "effect": "11% slow · 1.3s"
-            },
-            {
-              "rank": 4,
-              "price": 47,
-              "effect": "13% slow · 1.4s"
-            },
-            {
-              "rank": 5,
-              "price": 78,
-              "effect": "15% slow · 1.5s"
-            }
-          ]
-        },
-        {
-          "id": "nova",
-          "name": "Soulburst",
-          "max": 5,
-          "base": 8,
-          "art": "zone-ability-2-nova",
-          "codex": "zone_ability_2_nova",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 11,
-              "effect": "1 targets · 8% critical splash"
-            },
-            {
-              "rank": 2,
-              "price": 18,
-              "effect": "1 targets · 10% critical splash"
-            },
-            {
-              "rank": 3,
-              "price": 29,
-              "effect": "2 targets · 12% critical splash"
-            },
-            {
-              "rank": 4,
-              "price": 47,
-              "effect": "2 targets · 14% critical splash"
-            },
-            {
-              "rank": 5,
-              "price": 78,
-              "effect": "2 targets · 16% critical splash"
-            }
-          ]
-        },
-        {
-          "id": "ward",
-          "name": "Bone Ward",
-          "max": 5,
-          "base": 8,
-          "art": "zone-ability-2-ward",
-          "codex": "zone_ability_2_ward",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 11,
-              "effect": "2% protection"
-            },
-            {
-              "rank": 2,
-              "price": 18,
-              "effect": "4% protection"
-            },
-            {
-              "rank": 3,
-              "price": 29,
-              "effect": "6% protection"
-            },
-            {
-              "rank": 4,
-              "price": 47,
-              "effect": "8% protection"
-            },
-            {
-              "rank": 5,
-              "price": 78,
-              "effect": "10% protection"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "zone": 4,
-      "name": "The Astral Rift",
-      "abilities": [
-        {
-          "id": "storm",
-          "name": "Arc Rift",
-          "max": 5,
-          "base": 10,
-          "art": "zone-ability-3-storm",
-          "codex": "zone_ability_3_storm",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 15,
-              "effect": "4% chain chance · 23% damage"
-            },
-            {
-              "rank": 2,
-              "price": 24,
-              "effect": "8% chain chance · 26% damage"
-            },
-            {
-              "rank": 3,
-              "price": 40,
-              "effect": "12% chain chance · 29% damage"
-            },
-            {
-              "rank": 4,
-              "price": 66,
-              "effect": "16% chain chance · 32% damage"
-            },
-            {
-              "rank": 5,
-              "price": 108,
-              "effect": "20% chain chance · 35% damage"
-            }
-          ]
-        },
-        {
-          "id": "multishot",
-          "name": "Mirrorcast",
-          "max": 3,
-          "base": 24,
-          "ranged": true,
-          "art": "zone-ability-3-multishot",
-          "codex": "zone_ability_3_multishot",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 35,
-              "effect": "+1 projectile · 15% damage"
-            },
-            {
-              "rank": 2,
-              "price": 209,
-              "effect": "+2 projectiles · 15% damage"
-            },
-            {
-              "rank": 3,
-              "price": 1253,
-              "effect": "+3 projectiles · 15% damage"
-            }
-          ]
-        },
-        {
-          "id": "cleave",
-          "name": "Phase Sweep",
-          "max": 3,
-          "base": 18,
-          "melee": true,
-          "art": "zone-ability-3-cleave",
-          "codex": "zone_ability_3_cleave",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 27,
-              "effect": "+1 melee target"
-            },
-            {
-              "rank": 2,
-              "price": 157,
-              "effect": "+2 melee targets"
-            },
-            {
-              "rank": 3,
-              "price": 940,
-              "effect": "+3 melee targets"
-            }
-          ]
-        },
-        {
-          "id": "ward",
-          "name": "Astral Ward",
-          "max": 5,
-          "base": 8,
-          "art": "zone-ability-3-ward",
-          "codex": "zone_ability_3_ward",
-          "ranks": [
-            {
-              "rank": 1,
-              "price": 12,
-              "effect": "2% protection"
-            },
-            {
-              "rank": 2,
-              "price": 20,
-              "effect": "4% protection"
-            },
-            {
-              "rank": 3,
-              "price": 32,
-              "effect": "6% protection"
-            },
-            {
-              "rank": 4,
-              "price": 53,
-              "effect": "8% protection"
-            },
-            {
-              "rank": 5,
-              "price": 86,
-              "effect": "10% protection"
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "simulated": [
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 582.4800000000333,
+      "seconds": 567.5600000000297,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
@@ -1552,7 +1553,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1227.6400000000745,
+      "seconds": 1215.9600000000687,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
@@ -1560,7 +1561,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1948.8000000000807,
+      "seconds": 1860.0000000000664,
       "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 1800
@@ -1568,7 +1569,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2155.080000000113,
+      "seconds": 2161.6400000001086,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2100
@@ -1576,7 +1577,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2510.480000000147,
+      "seconds": 2464.6800000001354,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
@@ -1584,7 +1585,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2498.600000000149,
+      "seconds": 2481.3600000001397,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400

@@ -13,3 +13,4 @@
 }
 
 .zone-upgrade:focus-visible{outline:1px solid #c6aa73;outline-offset:4px}
+.dungeon-style-notice{display:grid;gap:7px;padding:13px 15px;margin:0 0 18px;border:1px solid #bfa46b55;background:#273b3b66;border-radius:8px;font:12px/1.5 system-ui;color:#c9c5af}.dungeon-style-notice>b{color:#eedbb5;font:16px Georgia}.dungeon-unlocks-title{font:17px Georgia;color:#c2b493;margin:24px 0 12px}.dungeon-locked-list .zone-upgrade{opacity:.65}.dungeon-locked-list .shop-buy{min-width:48px}.player-ui .zone-upgrade .shop-effect>span{font-size:11px;line-height:1.5}.player-ui .zone-wallet{flex-wrap:wrap}

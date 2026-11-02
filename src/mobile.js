@@ -56,7 +56,7 @@ function installMobileUI(){
  // A compatibility click can be retargeted into a newly opened menu. Consume it
  // before it reaches that menu; new physical presses and keyboard clicks still work.
  document.addEventListener('click',e=>{const previous=touchNavigationClick;if(previous&&e.isTrusted&&e.detail>0&&performance.now()-previous.time<650&&Math.hypot(e.clientX-previous.x,e.clientY-previous.y)<12){touchNavigationClick=null;e.preventDefault();e.stopImmediatePropagation();}},true);
- navigationIcon('delveNav','nav-delve','Delve');navigationIcon('quickGear','nav-inventory','Inventory');navigationIcon('quickShop','zone-shop','Zone Shop');
+ navigationIcon('delveNav','nav-delve','Delve');navigationIcon('quickGear','nav-inventory','Inventory');navigationIcon('quickShop','zone-shop','Dungeon Shop');
  navigationIcon('speedToggle','nav-speed');$('speedToggle').querySelector('svg')?.remove();
  for(const id of ['firstWeaponHint','delveNav','quickGear','quickSkills','quickShop','quickCodex','quickSettings','quickPause','speedToggle','dashButton','drawerClose','activeIdleButton'])bindTouchNavigation($(id));
  $('speedOptions').querySelectorAll('button').forEach(bindTouchNavigation);
@@ -101,6 +101,7 @@ function updatePauseHud(){
 }
 
 function showOverlay(markup,kind=''){
+ if(eliteRewardOpen()&&kind!=='elite-reward-overlay')return false;
  resetArenaTouch(true);
  const o=$('overlay');if(o.classList.contains('hidden'))modalFocus=document.activeElement;game.holdSkill=null;game.keys={};game.mouseMove.active=false;
  document.body.classList.toggle('mastery-modal-open',kind==='mastery-overlay');document.body.classList.toggle('codex-modal-open',kind==='codex-overlay');o.classList.toggle('mastery-modal',kind==='mastery-overlay');o.classList.toggle('codex-modal',kind==='codex-overlay');o.classList.remove('hidden');o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');

@@ -526,7 +526,7 @@
         3,
         4
       ],
-      "description": "Increase Zone currency drop chance by 10% per rank."
+      "description": "Increase ordinary-monster Dungeon Sigil drop chance by 10% per rank."
     },
     "adaptation": {
       "name": "Discovery",

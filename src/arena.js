@@ -3,7 +3,7 @@ const ARENA_PINS = [
   {id:'delve',element:'delveNav',name:'Delve'},
   {id:'gear',element:'quickGear',name:'Inventory'},
   {id:'skills',element:'quickSkills',name:'Skills'},
-  {id:'shop',element:'quickShop',name:'Zone Shop'},
+  {id:'shop',element:'quickShop',name:'Dungeon Shop'},
   {id:'codex',element:'quickCodex',name:'Codex'},
   {id:'settings',element:'quickSettings',name:'Settings'},
   {id:'pause',element:'quickPause',name:'Pause / resume'},
@@ -39,7 +39,7 @@ function announce(msg,seconds=2){
 
 function zoneEnemyHp(boss=false,bossIndex=0,variance=1){
   const model=zoneBalance(),base=boss?[160,230,360][bossIndex]*(bossIndex===2?(isZoneFinal()?3.2:1.75):1):30+game.phase*4;
-  return base*Math.pow(1.14,combatDepth()-zoneNumber()*3-1)*model.hpScale*(boss?1:variance);
+  return base*Math.pow(1.14,combatDepth()-zoneNumber()*3-1)*model.hpScale*(boss?1.12:variance);
 }
 
 function bonusPosition(){

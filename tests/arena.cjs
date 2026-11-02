@@ -28,12 +28,15 @@ function instrumentation(){
         for(let floor=0;floor<model.floors;floor++){
           startFloor();game.player.hp=game.player.maxHp=1e9;game.player.invuln=1e8;let steps=0;
           while(game.status==='running'&&steps++<600000){
-            // Permanent healing streams require counterplay. Approach the caster
-            // along its stream, within melee reach, to intercept while attacking.
-            const stream=(game.totems||[]).find(t=>t.type==='mend'),p=game.player;
-            if(stream){const from=encounterFoot(stream.owner),to=encounterFoot(stream),distance=Math.hypot(to.x-from.x,to.y-from.y),fraction=Math.min(.5,65/Math.max(1,distance)),target={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction-13},dx=target.x-p.x,dy=target.y-p.y;
-              game.joystick.pointer=-1;game.joystick.x=Math.hypot(dx,dy)>4?dx:0;game.joystick.y=Math.hypot(dx,dy)>4?dy:0;
-            }else{game.joystick.pointer=null;game.joystick.x=game.joystick.y=0;}
+            // Use counterplay at base equipment with no purchased or timed perks.
+            // Reflections, spires and shield guards require deliberate movement.
+            if(eliteRewardOpen())closeEliteReward(true);
+            const p=game.player,mirror=game.enemies.find(e=>['reflect','reversal'].includes(e.cast?.type)),spire=(game.totems||[]).find(t=>t.destructible),guard=game.enemies.find(e=>e.bastionGuard),stream=(game.totems||[]).find(t=>t.type==='mend'),nearest=combatTargets().sort((a,b)=>bodyDistance(a,p.x,p.y)-bodyDistance(b,p.x,p.y))[0];let target=null;
+            if(mirror)target={x:mirror.cast.point.x,y:mirror.cast.point.y-13};
+            else if(spire||guard){const actor=spire||guard;target=bodyPoint(actor,p.x,p.y);}
+            else if(stream){const from=encounterFoot(stream.owner),to=encounterFoot(stream),distance=Math.hypot(to.x-from.x,to.y-from.y),fraction=Math.min(.5,55/Math.max(1,distance));target={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction-13};}
+            else if(nearest&&bodyDistance(nearest,p.x,p.y)>attackReach()*.65)target=bodyPoint(nearest,p.x,p.y);
+            const dx=target?target.x-p.x:0,dy=target?target.y-p.y:0;game.joystick.pointer=-1;game.joystick.x=Math.hypot(dx,dy)>6?dx:0;game.joystick.y=Math.hypot(dx,dy)>6?dy:0;
             tickCombat(.04);
           }
           if(game.status!=='clear')throw Error('Simulation did not clear: '+game.status);
@@ -116,7 +119,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
       assert.equal(sim.kills,models[i].swarmCount+3*models[i].floors);
     }
     fs.writeFileSync(path.join(resultsDir,'zone-pacing.json'),JSON.stringify({models,simulated},null,2));
-    results.push('Full live combat simulation, including every spawn, hit, critical, approach and boss, verifies the first four zones and the long-term plateau');
+    results.push('Full live combat simulation, including every spawn, hit, guard, spire and reflection with active counterplay and no shop or timed perks, verifies the first four zones and the long-term plateau');
     await p.close();
     const speed=await page({viewport:{width:390,height:844}});
     await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);

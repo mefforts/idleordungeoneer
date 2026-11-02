@@ -23,6 +23,7 @@ function shieldingTarget(source){
  return game.enemies.filter(other=>other!==source&&other.elite&&!other.boss&&!other.shieldLink&&other.cast?.type!=='shield'&&!shieldRecipient(other)&&Math.hypot(other.x-source.x,other.y-source.y)<340).sort((a,b)=>Math.hypot(a.x-source.x,a.y-source.y)-Math.hypot(b.x-source.x,b.y-source.y))[0]||null;
 }
 function enemyShieldMultiplier(enemy){
+ if(enemy.guardIds?.some(g=>game.enemies.includes(g)&&g.hp>0))return .30;
  if(enemy.shieldLink||enemy.cast?.type==='shield')return 1;
  return game.enemies.some(source=>source.hp>0&&source.shieldLink?.target===enemy&&source.shieldLink.life>0&&!shieldRecipient(source))?.65:1;
 }
@@ -53,11 +54,12 @@ function resolveEliteSpecial(enemy,cast,damage){
  return false;
 }
 function tickEnemyCharge(enemy,dt){
- const charge=enemy.charge;if(!charge)return false;const distance=Math.min(charge.remaining,460*dt),x=enemy.x+Math.cos(charge.angle)*distance,y=enemy.y+Math.sin(charge.angle)*distance;
- if(!encounterClear(x,y+enemy.rad*.65,Math.max(10,enemy.rad*.7))){enemy.charge=null;burst(enemy.x,enemy.y,7,DUNGEON_THEMES[enemy.biome].color);return true;}
- enemy.x=x;enemy.y=y;charge.remaining-=distance;
- if(!charge.hitPlayer&&Math.hypot(game.player.x-x,game.player.y-y)<enemy.rad+17){charge.hitPlayer=true;hurt(bossAttackDamage(enemy)*1.1);enemy.contact=.8;}
- damageMonstersInAttack(enemy,charge,other=>Math.hypot(other.x-x,other.y-y)<enemy.rad+other.rad+9);
+ const charge=enemy.charge;if(!charge)return false;const distance=Math.min(charge.remaining,460*dt*enemyMovementFactor()),x=enemy.x+Math.cos(charge.angle)*distance,y=enemy.y+Math.sin(charge.angle)*distance;
+ if(!encounterClear(x,y+enemy.rad*.65,Math.max(10,enemy.rad*.7))){enemy.charge=null;burst(enemy.x,enemy.y,7,combatTheme('friendly').color);return true;}
+ const oldX=enemy.x,oldY=enemy.y;enemy.x=x;enemy.y=y;charge.remaining-=distance;
+ if(!charge.hitPlayer&&segmentDistance(game.player.x,game.player.y,oldX,oldY,x,y)<enemy.rad+17){charge.hitPlayer=true;hurt(bossAttackDamage(enemy)*1.1);enemy.contact=.8;}
+ damageMonstersInAttack(enemy,charge,other=>segmentDistance(other.x,other.y,oldX,oldY,x,y)<enemy.rad+other.rad+9);
+ if(charge.trail){charge.trailClock-=dt;if(charge.trailClock<=0){charge.trailClock=.18;game.hazards.push({type:'ground',language:'friendly',x:oldX,y:oldY,r:28,life:1.3,total:1.3,age:0,owner:enemy,enemyHits:charge.enemyHits,damage:bossAttackDamage(enemy)*.7,biome:enemy.biome});}}
  if(charge.remaining<=0)enemy.charge=null;return true;
 }
 function advanceRicochet(shot,dt){
@@ -84,7 +86,6 @@ function paintEliteSpecialWarning(enemy,cast,theme,progress){
  return false;
 }
 function paintEliteLinks(){
- for(const source of game.enemies){const target=source.shieldLink?.target;if(!target||!game.enemies.includes(target))continue;const theme=DUNGEON_THEMES[source.biome??biomeIndex()];
-  line(source.x,source.y-22,target.x,target.y-22,3,theme.dark+'a0');line(source.x,source.y-22,target.x,target.y-22,1.3,theme.hot+'b0');ctx.save();ctx.strokeStyle=theme.color+'a0';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(target.x,target.y-17,Math.max(22,target.rad+8),35,0,0,Math.PI*2);ctx.stroke();ctx.restore();
- }
+ for(const source of game.enemies){const target=source.shieldLink?.target;if(!target||!game.enemies.includes(target))continue;const theme=combatTheme('shield');line(source.x,source.y-22,target.x,target.y-22,3,theme.dark+'a0');line(source.x,source.y-22,target.x,target.y-22,1.3,theme.hot+'b0');ctx.save();ctx.strokeStyle=theme.color+'c0';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(target.x,target.y-17,Math.max(22,target.rad+8),35,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
+ for(const boss of game.enemies){const guards=boss.guardIds?.filter(g=>game.enemies.includes(g)&&g.hp>0)||[];if(!guards.length)continue;const theme=combatTheme('shield');for(const guard of guards)line(guard.x,guard.y-20,boss.x,boss.y-55,2,theme.color+'90');ctx.save();ctx.strokeStyle=theme.color;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(boss.x,boss.y-57,65,87,0,0,Math.PI*2);ctx.stroke();ctx.restore();encounterLabel('BLUE SHIELD · '+guards.length+' GUARDS',boss.x,boss.y-150,theme.hot,10);}
 }

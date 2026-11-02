@@ -1,4 +1,4 @@
-/* Rare members of the existing creature families and optional, timed spoils. */
+/* Rare creature families and stackable timed blessings. */
 const RARE_ELITE_CHANCE=.015;
 const RARE_ELITE_NAMES=[
  ['Thorncrown Mossling','Elder Moss Beetle','Antlered Sapling','Crowncap','Briar Alpha','Ancient Root Crawler'],
@@ -9,21 +9,27 @@ const RARE_ELITE_NAMES=[
 const ELITE_BOONS={
  fervor:{name:'Battle Fervor',seconds:45,damage:1.18,description:'+18% hit damage',color:'#e8b07c'},
  windstep:{name:'Windstep',seconds:40,attackSpeed:1.15,movement:1.12,description:'+15% attack speed · +12% movement',color:'#a8ded7'},
- stoneguard:{name:'Stoneguard',seconds:60,protection:.8,regen:.003,description:'20% less damage · 0.3% HP / s',color:'#c7d6a6'}
+ stoneguard:{name:'Stonebreaker',seconds:60,eliteDamage:1.25,description:'+25% damage to elites and bosses',color:'#c7d6a6'},
+ silence:{name:'Totem Silence',seconds:45,disableTotems:1,description:'Disable every enemy totem while this blessing lasts',color:'#c3abf4'},
+ quagmire:{name:'Stillworld',seconds:40,enemyMovement:.5,description:'All enemy movement is halved, including charges',color:'#a8dcf2'},
+ bounty:{name:'Golden Hunt',seconds:50,goldPerKill:1,description:'Each non-summoned kill grants 1 extra gold',color:'#f2d282'},
+ harvest:{name:'Plentiful Hunt',seconds:50,resourcePerKill:1,description:'Each non-summoned kill grants 1 material from this Zone',color:'#aeda93'},
+ cascade:{name:'Chain Reaction',seconds:45,chainChance:.22,description:'Hits have a 22% chance to arc to another enemy',color:'#a9c3f3'},
+ momentum:{name:'Momentum',seconds:45,damage:1.10,attackSpeed:1.08,description:'+10% hit damage · +8% attack speed',color:'#e9a985'},
+ longarm:{name:'Long Reach',seconds:50,range:1.25,description:'+25% attack reach for Melee, Mage and Ranged',color:'#d1dca9'}
 };
 const rareEliteImages=new Map();
-let rareEliteInstalled=false,eliteRewardId=0;
+let rareEliteInstalled=false,eliteRewardId=0,eliteRewardPause=false,eliteRewardOpenedAt=0;
 function normalizeRareEliteProgression(){
- const seen=new Set();data.eliteSpoils=(Array.isArray(data.eliteSpoils)?data.eliteSpoils:[]).filter(drop=>drop&&Number.isSafeInteger(drop.id)&&drop.id>0&&!seen.has(drop.id)&&seen.add(drop.id)&&Number.isInteger(drop.zone)&&drop.zone>=0&&drop.zone<=9999&&Number.isFinite(drop.x)&&Number.isFinite(drop.y)).slice(-64).map(drop=>({id:drop.id,zone:drop.zone,x:Math.max(-1e7,Math.min(1e7,drop.x)),y:Math.max(-1e7,Math.min(1e7,drop.y))}));
- data.eliteSpoilsSequence=Math.max(0,...data.eliteSpoils.map(drop=>drop.id),Math.min(1e12,Math.floor(Number(data.eliteSpoilsSequence)||0)));
- const boon=data.eliteBoon,definition=ELITE_BOONS[boon?.id];
- data.eliteBoon=definition&&boon.zone===zoneNumber()&&Number.isFinite(boon.remaining)&&boon.remaining>0?{id:boon.id,zone:boon.zone,remaining:Math.min(definition.seconds,boon.remaining)}:null;
+ const seen=new Set();data.eliteSpoils=(Array.isArray(data.eliteSpoils)?data.eliteSpoils:[]).filter(d=>d&&Number.isSafeInteger(d.id)&&d.id>0&&!seen.has(d.id)&&seen.add(d.id)&&Number.isInteger(d.zone)&&d.zone>=0&&d.zone<=9999&&Number.isFinite(d.x)&&Number.isFinite(d.y)).slice(-256).map(d=>{const drop={id:d.id,zone:d.zone,x:Math.max(-1e7,Math.min(1e7,d.x)),y:Math.max(-1e7,Math.min(1e7,d.y))};drop.choices=Array.isArray(d.choices)&&d.choices.length===3&&new Set(d.choices).size===3&&d.choices.every(id=>ELITE_BOONS[id])?[...d.choices]:blessingChoices(drop);return drop;});
+ data.eliteSpoilsSequence=Math.max(0,...data.eliteSpoils.map(d=>d.id),Math.min(1e12,Math.floor(Number(data.eliteSpoilsSequence)||0)));
+ const source=Array.isArray(data.eliteBoons)?data.eliteBoons:data.eliteBoon?[data.eliteBoon]:[];
+ data.eliteBoons=source.filter(b=>ELITE_BOONS[b?.id]&&Number.isFinite(b.remaining)&&b.remaining>0&&(b.dungeon||dungeonForZone(b.zone??zoneNumber()).id)===dungeonForZone().id).slice(-128).map((b,i)=>({id:b.id,dungeon:b.dungeon||dungeonForZone(b.zone??zoneNumber()).id,remaining:Math.min(ELITE_BOONS[b.id].seconds,b.remaining),uid:Number.isSafeInteger(b.uid)?b.uid:i+1}));
+ data.eliteBoonSequence=Math.max(0,...data.eliteBoons.map(b=>b.uid),Number(data.eliteBoonSequence)||0);data.eliteBoon=data.eliteBoons[0]||null;
 }
-function eliteBoonValue(key,fallback=1){const boon=data.eliteBoon;return boon&&boon.remaining>0&&boon.zone===zoneNumber()?(ELITE_BOONS[boon.id]?.[key]??fallback):fallback;}
+function eliteBoonValue(key,fallback=1){return activeEliteBoons().reduce((value,b)=>value*(ELITE_BOONS[b.id]?.[key]??1),fallback);}
 function tickEliteBoon(dt){
- const boon=data.eliteBoon;if(!boon)return;if(boon.zone!==zoneNumber()){data.eliteBoon=null;return;}
- const elapsed=Math.min(dt,boon.remaining),regen=eliteBoonValue('regen',0);if(regen)game.player.hp=Math.min(game.player.maxHp,game.player.hp+game.player.maxHp*regen*elapsed);
- boon.remaining=Math.max(0,boon.remaining-dt);if(boon.remaining<=0)data.eliteBoon=null;
+ if(eliteRewardOpen())return;data.eliteBoons=activeEliteBoons().map(b=>({...b,remaining:Math.max(0,b.remaining-dt)})).filter(b=>b.remaining>0);data.eliteBoon=data.eliteBoons[0]||null;
 }
 function rareEliteImage(kind,variant){
  const key=ENVIRONMENT_ZONES[kind].key+'-'+variant,art=RARE_ELITE_ART[key];if(!art)return null;
@@ -47,52 +53,51 @@ function paintRareElite(enemy){
  ctx.save();ctx.font='600 9px system-ui';ctx.textAlign='center';ctx.strokeStyle='#13140d';ctx.lineWidth=3;ctx.strokeText(enemy.name,enemy.x,y-6);ctx.fillStyle='#ead8ac';ctx.fillText(enemy.name,enemy.x,y-6);ctx.restore();
 }
 function dropEliteSpoils(enemy){
- if(!enemy.champion)return;const drop={id:++data.eliteSpoilsSequence,zone:zoneNumber(),x:enemy.x,y:enemy.y};data.eliteSpoils.push(drop);if(data.eliteSpoils.length>64)data.eliteSpoils.shift();
- toast('Elite spoils','Choose a blessing when ready.');save();
+ if(enemy.summoned||!enemy.elite||!enemy.champion&&Math.random()>=.35)return null;
+ const drop={id:++data.eliteSpoilsSequence,zone:zoneNumber(),x:enemy.x,y:enemy.y};drop.choices=blessingChoices(drop);data.eliteSpoils.push(drop);if(data.eliteSpoils.length>256)data.eliteSpoils.shift();codexDiscover('rare_elites');save();return drop;
 }
 function paintEliteSpoils(){
- const image=rareEliteImages.get('spoils');for(const drop of data.eliteSpoils||[]){if(drop.zone!==zoneNumber())continue;
-  const bob=reducedMotion()?0:Math.sin(game.frame*2+drop.id)*2;glow(drop.x,drop.y,22,'#e7c67b2a');ellipse(drop.x,drop.y+8,13,4,'#100f0a70');if(image?.complete&&image.naturalWidth)ctx.drawImage(image,drop.x-16,drop.y-17+bob,32,32);
+ const image=rareEliteImages.get('spoils');for(const drop of data.eliteSpoils||[]){if(drop.zone!==zoneNumber())continue;const bob=reducedMotion()?0:Math.sin(game.frame*2+drop.id)*2;
+  glow(drop.x,drop.y,22,'#e7c67b2a');ellipse(drop.x,drop.y+8,13,4,'#100f0a70');if(image?.complete&&image.naturalWidth)ctx.drawImage(image,drop.x-16,drop.y-17+bob,32,32);
+  if(Math.hypot(drop.x-game.player.x,drop.y-game.player.y)<120)encounterLabel('WALK OVER · BLESSING',drop.x,drop.y-24,'#f2dca3',9);
  }
 }
 function installRareEliteUI(){
  if(rareEliteInstalled)return;rareEliteInstalled=true;installBestiaryExpansion();
- for(const entry of [{id:'rare_elites',cat:'Guide',name:'Rare elites',desc:'Rare creatures leave a choice of timed blessings.'},...Object.entries(ELITE_BOONS).map(([id,boon])=>({id:'elite_boon_'+id,cat:'Powers',name:boon.name,desc:boon.description}))])if(!CODEX_ITEMS.some(item=>item.id===entry.id))CODEX_ITEMS.push(entry);
- const claim=document.createElement('button');claim.id='eliteSpoilsButton';claim.type='button';claim.className='elite-spoils-button hidden';claim.innerHTML=artHTML('codex-rare_elites')+'<span>Elite spoils</span>'+uiIcon('chevron');claim.onclick=()=>openEliteReward();$('stageWrap').append(claim);bindTouchNavigation(claim);
+ for(const entry of [{id:'combat_language',cat:'Guide',name:'Combat warning colors',desc:'Red danger, violet friendly fire, gold reflects, teal safety, blue shields.'},{id:'rare_elites',cat:'Guide',name:'Rare creatures and blessings',desc:'Walk over spoils to choose a stackable timed blessing.'},...Object.entries(ELITE_BOONS).map(([id,b])=>({id:'elite_boon_'+id,cat:'Dungeon Abilities',name:b.name,desc:b.description}))])if(!CODEX_ITEMS.some(item=>item.id===entry.id))CODEX_ITEMS.push(entry);
+ const claim=document.createElement('button');claim.id='eliteSpoilsButton';claim.className='hidden';claim.setAttribute('aria-hidden','true');claim.tabIndex=-1;$('stageWrap').append(claim);
  const image=new Image();image.src=iconAsset('codex-rare_elites');rareEliteImages.set('spoils',image);primeRareElites(biomeIndex());
  document.addEventListener('keydown',event=>{
-  if(!$('overlayCard').classList.contains('elite-reward-overlay')||$('overlay').classList.contains('hidden')||codexSession||event.ctrlKey||event.metaKey||event.altKey||event.repeat)return;
-  const index=['KeyA','KeyB','KeyC'].indexOf(event.code);if(index>=0){event.preventDefault();event.stopImmediatePropagation();chooseEliteBoon(Object.keys(ELITE_BOONS)[index]);}
-  else if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();closeEliteReward();}
+  if(!eliteRewardOpen()||codexSession||event.ctrlKey||event.metaKey||event.altKey)return;
+  const index=['Digit1','Digit2','Digit3','Numpad1','Numpad2','Numpad3'].indexOf(event.code),focused=event.target.closest('[data-elite-choice],#eliteRewardLater');
+  if(index>=0){event.preventDefault();event.stopImmediatePropagation();if(!event.repeat&&performance.now()-eliteRewardOpenedAt>180){const drop=data.eliteSpoils.find(d=>d.id===eliteRewardId);if(drop)chooseEliteBoon(drop.choices[index%3]);}return;}
+  if(event.key==='Tab'||(event.key==='Enter'||event.code==='Space')&&focused&&!event.repeat)return;
+  event.preventDefault();event.stopImmediatePropagation();
  },true);
 }
-function refreshRareEliteUI(){
- if(!rareEliteInstalled)return;const count=(data.eliteSpoils||[]).filter(drop=>drop.zone===zoneNumber()).length,button=$('eliteSpoilsButton'),visible=count>0&&game.scene==='combat'&&game.status==='running'&&!drawerKind&&$('overlay').classList.contains('hidden')&&tourIndex<0;
- button.classList.toggle('hidden',!visible);button.setAttribute('aria-label','Choose a blessing · '+count+' elite spoils');button.dataset.hint='A / B / C blessing · '+count+' unclaimed';
+function refreshRareEliteUI(){if(rareEliteInstalled)$('eliteSpoilsButton').classList.add('hidden');}
+function openEliteReward(id){
+ const drop=data.eliteSpoils.find(item=>item.zone===zoneNumber()&&(!id||item.id===id));if(!drop||game.status!=='running'||game.scene!=='combat'||drawerKind||!$('overlay').classList.contains('hidden'))return false;
+ if(!drop.choices)drop.choices=blessingChoices(drop);eliteRewardId=drop.id;eliteRewardPause=game.menuPaused;eliteRewardOpenedAt=performance.now();game.menuPaused=true;game.keys={};game.mouseMove.active=false;resetArenaTouch(true);
+ showOverlay('<div class="elite-reward-heading">'+artHTML('codex-rare_elites')+'<h2>Choose a blessing</h2></div><div class="elite-reward-choices">'+drop.choices.map((id,index)=>{const b=ELITE_BOONS[id];return '<button type="button" class="elite-boon-choice" data-elite-choice="'+id+'"><span class="elite-choice-key">'+String.fromCharCode(65+index)+'</span>'+artHTML('codex-elite_boon_'+id)+'<span class="elite-choice-copy"><b>'+b.name+'</b><span>'+b.description+'</span><small>'+b.seconds+'s · key '+(index+1)+'</small></span></button>';}).join('')+'</div><p class="elite-reward-note">Delve paused · Bonuses stack, including repeated blessings.</p><button type="button" class="elite-reward-later" id="eliteRewardLater">Skip blessing</button>','elite-reward-overlay');
+ $('overlayCard').querySelectorAll('[data-elite-choice]').forEach(button=>button.onclick=()=>chooseEliteBoon(button.dataset.eliteChoice));$('eliteRewardLater').onclick=()=>closeEliteReward(true);$('overlayCard').querySelectorAll('button').forEach(bindTouchNavigation);$('overlayCard').focus({preventScroll:true});updatePauseHud();return true;
 }
-function openEliteReward(){
- const drop=data.eliteSpoils.find(item=>item.zone===zoneNumber());if(!drop||game.status!=='running'||game.scene!=='combat'||drawerKind||!$('overlay').classList.contains('hidden'))return false;
- eliteRewardId=drop.id;const active=data.eliteBoon&&ELITE_BOONS[data.eliteBoon.id];
- showOverlay('<div class="elite-reward-heading">'+artHTML('codex-rare_elites')+'<h2>Elite spoils</h2></div><div class="elite-reward-choices">'+Object.entries(ELITE_BOONS).map(([id,boon],index)=>'<button type="button" class="elite-boon-choice" data-elite-choice="'+id+'"><span class="elite-choice-key">'+String.fromCharCode(65+index)+'</span>'+artHTML('codex-elite_boon_'+id)+'<span class="elite-choice-copy"><b>'+boon.name+'</b><span>'+boon.description+'</span><small>'+boon.seconds+'s</small></span></button>').join('')+'</div><p class="elite-reward-note">'+(active?'Replaces '+active.name:'One blessing at a time')+'</p><button type="button" class="elite-reward-later" id="eliteRewardLater">Later</button>','elite-reward-overlay');
- $('overlayCard').querySelectorAll('[data-elite-choice]').forEach(button=>button.onclick=()=>chooseEliteBoon(button.dataset.eliteChoice));$('eliteRewardLater').onclick=closeEliteReward;$('overlayCard').querySelectorAll('button').forEach(bindTouchNavigation);refreshRareEliteUI();return true;
+function closeEliteReward(skip=false){
+ if(skip)data.eliteSpoils=data.eliteSpoils.filter(d=>d.id!==eliteRewardId);eliteRewardId=0;hideOverlay(true);game.menuPaused=eliteRewardPause||!!game.manualPaused;game.keys={};resetArenaTouch(true);save();refreshRareEliteUI();updatePauseHud();
 }
-function closeEliteReward(){eliteRewardId=0;hideOverlay();refreshRareEliteUI();}
 function chooseEliteBoon(id){
- const definition=ELITE_BOONS[id],index=data.eliteSpoils.findIndex(drop=>drop.id===eliteRewardId&&drop.zone===zoneNumber());if(!definition||index<0||!$('overlayCard').classList.contains('elite-reward-overlay')||$('overlay').classList.contains('hidden')||codexSession)return false;
- data.eliteSpoils.splice(index,1);data.eliteBoon={id,zone:zoneNumber(),remaining:definition.seconds};codexDiscover('elite_boon_'+id);closeEliteReward();save();refreshUI();return true;
+ const index=data.eliteSpoils.findIndex(d=>d.id===eliteRewardId&&d.zone===zoneNumber()),drop=data.eliteSpoils[index];if(!eliteRewardOpen()||!ELITE_BOONS[id]||!drop?.choices.includes(id)||codexSession)return false;
+ data.eliteSpoils.splice(index,1);(data.eliteBoons||(data.eliteBoons=[])).push({id,dungeon:dungeonForZone().id,remaining:ELITE_BOONS[id].seconds,uid:++data.eliteBoonSequence});data.eliteBoon=data.eliteBoons[0]||null;codexDiscover('elite_boon_'+id);closeEliteReward();save();refreshUI();return true;
 }
 function eliteBoonHud(){
- const active=data.eliteBoon,boon=active?.zone===zoneNumber()&&active.remaining>0?ELITE_BOONS[active.id]:null;if(!boon)return '';
- return '<button type="button" class="buff-icon elite-boon-icon" data-codex-entry="elite_boon_'+active.id+'" aria-label="'+boon.name+' · '+Math.ceil(active.remaining)+' seconds remaining" data-hint="'+boon.name+' · '+boon.description+' · '+Math.ceil(active.remaining)+'s">'+artHTML('codex-elite_boon_'+active.id)+'<b>'+Math.ceil(active.remaining)+'s</b></button>';
+ const groups=new Map();for(const b of activeEliteBoons()){if(!groups.has(b.id))groups.set(b.id,[]);groups.get(b.id).push(b);}
+ return [...groups].map(([id,boons])=>{const b=ELITE_BOONS[id],time=Math.ceil(Math.max(...boons.map(b=>b.remaining)));return '<button type="button" class="buff-icon elite-boon-icon" data-codex-entry="elite_boon_'+id+'" aria-label="'+b.name+' · '+boons.length+' stack'+(boons.length>1?'s':'')+' · '+time+' seconds" data-hint="'+b.name+' · '+b.description+' · '+time+'s">'+artHTML('codex-elite_boon_'+id)+'<b>'+(boons.length>1?boons.length+'× · ':'')+time+'s</b></button>';}).join('');
 }
 function paintEliteBoonAura(player){
- const active=data.eliteBoon,boon=active?.zone===zoneNumber()&&active.remaining>0?ELITE_BOONS[active.id]:null;if(!boon)return;
- ctx.save();ctx.strokeStyle=boon.color+'80';ctx.lineWidth=1.3;ctx.beginPath();ctx.ellipse(player.x,player.y+14,21,7,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+ const boons=activeEliteBoons();if(!boons.length)return;ctx.save();ctx.strokeStyle=ELITE_BOONS[boons[0].id].color+'80';ctx.lineWidth=1.3;ctx.beginPath();ctx.ellipse(player.x,player.y+14,21,7,0,0,Math.PI*2);ctx.stroke();ctx.restore();
 }
-function rareEliteCodexHtml(){
- return codexParagraph('Rare elites are stronger forms of each small creature. Their sweeps and charges lock their direction before striking. Lure ordinary monsters into the marked area, then step aside. Ricochets rebound at visible markers. Shielders protect another elite for eight seconds and remain unprotected themselves; approach the shielder to focus it.')+codexRuleList([['Rarity','1.5% per eligible wave spawn · at most one per wave'],['Spoils','Open Elite spoils when ready. Combat waits while you choose A, B or C.'],['Blessings','40–60 seconds of combat time · one active at a time'],['Persistence','Pause and skilling preserve time. Blessings stay in their exact Zone. Unclaimed spoils survive travel and reload.'],['Enemy area damage','35% of each ordinary monster’s maximum HP, once per attack. Bosses, elites and totems are immune.']])+RARE_ELITE_NAMES.map((names,kind)=>codexHeading(BIOMES[kind].name,'<div class="elite-bestiary">'+names.map((name,variant)=>'<div><img src="'+RARE_ELITE_ART[ENVIRONMENT_ZONES[kind].key+'-'+variant].src+'" alt=""><span>'+name+'</span></div>').join('')+'</div>')).join('');
-}
-function eliteBoonCodexHtml(id){const boon=ELITE_BOONS[id];return codexParagraph(boon.description+'.')+codexRuleList([['Duration',boon.seconds+' seconds of combat time'],['Source','Rare elite spoils'],['Choice','Choose one of three blessings. A new blessing replaces the current one.'],['Timing','Pause, menus and skilling preserve remaining time. Delve speed advances the combat clock.'],['Zone','Applies in the Zone where chosen; leaving that Zone ends it.']]);}
+function rareEliteCodexHtml(){return codexParagraph('Rare creatures always leave spoils. Ordinary elites leave them 35% of the time. Walk over a drop to pause the delve and choose A, B or C. Select with a touch/click or keys 1/2/3; movement keys cannot choose or dismiss it. Skip blessing discards that drop.')+codexRuleList([['Blessings','40–60 seconds of combat time. Multiple different or repeated blessings can stack.'],['Pause','Menus, skilling and the choice screen preserve all remaining time.'],['Travel','Blessings remain within this Dungeon; unclaimed spoils remain in their Zone.'],['Summons','Summoned creatures grant no loot or wave progress. Destroy their summoning totem to stop replacements.'],['Violet attacks','Hurt you and other monsters. Bait enemies into a cleave, charge or marked eruption.'],['Red attacks','Hurt you only.']]);}
+function eliteBoonCodexHtml(id){const b=ELITE_BOONS[id];return codexParagraph(b.description+'.')+codexRuleList([['Duration',b.seconds+' seconds of combat time'],['Source','Guaranteed rare spoils; 35% of other elites'],['Stacking','All blessings stack, including repeated copies.'],['Timing','Pause, menus and skilling preserve time. Delve speed advances combat time.'],['Scope','This Dungeon']]);}
 
 /* Enemy area attacks hit each ordinary monster once, without player hit procs. */
 function cleaveContains(actor,cast){
@@ -100,12 +105,32 @@ function cleaveContains(actor,cast){
  const angle=Math.atan2(dy,dx)-cast.angle;return Math.abs(Math.atan2(Math.sin(angle),Math.cos(angle)))<=cast.halfAngle;
 }
 function damageMonstersInAttack(owner,shape,contains){
- if(!owner||!game.enemies.includes(owner)||game.status!=='running')return;
- const hits=shape.enemyHits||(shape.enemyHits=new Set());
- for(const enemy of [...game.enemies]){if(!game.enemies.includes(owner)||game.status!=='running')break;if(enemy===owner||enemy.boss||enemy.elite||hits.has(enemy)||!contains(enemy))continue;
-  hits.add(enemy);const damage=enemy.maxHp*.35;enemy.hp-=damage;enemy.lastHitAt=game.frame;enemy.lastDamageStyle=combatStyle();floater(enemy.x,enemy.y-25,Number(damage.toFixed(1)),DUNGEON_THEMES[owner.biome??biomeIndex()].hot);burst(enemy.x,enemy.y,3,DUNGEON_THEMES[owner.biome??biomeIndex()].color);if(enemy.hp<=0)onKill(enemy);
+ if(!owner||!game.enemies.includes(owner)||game.status!=='running')return;const hits=shape.enemyHits||(shape.enemyHits=new Set());
+ for(const enemy of [...game.enemies]){
+  if(!game.enemies.includes(owner)||game.status!=='running')break;if(enemy===owner||hits.has(enemy)||!contains(enemy))continue;
+  hits.add(enemy);const damage=enemy.maxHp*(enemy.boss?.025:enemy.elite?.12:.35)*enemyShieldMultiplier(enemy);enemy.hp-=damage;enemy.lastHitAt=game.frame;enemy.lastDamageStyle=combatStyle();
+  if(game.floaters.length<90)floater(enemy.x,enemy.y-25,Number(damage.toFixed(1)),combatTheme('friendly').hot);burst(enemy.x,enemy.y,3,combatTheme('friendly').color);if(enemy.hp<=0)onKill(enemy);
  }
 }
 function paintEnemyCleave(cast,theme,progress=1,active=false){
  ctx.save();ctx.translate(cast.origin.x,cast.origin.y);ctx.rotate(cast.angle);ctx.fillStyle=theme.color+(active?'45':'19');ctx.strokeStyle=theme.color;ctx.lineWidth=active?3:2;ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,cast.reach,-cast.halfAngle,cast.halfAngle);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle=theme.hot;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,cast.reach+4,-cast.halfAngle,-cast.halfAngle+cast.halfAngle*2*progress);ctx.stroke();ctx.restore();
+}
+
+function eliteRewardOpen(){return !!eliteRewardId&&!$('overlay').classList.contains('hidden')&&$('overlayCard').classList.contains('elite-reward-overlay');}
+
+function blessingChoices(drop){
+ const pool=Object.keys(ELITE_BOONS),chosen=[];let state=((drop.id*2654435761)^(drop.zone*1013904223)^0x6d2b79f5)>>>0;
+ for(let i=0;i<3;i++){state^=state<<13;state^=state>>>17;state^=state<<5;chosen.push(pool.splice((state>>>0)%pool.length,1)[0]);}return chosen;
+}
+
+function activeEliteBoons(){return (data.eliteBoons||[]).filter(b=>b.remaining>0&&b.dungeon===dungeonForZone().id);}
+
+function eliteBoonSum(key){return activeEliteBoons().reduce((value,b)=>value+(ELITE_BOONS[b.id]?.[key]||0),0);}
+
+function eliteBoonActive(id){return activeEliteBoons().some(b=>b.id===id);}
+
+function tickEliteSpoils(){
+ if(game.scene!=='combat'||game.status!=='running'||game.menuPaused||game.manualPaused||drawerKind||!$('overlay').classList.contains('hidden'))return false;
+ const drop=(data.eliteSpoils||[]).filter(d=>d.zone===zoneNumber()).sort((a,b)=>Math.hypot(a.x-game.player.x,a.y-game.player.y)-Math.hypot(b.x-game.player.x,b.y-game.player.y))[0];
+ return !!drop&&Math.hypot(drop.x-game.player.x,drop.y-game.player.y)<30?openEliteReward(drop.id):false;
 }

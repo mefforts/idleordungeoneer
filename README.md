@@ -10,30 +10,33 @@ For iPhone and iPad, enable **Settings → Pages → Deploy from a branch → ma
 
 ![Mobile touch movement and full-size navigation](preview-mobile-controls.png)
 
-[Inventory](preview-inventory-mobile.png) · [Materials](preview-inventory-materials.png) · [Zone abilities](preview-zone-abilities-mobile.png) · [Intro](preview-intro-mobile.png) · [Counterplay themes](preview-encounter-themes.png) · [Healing stream](preview-totems.png) · [Phone elite group](preview-encounters-mobile.png) · [Floor progression](preview-floor-progression.png) · [Phone environment](preview-environments-mobile.png) · [Desktop Zone Shop](preview-zone-abilities.png) · [Skills](polish-mobile-gather.png) · [Codex](polish-reading.png)
+[Inventory](preview-inventory-mobile.png) · [Materials](preview-inventory-materials.png) · [Dungeon Shop](preview-dungeon-shop-mobile.png) · [Intro](preview-intro-mobile.png) · [Counterplay themes](preview-encounter-themes.png) · [Healing stream](preview-totems.png) · [Phone elite group](preview-encounters-mobile.png) · [Floor progression](preview-floor-progression.png) · [Phone environment](preview-environments-mobile.png) · [Desktop Dungeon Shop](preview-dungeon-shop.png) · [Skills](polish-mobile-gather.png) · [Codex](polish-reading.png)
 
-## Zone abilities
+## Dungeon Shop
 
-Each Zone Shop offers **four themed abilities**, with sixteen distinct illustrations and Codex entries across the four environments. Open the **wisp pin**, your seal counter or **B**. Each exact Zone keeps its own wallet and purchased ranks, even when later Zones repeat an environment.
+**Build 10.0** replaces separate Zone shops with a shared **Dungeon Shop**. All current Zones belong to **The First Descent**; a future Dungeon can have its own wallet and perks. Open the wisp, the Dungeon Sigil counter or **B**. Purchased ranks remain active throughout this Dungeon.
 
-| Zone | Abilities |
-| --- | --- |
-| The Overgrowth | Briar Venom · Grasping Roots · Bramble Sweep · Barkskin |
-| Embervault | Cinderbrand · Slagburst · Searing Shot · Basalt Guard |
-| Hollow Crypt | Soul Chain · Grave Chill · Soulburst · Bone Ward |
-| Astral Rift | Arc Rift · Mirrorcast · Phase Sweep · Astral Ward |
+Eight perks start unlocked: Ember Edge, Winter Thread, Soul Conductor, Fracture, Dungeon Ward, Battle Geometry, Echo Arts and Spellbreaker. Cold Verdict, Returning Power, Gravitation and Mirrorcraft unlock at Dungeoneering **3 / 5 / 8 / 12**. First ranks cost 6–26 Sigils; subsequent ranks cost 2.8× more, rounded upward.
 
-Ordinary monsters rarely drop seals: **4% chance of one**. Elites guarantee **6**, and guardians **12 / 20 / 35**. Most seals come from these larger fights. Fortune Mastery raises the regular drop chance to **5.6%** at rank four.
+Every purchase benefits **Melee, Mage and Ranged**. Some perks change with the equipped weapon, as the shop explains:
 
-The shop focuses on elemental effects, additional targets/projectiles and themed protection. Ordinary damage, speed, health, critical chance, gold, XP and similar purchases have been removed. Earlier ranks that are no longer available, including ranks above revised limits, refund their exact original cost to their original Zone wallet once. Retained abilities, equipment and progression are preserved. Existing equipment and jewelry provide their established statistics.
+| Shared purchase | Melee | Mage | Ranged |
+| --- | --- | --- | --- |
+| Battle Geometry | More sweep targets and reach | Elite-first homing | Piercing arrows |
+| Echo Arts | Weak echo blade | Spell ricochets | Additional arrows |
+| Returning Power | Returning slash | Returning orb | Returning arrow |
 
-**Dungeoneering level and XP are global and persistent.** Level 2 needs 1,600 total XP; level 3 needs 6,400. Progress slows at higher levels; levels do not grant Mastery points. Leveling leaves combat running. XP orbs never expire: positions and values survive activity changes, retries and returning to a Zone. Encounter completion collects the remaining XP exactly once.
+Dungeon Sigils arrive slowly: ordinary monsters have a **0.3% chance of one**, other elites **35%**, and rares guarantee **one**. Guardians grant **1 / 1 / 2**, with **3 more** from a Zone-final overlord. Summoned creatures grant no rewards. Fortune 4 raises the ordinary chance to **0.42%**. Jewelry and equipment retain traditional statistics; the shop focuses on elemental effects, area attacks and utility.
 
-**Dungeoneering Mastery** is a separate shared, refundable bank. The final boss of each Zone grants 2 points. The Zone 1, Floor 1 final boss also grants 2 points on your first victory; that early reward cannot be repeated. Onslaught unlocks spawn settings, Fortune improves seal drops, and Discovery improves rare-material drops. These change dungeon configuration and rewards rather than attack damage or protection. Its HUD shortcut shows unspent Mastery points; Essence remains an enchanting material.
+Old Zone wallets and the full historical price of purchased ranks convert once at **25 seals per Dungeon Sigil**, retaining fractional credit. Original ledgers stay archived in the save. Choose new perks freely.
 
-That first Floor 1 victory unlocks **1× / 2× Delve speed**. Mastery speed affects combat only. Skilling keeps its own clock; offline earnings and collection windows use real time.
+**Dungeoneering XP and level persist across Zones.** Level 2 needs 1,600 total XP; level 3 needs 6,400. Levels unlock shop choices and grant no Mastery points. XP orbs and saved ground caches retain their existing behavior.
 
-Press **Delve while delving** to choose any previously cleared floor or return to your frontier. Each Zone shows its recommended DPS. Travel restarts the chosen floor and keeps equipment, materials, ammunition charge, Zone purchases and cached XP. The longer Zones use compact floor grids, with every completed floor available for replay. Entering **Zone 2, Floor 1** gives a one-time reminder about replay travel and the newly unlocked second idle slot. [Phone selector](preview-delve-mobile.png).
+**Mastery** remains a separate shared bank for dungeon settings and reward bonuses. Zone-final overlords grant 2 points. Zone 1 Floor 1's overlord also grants 2 on the first victory only, unlocking **2× Delve speed**. Mastery speed never affects skilling.
+
+Press **Delve while delving** to replay a cleared floor or return to the frontier. The first idle-slot tip explains that the second slot comes at **Zone 2**. Entering Zone 2 also explains replay travel and the second idle slot. Crafting your first upgraded weapon gives a refinement and Warding enchantment tip.
+
+[Phone shop](preview-dungeon-shop-mobile.png) · [Desktop shop](preview-dungeon-shop.png).
 
 ## Equipment and pacing
 
@@ -52,7 +55,7 @@ Weapon refinement, attack-speed training, proficiency and matching crafting leve
 | 3 | ~30 minutes | Current Steel reference |
 | 4+ | ~35–40 minutes | Current Steel reference |
 
-References use complete Iron / Steel equipment at base proficiency, with no required Zone abilities. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Later equipment progression remains reserved.
+References use complete Iron / Steel equipment at base proficiency, with no required Dungeon abilities. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Later equipment progression remains reserved.
 
 Ordinary monsters drop **no gold**. Baseline clears pay **191 gold in Zone 1 / 293 in Zone 2**, mainly from guardians and floor caches, before elites and jewelry. Those per-Zone gold budgets stay the same across the longer floor counts; guardian XP is also spread across each Zone. Scavenging remains another gold source. Fractional rewards survive reload; existing balances and crafting costs are preserved.
 
@@ -77,7 +80,7 @@ New creatures scuttle, sway, hop, prowl or hover, with reduced-motion support. T
 
 ## Minimal runestone interface
 
-Gameplay uses outlined information and isolated controls with transparent backing. Delve, Inventory, Skills, Zone Shop, Codex, Settings, Pause and unlocked speed occupy a circular icon rail. The dungeon entrance, satchel, wisp and raised play/pause medallions use over 90% of each button’s space. **Settings → Navigation** selects either side and reorders pins with dragging or arrows. Titles sit at the top center, health/XP on the left, and warnings/messages below them. The message icon reopens the latest 40 notices.
+Gameplay uses outlined information and isolated controls with transparent backing. Delve, Inventory, Skills, Dungeon Shop, Codex, Settings, Pause and unlocked speed occupy a circular icon rail. The dungeon entrance, satchel, wisp and raised play/pause medallions use over 90% of each button’s space. **Settings → Navigation** selects either side and reorders pins with dragging or arrows. Titles sit at the top center, health/XP on the left, and warnings/messages below them. The message icon reopens the latest 40 notices.
 
 Menus use warm stone, leather and brass. Carved runestone buttons and headers keep hard corners; painted medallions frame the icons. All **111 collection entries** have distinct artwork. Tooltips, native buttons, focus restoration and accessible labels support keyboard and touch navigation. Detailed explanations stay in the Codex.
 
@@ -111,11 +114,11 @@ All 20 activities support their appropriate scenes, active bonuses and visible t
 
 Each arrow supplies **10 seconds of bow firing time**, and each rune **10 seconds of staff casting time**. Loaded time stays while waiting for a target, paused, skilling or using the other weapon, and survives reloads. Delve speed scales this combat clock. The HUD shows reserve items and loaded seconds beside the Zone seal counter. [Phone HUD](preview-ammunition-mobile.png).
 
-One weapon selects your Melee, Ranged or Magic style. Each style has separate refinement, speed, reach, enchantment and proficiency. Iron caps at refinement **10**, speed/reach **5**, reinforcement **5** and enchantment **2**. Steel caps at **20 / 10 / 10 / 4**. Clear Zone 1, reach refinement 10 and crafting level 10, then pay a Steel promotion to open the next ranks for that style.
+One weapon selects your Melee, Ranged or Mage style. Each style has separate refinement, speed, reach, enchantment and proficiency. Iron caps at refinement **10**, speed/reach **5**, reinforcement **5** and enchantment **2**. Steel caps at **20 / 10 / 10 / 4**. Clear Zone 1, reach refinement 10 and crafting level 10, then pay a Steel promotion to open the next ranks for that style.
 
 Combat proficiency grants up to **3% damage** and matching crafting levels up to **5%** more. Equipment-only dedicated limits are approximately **86 / 173 DPS**. Zone elemental upgrades work with every combat style.
 
-The Opal Leech Ring starts at **0.5%** lifesteal. Armor equips independently of the weapon. Warrior, Ranger and Mage each have two illustrated sets: Iron/Steel armor, Plain/Cured leathers, and Linen/Blue Wool robes. The worn set supplies its own health and protection, movement or Magic bonus. Reinforcement adds 8 HP per rank, limited by that set’s tier. Switching owned armor never heals you. Promotions change held weapon art; bows aim toward targets while retreating, and articulated hands, collars and weapon grips stay joined across poses.
+The Opal Leech Ring starts at **0.5%** lifesteal. Armor equips independently of the weapon. Melee, Ranged and Mage each have two illustrated sets: Iron/Steel armor, Plain/Cured leathers, and Linen/Blue Wool robes. The worn set supplies its own health and protection, movement or Mage bonus. Reinforcement adds 8 HP per rank, limited by that set’s tier. Switching owned armor never heals you. Promotions change held weapon art; bows aim toward targets while retreating, and articulated hands, collars and weapon grips stay joined across poses.
 
 ## Player and animation
 
@@ -129,51 +132,50 @@ Attack clips now ease into windup and return to their ready stance, including a 
 
 ## Guardians and elites
 
-Guardians combine area-themed projectiles, ground strikes and beams with three kinds of counterplay:
+The combat library now has **28 attack patterns**, including eighteen new ones. Bosses change tactics at **75% and 40% health**, with shielded Royal Guards, summoning spires, failed-reflect healing, and large arena attacks. Their body hurtboxes now match their visible size, so a short sword can hit a large creature above its feet.
 
-- **Reflect wards:** enter the pale shield at the center before its 1.9-second warning completes. Return **12% of the caster’s maximum HP** and stagger it for **1.6 seconds**. The surrounding ring is dangerous; escaping the whole mark is also safe. The core absorbs hostile projectiles during the warning.
-- **Healing totems:** move closer to the totem than its caster to receive **2% of your maximum HP per second**. Left alone, it restores **0.8% of the guardian’s maximum HP per second** until its caster falls.
-- **Power totems:** an uninterrupted stream gives its guardian **12% stronger attacks**. Move closer to the totem than its caster for **10% more hit damage**, refreshed for five seconds. This conditional bonus never changes permanent equipment or Zone training.
+| Warning | Meaning |
+| --- | --- |
+| **Red** | Dangerous to you only |
+| **Violet** | Dangerous to you and other monsters |
+| **Gold / white center** | Stand in the center to reflect |
+| **Teal** | Safe space or an intercepted benefit |
+| **Blue** | Shield; remove its source or Royal Guards |
 
-Totems are **untargetable** and have no countdown or health bar. Move closer to a totem than its caster to draw its benefit; defeating the caster removes its totems. A caster can sustain one healing and one power totem, with at most two active across the encounter. Streams choose the player when the player is nearer to the totem than its caster; standing in their path is unnecessary. Stream bonuses do not stack. Encounter objects clear on defeat, retry and floor transitions. Menus and skilling pause their combat clock.
+Shapes, outlines and labels reinforce the colors. Violet sweeps, charges, beams, eruptions and rebounding rings also damage other enemies once per cast: **35% ordinary / 12% elite / 2.5% boss maximum HP**, before shields. They cannot trigger player weapon procs or lifesteal.
 
-The first guardian uses four distinct patterns, the second four. Floor overlords use four; the Zone’s final overlord uses all six and attacks faster below 40% health. Up to two attacks can wind up together. A reflect mark reserves a clear cast window and waits for existing ground hazards to expire. Marks avoid scenery and occupied enemy positions when placed.
+- **Rebounding Barrage** fires three projectile rings with rotating gaps, then banks them off the arena bounds. **Growing Stars** expand as they travel. **Homeward Blades** turn back toward their caster.
+- **Threefold Ruin** warns three red arena quarters and marks one teal quarter safe. Numbered lanes, inner/outer rings, pincers, spirals, mines, siphon tethers and orbital blades provide other movement challenges.
+- **Royal Guard** protects the boss with a blue shield until its guards are defeated. The boss takes 70% less damage while protected.
+- **Hungry Mirror** returns 12% maximum boss HP and staggers when reflected; a missed center heals the boss for 5%. Standard reflects retain their 1.9s warning.
+- **Calling Spires** are permanent, destructible summoning totems. They replenish ordinary monsters or elites after visible arrival warnings. Destroy them to stop reinforcements. Summons grant no loot, XP, Mastery or wave progress; encounter caps prevent unlimited armies.
+- **Healing and power totems** remain untargetable. Get closer to the totem than its caster to redirect the stream. They stay until the caster falls. Power interception grants +10% hit damage for five seconds; healing now has a finite reserve.
 
-Known guardians return as smaller elite echoes: **up to one, two or three per wave in the early, middle and deep floors**. Different known guardians are favored before repeats. Echoes replace ordinary wave enemies, retain reduced pattern sets and grant seals/gold without duplicate Mastery or Essence.
+Reflect centers, stream corridors and totems retain their larger spacing and scenery checks. Major arena attacks and reflects reserve clear cast windows. Owner death, retry, defeat and transitions clean up the caster's mechanics. Menus and skilling pause combat timers.
 
-Totems prefer 320 world units from their caster on desktop and 260 on narrow screens, with minimum gaps of 220 / 190. Reflect centers prefer 300 / 250, stay at least 230 / 200 away from their caster and within 300 of the player. Placements avoid scenery and the navigation rail; stream corridors are checked along their length.
+Known guardians still return as elite echoes, up to **one / two / three per wave** as floors deepen. They can charge, ricochet, shield allies and use additional themed patterns. Shield sources cannot form shield chains.
 
-Each area has its own painted reflect ward, healing totem and power totem, alongside its themed attack effects: green briars and spring blossoms, amber basalt and furnaces, violet soul fonts and grave idols, or cyan starwells and prisms. Source art and export metrics are in `assets/encounters/`; `npm run art:encounters` rebuilds embedded sprites, and `npm run review:encounters` captures all twelve mechanics in combat. Sweeps, ground eruptions and beams also damage ordinary monsters in their marked area. Full descriptions stay in guardian Codex entries. Burn retains visible flames and orange damage numbers.
+[Safe-quarter warning](preview-boss-sunder-mobile.png) · [Summoning spire](preview-summoning-spire.png) · [Combat reel](preview-boss-patterns.mp4).
 
 ## Rare elites and blessings
 
-Each of the **42 small-monster appearances** has a distinct painted elite form, with **3.5× its ordinary health** and a themed attack set. Eligible wave spawns have a **1.5% chance**, with at most one rare elite per wave, alongside the existing guardian echoes. The first three spawns in each wave remain ordinary.
+All **42 ordinary creature forms** have a distinct painted rare elite form with **3.5× health**. Eligible spawns have a **1.5% chance**, capped at one rare per wave. Rares always leave blessing spoils; other elites leave them **35%** of the time.
 
-Elites have recognizable combat roles:
+**Walk over spoils** to pause the delve and see three A/B/C options. Touch/click a card or press **1 / 2 / 3**. Movement and Escape cannot choose or dismiss the screen. **Skip blessing** explicitly discards that drop. Choice contents are fixed when dropped and survive reload.
 
-- **Charge:** a lane and target lock during a 1.1-second warning. The elite then rushes forward; it cannot turn to follow your dodge and stops at solid scenery.
-- **Ricochet:** a warned path banks at visible markers. Its projectile has a fixed path and a six-second lifetime.
-- **Shield:** an eight-second link reduces another elite’s incoming weapon damage by 35%. A shielder cannot be shielded, and targets cannot form shield chains. Ranged attacks focus the exposed shielder when it comes into range.
+The ten blessings last **40–60 seconds**: Battle Fervor, Windstep, Stonebreaker, Totem Silence, Stillworld, Golden Hunt, Plentiful Hunt, Chain Reaction, Momentum and Long Reach. They add offense or powerful utility: disabling totems, halving enemy movement, and granting gold or materials on kills. There are no healing blessings.
 
-Defeating one drops **Elite spoils**, along with the usual elite seals, small gold reward and healing mote. Spoils wait for you to open their button; combat pauses only while you choose. Pick with **A / B / C** or touch the whole card. **Later** leaves the reward available. Unclaimed spoils persist through waves, floor replays, travel and reload in their original Zone.
+**Different blessings and repeated copies stack**, with independent timers and visible stack counts. Menus, pause and skilling freeze their duration. They carry across Zones in this Dungeon. Unclaimed spoils stay in their original Zone. Delve speed advances combat time.
 
-| Choice | Blessing | Effect | Combat time |
-| --- | --- | --- | --- |
-| A | Battle Fervor | +18% hit damage | 45s |
-| B | Windstep | +15% attack speed · +12% movement | 40s |
-| C | Stoneguard | 20% less incoming damage · restores 0.3% max HP/s | 60s |
+The Opal Leech Ring remains at **0.5%** of actual direct-hit health removed, with no overkill healing.
 
-Only **one** blessing is active; choosing another replaces it. All styles benefit. The remaining time appears on its HUD icon and survives menus, pause, skilling and reload. Delve speed scales the combat clock; leaving that exact Zone ends the blessing. Equipment and permanent shop ranks remain unchanged.
-
-Enemy sweeps, charges, ground eruptions and beams deal **35% of each ordinary monster’s maximum HP, once per attack**. Overlapping ground marks from the same cast cannot multiply that hit. Bosses, elites and totems are immune. These hits can finish monsters and grant their usual rewards, but cannot trigger player lifesteal, critical hits, enchantments or weapon effects.
-
-The **Opal Leech Ring now steals 0.5%** of actual health removed by a direct hit, with no healing from excess overkill damage. Its recipe and ownership are preserved.
-
-[Overgrowth elites](preview-rare-overgrowth.png) · [Embervault](preview-rare-embervault.png) · [Crypt](preview-rare-crypt.png) · [Rift](preview-rare-rift.png) · [Phone choices](preview-elite-spoils-mobile.png) · [Landscape choices](preview-elite-spoils-landscape.png) · [Charge](preview-elite-charge-mobile.png) · [Ricochet](preview-elite-ricochet.png) · [Shield](preview-elite-shield.png) · [Twenty-floor selector](preview-zone-depths-mobile.png).
+[Phone choices](preview-blessings-mobile.png) · [Landscape choices](preview-blessings-landscape.png).
 
 ## Healing drops
 
-Ordinary monsters have a **5% chance** to drop a heart mote restoring **5% maximum HP**. Elites always drop a larger mote restoring **25%**. Walk near one while hurt to draw it in. Motes wait at full health and stay through waves, menus and skilling on the same floor; starting or retrying a floor clears them. Healing is capped at maximum HP. [Phone preview](preview-healing-mobile.png).
+Ordinary monsters have a **2% chance** of a mote healing **3% maximum HP**. Other elites have a **55% chance** of **12%**, and rares a **70% chance** of **15%**. Motes wait at full health and stay through waves on the same floor; starting or retrying clears them.
+
+An intercepted healing stream restores **0.35% maximum HP per second**, up to a **15% lifetime reserve per totem**. A depleted stream still blocks the caster's healing. Uninterrupted streams restore **0.4% caster maximum HP per second**. Healing streams do not stack.
 
 ## Controls and saves
 
@@ -183,13 +185,13 @@ Ordinary monsters have a **5% chance** to drop a heart mote restoring **5% maxim
 | Dash | Three short drags in the same direction, triple tap a movement key, Space or Dash |
 | Work | Hold work control, scene or Space |
 | Collect active bonus | Tap, drag, Enter/Space on focused bonus |
-| Skills / Inventory / Codex / Zone Shop | G / E / C / B |
+| Skills / Inventory / Codex / Dungeon Shop | G / E / C / B |
 | Return to delve | D or Delve pin |
 | Close menu / pause | Escape |
 
 Older three-floor saves migrate to the expanded depths once. Previously reached Zones, equipment, wallets, materials, Dungeoneering XP, Mastery and idle assignments are preserved. Former Zone completions mark the expanded Zone as cleared, so the new intermediate floors can be replayed. Saves retain the `deepwell-prototype-v1` key. Settings provides backup/restore and reduced motion. Back up and restore your save when moving between browser origins or downloaded filenames.
 
-Existing power ranks migrate into their saved Zone, and pending choices convert to seals. Earned XP becomes global XP while uncollected orbs stay separate. Old biome Mastery banks are pooled; duplicate allocations are refunded. Migration runs once and archives the old Zone/Mastery record. Equipment, materials, gold and XP caches remain. Older excess equipment ranks and unavailable armor remain archived under the existing tier rules.
+Existing power ranks and pending choices pass through the legacy Zone migration, then convert into Dungeon Sigils. Earned XP becomes global XP while uncollected orbs stay separate. Old biome Mastery banks are pooled; duplicate allocations are refunded. Migration runs once and archives the old Zone/Mastery record. Equipment, materials, gold and XP caches remain. Older excess equipment ranks and unavailable armor remain archived under the existing tier rules.
 
 ## Development and validation
 
@@ -205,8 +207,10 @@ npm run report:balance
 npm run review:ui
 ```
 
-Zone shops, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. Guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. Work animations, gold receipts and painted foreground props live in `src/workshop.*` / `src/workshop-art.js`; ammunition timing in `src/ammunition.js`; Mastery milestones and healing drops in `src/restoration.js`. Rare creatures, timed blessings and enemy area damage live in `src/rare-elites.js`; floor coordinates and migration in `src/zone-layout.js`, with the expanded bestiary and elite roles in `src/deep-encounters.js`; `npm run art:rare-elites` exports their source art and `npm run review:rare-elites` captures actual game previews. The early loading screen lives in `src/loading.*` and `src/loading-runtime.js`. Mobile controls, navigation and material inventory live in `src/mobile.js` / `src/mobile.css`; themed ability definitions, migration and pricing in `src/zone-abilities.js`. The original engine and compiled standalone output are in `index.html`.
+Dungeon progression, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. The expanded ability library, geometry and combat language live in `src/combat-expansion.js`; guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. Work animations, gold receipts and painted foreground props live in `src/workshop.*` / `src/workshop-art.js`; ammunition timing in `src/ammunition.js`; Mastery milestones and healing drops in `src/restoration.js`. Rare creatures, timed blessings and enemy area damage live in `src/rare-elites.js`; floor coordinates and migration in `src/zone-layout.js`, with the expanded bestiary and elite roles in `src/deep-encounters.js`; `npm run art:rare-elites` exports their source art and `npm run review:rare-elites` captures actual game previews. The early loading screen lives in `src/loading.*` and `src/loading-runtime.js`. Mobile controls, navigation and material inventory live in `src/mobile.js` / `src/mobile.css`; themed ability definitions, migration and pricing in `src/zone-abilities.js`. The original engine and compiled standalone output are in `index.html`.
 
-Twenty-three browser suites cover saves/migration, exact-Zone isolation, no automatic buff modals, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 111 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. A complete 55-floor progression test verifies Zone endings, Mastery gates and migration. Full combat simulations verify the first four Zones and later pacing. Startup tests hold back the game download to verify the loading screen actually paints first; they also cover reduced motion, asset readiness and retry. Static encounters, biome and jewelry definitions remain guarded by a manifest.
+Twenty-four browser suites cover save migration, shared Dungeon progression, automatic and explicitly dismissed buff choices, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and 111 distinct painted collection icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. A complete 55-floor progression test verifies Zone endings, Mastery gates and migration. Full combat simulations verify the first four Zones and later pacing. Startup tests hold back the game download to verify the loading screen actually paints first; they also cover reduced motion, asset readiness and retry. Core phase, biome, gear and jewelry definitions remain guarded by manifests; the approved style-name copy is updated.
 
 Generated icon sheets, calibrated regions and alignment metrics live in `assets/icons/`. `python3 scripts/measure-icon-bounds.py` measures the medallions without altering source art; `npm run art:icons` exports embedded WebP badges. `scripts/export-player.py` isolates the player textures with Pillow, NumPy and SciPy; `scripts/measure-player-binds.py` calibrates their joint axes. Use `CHROMIUM_PATH` for a custom browser. Local test output stays in ignored `test-results/`.
+
+`npm run art:blessings` exports the original blessing emblems and embedded WebP caches. `npm run review:combat` records six actual boss patterns and captures the Dungeon Shop and blessing picker; it requires FFmpeg and Playwright video support.

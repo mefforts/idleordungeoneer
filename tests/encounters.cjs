@@ -15,11 +15,11 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
   passed.push('Reflect warnings do no early damage; the center returns exactly 12% HP and staggers, the annulus hits, escape avoids damage, and a lethal counter rewards once');
   for(const type of ['mend','fury']){
    const r=await p.evaluate(type=>__encounterTest.streams(type),type);
-   if(type==='mend'){assert.equal(r.unblocked.hp,508);assert.equal(r.blocked.hp,508);assert.equal(r.blocked.player,520);assert.equal(r.resumed.hp,516);assert.equal(r.resumed.player,520);}
+   if(type==='mend'){assert.equal(r.unblocked.hp,504);assert.equal(r.blocked.hp,504);assert.equal(r.blocked.player,503.5);assert.equal(r.resumed.hp,508);assert.equal(r.resumed.player,503.5);}
    else{assert.ok(Math.abs(r.unblocked.damage-r.base*1.12)<1e-8);assert.equal(r.blocked.damage,r.base);assert.equal(r.blocked.rally,5);assert.equal(r.resumed.damage,r.base*1.12);}
    assert.equal(r.blocked.blocked,true);assert.deepEqual(r.expired,{rally:0,nodes:0,damage:r.base});assert.equal(r.kills,1);
   }
-  const edges=await p.evaluate(()=>__encounterTest.healingEdges());assert.deepEqual(edges,{capped:1000,double:510,single:520});
+  const edges=await p.evaluate(()=>__encounterTest.healingEdges());assert.deepEqual(edges,{capped:1000,double:501.75,single:503.5});
   for(let kind=0;kind<4;kind++){const r=await p.evaluate(kind=>__encounterTest.proximity(kind),kind);assert.equal(r.inside.linked,true,'Off-axis proximity must link');assert.equal(r.near.linked,true);assert.equal(r.outside.linked,false);assert.ok(r.inside.distance<r.casterDistance&&r.outside.distance>r.casterDistance);}
   passed.push('Totems choose an off-axis player when closer than their caster, return to the caster outside that radius, never stack healing, and end their streams with the caster');
   for(const weapon of ['sword','shield','polearm','greatsword','bow','staff']){
@@ -35,7 +35,7 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
   passed.push('Later floors substitute two or three simultaneous known elites, favor different guardians, keep wave totals and rewards intact, and never introduce an unseen boss');
   const schedule=await p.evaluate(()=>__encounterTest.scheduling());assert.deepEqual(schedule,{third:false,counterWait:false,reserved:true,offenseWait:false,hazardWait:false,reflection:true,noOverlap:false,absorbed:true,notAbsorbed:false,active:1});
   const budget=await p.evaluate(()=>__encounterTest.nodeBudget());assert.deepEqual(budget,{first:true,second:true,secondType:'shield',count:2,remaining:2,targets:0,afterDamage:2,afterCasterDeath:1});
-  assert.deepEqual(await p.evaluate(()=>__encounterTest.dual()),{types:['fury','mend'],next:true,attack:'beam',count:2});
+  assert.deepEqual(await p.evaluate(()=>__encounterTest.dual()),{types:['fury','mend'],next:true,attack:'sunder',count:2});
   passed.push('Permanent untargetable totems remain after a minute, leave with their caster, support both stream types, and advance duplicate/full slots to another attack without freezing the boss');
   for(const which of ['owner','reset','phase','death','next']){const r=await p.evaluate(which=>__encounterTest.cleanup(which),which);assert.equal(r.nodes,0);assert.equal(r.request,false);assert.equal(r.casts,0);if(which!=='owner')assert.equal(r.rally,0);}
   for(const context of ['pause','skill']){const r=await p.evaluate(context=>__encounterTest.timing(2,context),context);assert.equal(r.age,0);assert.equal(r.exists,true);assert.equal(r.combat,0);}

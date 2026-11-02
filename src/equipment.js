@@ -1,7 +1,7 @@
 /* Crafted armor sets and illustrated, independent equipment. */
 const ARMOR_STYLES={
-  melee:{label:'Warrior',group:'blacksmithing',names:['Iron Armor','Steel Armor'],health:[35,65],perk:[4,7],costs:[{bars:10,cloth:2,gold:40},{steelBars:16,runicCloth:6,ancientFragments:4,gold:140}]},
-  ranged:{label:'Ranger',group:'woodworking',names:['Plain Ranger Leathers','Cured Ranger Leathers'],health:[24,45],perk:[4,6],costs:[{bars:4,cloth:10,logs:6,gold:40},{steelBars:6,willowLogs:14,runicCloth:16,gold:140}]},
+  melee:{label:'Melee',group:'blacksmithing',names:['Iron Armor','Steel Armor'],health:[35,65],perk:[4,7],costs:[{bars:10,cloth:2,gold:40},{steelBars:16,runicCloth:6,ancientFragments:4,gold:140}]},
+  ranged:{label:'Ranged',group:'woodworking',names:['Plain Ranged Leathers','Cured Ranged Leathers'],health:[24,45],perk:[4,6],costs:[{bars:4,cloth:10,logs:6,gold:40},{steelBars:6,willowLogs:14,runicCloth:16,gold:140}]},
   magic:{label:'Mage',group:'warding',names:['Plain Linen Robes','Blue Wool Robes'],health:[18,34],perk:[4,8],costs:[{bars:2,cloth:18,scraps:4,gold:40},{steelBars:4,runicCloth:28,cutGarnets:2,gold:150}]}
 };
 const ARMOR_SETS=Object.fromEntries(Object.entries(ARMOR_STYLES).flatMap(([style,d])=>d.names.map((name,i)=>[style+'_'+(i+1),{id:style+'_'+(i+1),name,style,group:d.group,tier:i+1,level:[1,10,25,45][i],health:d.health[i],perk:d.perk[i],cost:d.costs[i],art:'armor-set-'+style+'_'+(i+1)}])));
@@ -56,13 +56,13 @@ function chooseWeapon(id){
   if(!data.unlockedWeapons.includes(id)){
     if(weaponCraftLevel(id)<WEAPON_LEVELS[id]){toast('Training needed',DISCIPLINES[STYLE_DEFS[styleForWeapon(id)].group].name+' level '+WEAPON_LEVELS[id]+' unlocks this weapon.');return false;}
     if(!spendAtStation({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},STYLE_DEFS[styleForWeapon(id)].group))return false;
-    data.unlockedWeapons.push(id);data.firstWeaponCrafted=true;codexDiscover('weapon_'+id);toast(weaponDisplayName(id)+' crafted!','One weapon equipped. Your worn armor stays equipped.');
+    data.unlockedWeapons.push(id);data.firstWeaponCrafted=true;announceWeaponUpgradeTip();codexDiscover('weapon_'+id);toast(weaponDisplayName(id)+' crafted!','One weapon equipped. Your worn armor stays equipped.');
   }
   data.weaponType=id;projectCombatStyle();inspectedStyle=combatStyle();styleBench=combatStyle();
   game.player.maxHp=maxHp()+waveVitality();game.player.hp=Math.min(game.player.hp,game.player.maxHp);game.attackTimer=Math.max(game.attackTimer,.45);save();refreshUI();return true;
 }
 
-function armorPerkText(a){return a.style==='melee'?a.perk+'% damage reduction':a.style==='ranged'?'+'+a.perk+'% movement speed':'+'+a.perk+'% magic damage';}
+function armorPerkText(a){return a.style==='melee'?a.perk+'% damage reduction':a.style==='ranged'?'+'+a.perk+'% movement speed':'+'+a.perk+'% Mage damage';}
 
 function refreshEquipmentUI(){
   if(!equipmentInstalled)return;const focusKey=document.activeElement?.closest('[data-focus-key]')?.dataset.focusKey;

@@ -1,5 +1,5 @@
 /* Mastery milestones and small, physical healing drops. */
-const RESTORATION={chance:.05,ordinary:.05,elite:.25};
+const RESTORATION={chance:.02,ordinary:.03,elite:.12,eliteChance:.55,rare:.15,rareChance:.7};
 let restorationInstalled=false,healthDropImage=null;
 function normalizeMasteryMilestones(){
  if(data.masteryRewardVersion!==1){data.earlyMasteryClaimed=!!data.earlyMasteryClaimed||data.cleared>=1;data.masteryRewardVersion=1;}
@@ -16,8 +16,8 @@ function installRestorationUI(){
  if(!CODEX_ITEMS.some(entry=>entry.id==='health_pickup'))CODEX_ITEMS.push({id:'health_pickup',cat:'Guide',name:'Healing motes',desc:'Walk over a heart mote to recover health.'});
 }
 function dropHealth(enemy){
- if(enemy.boss||!enemy.elite&&Math.random()>=RESTORATION.chance)return null;
- const mote={x:enemy.x,y:enemy.y,fraction:enemy.elite?RESTORATION.elite:RESTORATION.ordinary,elite:!!enemy.elite};
+ if(enemy.boss||enemy.summoned||Math.random()>=(enemy.champion?RESTORATION.rareChance:enemy.elite?RESTORATION.eliteChance:RESTORATION.chance))return null;
+ const mote={x:enemy.x,y:enemy.y,fraction:enemy.champion?RESTORATION.rare:enemy.elite?RESTORATION.elite:RESTORATION.ordinary,elite:!!enemy.elite};
  (game.healthDrops||(game.healthDrops=[])).push(mote);codexDiscover('health_pickup');return mote;
 }
 function tickHealthDrops(dt=0){
@@ -35,4 +35,4 @@ function paintHealthDrops(){
   if(healthDropImage?.complete&&healthDropImage.naturalWidth)ctx.drawImage(healthDropImage,mote.x-size/2,mote.y-size/2-3+hover,size,size);
  }
 }
-function healthCodexHtml(){return codexParagraph('Walk over a heart mote while hurt to recover health. Motes remain on the floor when you are at full health.')+codexRuleList([['Ordinary monsters','5% chance · restores 5% of maximum health'],['Elite echoes','Always drop one · restores 25% of maximum health'],['Timing','No expiry during the floor; menus and skilling keep them'],['Collection','Nearby motes draw toward you; healing stops at full health']])+codexParagraph('Unused motes stay through waves on the same floor. Starting or retrying a floor clears them.');}
+function healthCodexHtml(){return codexParagraph('Walk over a heart mote while hurt to recover health. Motes remain on the floor when you are at full health.')+codexRuleList([['Ordinary monsters','2% chance · restores 3% of maximum health'],['Elite echoes','55% chance · restores 12% of maximum health'],['Rare creatures','70% chance · restores 15% of maximum health'],['Timing','No expiry during the floor; menus and skilling keep them'],['Collection','Nearby motes draw toward you; healing stops at full health']])+codexParagraph('Unused motes stay through waves on the same floor. Starting or retrying a floor clears them.');}

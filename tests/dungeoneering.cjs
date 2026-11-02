@@ -24,7 +24,7 @@ function instrumentation(){
     cycle(seconds){for(let time=0;time<seconds;time+=.04)tickCombat(Math.min(.04,seconds-time));return {used:[...game.boss.mechanicsUsed],shots:game.hostileShots.map(s=>({biome:s.biome,damage:s.damage})),hazards:(game.hazards||[]).map(h=>h.type)};},
     warning(type,avoid){
       fresh(3);const boss=spawnEnemy(true,2);boss.x=boss.y=0;boss.hp=boss.maxHp=10000;game.boss=boss;game.player.hp=game.player.maxHp=500;game.player.invuln=0;game.player.x=0;game.player.y=170;
-      boss.mechanicIndex=bossPlan(boss).indexOf(type);beginBossCast(boss);const before=game.player.hp;
+      boss.phaseQueue=[type];beginBossCast(boss);const before=game.player.hp;
       tickBossSpecial(boss,boss.cast.total-.05);tickDungeonHazards(.01);const during=game.player.hp;
       if(avoid)game.player.x=1000;tickBossSpecial(boss,.06);tickDungeonHazards(.04);return {before,during,after:game.player.hp,cast:boss.cast,hazards:game.hazards.length};
     },
@@ -70,9 +70,9 @@ function instrumentation(){
     passed.push('Delve speed alone, including 2× Mastery, leaves skilling unchanged; combat advances faster');
     const bossResults=[];
     for(let theme=0;theme<4;theme++){
-      const floorPlan=await p.evaluate(theme=>__dungeonTest.boss(theme,1,2),theme);assert.deepEqual(floorPlan,['volley','ground','reflect','mend']);
-      const plan=await p.evaluate(theme=>__dungeonTest.boss(theme,3,2),theme);assert.deepEqual(plan,['volley','ground','reflect','fury','beam','mend']);
-      const result=await p.evaluate(()=>__dungeonTest.cycle(45));assert.deepEqual(result.used,['volley','ground','reflect','fury','beam','mend']);assert.ok(result.shots.every(s=>s.biome===theme&&s.damage>0));const shots=await p.evaluate(theme=>__dungeonTest.projectiles(theme),theme);assert.ok(shots.length>=8);assert.ok(shots.every(s=>s.biome===theme&&s.damage>0));bossResults.push({theme,used:result.used,projectiles:shots.length});
+      const floorPlan=await p.evaluate(theme=>__dungeonTest.boss(theme,1,2),theme);assert.ok(floorPlan.includes('ringchain')&&floorPlan.includes('sunder')&&floorPlan.includes('bastion'));
+      const plan=await p.evaluate(theme=>__dungeonTest.boss(theme,3,2),theme);assert.deepEqual(plan,floorPlan);
+      const result=await p.evaluate(()=>__dungeonTest.cycle(45));assert.ok(result.used.includes('ringchain')&&result.used.includes('sunder')&&result.used.length>=4);assert.ok(result.shots.every(s=>s.biome===theme&&s.damage>0));const shots=await p.evaluate(theme=>__dungeonTest.projectiles(theme),theme);assert.ok(shots.length>=8);assert.ok(shots.every(s=>s.biome===theme&&s.damage>0));bossResults.push({theme,used:result.used,projectiles:shots.length});
       await p.screenshot({path:path.join(resultsDir,'dungeon-boss-'+theme+'.png')});
     }
     for(const type of ['ground','beam']){
@@ -80,11 +80,11 @@ function instrumentation(){
       assert.equal(hit.before,hit.during,'Warnings cannot deal damage');assert.ok(hit.after<hit.before);assert.equal(avoid.after,avoid.before,'Leaving the locked telegraph avoids the attack');
     }
     const elites=await p.evaluate(()=>__dungeonTest.elites());assert.equal(elites.unseen,false);assert.deepEqual(elites.seen,[true,false,false]);assert.equal(elites.elite,true);assert.equal(elites.boss,false);assert.equal(elites.index,0);assert.equal(elites.second,false);assert.deepEqual(elites.after,elites.before);assert.equal(elites.kills,1);
-    passed.push('All four areas use themed attacks; floor overlords have four mechanics, zone overlords six; telegraphs precede damage and can be dodged');
+    passed.push('All four areas use themed attacks; overlords use repeated barrages, arena control and guard phases; telegraphs precede damage and can be dodged');
     passed.push('Elite echoes appear only after a known boss has appeared, stay capped at one per Floor 1 wave, count toward the wave and grant no duplicate Mastery');
-    const burn=await p.evaluate(()=>__dungeonTest.burn());assert.equal(burn.first.rate,.2);assert.equal(burn.second.rank,2);assert.equal(burn.second.rate,.4);assert.ok(Math.abs(burn.second.damage-.24)<1e-6);assert.ok(burn.second.floaters.some(t=>/Venom/.test(t)));
+    const burn=await p.evaluate(()=>__dungeonTest.burn());assert.equal(burn.first.rate,.2);assert.equal(burn.second.rank,2);assert.equal(burn.second.rate,.4);assert.ok(Math.abs(burn.second.damage-.24)<1e-6);assert.ok(burn.second.floaters.some(t=>/Burn/.test(t)));
     await p.evaluate(()=>__dungeonTest.fireChoices());const fire=p.locator('.zone-upgrade').filter({has:p.locator('[data-buy-zone="fire"]')});assert.match(await fire.innerText(),/Rank 1/);assert.match(await fire.innerText(),/2%/);assert.match(await fire.innerText(),/4%/);await fire.locator('[data-buy-zone]').click();assert.equal(await p.evaluate(()=>__deepwell.getState().upgrades.fire),2);await p.click('#drawerClose');
-    passed.push('Burn ticks remain visible; purchased rank two doubles its damage and the Zone Shop shows exact current / next effects');
+    passed.push('Burn ticks remain visible; purchased rank two doubles its damage and the Dungeon Shop shows exact current / next effects');
     const rewards=await p.evaluate(()=>__dungeonTest.rewards());assert.equal(rewards.gold,49);assert.equal(rewards.level,1);assert.ok(Math.abs(rewards.xp-58.8)<1e-6);const capped=await p.evaluate(()=>__dungeonTest.capped());assert.deepEqual(capped,{gold:45,pending:0,status:'running'});passed.push('Retired stat ranks cannot increase guardian XP or gold; obsolete choice calls cannot open a popup or grant duplicate rewards');
     const early=[];for(const id of ['sword','shield','polearm','greatsword','bow','staff']){const result=await p.evaluate(id=>__dungeonTest.bestEarlyDps(id),id);assert.ok(result.dps<result.target,'Three early purchases should stay below ideal DPS: '+id);early.push(result);}
     passed.push('The first three ability purchases stay below Zone 1’s recommended DPS across every weapon');

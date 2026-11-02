@@ -6,7 +6,7 @@ function workGoldLabel(key){const amount=skillGoldYield(key);return amount?Numbe
 function workshopYieldHtml(key){return '<b>+'+skillYield(key)+'</b>'+(SKILLS[key].goldGain?'<span class="work-gold" aria-label="'+workGoldLabel(key)+' Gold per search">'+artHTML('coins')+'<b>+'+workGoldLabel(key)+'</b></span>':'');}
 function installWorkshopUI(){
  if(workshopInstalled)return;workshopInstalled=true;
- const row=document.createElement('div');row.id='resourceHud';row.className='resource-hud';row.setAttribute('aria-label','Zone currency and ammunition');$('stageWrap').append(row);
+ const row=document.createElement('div');row.id='resourceHud';row.className='resource-hud';row.setAttribute('aria-label','Dungeon Sigils and ammunition');$('stageWrap').append(row);
  for(const id of ['zoneCurrencyHud','ammoNotice'])if($(id))row.append($(id));
  for(const key of Object.keys(WORKSHOP_ART))workshopPropImage(key);
 }
