@@ -1,7 +1,7 @@
 // Isolated review and test state; never embedded in the downloadable game.
 function workshopFixture(){
  let frozen=null;const animate=workshopAnimation;
- workshopAnimation=(...args)=>{const frame=animate(...args);if(frozen!==null){frame.phase=frame.workPhase=frozen;frame.time=frozen*6;}return frame;};
+ workshopAnimation=(...args)=>{const frame=animate(...args);if(frozen!==null){frame.phase=frame.workPhase=frozen;frame.time=frozen*6;frame.workBlend=1;}return frame;};
  function fresh(key='scavenge',armor='ranged_1',zone=0){
   resetArenaTouch();if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();data.floor=zoneStart(zone);data.cleared=Math.max(zoneEnd(0),zoneStart(zone)-1);data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=data.skillsNudgeSeen=data.zone2SkillsAnnounced=true;
   data.unlockedWeapons=Object.keys(WEAPON_TYPES);data.ownedArmor=Object.keys(ARMOR_SETS);data.equippedArmor=armor;data.equipmentVersion=data.tierProgressionVersion=1;
@@ -16,6 +16,7 @@ function workshopFixture(){
   snapshot(){return {gold:data.gold,material:data[SKILLS[game.scene]?.resource],reward:game.workReward,scene:game.scene,hold:game.holdSkill,goal:data.craftGoal};},
   cycle(active=true){return produce(game.scene,active);},
   review(key,armor='magic_1',zone=0,phase=.25){fresh(key,armor,zone);frozen=phase;game.holdSkill=key;game.lastActiveAt[key]=game.activeClockMs-phase*skillInterval(key)*1000;refreshUI();render();},
+  motion(key,armor,zone=0){fresh(key,armor,zone);game.holdSkill=key;game.lastActiveAt[key]=game.activeClockMs;},
   reward(){game.workReward=null;delete game.lastActiveAt[game.scene];activeSkill(game.scene);refreshUI();render();},
   hud(weapon,side,large=false){fresh('scavenge');data.weaponType=weapon;data.hudLayout.side=side;if(large){data.runes=data.arrows=1e12;zoneShopFor().currency=1e12;}data.ammoCharges={arrows:7.5,runes:7.5};projectCombatStyle();applyHudLayout();setScene('combat',false);game.status='running';game.manualPaused=game.menuPaused=true;refreshUI();render();},
   async healing(){fresh('scavenge','melee_1');setScene('combat',false);game.status='running';game.manualPaused=game.menuPaused=true;data.idleNoticeSlots=2;data.idleFirstAssigned=true;game.player.hp=game.player.maxHp*.55;game.player.invuln=0;game.healthDrops=[{x:-55,y:60,fraction:.05,elite:false},{x:65,y:90,fraction:.25,elite:true}];await healthDropImage.decode();refreshUI();render();},

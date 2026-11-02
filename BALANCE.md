@@ -1,6 +1,6 @@
 # Zone progression and balance
 
-Build 9.6 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.
+Build 9.7 gives each Zone four themed abilities. Core weapon statistics come from equipment, proficiency and existing jewelry. Each exact Zone retains its own seals and ranks; global Dungeoneering and Mastery remain separate.
 
 ## Equipment ceilings
 
@@ -62,11 +62,11 @@ Ordinary monsters drop no gold. Elites give 2 / 2.8 gold in Zones 1 / 2. Existin
 References now use completed Iron / Steel equipment at base proficiency, with no required Zone abilities. Health forecasts retain the 10 / 20 / 30-minute targets and the later 35–40-minute plateau. Movement, deaths, preparation and menus extend play time; abilities and successful counters can shorten it. Future equipment tiers remain unauthored.
 
 - Live Zone 1 simulation: **9.7 min**, 375 defeats, 80.0 reference DPS.
-- Live Zone 2 simulation: **20.4 min**, 570 defeats, 160.0 reference DPS.
-- Live Zone 3 simulation: **32.2 min**, 780 defeats, 160.0 reference DPS.
-- Live Zone 4 simulation: **36.3 min**, 960 defeats, 160.0 reference DPS.
-- Live Zone 9 simulation: **42.0 min**, 960 defeats, 160.0 reference DPS.
-- Live Zone 15 simulation: **41.4 min**, 960 defeats, 160.0 reference DPS.
+- Live Zone 2 simulation: **20.5 min**, 570 defeats, 160.0 reference DPS.
+- Live Zone 3 simulation: **32.5 min**, 780 defeats, 160.0 reference DPS.
+- Live Zone 4 simulation: **35.9 min**, 960 defeats, 160.0 reference DPS.
+- Live Zone 9 simulation: **41.8 min**, 960 defeats, 160.0 reference DPS.
+- Live Zone 15 simulation: **41.6 min**, 960 defeats, 160.0 reference DPS.
 
 Live tests use actual spawning, damage, approach, guardian mechanics and transitions at 40 ms steps. Only incoming damage and XP progression are suppressed in the isolated fixture. They approach healing totems to divert permanent healing, and do not deliberately seek reflect marks. Attack-cadence rounding contributes to the difference from the forecast.
 
@@ -126,4 +126,4 @@ Clearing Zone 1 unlocks the second idle slot and a replay-travel tip. All ten ad
 
 Retired statistics, abilities absent from a Zone and ranks above its revised maximum refund their original purchase prices to that exact Zone. Retained abilities keep their ranks. A versioned receipt prevents repeated credits. Older power-card saves first pass through the existing global-XP/Mastery migration, then receive any applicable refunds. Equipment, materials, gold, ground XP and Mastery are preserved.
 
-Twenty-two browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 111 distinct painted Codex entries, boss mechanics and live Zone pacing. Startup checks pause the HTML download to verify first paint, then cover asset readiness, reduced motion and retry. Run npm run report:balance to regenerate this file and balance-report.json.
+Twenty-three browser suites cover migration and exact refunds, real damage/cadence for all six weapons, both equipment tiers, every skill, first-weapon guidance, real touch gestures, full-card equipment selection, the four-ability shops, all 111 distinct painted Codex entries, boss mechanics and live Zone pacing. Startup checks pause the HTML download to verify first paint, then cover asset readiness, reduced motion and retry. Run npm run report:balance to regenerate this file and balance-report.json.

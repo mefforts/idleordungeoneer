@@ -1,0 +1,57 @@
+// Review/test helpers are injected into an isolated browser response only.
+function playerFixture(){
+ function ready(){return Promise.all([...DeepwellAvatar.images(),...Object.values(equipmentImages||{})].map(image=>image.decode()));}
+ function renderToCanvas(options={}){const canvas=document.createElement('canvas');canvas.width=canvas.height=600;const c=canvas.getContext('2d',{willReadFrequently:true});DeepwellAvatar.render(c,{x:240,y:540,scale:2.5,time:1.4,data:{...data,enchant:0,...options.data},...options});return {canvas,c};}
+ window.__playerTest={
+  ready,
+  openCreator(){creator.open();},
+  closeCreator(){creator.close();},
+  creatorPixels(){const canvas=$('wardrobeCanvas'),r=canvas.getBoundingClientRect(),scale=Math.min(r.width/145,r.height/135)*.89,x=r.width*.5*canvas.width/r.width,y=(r.height*.88-53*scale)*canvas.height/r.height,pixels=canvas.getContext('2d').getImageData(Math.round(x)-3,Math.round(y)-3,7,7).data;let green=0;for(let i=0;i<pixels.length;i+=4)green+=pixels[i+1]-pixels[i];return green/49;},
+  fixtures(){return {keys:DeepwellAvatar.assetKeys(),metrics:DeepwellAvatar.metrics(),armor:Object.keys(ARMOR_SETS),custom:DeepwellAvatar.normalizeCustom(data.custom),tools:['mine','smith','wood','scavenge','fletch','ward','rune','polish'].map(pose=>({pose,...DeepwellAvatar.toolForPose(pose)}))};},
+  joints(){
+   let samples=0,maxArmError=0,maxLegError=0,maxGripError=0;const failures=[];
+   for(const pose of ['combat','mine','smith','wood','fletch','ward','rune','polish','scavenge'])for(const weapon of Object.keys(WEAPON_TYPES))for(const facing of [-1,1])for(let frame=0;frame<48;frame++){
+    const rig=DeepwellAvatar.poseRig({pose,workPhase:frame/48,working:true,attack:pose==='combat'?frame/48:0,charge:.9,aimAngle:Math.sin(frame/48*Math.PI*2)*.8,time:frame/8,vx:-facing,facing,data:{...data,weaponType:weapon}});samples++;
+    for(const arm of [rig.frontArm,rig.backArm]){const upper=Math.hypot(arm.elbow.x-arm.shoulder.x,arm.elbow.y-arm.shoulder.y),lower=Math.hypot(arm.hand.x-arm.elbow.x,arm.hand.y-arm.elbow.y);maxArmError=Math.max(maxArmError,Math.abs(upper-arm.lengths[0]),Math.abs(lower-arm.lengths[1]));}
+    for(const leg of rig.legs)maxLegError=Math.max(maxLegError,Math.abs(Math.hypot(leg.knee.x-leg.hip.x,leg.knee.y-leg.hip.y)-DeepwellAvatar.metrics().legLengths[0]),Math.abs(Math.hypot(leg.ankle.x-leg.knee.x,leg.ankle.y-leg.knee.y)-DeepwellAvatar.metrics().legLengths[1]));
+    if(rig.gripOffset)maxGripError=Math.max(maxGripError,Math.hypot(rig.back.x-rig.main.x-rig.gripOffset.x,rig.back.y-rig.main.y-rig.gripOffset.y));
+    if(![rig.head.x,rig.head.y,rig.main.x,rig.back.y].every(Number.isFinite))failures.push({pose,weapon,frame});
+   }return {samples,maxArmError,maxLegError,maxGripError,failures};
+  },
+  bowString(){const canvas=document.createElement('canvas');canvas.width=canvas.height=300;const c=canvas.getContext('2d');c.translate(150,150);c.scale(4,4);paintEquipmentWeapon(c,{...data,weaponType:'bow'},'bow',{x:0,y:0,angle:0});const pixel=c.getImageData(102,150,1,1).data;return {bakedStringAlpha:pixel[3],woodAlpha:c.getImageData(150,150,1,1).data[3]};},
+  resting(){return [...['sword','staff'].map(weapon=>({pose:'idle',weapon})),...['mine','smith','wood','fletch','ward','rune','polish','scavenge'].map(pose=>({pose,weapon:'sword'}))].map(({pose,weapon})=>{const rig=DeepwellAvatar.poseRig({pose,working:false,data:{...data,weaponType:weapon}});return {pose,weapon,hip:rig.body.y,main:rig.main,back:rig.back,elbow:rig.backArm.elbow};});},
+  continuity(){const out=[];for(const pose of ['mine','smith','wood','fletch','ward','rune','polish','scavenge']){let last=null,largestStep=0;const points=[];for(let frame=0;frame<=120;frame++){const rig=DeepwellAvatar.poseRig({pose,workPhase:frame/120,working:true,data});points.push(rig.main);if(last)largestStep=Math.max(largestStep,Math.hypot(rig.main.x-last.x,rig.main.y-last.y));last=rig.main;}out.push({pose,largestStep,travel:Math.max(...points.map(p=>p.x))-Math.min(...points.map(p=>p.x))+Math.max(...points.map(p=>p.y))-Math.min(...points.map(p=>p.y))});}return out;},
+  layers(){
+   const rows=[];for(const armor of ['',...Object.keys(ARMOR_SETS)])for(const pose of ['idle','mine','ward','scavenge']){
+    const options={pose,working:true,workBlend:1,workPhase:.65,showWeapon:false,data:{...data,equippedArmor:armor,enchant:0}},rig=DeepwellAvatar.poseRig(options),{canvas,c}=renderToCanvas(options),pixels=c.getImageData(0,0,600,600).data;
+    const point=p=>({x:Math.round(240+p.x*2.5),y:Math.round(540+p.y*2.5)}),neck=point(rig.neck),chest=point({x:rig.body.x+Math.sin(rig.body.angle)*13,y:rig.body.y-Math.cos(rig.body.angle)*13});
+    let seen=new Uint8Array(600*600),queue=[chest.y*600+chest.x];seen[queue[0]]=1;for(let at=0;at<queue.length;at++){const p=queue[at],x=p%600,y=Math.floor(p/600);for(const next of [x>0?p-1:-1,x<599?p+1:-1,y>0?p-600:-1,y<599?p+600:-1])if(next>=0&&!seen[next]&&pixels[next*4+3]>28){seen[next]=1;queue.push(next);}}
+    const joints=[rig.frontArm.shoulder,rig.frontArm.elbow,rig.frontArm.hand,rig.backArm.shoulder,rig.backArm.elbow,rig.backArm.hand,...rig.legs.flatMap(leg=>[leg.hip,leg.knee,leg.ankle])],detached=joints.map(point).map((p,index)=>seen[p.y*600+p.x]?null:index).filter(index=>index!==null);
+    rows.push({armor,pose,neckConnected:!!seen[neck.y*600+neck.x],detached,visiblePixels:queue.length});
+   }return rows;
+  },
+  gallery(){
+   const canvas=document.createElement('canvas');canvas.id='playerReviewCanvas';canvas.width=1540;canvas.height=400;canvas.style='position:fixed;inset:0;z-index:999999;background:#28271f';document.body.append(canvas);const c=canvas.getContext('2d'),sets=['',...Object.keys(ARMOR_SETS)];c.fillStyle='#28271f';c.fillRect(0,0,1540,400);c.font='15px Georgia';
+   sets.forEach((id,i)=>{c.fillStyle='#e5d6b7';c.textAlign='center';c.fillText(ARMOR_SETS[id]?.name||'Travel clothes',i*220+104,30);DeepwellAvatar.render(c,{x:i*220+94,y:360,scale:2.8,time:1.5,pose:'idle',showWeapon:false,data:{...data,equippedArmor:id,enchant:0}});});
+  },
+  weapons(){
+   const canvas=document.createElement('canvas');canvas.id='playerReviewCanvas';canvas.width=1440;canvas.height=620;canvas.style='position:fixed;inset:0;z-index:999999;background:#28271f';document.body.append(canvas);const c=canvas.getContext('2d'),weapons=Object.keys(WEAPON_TYPES);c.fillStyle='#28271f';c.fillRect(0,0,1440,620);c.font='14px Georgia';
+   for(let row=0;row<2;row++)weapons.forEach((weapon,col)=>{const style=styleForWeapon(weapon),outfit=style+'_2';c.fillStyle='#e5d6b7';c.textAlign='center';c.fillText(WEAPON_TYPES[weapon].name+(row?' · attack':' · ready'),col*240+110,row*310+22);DeepwellAvatar.render(c,{x:col*240+95,y:row*310+285,scale:2,time:1.2,pose:'combat',vx:weapon==='bow'?-1:0,facing:1,attack:row?.44:0,charge:.9,data:{...data,weaponType:weapon,equippedArmor:outfit,enchant:0,arrows:100,styles:{...data.styles,[style]:{...data.styles[style],tier:2}}}});});
+  },
+  actions(){
+   const canvas=document.createElement('canvas');canvas.id='playerReviewCanvas';canvas.width=1760;canvas.height=880;canvas.style='position:fixed;inset:0;z-index:999999;background:#28271f';document.body.append(canvas);const c=canvas.getContext('2d'),poses=['mine','smith','wood','fletch','ward','rune','polish','scavenge'];c.fillStyle='#28271f';c.fillRect(0,0,1760,880);c.font='14px Georgia';
+   for(let row=0;row<4;row++)poses.forEach((pose,col)=>{c.fillStyle='#e5d6b7';c.textAlign='center';c.fillText(pose,col*220+100,row*220+20);DeepwellAvatar.render(c,{x:col*220+85,y:row*220+205,scale:1.7,time:1.3,pose,workPhase:[.12,.37,.62,.87][row],working:true,workBlend:1,data:{...data,equippedArmor:pose==='ward'||pose==='rune'?'magic_2':'melee_1',enchant:0}});});
+  },
+  mix(){const pieces={head:'magic_2',shoulders:'melee_2',chest:'ranged_1',legs:'ranged_2',boots:'base',gloves:'melee_1'};return DeepwellAvatar.appearance(data,pieces);},
+  icons(){const out={};for(const [id,set]of Object.entries(ARMOR_SETS)){
+   const canvas=document.createElement('canvas');canvas.width=canvas.height=256;const c=canvas.getContext('2d'),g=c.createRadialGradient(112,86,8,128,128,123);g.addColorStop(0,'#776b48');g.addColorStop(.65,'#3b3a2b');g.addColorStop(1,'#171b18');c.fillStyle=g;c.beginPath();c.arc(128,128,121,0,Math.PI*2);c.fill();c.strokeStyle='#aa8c54';c.lineWidth=5;c.stroke();c.strokeStyle='#e2c997';c.lineWidth=1.5;c.beginPath();c.arc(128,128,116,0,Math.PI*2);c.stroke();DeepwellAvatar.render(c,{x:127,y:239,scale:2.04,time:1.6,pose:'idle',showWeapon:false,data:{...data,equippedArmor:id,enchant:0}});out['armor-set-'+id+'.svg']=canvas.toDataURL('image/webp',.94);out['codex-armor_set_'+id+'.svg']=out['armor-set-'+id+'.svg'];
+  }
+  for(const [style,color]of Object.entries({melee:'#48525a',ranged:'#384e3a',magic:'#39445d'})){
+   const canvas=document.createElement('canvas');canvas.width=canvas.height=256;const c=canvas.getContext('2d'),g=c.createRadialGradient(110,80,8,128,128,122);g.addColorStop(0,color);g.addColorStop(1,'#161a18');c.fillStyle=g;c.beginPath();c.arc(128,128,121,0,Math.PI*2);c.fill();c.save();c.beginPath();c.arc(128,128,115,0,Math.PI*2);c.clip();DeepwellAvatar.render(c,{x:127,y:450,scale:4.15,time:1.5,pose:'idle',showWeapon:false,data:{...data,equippedArmor:style+'_1',enchant:0}});c.restore();c.strokeStyle='#bda06b';c.lineWidth=5;c.beginPath();c.arc(128,128,121,0,Math.PI*2);c.stroke();out['style-'+style+'-armor.svg']=canvas.toDataURL('image/webp',.94);out['codex-armor_'+style+'.svg']=out['style-'+style+'-armor.svg'];
+  }
+  for(const name of ['pickaxe','hatchet','mattock']){
+   const canvas=document.createElement('canvas');canvas.width=canvas.height=256;const c=canvas.getContext('2d'),g=c.createRadialGradient(105,90,8,128,128,121);g.addColorStop(0,'#657477');g.addColorStop(1,'#17262b');c.fillStyle=g;c.beginPath();c.arc(128,128,121,0,Math.PI*2);c.fill();c.strokeStyle='#9ba590';c.lineWidth=4;c.stroke();const image=new Image();image.src=PLAYER_ART['tool-'+name].src;const loaded=DeepwellAvatar.images().find(i=>i.src===image.src);if(!loaded?.naturalWidth)throw Error('Tool not ready');const height=190,width=height*loaded.naturalWidth/loaded.naturalHeight;c.save();c.translate(128,128);c.rotate(.30);c.drawImage(loaded,-width/2,-height/2,width,height);c.restore();out['tool-'+name+'.svg']=canvas.toDataURL('image/webp',.94);out['codex-tool_'+name+'.svg']=out['tool-'+name+'.svg'];
+  }return out;}
+ };
+}
+module.exports={playerFixture};

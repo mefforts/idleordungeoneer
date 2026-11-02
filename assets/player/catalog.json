@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "bodyParts": [
+    "head",
+    "chest",
+    "upperarm",
+    "forearm",
+    "hand",
+    "thigh",
+    "shin",
+    "boot",
+    "shoulder",
+    "waist",
+    "neck",
+    "cuff",
+    "grip",
+    "reach"
+  ],
+  "armorParts": [
+    "head",
+    "shoulder",
+    "chest",
+    "thigh",
+    "shin",
+    "boot",
+    "upperarm",
+    "forearm",
+    "hand",
+    "grip"
+  ],
+  "armorSets": [
+    "melee_1",
+    "melee_2",
+    "ranged_1",
+    "ranged_2",
+    "magic_1",
+    "magic_2"
+  ],
+  "physicalSlots": [
+    "head",
+    "shoulders",
+    "chest",
+    "legs",
+    "boots",
+    "gloves"
+  ],
+  "hairstyles": 6,
+  "tools": 8,
+  "sprites": 88,
+  "coordinateSystem": "Foot origin; upright bind pose; shared shoulder, elbow, knee and wrist sockets",
+  "sourceSheets": [
+    "body.png",
+    "hair.png",
+    "armor-iron.png",
+    "armor-steel.png",
+    "tools.png",
+    "grips.png"
+  ]
+}

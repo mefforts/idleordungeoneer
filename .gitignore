@@ -40,3 +40,7 @@ chat-exports/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Python asset-export caches
+__pycache__/
+*.py[cod]

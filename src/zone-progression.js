@@ -53,37 +53,19 @@ function describeEquipment(d){
  const a=ARMOR_SETS[d.equippedArmor],s=d.styles?.[styleForWeapon(d.weaponType)]||{};
  return {armor:a||null,style:a?.style||'travel',tier:a?.tier||0,weaponTier:s.tier===2?2:1};
 }
-function paintEquipmentBody(c,d,motion={}){
- const a=equipmentRegion(d,'armor');if(!a)return false;const [x,y,w,h]=a.region,style=a.details.style;
- const plain=a.details.armor.id==='ranged_1',top=plain?.03:style==='magic'?.24:.25;
- c.save();c.beginPath();c.moveTo(-11,-50);c.lineTo(11,-50);c.lineTo(15,-44);c.lineTo(12,-30);c.lineTo(style==='magic'?15:16,-18);c.lineTo(-16,-18);c.lineTo(-12,-30);c.lineTo(-15,-44);c.closePath();c.clip();
- c.drawImage(a.image,x+w*.22,y+h*top,w*.56,h*((style==='magic'?.53:.66)-top),-17,-51,34,35);c.restore();
- if(style==='magic'){
-  const strips=12;
-  for(let i=0;i<strips;i++){
-   const t=i/strips,sway=Math.sin((motion.time||0)*3-t*1.8)*(motion.walking?1.1:.25)*t;
-   const width=31+t*9,sy=y+h*(.51+t*.405);c.drawImage(a.image,x+w*.13,sy,w*.74,h*.405/strips,-width/2+sway,-28+i*27/strips,width,27/strips+.25);
-  }
- }
- return true;
-}
 
-function paintEquipmentArm(c,d,side,angle,joints){
- const a=equipmentRegion(d,'armor');if(!a||!joints)return false;
- const plain=a.details.armor.id==='ranged_1',mage=a.details.style==='magic',upper=plain?[.12,.29]:mage?[.24,.39]:[.21,.40],lower=plain?[.28,.45]:mage?[.38,.51]:[.39,.57];
- paintRigSegment(c,a,side,joints.shoulder,joints.elbow,...upper,mage?10:a.details.style==='melee'?11:9);
- paintRigSegment(c,a,side,joints.elbow,joints.hand,...lower,mage?8.5:7.5);return true;
-}
-function paintEquipmentLeg(c,d,side,theta){
- const a=equipmentRegion(d,'armor');if(!a)return false;const [x,y,w,h]=a.region,mage=a.details.style==='magic';
- c.save();c.translate(side*6.6,mage?-7:-27);c.rotate(theta*(mage?.18:1));
- c.drawImage(a.image,x+w*(side<0?.20:.48),y+h*(mage?.89:.59),w*.32,h*(mage?.11:.41),-7.2,0,14.4,mage?8:28);c.restore();return true;
-}
+
+
+
 
 function paintEquipmentWeapon(c,d,type,pose={x:0,y:0,angle:0}){
  const actual=type||d.weaponType,a=equipmentRegion(d,'weapons',actual),rig=WEAPON_RIGS[actual];if(!a||!rig)return false;
  const [x,y,w,h]=a.region,height=rig.height,width=height*w/h;
  c.save();c.translate(pose.x,pose.y);c.rotate(pose.angle||0);if(rig.flip)c.scale(-1,1);
+ if(actual==='bow'){
+  const left=-rig.grip[0]*width,top=-rig.grip[1]*height;
+  c.beginPath();c.moveTo(left,top);c.lineTo(left+width,top);c.lineTo(left+width*.84,top+height*.1);c.lineTo(left+width*.84,top+height*.9);c.lineTo(left+width,top+height);c.lineTo(left,top+height);c.closePath();c.clip();
+ }
  c.drawImage(a.image,x,y,w,h,-rig.grip[0]*width,-rig.grip[1]*height,width,height);c.restore();return true;
 }
 function promoteStyle(id){
@@ -173,7 +155,7 @@ function refreshTierProgressionUI(){
  if(!tierProgressionInstalled)return;
  if(tier2Unlocked()&&!data.zone2SkillsAnnounced){data.zone2SkillsAnnounced=true;toast('Zone 2 skilling unlocked','Coal and steel · willow · ancient salvage · garnets · runic cloth. Visit Skills to continue each discipline.');}
  const key=game.scene;if(SKILLS[key]?.tier===2){
-  $('activeTool').textContent=({steelSmelt:'Smithing hammer',steelFletch:'Fletching knife',aetherWeave:'Weaving shuttle',greaterRune:'Inscription stylus',garnetCut:'Gem chisel'})[key]||TOOL_DEFS[toolForSkill(key)]?.name||'Prospecting mattock';
+  $('activeTool').textContent=({steelSmelt:'Smithing hammer',steelFletch:'Fletching knife',aetherWeave:'Warding spindle',greaterRune:'Engraving burin',garnetCut:'Jeweler’s file'})[key]||TOOL_DEFS[toolForSkill(key)]?.name||'Prospecting mattock';
  }
 }
 
@@ -191,9 +173,9 @@ function drawWorkstationScene(w,h,key){
  const heroPosition={wood:.60,mine:.53,silverMine:.53,forge:.61,silverSmelt:.61,fletch:.60,ward:.57,rune:.57,polish:.57,scavenge:.59};
  const heroFraction=useAdvanced?(base==='wood'?.64:.62):heroPosition[base];
  const feet=Math.min(dy+dh*.81,game.workAreaBottom??h-(innerWidth<=760?304:230)),bounds=workshopBounds(key),leftMargin=16+(data.hudLayout.side==='left'?52:0),rightMargin=16+(data.hudLayout.side==='right'?52:0);
- const scale=Math.min(clamp(dw/sw*1.4,1.28,3.2),Math.max(.85,(feet-96*(w/innerWidth))/82),(w-leftMargin-rightMargin)/(bounds.right-bounds.left));
+ const scale=Math.min(clamp(dw/sw*1.15,1.05,2.65),Math.max(.85,(feet-96*(w/innerWidth))/100),(w-leftMargin-rightMargin)/(bounds.right-bounds.left));
  const heroX=clamp(dx+dw*heroFraction,leftMargin-bounds.left*scale,Math.max(leftMargin-bounds.left*scale,w-rightMargin-bounds.right*scale));
- const frame=workshopAnimation(key,activeWorking,working),anchor={x:heroX,y:feet,scale,height:scale*82};
+ const frame=workshopAnimation(key,activeWorking,working),anchor={x:heroX,y:feet,scale,height:scale*100};
  paintWorkshopSceneEffects(frame,anchor,'back');DeepwellAvatar.render(ctx,{...frame,x:heroX,y:feet,scale});paintWorkshopSceneEffects(frame,anchor,'front');paintWorkshopReward(anchor);
 
  if(!reducedMotion()){
@@ -230,7 +212,7 @@ function attack(){
  if(data.weaponType==='greatsword'&&p.hp<p.maxHp*.5)damage*=1.65;
  if(isRanged()){
   const ammo=ammunitionResource();if(!loadAmmunition(ammo)){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1')}return false;}
-  const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,aimAngle:localAimAngle(p.aimAngle),data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*1.16,y:p.y+18+hand.y*1.16};
+  const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,aimAngle:localAimAngle(p.aimAngle),data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*.98,y:p.y+18+hand.y*.98};
   const number=1+waveRank('multishot');
   for(let i=0;i<number;i++){
    const target=targets[Math.min(i,targets.length-1)].e,a=Math.atan2(target.y-origin.y,target.x-origin.x);
@@ -253,7 +235,7 @@ function attack(){
 function drawPlayer(p){
  if(p.invuln>0&&!game.menuPaused&&!game.manualPaused&&!reducedMotion()&&Math.sin(game.frame*38)>0)return;
  if(p.dashTime>0){glow(p.x,p.y-3,64,'#86efdd9a');for(let i=1;i<=3;i++){ctx.save();ctx.globalAlpha=.2/i;ellipse(p.x-p.dashDX*i*21,p.y-p.dashDY*i*21,22,14,'#affff2');ctx.restore()}}
- DeepwellAvatar.render(ctx,{x:p.x,y:p.y+18,scale:1.16,time:game.frame,pose:'combat',vx:p.vx,vy:p.vy,facing:p.facing,aimAngle:localAimAngle(p.aimAngle),attack:p.attackPose/.38,charge:data.weaponType==='bow'?clamp(1-game.attackTimer/attackCooldown(),0,1):0,hit:p.hitPose/.26,data});
+ DeepwellAvatar.render(ctx,{x:p.x,y:p.y+18,scale:.98,time:game.frame,pose:'combat',dash:p.dashTime>0,vx:p.vx,vy:p.vy,facing:p.facing,aimAngle:localAimAngle(p.aimAngle),attack:p.attackPose/.38,charge:data.weaponType==='bow'?clamp(1-game.attackTimer/attackCooldown(),0,1):0,hit:p.hitPose/.26,data});
 }
 
 function localAimAngle(angle=0){return Math.max(-.8,Math.min(.8,Math.atan2(Math.sin(angle),Math.abs(Math.cos(angle)))));}

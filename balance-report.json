@@ -1,5 +1,5 @@
 {
-  "version": "9.6.0",
+  "version": "9.7.0",
   "economy": [
     {
       "zone": 1,
@@ -1544,7 +1544,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 581.8800000000322,
+      "seconds": 582.4800000000333,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
@@ -1552,7 +1552,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1222.3200000000722,
+      "seconds": 1227.6400000000745,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
@@ -1560,7 +1560,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1933.8400000000784,
+      "seconds": 1948.8000000000807,
       "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 1800
@@ -1568,7 +1568,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2177.0400000001146,
+      "seconds": 2155.080000000113,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2100
@@ -1576,7 +1576,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2520.520000000146,
+      "seconds": 2510.480000000147,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
@@ -1584,7 +1584,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2483.8800000001447,
+      "seconds": 2498.600000000149,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400

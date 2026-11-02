@@ -6,5 +6,6 @@ function finishGameLoading(){
  for(const image of environmentImages.values())images.add(image);
  for(const image of rareEliteImages.values())images.add(image);
  for(const image of Object.values(equipmentImages||{}))images.add(image);
+ for(const image of DeepwellAvatar.images())images.add(image);
  Promise.allSettled([...images].map(image=>image.decode())).then(()=>{render();loading.ready();}).catch(()=>loading.fail());
 }

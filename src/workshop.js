@@ -45,8 +45,11 @@ const WORKSHOP_THEMES=[{light:'#bed99a',deep:'#527b46',spark:'#e5d79c'},{light:'
 function workshopAnimation(key,active,working){
  const base=SKILLS[key].scene||key,pose={mine:'mine',silverMine:'mine',forge:'smith',silverSmelt:'smith',wood:'wood',fletch:'fletch',ward:'ward',rune:'rune',polish:'polish',scavenge:'scavenge'}[base]||'scavenge';
  const interval=skillInterval(key,active),elapsed=active?(game.activeClockMs-(game.lastActiveAt?.[key]??game.activeClockMs))/1000:(data.jobTimers[key]||0),phase=working&&!reducedMotion()?Math.min(.9999,Math.max(0,elapsed/interval)):.3;
- const time=reducedMotion()?0:game.activeClockMs/1000;
- return {key,base,pose,working,phase,time,workPhase:phase,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
+ const time=reducedMotion()?0:(game.workVisualClock||0),now=performance.now();
+ if(!game.workPresentation||game.workPresentation.key!==key)game.workPresentation={key,at:now,blend:0};
+ const presentation=game.workPresentation,elapsedVisual=Math.min(.08,Math.max(0,(now-presentation.at)/1000));presentation.at=now;presentation.blend=clamp(presentation.blend+(working?elapsedVisual/.18:-elapsedVisual/.24),0,1);
+ const rates={mine:1.05,smith:1.2,wood:.92,fletch:.85,ward:.62,rune:.7,polish:1.15,scavenge:.72},visualPhase=working&&!reducedMotion()?((time*(rates[pose]||1))%1):.3;
+ return {key,base,pose,working,phase:visualPhase,productionPhase:phase,time,workBlend:reducedMotion()?(working?1:0):presentation.blend,workPhase:visualPhase,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
 }
 function workshopGlyph(c,x,y,r,kind,color){
  c.save();c.translate(x,y);c.strokeStyle=color;c.lineWidth=.7;c.beginPath();
@@ -57,7 +60,7 @@ function workshopGlyph(c,x,y,r,kind,color){
  c.stroke();c.restore();
 }
 function paintWorkshopSceneEffects(frame,anchor,layer){
- const {pose,working,phase,time,theme,key}=frame,kind=biomeIndex(),rig=DeepwellAvatar.poseRig(frame),magical=['ward','rune'].includes(pose),center=pose==='ward'?{x:24,y:-34}:{x:31,y:-27};
+ const {pose,working,phase,time,theme,key}=frame,kind=biomeIndex(),rig=DeepwellAvatar.poseRig(frame),magical=['ward','rune'].includes(pose),center=pose==='ward'?{x:29,y:-49}:{x:33,y:-44};
  ctx.save();ctx.translate(anchor.x,anchor.y);ctx.scale(anchor.scale,anchor.scale);
  if(layer==='back'){
   const prop=workshopProp(frame),image=prop&&workshopPropImage(prop.art);if(image?.complete&&image.naturalWidth){const width=Math.min(62,prop.height*image.naturalWidth/image.naturalHeight);ctx.drawImage(image,prop.x-width/2,-prop.height,width,prop.height);}
@@ -73,16 +76,16 @@ function paintWorkshopSceneEffects(frame,anchor,layer){
  }else if(pose==='rune'){
   ctx.save();ctx.translate(center.x,center.y);ctx.fillStyle='#626d72';ctx.strokeStyle='#263438';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,8,5,-.2,0,Math.PI*2);ctx.fill();ctx.stroke();workshopGlyph(ctx,0,-1,3.1,kind,working?theme.spark:theme.light);if(working){ctx.strokeStyle=theme.light;ctx.lineWidth=.75;ctx.beginPath();ctx.ellipse(0,0,13,8,-.2,-Math.PI/2,-Math.PI/2+Math.PI*2*phase);ctx.stroke();}ctx.restore();
  }else if(pose==='polish'){
-  const x=25,y=-27;ctx.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';ctx.strokeStyle='#3a4b4c';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x+5,y-1);ctx.lineTo(x+2,y+4);ctx.lineTo(x-4,y+2);ctx.lineTo(x-5,y-2);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#e4eee0';ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x-1,y);ctx.lineTo(x+5,y-1);ctx.moveTo(x-1,y);ctx.lineTo(x+2,y+4);ctx.stroke();
+  const x=31,y=-44;ctx.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';ctx.strokeStyle='#3a4b4c';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x+5,y-1);ctx.lineTo(x+2,y+4);ctx.lineTo(x-4,y+2);ctx.lineTo(x-5,y-2);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#e4eee0';ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x-1,y);ctx.lineTo(x+5,y-1);ctx.moveTo(x-1,y);ctx.lineTo(x+2,y+4);ctx.stroke();
  }else if(pose==='fletch'){
-  ctx.strokeStyle=SKILLS[key].tier===2?'#b8a27b':'#c5a276';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(13,-26);ctx.lineTo(45,-29);ctx.stroke();ctx.fillStyle='#a6b6ba';ctx.beginPath();ctx.moveTo(45,-31);ctx.lineTo(51,-30);ctx.lineTo(45,-27);ctx.fill();ctx.strokeStyle='#d6d3b8';ctx.lineWidth=1;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(14+i*2,-26);ctx.lineTo(10+i*2,-29);ctx.stroke();}
+  ctx.strokeStyle=SKILLS[key].tier===2?'#b8a27b':'#c5a276';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(12,-43);ctx.lineTo(43,-45);ctx.stroke();ctx.fillStyle='#a6b6ba';ctx.beginPath();ctx.moveTo(43,-47);ctx.lineTo(49,-46);ctx.lineTo(43,-43);ctx.fill();ctx.strokeStyle='#d6d3b8';ctx.lineWidth=1;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(13+i*2,-43);ctx.lineTo(9+i*2,-46);ctx.stroke();}
  }else if(pose==='scavenge'){
-  for(let i=0;i<5;i++){const x=25+i*4,y=-1+(i%2);ctx.fillStyle=i%2?'#716650':'#8c8067';ctx.beginPath();ctx.moveTo(x-2,y);ctx.lineTo(x-1,y-3-i%2);ctx.lineTo(x+2,y-2);ctx.lineTo(x+3,y+1);ctx.fill();}
+  for(let i=0;i<5;i++){const x=27+i*6,y=-1+(i%2);ctx.fillStyle=i%2?'#716650':'#8c8067';ctx.beginPath();ctx.moveTo(x-2,y);ctx.lineTo(x-1,y-3-i%2);ctx.lineTo(x+2,y-2);ctx.lineTo(x+3,y+1);ctx.fill();}
   const reward=game.workReward;if(reward?.key===key&&reward.gold&&performance.now()-reward.time<900){ctx.fillStyle='#dfb766';ctx.beginPath();ctx.ellipse(34,-5,3,1.8,-.2,0,Math.PI*2);ctx.fill();workshopGlyph(ctx,34,-9,2,3,'#fff0bb');}
  }
  if(working&&!reducedMotion()){
-  const striking=['mine','smith','wood'].includes(pose),impact=phase<.18||phase>.94;
-  if(!striking||impact){const origin=magical?center:pose==='scavenge'?rig.main:pose==='fletch'?{x:31,y:-28}:pose==='polish'?{x:26,y:-28}:{x:rig.main.x+Math.sin(rig.angle+.56)*36,y:rig.main.y-Math.cos(rig.angle+.56)*36};
+  const striking=['mine','smith','wood'].includes(pose),impact=phase>.6&&phase<.8;
+  if(!striking||impact){const origin=magical?center:pose==='scavenge'?rig.main:pose==='fletch'?{x:31,y:-44}:pose==='polish'?{x:31,y:-44}:rig.toolTip||rig.main;
    const count=pose==='smith'?9:pose==='ward'?7:4;for(let i=0;i<count;i++){const age=((striking?phase*5:time*.5)+i/count)%1,a=i*2.399,dist=age*(magical?16:pose==='smith'?18:10);ctx.globalAlpha=(1-age)*.7;ctx.strokeStyle=pose==='smith'?'#f5bf75':magical?theme.light:pose==='wood'||pose==='fletch'?'#c8a16a':pose==='scavenge'?'#b4a080':'#a7b6b7';ctx.lineWidth=pose==='smith'?.7:.9;ctx.beginPath();ctx.moveTo(origin.x+Math.cos(a)*dist,origin.y+Math.sin(a)*dist*.6-age*6);ctx.lineTo(origin.x+Math.cos(a)*(dist+2),origin.y+Math.sin(a)*(dist+2)*.6-age*6);ctx.stroke();}}
  }
  ctx.restore();
@@ -96,10 +99,10 @@ function workshopProp(frame){
  if(pose==='mine')return {art:frame.key==='coal'?'coal':frame.base==='silverMine'?'silver':'iron',x:58,height:48};
  if(pose==='smith')return {art:'anvil',x:60,height:36};
  if(pose==='wood')return {art:'chopping',x:58,height:39};
- if(pose==='fletch')return {art:'fletching',x:34,height:29};
- if(pose==='ward')return {art:'warding',x:24,height:15};
- if(pose==='rune')return {art:'engraving',x:31,height:30};
- if(pose==='polish')return {art:'jeweling',x:26,height:29};
+ if(pose==='fletch')return {art:'fletching',x:34,height:44};
+ if(pose==='ward')return {art:'warding',x:29,height:26};
+ if(pose==='rune')return {art:'engraving',x:33,height:44};
+ if(pose==='polish')return {art:'jeweling',x:31,height:44};
  return null;
 }
 function workshopBounds(key){
@@ -124,10 +127,10 @@ function drawProceduralWorkstation(w,h,key){
  if(base==='forge'||base==='silverSmelt'){
   glow(279,351,130,'#e0a15f20');for(let i=0;i<7;i++){const x=241+i*13,y=401,fl=23+Math.sin(t*3+i)*8;ctx.beginPath();ctx.moveTo(x-10,y);ctx.bezierCurveTo(x-18,y-fl,x+7,y-fl-22,x+4,y-fl-38);ctx.bezierCurveTo(x+18,y-fl+4,x+20,y-4,x+9,y);ctx.closePath();ctx.fillStyle=i%2?'#ecb478':'#d98f56';ctx.fill();}
  }
- const frame=workshopAnimation(key,active,working),anchor={x:521,y:534,scale:2.18,height:2.18*82};
+ const frame=workshopAnimation(key,active,working),anchor={x:521,y:534,scale:1.8,height:180};
  paintWorkshopSceneEffects(frame,anchor,'back');DeepwellAvatar.render(ctx,{...frame,x:anchor.x,y:anchor.y,scale:anchor.scale});paintWorkshopSceneEffects(frame,anchor,'front');
  ctx.restore();
- paintWorkshopReward({x:x+21*scale,y:y+254*scale,height:2.18*82*scale});
+ paintWorkshopReward({x:x+21*scale,y:y+254*scale,height:180*scale});
  // Local ambient motes are few, slow, and never cover the action bar.
  if(!reducedMotion())for(let i=0;i<12;i++){const px=rng(i,83,key.length)*w,py=top+((rng(i,84)*available+t*(2+i%3))%available);ctx.globalAlpha=.14;disc(px,py,1,'#ecdbb2');}ctx.globalAlpha=1;
 }

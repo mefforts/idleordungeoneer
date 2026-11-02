@@ -205,7 +205,7 @@ function refreshSystemsUI(){
 
   }
   refreshTierProgressionUI();const toolEl=$('activeTool');if(toolEl&&SKILLS[game.scene]){
-    const tool=toolForSkill(game.scene),t=TOOL_DEFS[tool],label=t?(data.tools[tool]?t.name:'Improvised '+tool):({forge:'Smithing hammer',silverSmelt:'Smithing hammer',fletch:'Fletching knife',ward:'Weaving shuttle',rune:'Inscription stylus',polish:'Polishing chisel'})[SKILLS[game.scene].scene||game.scene];
+    const tool=toolForSkill(game.scene),t=TOOL_DEFS[tool],label=t?(data.tools[tool]?t.name:'Improvised '+tool):({forge:'Smithing hammer',silverSmelt:'Smithing hammer',fletch:'Fletching knife',ward:'Warding spindle',rune:'Engraving burin',polish:'Jeweler’s file'})[SKILLS[game.scene].scene||game.scene];
     toolEl.textContent=label+(t&&data.tools[tool]?' · equipped':'');
   }
   if(data.gold>data.goldHighWater)data.goldHighWater=data.gold;

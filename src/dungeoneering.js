@@ -241,6 +241,7 @@ function dealDamage(enemy,base,fromX,fromY,sourceStyle=combatStyle()){
 
 function update(dt){
  const simDt=dt*(game.devSpeed||1),skillSpeed=skillingTimeMultiplier();
+ game.workVisualClock=(game.workVisualClock||0)+dt*Math.min(2.5,skillSpeed);
  game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);
  advanceActiveWork(dt*skillSpeed);
  game.frame+=game.status==='running'?0:dt;

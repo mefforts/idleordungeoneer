@@ -71,3 +71,5 @@ body.codex-modal-open .stage-wrap,body.mastery-modal-open .stage-wrap{z-index:20
  .player-ui .codex-icon{background:none!important;border:0!important;box-shadow:none!important}
  .player-ui .hud-pin .nav-icon,.player-ui .hud-chip .nav-icon{padding:0!important}
 }
+
+.player-ui .wardrobe-pose-group{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.player-ui .wardrobe-pose-group button{min-height:44px;padding:8px 4px}
