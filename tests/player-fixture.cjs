@@ -21,8 +21,32 @@ function playerFixture(){
   bowString(){const canvas=document.createElement('canvas');canvas.width=canvas.height=300;const c=canvas.getContext('2d');c.translate(150,150);c.scale(4,4);paintEquipmentWeapon(c,{...data,weaponType:'bow'},'bow',{x:0,y:0,angle:0});const pixel=c.getImageData(102,150,1,1).data;return {bakedStringAlpha:pixel[3],woodAlpha:c.getImageData(150,150,1,1).data[3]};},
   resting(){return [...['sword','staff'].map(weapon=>({pose:'idle',weapon})),...['mine','smith','wood','fletch','ward','rune','polish','scavenge'].map(pose=>({pose,weapon:'sword'}))].map(({pose,weapon})=>{const rig=DeepwellAvatar.poseRig({pose,working:false,data:{...data,weaponType:weapon}});return {pose,weapon,hip:rig.body.y,main:rig.main,back:rig.back,elbow:rig.backArm.elbow};});},
   continuity(){const out=[];for(const pose of ['mine','smith','wood','fletch','ward','rune','polish','scavenge']){let last=null,largestStep=0;const points=[];for(let frame=0;frame<=120;frame++){const rig=DeepwellAvatar.poseRig({pose,workPhase:frame/120,working:true,data});points.push(rig.main);if(last)largestStep=Math.max(largestStep,Math.hypot(rig.main.x-last.x,rig.main.y-last.y));last=rig.main;}out.push({pose,largestStep,travel:Math.max(...points.map(p=>p.x))-Math.min(...points.map(p=>p.x))+Math.max(...points.map(p=>p.y))-Math.min(...points.map(p=>p.y))});}return out;},
+  attackSeams(){
+   const rows=[],distance=(a,b)=>Math.max(...[a.main,a.back,a.frontArm.elbow,a.backArm.elbow,a.head].map((p,i)=>Math.hypot(p.x-[b.main,b.back,b.frontArm.elbow,b.backArm.elbow,b.head][i].x,p.y-[b.main,b.back,b.frontArm.elbow,b.backArm.elbow,b.head][i].y)));
+   for(const weapon of Object.keys(WEAPON_TYPES))for(const facing of [-1,1])for(const direction of [-1,0,1])for(const dash of [false,true]){
+    const base={pose:'combat',time:1.2,facing,vx:direction*facing,vy:0,dash,data:{...data,weaponType:weapon}},ready=DeepwellAvatar.poseRig({...base,attack:0,charge:weapon==='bow'?1:0}),start=DeepwellAvatar.poseRig({...base,attack:1,charge:0}),rest=DeepwellAvatar.poseRig({...base,attack:0,charge:.38}),end=DeepwellAvatar.poseRig({...base,attack:.0001,charge:.38});
+    let last=ready,maxStep=0;for(let frame=0;frame<=120;frame++){const age=frame/120,r=DeepwellAvatar.poseRig({...base,attack:age<.38?1-age/.38:0,charge:age});maxStep=Math.max(maxStep,distance(last,r));last=r;}
+    rows.push({weapon,facing,direction,dash,startGap:distance(ready,start),endGap:distance(rest,end),startAngle:Math.abs(ready.angle-start.angle),endAngle:Math.abs(rest.angle-end.angle),maxStep});
+   }return rows;
+  },
+  workContacts(){
+   const out=[];for(const pose of ['fletch','rune','polish','scavenge']){
+    let contacts=0,maxMiss=0,supportGap=0;for(let frame=0;frame<120;frame++){const r=DeepwellAvatar.poseRig({pose,working:true,workBlend:1,workPhase:frame/120,data}),p=r.workPiece,t=r.toolTip;
+     if(r.contact){contacts++;if(pose==='fletch')maxMiss=Math.max(maxMiss,Math.abs(t.y-(p.y+1-(t.x-(p.x-19))*2/31)));if(pose==='rune')maxMiss=Math.max(maxMiss,Math.max(0,Math.hypot((t.x-p.x)/8,(t.y-p.y)/5)-1));if(pose==='polish')maxMiss=Math.max(maxMiss,Math.max(0,Math.hypot(t.x-p.x,t.y-p.y)-5));if(pose==='scavenge')maxMiss=Math.max(maxMiss,Math.abs(t.y+2));}
+     if(p){const edge=pose==='fletch'?{x:p.x-16,y:p.y+.8}:pose==='rune'?{x:p.x-8,y:p.y}:{x:p.x-5,y:p.y};supportGap=Math.max(supportGap,Math.hypot(r.back.x-edge.x,r.back.y-edge.y));}
+    }out.push({pose,contacts,maxMiss,supportGap});
+   }return out;
+  },
+  toolBounds(){
+   const rows=[];for(const [key,pose]of [['mine','mine'],['forge','smith'],['wood','wood'],['fletch','fletch'],['ward','ward'],['rune','rune'],['polish','polish'],['scavenge','scavenge']]){
+    let left=Infinity,right=-Infinity;const bound=workshopBounds(key);
+    for(let frame=0;frame<120;frame++){const r=DeepwellAvatar.poseRig({pose,working:true,workPhase:frame/120,data}),t=r.tool,a=PLAYER_ART['tool-'+t.key],width=t.height*a.width/a.height;
+     for(const u of [0,1])for(const v of [0,1]){const x=(u-t.grip[0])*width,y=(v-t.grip[1])*t.height,px=r.main.x+x*Math.cos(r.angle)-y*Math.sin(r.angle);left=Math.min(left,px);right=Math.max(right,px);}
+    }rows.push({pose,left,right,bound});
+   }return rows;
+  },
   layers(){
-   const rows=[];for(const armor of ['',...Object.keys(ARMOR_SETS)])for(const pose of ['idle','mine','smith','wood','fletch','ward','rune','polish','scavenge'])for(const facing of [-1,1])for(const workPhase of [.12,.65]){
+   const rows=[];for(const armor of ['',...Object.keys(ARMOR_SETS)])for(const pose of ['idle','mine','smith','wood','fletch','ward','rune','polish','scavenge'])for(const facing of [-1,1])for(const workPhase of [.12,.24,.65]){
     const options={pose,facing,working:true,workBlend:1,workPhase,showWeapon:false,data:{...data,equippedArmor:armor,enchant:0}},rig=DeepwellAvatar.poseRig(options),{canvas,c}=renderToCanvas(options),pixels=c.getImageData(0,0,600,600).data;
     const point=p=>({x:Math.round(240+p.x*2.5*facing),y:Math.round(540+p.y*2.5)}),neck=point(rig.neck),chest=point({x:rig.body.x+Math.sin(rig.body.angle)*13,y:rig.body.y-Math.cos(rig.body.angle)*13});
     let seen=new Uint8Array(600*600),queue=[chest.y*600+chest.x];seen[queue[0]]=1;for(let at=0;at<queue.length;at++){const p=queue[at],x=p%600,y=Math.floor(p/600);for(const next of [x>0?p-1:-1,x<599?p+1:-1,y>0?p-600:-1,y<599?p+600:-1])if(next>=0&&!seen[next]&&pixels[next*4+3]>28){seen[next]=1;queue.push(next);}}

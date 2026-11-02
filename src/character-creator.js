@@ -68,7 +68,8 @@ function draw(t){if(!show)return;const canvas=$('wardrobeCanvas'),rect=canvas.ge
  c.fillStyle='#0b1119a0';c.beginPath();c.ellipse(anchorX,anchorY+6,w*.24,9,0,0,Math.PI*2);c.fill();
  c.strokeStyle='#d9b97944';c.lineWidth=2;c.beginPath();c.ellipse(anchorX,anchorY+6,w*.29,13,0,0,Math.PI*2);c.stroke();
  const d=gear,gameData=baseOnly?{...d,equippedArmor:'',weapon:0,armor:0,enchant:0}:d;
- A.render(c,{x:anchorX,y:anchorY,scale,time:t/1000,pose,attack:pose==='attack'?.38:0,action:(pose==='mine'||pose==='smith')?.45:0,vx:pose==='walk'?1:0,data:gameData});
+ const attackCycle=(t/1000)%1.2,attack=pose==='attack'&&attackCycle<.38?1-attackCycle/.38:0;
+ A.render(c,{x:anchorX,y:anchorY,scale,time:t/1000,pose,attack,charge:pose==='attack'&&gear.weaponType==='bow'?attackCycle/1.2:0,vx:pose==='walk'?1:0,data:gameData});
  // Preset thumbnails use the same renderer and equipment-independent appearance.
  document.querySelectorAll('.wardrobe-preset').forEach((el,i)=>{const pc=el.querySelector('canvas'),q=pc.getContext('2d');q.clearRect(0,0,62,72);A.render(q,{x:31,y:70,scale:.63,time:t/1000,pose:'idle',data:{armor:0,weapon:0,enchant:0,custom:A.normalizeCustom(PRESETS[i].custom)}})});
  raf=requestAnimationFrame(draw);

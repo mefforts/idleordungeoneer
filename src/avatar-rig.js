@@ -8,6 +8,8 @@ const COLOR_SETS=Object.freeze({hairColor:['#74513b','#3f3332','#c59650','#dcb76
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n)),lerp=(a,b,t)=>a+(b-a)*t,smooth=t=>t*t*(3-2*t);
 const PHYSICAL_SLOTS=Object.freeze(['head','shoulders','chest','legs','boots','gloves']);
 const TOOLS=Object.freeze({mine:{key:'pickaxe',name:'Pickaxe',height:50,grip:[.5,.84]},smith:{key:'hammer',name:'Smithing hammer',height:44,grip:[.5,.82]},wood:{key:'hatchet',name:'Hatchet',height:50,grip:[.24,.84]},scavenge:{key:'mattock',name:'Mattock',height:32,grip:[.466,.84]},fletch:{key:'knife',name:'Fletching knife',height:17,grip:[.5,.82]},ward:{key:'spindle',name:'Weaving shuttle',height:24,grip:[.5,.83]},rune:{key:'burin',name:'Engraving burin',height:16,grip:[.5,.84]},polish:{key:'file',name:'Jeweler’s chisel',height:14,grip:[.5,.83]}});
+const WORK_RATES=Object.freeze({mine:1.05,smith:1.2,wood:.92,fletch:.85,ward:.62,rune:.7,polish:1.15,scavenge:.72});
+function workRate(pose){return WORK_RATES[pose]||1;}
 const ARM_LENGTHS=Object.freeze([20,19.5]),LEG_LENGTHS=Object.freeze([19,18]);
 const motionPreference=global.matchMedia?.('(prefers-reduced-motion: reduce)');
 let assets={},images=new Map();
@@ -29,46 +31,81 @@ function clipSample(keys,phase){let index=0;while(index<keys.length-2&&phase>key
 function projectHand(point,root){const distance=Math.hypot(point.x-root.x,point.y-root.y),reach=ARM_LENGTHS[0]+ARM_LENGTHS[1]-.05;if(distance<=reach)return {...point};return {x:root.x+(point.x-root.x)/distance*reach,y:root.y+(point.y-root.y)/distance*reach};}
 function poseRig(options={}){
  const {pose='idle',data={}}=options,reduced=!!options.reducedMotion||!!data.reducedMotion||!!motionPreference?.matches,time=reduced?0:(options.time||0),weapon=data.weaponType||'sword',activity=Object.hasOwn(TOOLS,pose)||pose==='cast',working=options.working!==false,walking=!reduced&&(pose==='walk'||pose==='combat'&&Math.hypot(options.vx||0,options.vy||0)>.1),backpedal=walking&&(options.vx||0)*(options.facing||1)<-.1;
- const a=reduced?0:clamp(options.attack||0,0,1),attack=pose==='attack'&&a===0?.65:a,walk=walking?Math.sin(time*8)*(backpedal?-1:1):0,phase=((options.workPhase??time*1.05)%1+1)%1,cycle=phase*Math.PI*2,breath=Math.sin(time*2.25)*.32;
- const body={x:0,y:-42+(walking?Math.abs(walk)*1.4:breath),angle:options.dash?.18:0};let main={x:21,y:-35},back={x:-17,y:-31},angle=.35,headAngle=0,kneeling=false,twoHand=0;
- if(walking){main.y+=walk*1.1;back.x+=walk*5;back.y-=Math.abs(walk)*.7;}
+ const a=reduced?(pose==='attack'?.45:0):clamp(options.attack||0,0,1),attack=pose==='attack'&&options.attack===undefined?.65:a,elapsed=1-attack,walk=walking?Math.sin(time*8)*(backpedal?-1:1):0,phase=reduced?.65:((options.workPhase??time*workRate(pose))%1+1)%1,cycle=phase*Math.PI*2,breath=Math.sin(time*2.25)*.32;
+ const body={x:walking?walk*.5:0,y:-42+(walking?Math.abs(walk)*1.4:breath),angle:(options.dash&&!reduced?.18:0)+(walking?walk*.025:0)};
+ let main={x:21,y:-35},back={x:-17,y:-31},angle=.35,headAngle=walking?walk*.02:0,kneeling=false,twoHand=0,contact=false,workPiece=null;
+ const tool=TOOLS[pose],placeTip=(x,y,toolAngle)=>{angle=toolAngle;const length=tool.height*tool.grip[1];main={x:x-Math.sin(angle)*length,y:y+Math.cos(angle)*length};};
+ if(walking){main.x-=walk*1.2;main.y+=walk*1.1;back.x+=walk*6;back.y-=Math.abs(walk)*.9;}
  if(weapon==='shield')back={x:-14,y:-49};
- if(attack>0&&!['bow','staff'].includes(weapon)){const resting=weapon==='polearm'?[17,-45,.38]:weapon==='greatsword'?[16,-46,.4]:[21,-35,.35],sample=clipSample([[0,...resting],[.16,27,-42,1.9],[.43,31,-51,1.45],[.72,22,-59,.35],[1,16,-61,.12]],attack);[main.x,main.y,angle]=sample;body.angle=Math.sin(attack*Math.PI)*.12;back={x:lerp(-17,-21,Math.sin(attack*Math.PI)),y:lerp(-31,-43,Math.sin(attack*Math.PI))};if(weapon==='shield')back={x:lerp(-14,-8,Math.sin(attack*Math.PI)),y:lerp(-49,-54,Math.sin(attack*Math.PI))};}
- if(weapon==='polearm'){if(!attack){main={x:17,y:-45};angle=.38;}else angle=Math.min(1.12,angle);twoHand=-13;}
- if(weapon==='greatsword'){if(!attack){main={x:16,y:-46};angle=.40;}twoHand=7;}
- if(weapon==='bow'){const aim=clamp(options.aimAngle||0,-.8,.8),draw=clamp(((options.charge||0)-.45)/.55,0,1);main={x:8+(24+Math.sin(attack*Math.PI))*Math.cos(aim),y:-60+(24+Math.sin(attack*Math.PI))*Math.sin(aim)};angle=aim;twoHand=-(12+draw*14);}
- if(weapon==='staff'){main={x:20+attack*3,y:-35-attack*13};angle=.22+attack*.18;if(attack>0){const cast=Math.sin(attack*Math.PI/2);back={x:lerp(-17,17,cast),y:lerp(-31,-59,cast)};}}
+ if(weapon==='polearm'){main={x:17,y:-45};angle=.38;twoHand=-13;}
+ if(weapon==='greatsword'){main={x:16,y:-46};angle=.40;twoHand=7;}
+ if(attack>0&&!['bow','staff'].includes(weapon)){
+  const resting=[main.x,main.y,angle],heavy=weapon==='greatsword',long=weapon==='polearm';
+  // The live timer runs 1 → 0. Both ends of the clip meet the ready pose.
+  const sample=clipSample([[0,...resting],[.18,28,long?-56:-54,long?.34:.08],[.40,long?30:33,-48,long?1.10:1.40],[.57,heavy?30:29,heavy?-35:-38,long?1.12:1.88],[.76,25,-34,long?.85:1.55],[1,...resting]],elapsed);
+  [main.x,main.y,angle]=sample;const weight=Math.sin(elapsed*Math.PI)**2;
+  body.angle+=weight*(heavy?.12:.085);body.x+=weight*(long?1.4:1.8);headAngle+=weight*.025;
+  if(weapon==='shield')back={x:lerp(-14,-8,weight),y:lerp(-49,-54,weight)};
+  else back={x:lerp(back.x,-21,weight),y:lerp(back.y,-40,weight)};
+ }
+ if(weapon==='bow'){
+  const aim=clamp(options.aimAngle||0,-.8,.8),drawing=smooth(clamp(((options.charge||0)-.45)/.55,0,1)),release=attack>0?1-smooth(clamp(elapsed/.30,0,1)):0,draw=Math.max(drawing,release),recoil=attack>0?Math.sin(Math.PI*clamp(elapsed/.42,0,1)):0;
+  main={x:8+(24+recoil)*Math.cos(aim),y:-60+(24+recoil)*Math.sin(aim)};angle=aim;twoHand=-(12+draw*14);body.x-=recoil*.8;
+ }
+ if(weapon==='staff'){
+  const ready=pose==='combat'||pose==='attack';main={x:20,y:-35};angle=.22;
+  if(ready)back={x:18,y:-48};
+  if(attack>0){
+   const rest={...back},sample=clipSample([[0,rest.x,rest.y,0],[.20,12,-57,.7],[.43,30,-52,1],[.68,25,-45,.5],[1,rest.x,rest.y,0]],elapsed);back={x:sample[0],y:sample[1]};main.y-=sample[2]*6;angle+=sample[2]*.14;body.angle+=sample[2]*.04;
+  }
+ }
  if(activity){
-  body.x=3;body.angle=.18;main={x:24,y:-50};back={x:12,y:-45};angle=2.3;twoHand=0;headAngle=.08;
+  body.x=3;body.angle=.16;main={x:24,y:-50};back={x:12,y:-45};angle=2.3;twoHand=0;headAngle=.08;
   if(['mine','smith','wood'].includes(pose)){
    const impact=clipSample([[0,.72],[.24,0],[.40,.05],[.65,1],[.76,.98],[1,.72]],phase)[0],lift=working?impact:1;
-   body.angle=working?.07+impact*.20:.04;body.x=working?3+impact*3:0;main={x:working?20+lift*9:22,y:working?-68+lift*27:-36};angle=working?lerp(.22,pose==='smith'?1.72:pose==='wood'?1.64:1.53,lift):.5;
-   back=working?{x:14,y:-43}:{x:-17,y:-31};twoHand=working&&pose!=='smith'?13:0;headAngle=working?.10+lift*.07:0;
-  }else if(pose==='fletch'){main={x:24+Math.sin(cycle)*3*(working?1:0),y:-54+Math.cos(cycle)*.8};angle=2.55+Math.sin(cycle)*.12;back={x:12,y:-43};}
-  else if(pose==='ward'||pose==='cast'){body.angle=.08+Math.sin(cycle)*.025*(working?1:0);main={x:34+Math.sin(cycle)*2,y:-45+Math.cos(cycle)*2};back={x:12-Math.sin(cycle)*2,y:-56-Math.cos(cycle)*2};angle=-.25+Math.sin(cycle)*.18;}
-  else if(pose==='rune'){main={x:22+Math.sin(cycle)*2.7,y:-52+Math.cos(cycle)*1.4};back={x:12,y:-43};angle=2.3+Math.sin(cycle)*.1;headAngle=.14;}
-  else if(pose==='polish'){main={x:23+Math.sin(cycle)*3,y:-51+Math.sin(cycle*2)*.7};back={x:24,y:-43};angle=2.3+Math.sin(cycle)*.09;headAngle=.16;}
-  else if(pose==='scavenge'){kneeling=true;body.x=-9;body.y=-17;body.angle=1.03+Math.sin(cycle)*.035*(working?1:0);main={x:37+Math.sin(cycle)*4*(working?1:0),y:-5-Math.max(0,Math.sin(cycle))*6*(working?1:0)};back={x:11,y:-5};angle=1.5+Math.sin(cycle)*.2*(working?1:0);headAngle=.35;}
-  if(!working&&!['mine','smith','wood','scavenge'].includes(pose)){main={x:23,y:-36};back={x:-17,y:-31};angle=.4;body.angle=.04;}
+   body.angle=working?.07+impact*.20:.04;body.x=working?3+impact*3:0;main={x:working?30-lift:27,y:working?-68+lift*27:-36};angle=working?lerp(.40,pose==='smith'?1.72:pose==='wood'?1.64:1.53,lift):.65;
+   back=working?{x:pose==='smith'?24:14,y:pose==='smith'?-45:-43}:{x:-17,y:-31};twoHand=working&&pose!=='smith'?13:0;headAngle=working?.10+lift*.07:0;contact=working&&phase>.60&&phase<.80;
+  }else if(pose==='fletch'){
+   const pass=clipSample([[0,0,4],[.16,0,0],[.60,1,0],[.76,1,5],[1,0,4]],phase);workPiece={x:31,y:-48,angle:0};back={x:15,y:-47.2};
+   placeTip(34+pass[0]*9,-48.4-pass[0]*.6-pass[1],2.48+pass[0]*.18);body.angle=.12+Math.sin(cycle)*.018;headAngle=.14;contact=working&&phase>=.16&&phase<=.60;
+  }else if(pose==='ward'||pose==='cast'){
+   body.angle=.08+Math.sin(cycle)*.025;main={x:38+Math.sin(cycle)*5,y:-45+Math.sin(cycle*2)*3};back={x:15-Math.sin(cycle)*4,y:-57-Math.cos(cycle)*3};angle=-1.16+Math.cos(cycle)*.22;headAngle=.08;workPiece={x:29,y:-49+Math.sin(cycle)*1.2,angle:0};contact=working;
+  }else if(pose==='rune'){
+   workPiece={x:31,y:-47,angle:0};back={x:23,y:-46};placeTip(31+Math.cos(cycle)*3.8,-48+Math.sin(cycle)*2.6,2.10+Math.sin(cycle)*.16);body.angle=.15+Math.cos(cycle)*.018;headAngle=.14;contact=working;
+  }else if(pose==='polish'){
+   const lift=clipSample([[0,0],[.20,1],[.36,1],[.60,0],[.74,0],[1,0]],phase)[0];workPiece={x:31,y:-47,angle:Math.sin(cycle)*.14};back={x:23,y:-45};placeTip(32+Math.sin(cycle)*1.8,-49-lift*5.5,2.12+Math.cos(cycle)*.18);body.angle=.15+lift*.035;headAngle=.12+lift*.035;contact=working&&phase>=.58&&phase<=.76;
+  }else if(pose==='scavenge'){
+   kneeling=true;body.x=-11;body.y=-17;body.angle=1.00+(working?Math.sin(cycle)*.025:0);back={x:22,y:-4};headAngle=.35;
+   if(working)placeTip(61+Math.sin(cycle)*8,-2-Math.max(0,-Math.cos(cycle))*8,1.62+Math.sin(cycle)*.16);
+   else{main={x:37,y:-5};angle=1.62;}
+   contact=working&&Math.cos(cycle)>.10;
+  }
+  if(!working&&!['mine','smith','wood','scavenge'].includes(pose)){main={x:27,y:-36};back={x:-17,y:-31};angle=.4;body.angle=.04;headAngle=0;if(workPiece)workPiece={...workPiece,angle:0,...(pose==='ward'||pose==='cast'?{y:-49}:{})};}
  }
- const blend=options.workBlend??(working?1:0);
+ const blend=clamp(options.workBlend??(working?1:0),0,1);
  if(activity&&options.workBlend!==undefined&&!options._unblended&&(working?blend<1:blend>0)){
   const activeRig=poseRig({...options,working:true,_unblended:true}),restRig=poseRig({...options,working:false,_unblended:true}),amount=smooth(blend);
   for(const key of ['x','y','angle'])body[key]=lerp(restRig.body[key],activeRig.body[key],amount);
   main={x:lerp(restRig.main.x,activeRig.main.x,amount),y:lerp(restRig.main.y,activeRig.main.y,amount)};back={x:lerp(restRig.back.x,activeRig.back.x,amount),y:lerp(restRig.back.y,activeRig.back.y,amount)};
   angle=lerp(restRig.angle,activeRig.angle,amount);headAngle=lerp(restRig.head.angle,activeRig.head.angle,amount);twoHand=0;
+  if(workPiece)for(const key of ['x','y','angle'])workPiece[key]=lerp(restRig.workPiece[key],activeRig.workPiece[key],amount);
  }
- if(!reduced&&!activity&&options.hit>0){const recoil=clamp(options.hit,0,1);body.angle-=recoil*.09;body.x-=recoil*1.5;}
- const frontRoot=transform(body,{x:12,y:-69}),backRoot=transform(body,{x:-10,y:-68});
- let offset=null;
+ if(!reduced&&!activity&&options.hit>0){const recoil=clamp(options.hit,0,1)**2;body.angle-=recoil*.09;body.x-=recoil*1.5;}
+ const frontRoot=transform(body,{x:12,y:-69}),backRoot=transform(body,{x:-10,y:-68});let offset=null;
  if(weapon==='bow'&&!activity)offset={x:twoHand*Math.cos(angle),y:twoHand*Math.sin(angle)};
  else if(twoHand)offset={x:-Math.sin(angle)*twoHand,y:Math.cos(angle)*twoHand};
  if(offset){for(let pass=0;pass<12;pass++){main=projectHand(main,frontRoot);const projected=projectHand({x:main.x+offset.x,y:main.y+offset.y},backRoot);main={x:projected.x-offset.x,y:projected.y-offset.y};}back={x:main.x+offset.x,y:main.y+offset.y};}
- const frontArm=inverseKinematics(frontRoot,main,-1,ARM_LENGTHS),backArm=inverseKinematics(backRoot,back,1,ARM_LENGTHS);main=frontArm.hand;back=backArm.hand;
+ const frontArm=inverseKinematics(frontRoot,main,activity||['bow','polearm','greatsword'].includes(weapon)?1:-1,ARM_LENGTHS),backArm=inverseKinematics(backRoot,back,1,ARM_LENGTHS);main=frontArm.hand;back=backArm.hand;
  const headBase=transform(body,{x:0,y:-75}),head={x:headBase.x+Math.sin(headAngle)*10,y:headBase.y-Math.cos(headAngle)*10,angle:headAngle},legs=[];
- for(const side of [-1,1]){const hip={x:body.x+side*6,y:body.y};let ankle;if(kneeling)ankle={x:side<0?-28:-13,y:-5};else ankle={x:side*6+side*walk*8,y:-5-(walking?Math.max(0,Math.cos(time*8+(side<0?Math.PI:0)))*4:0)};let joint=inverseKinematics(hip,ankle,-1,LEG_LENGTHS);if(kneeling){const knee={x:hip.x+Math.sqrt(Math.max(0,LEG_LENGTHS[0]**2-(-3-hip.y)**2)),y:-3};ankle={x:knee.x-Math.sqrt(LEG_LENGTHS[1]**2-4),y:-5};joint={shoulder:hip,elbow:knee,hand:ankle,lengths:LEG_LENGTHS};}legs.push({side,hip:joint.shoulder,knee:joint.elbow,ankle:joint.hand,footAngle:kneeling?-.3:0});}
- const point=(x,y)=>({x:main.x+x*Math.cos(angle)-y*Math.sin(angle),y:main.y+x*Math.sin(angle)+y*Math.cos(angle)}),tool=TOOLS[pose],tip=tool?point(0,-tool.height*tool.grip[1]):null;
- return {weapon,activity,walking,backpedal,walk,stroke:Math.sin(attack*Math.PI),angle,main,back,body,head,kneeling,phase,frontArm,backArm,legs,neck:headBase,bowUpper:point(-12,-25),bowLower:point(-12,25),arrowTip:point(27,0),toolTip:tip,tool:tool||null,gripOffset:offset};
+ for(const side of [-1,1]){
+  const hip={x:body.x+side*6,y:body.y};let ankle;if(kneeling)ankle={x:side<0?-28:-13,y:-5};else ankle={x:side*6+side*walk*8,y:-5-(walking?Math.max(0,Math.cos(time*8+(side<0?Math.PI:0)))*4:0)};
+  let joint=inverseKinematics(hip,ankle,-1,LEG_LENGTHS);
+  if(kneeling){const knee={x:hip.x+Math.sqrt(Math.max(0,LEG_LENGTHS[0]**2-(-3-hip.y)**2)),y:-3};ankle={x:knee.x-Math.sqrt(LEG_LENGTHS[1]**2-4),y:-5};joint={shoulder:hip,elbow:knee,hand:ankle,lengths:LEG_LENGTHS};}
+  legs.push({side,hip:joint.shoulder,knee:joint.elbow,ankle:joint.hand,footAngle:kneeling?-.3:walking?side*walk*.08:0});
+ }
+ const point=(x,y)=>({x:main.x+x*Math.cos(angle)-y*Math.sin(angle),y:main.y+x*Math.sin(angle)+y*Math.cos(angle)}),tip=tool?point(0,-tool.height*tool.grip[1]):null;
+ const backGesture=activity?(pose==='scavenge'?'plant':['ward','cast'].includes(pose)?'reach':offset||blend>.5&&['mine','wood','fletch','rune','polish'].includes(pose)?'grip':'rest'):weapon==='staff'&&(pose==='combat'||pose==='attack')?'reach':offset?'grip':'rest';
+ return {weapon,activity,walking,backpedal,walk,stroke:Math.sin(attack*Math.PI),angle,main,back,body,head,kneeling,phase,frontArm,backArm,legs,neck:headBase,bowUpper:point(-12,-25),bowLower:point(-12,25),arrowTip:point(27,0),toolTip:tip,tool:tool||null,gripOffset:offset,workPiece,contact:contact&&blend>.95,backGesture};
 }
 const INK='#293337';
 const ARMOR_PALETTES=Object.freeze({
@@ -143,8 +180,9 @@ function paintArm(c,joints,side,kit,look,forearmOnly=false){
 }
 function paintHand(c,point,angle,side,kit,look,handPose='rest'){
  const p=paletteFor(kit,'gloves',look),bare=p.style==='travel',color=bare?look.skinColor:p.style==='melee'&&kit.pieces.gloves.endsWith('_2')?p.mid:p.leather,light=shade(color,1.20),dark=shade(color,.72);
- c.save();c.translate(point.x,point.y);c.rotate(angle);if(side>0)c.scale(-1,1);
- if(handPose==='reach'){
+ c.save();c.translate(point.x,point.y);c.rotate(handPose==='plant'?0:angle);if(side>0)c.scale(-1,1);
+ if(handPose==='plant'){path(c,[-4,-3,2,-3,3,-.5,7,0,7.5,1.5,4.6,2.3,0,2.1,-3,1.3,-4.5,-.5],color,INK,.8);line(c,-2,-1.7,2,-1.5,light,.8);}
+ else if(handPose==='reach'){
   path(c,[-3,-4.2,2.2,-4.2,3.6,-.2,6.8,-1.3,7.5,.0,3.2,3.2,1.4,6.0,-.1,5.7,-1.6,3.3,-2.1,6.4,-3.6,6.1,-3.9,2.9,-5.3,5.0,-6.5,4.1,-5.5,.0],color,INK,.85);line(c,-2.7,-2.5,1.3,-2.5,light,.8);
  }else{c.beginPath();c.moveTo(-3.3,-4.7);c.lineTo(2.9,-4.7);c.quadraticCurveTo(4.7,-.9,4.0,2.6);c.quadraticCurveTo(2.0,5.1,-1.7,4.2);c.quadraticCurveTo(-4.5,3.0,-4.2,-.2);c.closePath();c.fillStyle=color;c.fill();c.strokeStyle=INK;c.lineWidth=.9;c.stroke();path(c,[-2.6,-3.2,.8,-3.6,2.3,-.3,.6,1.2,-2.6,.8],light,'',0);if(handPose==='grip'){path(c,[2.4,-2.0,4.2,-1.3,3.2,1.4,1.1,1.9,.2,.8],color,INK,.7);line(c,-2.7,1.8,.0,2.2,dark,.7);}else line(c,-1.1,1.1,-1.3,3.3,dark,.7);}
  c.restore();
@@ -301,7 +339,7 @@ function render(c,options={}){
   if(rig.weapon==='staff'&&options.attack>0)ellipse(c,rig.back.x,rig.back.y,3+rig.stroke*2,3+rig.stroke*2,'#a4d9e2aa');
  }
  const wrist=arm=>Math.atan2(arm.hand.y-arm.elbow.y,arm.hand.x-arm.elbow.x)-Math.PI/2;
- if(rig.weapon!=='shield'||rig.activity)paintHand(c,rig.back,wrist(rig.backArm),-1,kit,look,rig.gripOffset?'grip':rig.activity&&['ward','cast'].includes(options.pose)?'reach':'rest');paintHand(c,rig.main,wrist(rig.frontArm),1,kit,look,rig.activity?rig.tool?'grip':'reach':options.showWeapon===false?'rest':'grip');c.restore();return kit;
+ if(rig.weapon!=='shield'||rig.activity)paintHand(c,rig.back,wrist(rig.backArm),-1,kit,look,rig.backGesture);paintHand(c,rig.main,wrist(rig.frontArm),1,kit,look,rig.activity?rig.tool?'grip':'reach':options.showWeapon===false?'rest':'grip');c.restore();return kit;
 }
-global.DeepwellAvatar=Object.freeze({render,drawPart,appearance,poseRig,tier,normalizeCustom,STYLE_COUNTS,COLOR_SETS,BASE,setAssets,images:()=>[...images.values()],assetKeys:()=>[...['base',...Object.keys(ARMOR_PALETTES)].flatMap(set=>PHYSICAL_SLOTS.map(slot=>(set==='base'?'base':'armor-'+set)+'-'+slot)),...Object.keys(assets)],metrics:()=>({height:117,version:2,style:'illustrated-2d',armLengths:[...ARM_LENGTHS],legLengths:[...LEG_LENGTHS],physicalSlots:[...PHYSICAL_SLOTS]}),toolForPose:pose=>TOOLS[pose]||null,slots:Object.freeze([...PHYSICAL_SLOTS,'mainHand','offHand','tool','aura'])});
+global.DeepwellAvatar=Object.freeze({render,drawPart,appearance,poseRig,tier,normalizeCustom,STYLE_COUNTS,COLOR_SETS,BASE,setAssets,images:()=>[...images.values()],assetKeys:()=>[...['base',...Object.keys(ARMOR_PALETTES)].flatMap(set=>PHYSICAL_SLOTS.map(slot=>(set==='base'?'base':'armor-'+set)+'-'+slot)),...Object.keys(assets)],metrics:()=>({height:117,version:2,style:'illustrated-2d',armLengths:[...ARM_LENGTHS],legLengths:[...LEG_LENGTHS],physicalSlots:[...PHYSICAL_SLOTS]}),workRate,toolForPose:pose=>TOOLS[pose]||null,slots:Object.freeze([...PHYSICAL_SLOTS,'mainHand','offHand','tool','aura'])});
 })(window);

@@ -4,7 +4,6 @@ const {createRuntime}=require('../tests/runtime.cjs'),{workshopFixture}=require(
 const root=path.resolve(__dirname,'..');
 function motionReviewFixture(){
  let raf=0,recorder=null,chunks=[],captureCanvas=null;
- const rates={mine:1.05,smith:1.2,wood:.92,fletch:.85,ward:.62,rune:.7,polish:1.15,scavenge:.72};
  const work=[['mine','Mining','melee_1'],['smith','Smithing','melee_2'],['wood','Woodcutting','ranged_1'],['fletch','Fletching','ranged_2'],['ward','Warding','magic_1'],['rune','Runecrafting','magic_2'],['polish','Artisan','ranged_1'],['scavenge','Scavenging','ranged_2']];
  const weapons=[['sword','Arming sword','melee_1'],['shield','Sword and shield','melee_2'],['polearm','Halberd','melee_1'],['greatsword','Greatsword','melee_2'],['bow','Bow','ranged_2'],['staff','Staff','magic_2']];
  function title(c,heading,detail){c.fillStyle='#191f21';c.fillRect(0,0,c.canvas.width,c.canvas.height);c.fillStyle='#f1dfb7';c.font='24px Georgia';c.textAlign='left';c.fillText(heading,26,37);c.font='14px system-ui';c.fillStyle='#adbbb5';c.fillText(detail,26,63);}
@@ -29,7 +28,7 @@ function motionReviewFixture(){
    weapons.forEach(([weapon,name,armor],i)=>person(c,panel(c,i,3,name,'Attack → recovery → ready'),{pose:'combat',time:t,attack,charge:cycle,aimAngle:Math.sin(t*1.2)*.35},armor,weapon,facing));
   }else{
    title(c,'Skilling · eight work families','1× work clocks · steady loops · facing changes after four seconds · start/stop transitions in the scene reel');
-   work.forEach(([pose,name,armor],i)=>person(c,panel(c,i,4,name,'Live rig · '+(facing>0?'facing right':'facing left')),{pose,time:t,working:true,workBlend:1,workPhase:(t*rates[pose])%1},armor,'sword',facing));
+   work.forEach(([pose,name,armor],i)=>person(c,panel(c,i,4,name,'Live rig · '+(facing>0?'facing right':'facing left')),{pose,time:t,working:true,workBlend:1,workPhase:(t*DeepwellAvatar.workRate(pose))%1},armor,'sword',facing));
   }
  }
  function begin(kind){

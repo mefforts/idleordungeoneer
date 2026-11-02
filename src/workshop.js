@@ -48,7 +48,7 @@ function workshopAnimation(key,active,working){
  const time=reducedMotion()?0:(game.workVisualClock||0),now=performance.now();
  if(!game.workPresentation||game.workPresentation.key!==key)game.workPresentation={key,at:now,blend:0};
  const presentation=game.workPresentation,elapsedVisual=Math.min(.08,Math.max(0,(now-presentation.at)/1000));presentation.at=now;presentation.blend=clamp(presentation.blend+(working?elapsedVisual/.18:-elapsedVisual/.24),0,1);
- const rates={mine:1.05,smith:1.2,wood:.92,fletch:.85,ward:.62,rune:.7,polish:1.15,scavenge:.72},visualPhase=working&&!reducedMotion()?((time*(rates[pose]||1))%1):.3;
+ const visualPhase=working&&!reducedMotion()?((time*DeepwellAvatar.workRate(pose))%1):.65;
  return {key,base,pose,working,phase:visualPhase,productionPhase:phase,time,workBlend:reducedMotion()?(working?1:0):presentation.blend,workPhase:visualPhase,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
 }
 function workshopGlyph(c,x,y,r,kind,color){
@@ -59,34 +59,43 @@ function workshopGlyph(c,x,y,r,kind,color){
  else{c.moveTo(0,-r*1.3);c.lineTo(r,0);c.lineTo(0,r*1.3);c.lineTo(-r,0);c.closePath();c.moveTo(-r,0);c.lineTo(r,0);}
  c.stroke();c.restore();
 }
+function paintWorkshopWorkpiece(frame,rig){
+ const {pose,working,key,theme}=frame,piece=rig.workPiece;if(!piece)return;const {x,y}=piece;
+ if(pose==='ward'){
+  ctx.fillStyle=SKILLS[key].tier===2?'#94aac6':'#c5b3ce';ctx.strokeStyle='#4e4351';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x-9,y-6);ctx.quadraticCurveTo(x,y-4,x+9,y-6);ctx.lineTo(x+8,y+7);ctx.quadraticCurveTo(x,y+5,x-8,y+7);ctx.closePath();ctx.fill();ctx.stroke();
+  for(let row=0;row<5;row++){ctx.strokeStyle=row%2?theme.light:'#e2d6d7';ctx.lineWidth=.45;ctx.beginPath();ctx.moveTo(x-7,y-4+row*2);ctx.quadraticCurveTo(x,y-2+row*2,x+7,y-4+row*2);ctx.stroke();}
+ }else if(pose==='rune'){
+  ctx.save();ctx.translate(x,y);ctx.fillStyle='#626d72';ctx.strokeStyle='#263438';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,8,5,-.2,0,Math.PI*2);ctx.fill();ctx.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);ctx.restore();
+ }else if(pose==='polish'){
+  ctx.save();ctx.translate(x,y);ctx.rotate(piece.angle);ctx.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';ctx.strokeStyle='#3a4b4c';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(5,-1);ctx.lineTo(2,4);ctx.lineTo(-4,2);ctx.lineTo(-5,-2);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#e4eee0';ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(-1,0);ctx.lineTo(5,-1);ctx.moveTo(-1,0);ctx.lineTo(2,4);ctx.stroke();ctx.restore();
+ }else if(pose==='fletch'){
+  ctx.strokeStyle=SKILLS[key].tier===2?'#b8a27b':'#c5a276';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(x-19,y+1);ctx.lineTo(x+12,y-1);ctx.stroke();ctx.fillStyle='#a6b6ba';ctx.beginPath();ctx.moveTo(x+12,y-3);ctx.lineTo(x+18,y-2);ctx.lineTo(x+12,y+1);ctx.fill();ctx.strokeStyle='#d6d3b8';ctx.lineWidth=1;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(x-18+i*2,y+1);ctx.lineTo(x-22+i*2,y-2);ctx.stroke();}
+ }
+}
 function paintWorkshopSceneEffects(frame,anchor,layer){
- const {pose,working,phase,time,theme,key}=frame,kind=biomeIndex(),rig=DeepwellAvatar.poseRig(frame),magical=['ward','rune'].includes(pose),center=pose==='ward'?{x:29,y:-49}:{x:33,y:-44};
+ const {pose,working,time,theme,key}=frame,kind=biomeIndex(),rig=DeepwellAvatar.poseRig(frame),phase=rig.phase,magical=['ward','rune'].includes(pose),center=rig.workPiece||{x:33,y:-44};
  ctx.save();ctx.translate(anchor.x,anchor.y);ctx.scale(anchor.scale,anchor.scale);
  if(layer==='back'){
   const prop=workshopProp(frame),image=prop&&workshopPropImage(prop.art);if(image?.complete&&image.naturalWidth){const width=Math.min(62,prop.height*image.naturalWidth/image.naturalHeight);ctx.drawImage(image,prop.x-width/2,-prop.height,width,prop.height);}
   if(magical){const g=ctx.createRadialGradient(center.x,center.y,1,center.x,center.y,29);g.addColorStop(0,theme.light+'35');g.addColorStop(1,theme.light+'00');ctx.fillStyle=g;ctx.beginPath();ctx.arc(center.x,center.y,29,0,Math.PI*2);ctx.fill();
    ctx.strokeStyle=theme.deep+'b0';ctx.lineWidth=.65;ctx.beginPath();ctx.ellipse(center.x,center.y,23,17,-.2,0,Math.PI*2);ctx.stroke();for(let i=0;i<6;i++){const a=i*Math.PI/3+(working?time*.15:0);workshopGlyph(ctx,center.x+Math.cos(a)*23,center.y+Math.sin(a)*17,2.1,kind,theme.light+'c0');}}
-  ctx.restore();return;
+  // The fingers and tools must sit in front of the solid workpiece.
+  paintWorkshopWorkpiece(frame,rig);ctx.restore();return;
  }
- if(pose==='ward'){
-  const hover=working?Math.sin(phase*Math.PI*2)*1.2:0,x=center.x,y=center.y+hover;
-  ctx.fillStyle=SKILLS[key].tier===2?'#94aac6':'#c5b3ce';ctx.strokeStyle='#4e4351';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x-9,y-6);ctx.quadraticCurveTo(x,y-4,x+9,y-6);ctx.lineTo(x+8,y+7);ctx.quadraticCurveTo(x,y+5,x-8,y+7);ctx.closePath();ctx.fill();ctx.stroke();
-  for(let row=0;row<5;row++){ctx.strokeStyle=row%2?theme.light:'#e2d6d7';ctx.lineWidth=.45;ctx.beginPath();ctx.moveTo(x-7,y-4+row*2);ctx.quadraticCurveTo(x,y-2+row*2,x+7,y-4+row*2);ctx.stroke();}
-  if(working){ctx.strokeStyle=theme.light;ctx.lineWidth=.6;for(const [i,hand]of [rig.main,rig.back].entries()){ctx.beginPath();ctx.moveTo(hand.x,hand.y);ctx.bezierCurveTo(hand.x+9,hand.y-13,x-10,y+8,x+(i?6:-6),y+(i?-4:4));ctx.stroke();}workshopGlyph(ctx,x,y,3,kind,'#f6eed9');}
- }else if(pose==='rune'){
-  ctx.save();ctx.translate(center.x,center.y);ctx.fillStyle='#626d72';ctx.strokeStyle='#263438';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,8,5,-.2,0,Math.PI*2);ctx.fill();ctx.stroke();workshopGlyph(ctx,0,-1,3.1,kind,working?theme.spark:theme.light);if(working){ctx.strokeStyle=theme.light;ctx.lineWidth=.75;ctx.beginPath();ctx.ellipse(0,0,13,8,-.2,-Math.PI/2,-Math.PI/2+Math.PI*2*phase);ctx.stroke();}ctx.restore();
- }else if(pose==='polish'){
-  const x=31,y=-44;ctx.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';ctx.strokeStyle='#3a4b4c';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x+5,y-1);ctx.lineTo(x+2,y+4);ctx.lineTo(x-4,y+2);ctx.lineTo(x-5,y-2);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#e4eee0';ctx.beginPath();ctx.moveTo(x,y-5);ctx.lineTo(x-1,y);ctx.lineTo(x+5,y-1);ctx.moveTo(x-1,y);ctx.lineTo(x+2,y+4);ctx.stroke();
- }else if(pose==='fletch'){
-  ctx.strokeStyle=SKILLS[key].tier===2?'#b8a27b':'#c5a276';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(12,-43);ctx.lineTo(43,-45);ctx.stroke();ctx.fillStyle='#a6b6ba';ctx.beginPath();ctx.moveTo(43,-47);ctx.lineTo(49,-46);ctx.lineTo(43,-43);ctx.fill();ctx.strokeStyle='#d6d3b8';ctx.lineWidth=1;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(13+i*2,-43);ctx.lineTo(9+i*2,-46);ctx.stroke();}
+ if(pose==='ward'&&working){
+  const {x,y}=center;ctx.strokeStyle=theme.light;ctx.lineWidth=.8;
+  for(const [i,hand]of [rig.back,rig.toolTip||rig.main].entries()){ctx.beginPath();ctx.moveTo(hand.x,hand.y);ctx.bezierCurveTo(hand.x+7,hand.y-10,x-9,y+8,x+(i?6:-6),y+(i?-4:4));ctx.stroke();}
+  const weft=x-7+14*((phase*2)%1);ctx.strokeStyle='#fff6db';ctx.lineWidth=.85;ctx.beginPath();ctx.moveTo(weft,y-4);ctx.lineTo(weft+1,y+4);ctx.stroke();workshopGlyph(ctx,x,y,3,kind,'#f6eed9');
+ }else if(pose==='rune'&&working){
+  ctx.strokeStyle=theme.light;ctx.lineWidth=.75;ctx.beginPath();ctx.ellipse(center.x,center.y,13,8,-.2,-Math.PI/2,-Math.PI/2+Math.PI*2*phase);ctx.stroke();
+  if(rig.toolTip){ctx.fillStyle=theme.spark;ctx.beginPath();ctx.arc(rig.toolTip.x,rig.toolTip.y,1.15,0,Math.PI*2);ctx.fill();}
  }else if(pose==='scavenge'){
-  for(let i=0;i<5;i++){const x=27+i*6,y=-1+(i%2);ctx.fillStyle=i%2?'#716650':'#8c8067';ctx.beginPath();ctx.moveTo(x-2,y);ctx.lineTo(x-1,y-3-i%2);ctx.lineTo(x+2,y-2);ctx.lineTo(x+3,y+1);ctx.fill();}
+  for(let i=0;i<5;i++){const x=35+i*6,y=-1+(i%2);ctx.fillStyle=i%2?'#716650':'#8c8067';ctx.beginPath();ctx.moveTo(x-2,y);ctx.lineTo(x-1,y-3-i%2);ctx.lineTo(x+2,y-2);ctx.lineTo(x+3,y+1);ctx.fill();}
   const reward=game.workReward;if(reward?.key===key&&reward.gold&&performance.now()-reward.time<900){ctx.fillStyle='#dfb766';ctx.beginPath();ctx.ellipse(34,-5,3,1.8,-.2,0,Math.PI*2);ctx.fill();workshopGlyph(ctx,34,-9,2,3,'#fff0bb');}
  }
- if(working&&!reducedMotion()){
-  const striking=['mine','smith','wood'].includes(pose),impact=phase>.6&&phase<.8;
-  if(!striking||impact){const origin=magical?center:pose==='scavenge'?rig.main:pose==='fletch'?{x:31,y:-44}:pose==='polish'?{x:31,y:-44}:rig.toolTip||rig.main;
-   const count=pose==='smith'?9:pose==='ward'?7:4;for(let i=0;i<count;i++){const age=((striking?phase*5:time*.5)+i/count)%1,a=i*2.399,dist=age*(magical?16:pose==='smith'?18:10);ctx.globalAlpha=(1-age)*.7;ctx.strokeStyle=pose==='smith'?'#f5bf75':magical?theme.light:pose==='wood'||pose==='fletch'?'#c8a16a':pose==='scavenge'?'#b4a080':'#a7b6b7';ctx.lineWidth=pose==='smith'?.7:.9;ctx.beginPath();ctx.moveTo(origin.x+Math.cos(a)*dist,origin.y+Math.sin(a)*dist*.6-age*6);ctx.lineTo(origin.x+Math.cos(a)*(dist+2),origin.y+Math.sin(a)*(dist+2)*.6-age*6);ctx.stroke();}}
+ if(working&&rig.contact&&!reducedMotion()){
+  const striking=['mine','smith','wood','polish'].includes(pose),origin=rig.toolTip||center;
+  const count=pose==='smith'?9:pose==='ward'?7:4;for(let i=0;i<count;i++){const age=((striking?phase*5:time*.5)+i/count)%1,a=i*2.399,dist=age*(magical?16:pose==='smith'?18:10);ctx.globalAlpha=(1-age)*.7;ctx.strokeStyle=pose==='smith'?'#f5bf75':magical?theme.light:pose==='wood'||pose==='fletch'?'#c8a16a':pose==='scavenge'?'#b4a080':'#a7b6b7';ctx.lineWidth=pose==='smith'?.7:.9;ctx.beginPath();ctx.moveTo(origin.x+Math.cos(a)*dist,origin.y+Math.sin(a)*dist*.6-age*6);ctx.lineTo(origin.x+Math.cos(a)*(dist+2),origin.y+Math.sin(a)*(dist+2)*.6-age*6);ctx.stroke();}
  }
  ctx.restore();
 }
@@ -107,7 +116,7 @@ function workshopProp(frame){
 }
 function workshopBounds(key){
  const base=SKILLS[key].scene||key;
- return base==='scavenge'?{left:-46,right:48}:['mine','silverMine','forge','silverSmelt','wood'].includes(base)?{left:-24,right:90}:base==='fletch'?{left:-24,right:67}:{left:-24,right:62};
+ return base==='scavenge'?{left:-46,right:80}:['mine','silverMine','forge','silverSmelt','wood'].includes(base)?{left:-24,right:90}:base==='fletch'?{left:-24,right:67}:{left:-24,right:62};
 }
 
 function drawProceduralWorkstation(w,h,key){
