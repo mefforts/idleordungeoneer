@@ -1,5 +1,5 @@
 {
-  "version": "10.0.0",
+  "version": "10.1.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -944,12 +944,12 @@
       "summon": {
         "name": "Calling Spire",
         "seconds": 1.7,
-        "hint": "Destroy the spire · stop its reinforcements"
+        "hint": "Bump once to break · dash or wait while red"
       },
       "eliteSummon": {
         "name": "Royal Calling",
         "seconds": 2,
-        "hint": "Destroy the crowned spire · it calls elites"
+        "hint": "Bump twice · step away between hits · dash or wait while red"
       },
       "bastion": {
         "name": "Royal Guard",
@@ -1023,7 +1023,19 @@
       "maximum": 8,
       "maximumElites": 3,
       "maximumSpires": 2,
-      "rewards": false
+      "rewards": false,
+      "bumps": {
+        "normal": 1,
+        "royal": 2,
+        "radius": 28,
+        "releaseRadius": 40,
+        "normalBacklash": 0.08,
+        "royalBacklash": 0.12
+      },
+      "requiresExit": true,
+      "retaliation": "Only while summoning; normal defenses and invulnerability apply",
+      "dashSafe": true,
+      "weaponDamage": true
     },
     "healing": {
       "chance": 0.02,
@@ -1545,7 +1557,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 567.5600000000297,
+      "seconds": 561.8400000000298,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
@@ -1553,7 +1565,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1215.9600000000687,
+      "seconds": 1213.2400000000691,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
@@ -1561,7 +1573,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1860.0000000000664,
+      "seconds": 1859.5200000000666,
       "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 1800
@@ -1569,7 +1581,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2161.6400000001086,
+      "seconds": 2133.7200000001067,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2100
@@ -1577,7 +1589,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2464.6800000001354,
+      "seconds": 2468.600000000136,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
@@ -1585,7 +1597,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2481.3600000001397,
+      "seconds": 2471.6400000001404,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400

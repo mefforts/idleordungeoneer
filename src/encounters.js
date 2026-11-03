@@ -58,7 +58,7 @@ function bossMechanicHint(){
  const e=game.boss;if(!e)return '';if(e.stagger>0)return 'Reflected · staggered';
  if(e.cast)return e.cast.hint||(['reflect','reversal'].includes(e.cast.type)?'Gold center · reflect':['mend','fury'].includes(e.cast.type)?'Teal stream · approach totem':e.cast.label);
  if(e.guardIds?.some(g=>game.enemies.includes(g)&&g.hp>0))return 'Blue shield · defeat Royal Guards';
- const owned=(game.totems||[]).filter(t=>t.owner===e);return owned.length?(owned.some(t=>t.destructible)?'Summoning spire · destroy':owned.some(t=>t.blocked)?'Stream redirected':'Totem · approach'):'';
+ const owned=(game.totems||[]).filter(t=>t.owner===e);return owned.length?(owned.some(t=>t.destructible)?'Spire · bump to break · dash while red':owned.some(t=>t.blocked)?'Stream redirected':'Totem · approach'):'';
 }
 function beginBossCast(e){
  const plan=bossPlan(e),theme=DUNGEON_THEMES[e.biome??biomeIndex()];let type=e.phaseQueue?.[0]||plan[(e.mechanicIndex||0)%plan.length];
@@ -126,13 +126,16 @@ function totemInterception(t){
  const totem=encounterFoot(t),caster=encounterFoot(t.owner),player=encounterFoot(game.player);
  return Math.hypot(player.x-totem.x,player.y-totem.y)<Math.hypot(caster.x-totem.x,caster.y-totem.y);
 }
-function tickEncounterObjects(dt){
+function tickEncounterObjects(dt,playerFrom=encounterFoot(game.player),dashing=game.player.dashTime>0){
  const p=game.player;p.rallyTime=Math.max(0,(p.rallyTime||0)-dt);p.mending=false;game.reflectCooldown=Math.max(0,(game.reflectCooldown||0)-dt);
  game.counterEffects=(game.counterEffects||[]).filter(fx=>{fx.life-=dt;return fx.life>0;});for(const e of game.enemies)e.furyLinked=false;
  game.totems=(game.totems||[]).filter(t=>game.enemies.includes(t.owner)&&(!t.destructible||t.hp>0));
  let healing=0;
- for(const t of game.totems){
-  t.age+=dt;t.disabled=totemsDisabled()||(t.disabledUntil||0)>game.frame;if(t.disabled){t.blocked=false;continue;}
+ for(const t of [...game.totems]){
+  if(!game.totems.includes(t))continue;
+  t.age+=dt;t.disabled=totemsDisabled()||(t.disabledUntil||0)>game.frame;
+  if(t.destructible){bumpSummonTotem(t,playerFrom,dashing);if(game.status==='dead')return;if(!game.totems.includes(t))continue;}
+  if(t.disabled){t.blocked=false;continue;}
   if(t.destructible){tickSummonTotem(t,dt);tickSummonArrival(t,dt);continue;}
   t.blocked=totemInterception(t);const disrupt=waveRank('disrupt'),power=Math.max(.4,1-.15*disrupt);
   if(t.type==='mend'){
@@ -142,9 +145,9 @@ function tickEncounterObjects(dt){
  }
  if(healing)p.hp=Math.min(p.maxHp,p.hp+healing);tickBossBursts(dt);
 }
-function damageTotem(t,damage){
+function damageTotem(t,damage,impact=false){
  if(!t?.destructible||t.hp<=0||!(game.totems||[]).includes(t))return false;
- const amount=Math.max(0,damage)*eliteBoonValue('damage')*(1+.18*waveRank('disrupt'));t.hp-=amount;floater(t.x,t.y-30,Math.round(amount),'#ffe2d8');
+ const amount=Math.max(0,damage)*(impact?1:eliteBoonValue('damage')*(1+.18*waveRank('disrupt')));t.hp-=amount;floater(t.x,t.y-30,impact?(t.hp>0?'CRACK · '+summonBumpsLeft(t)+' BUMP LEFT':'SHATTERED'):Math.round(amount),'#ffe2d8');
  if(t.hp<=0){game.totems.splice(game.totems.indexOf(t),1);burst(t.x,t.y,14,combatTheme('danger').color);floater(t.x,t.y-48,'SUMMONING STOPPED','#d4fff0');}return true;
 }
 

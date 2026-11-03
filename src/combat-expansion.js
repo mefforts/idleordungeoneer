@@ -1,5 +1,6 @@
 /* Shared combat language and reusable, geometry-driven encounter patterns. */
 const COMBAT_LANGUAGE={danger:{color:'#f16d68',hot:'#ffe2d8',dark:'#52272a'},friendly:{color:'#c887ff',hot:'#f3ddff',dark:'#432756'},reflect:{color:'#edcb76',hot:'#fff5d5',dark:'#51452c'},safe:{color:'#6ce0bc',hot:'#d4fff0',dark:'#214940'},shield:{color:'#79bdff',hot:'#e4f3ff',dark:'#233e63'}};
+const SUMMON_BUMPS=Object.freeze({normal:1,royal:2,radius:28,releaseRadius:40,normalBacklash:.08,royalBacklash:.12});
 const EXPANDED_ABILITIES={
  ringchain:{name:'Rebounding Barrage',seconds:1.6,hint:'Three rings · gaps rotate · violet shots rebound'},
  bloom:{name:'Growing Stars',seconds:1.5,hint:'Projectiles grow · leave a wider gap'},
@@ -11,8 +12,8 @@ const EXPANDED_ABILITIES={
  donut:{name:'Outer Ruin',seconds:1.8,hint:'Teal center · red outer ring'},
  nova:{name:'Inner Ruin',seconds:1.6,hint:'Red center · move outside'},
  pincer:{name:'Closing Jaws',seconds:1.8,hint:'Two violet sweeps · use the gap'},
- summon:{name:'Calling Spire',seconds:1.7,hint:'Destroy the spire · stop its reinforcements'},
- eliteSummon:{name:'Royal Calling',seconds:2,hint:'Destroy the crowned spire · it calls elites'},
+ summon:{name:'Calling Spire',seconds:1.7,hint:'Bump once to break · dash or wait while red'},
+ eliteSummon:{name:'Royal Calling',seconds:2,hint:'Bump twice · step away between hits · dash or wait while red'},
  bastion:{name:'Royal Guard',seconds:2,hint:'Blue shield · defeat both guards'},
  reversal:{name:'Hungry Mirror',seconds:1.9,hint:'Gold center reflects · a missed mirror heals the boss'},
  minefield:{name:'Marked Ground',seconds:1.8,hint:'Red marks lock on cast · step between them'},
@@ -95,6 +96,24 @@ function createSummonTotem(owner,point,elite=false){
  const hp=Math.max(40,zoneEnemyHp(false,0)*(elite?1.6:1));
  const t={totem:true,destructible:true,type:elite?'eliteSummon':'summon',eliteSummon:elite,biome:owner.biome,owner,x:point.x,y:point.y-18,rad:18,hp,maxHp:hp,age:0,spawnClock:2.4,spawnWarn:0,summonCount:0};
  (game.totems||(game.totems=[])).push(t);return t;
+}
+function summonBumpDamage(t){return t.maxHp/(t.eliteSummon?SUMMON_BUMPS.royal:SUMMON_BUMPS.normal);}
+function summonBumpsLeft(t){return t.hp>0?Math.max(1,Math.ceil(t.hp/summonBumpDamage(t)-1e-9)):0;}
+function bumpSummonTotem(t,from=encounterFoot(game.player),dashing=false){
+ if(!t.destructible||!['summon','eliteSummon'].includes(t.type)||t.hp<=0)return false;
+ const foot=encounterFoot(t),player=encounterFoot(game.player),distance=Math.hypot(player.x-foot.x,player.y-foot.y);
+ // Re-arm only after clearing the base. A held touch or boundary jitter must
+ // never turn one collision into several; a dash can cross it in one step.
+ if(t.bumpContact){
+  if(Math.hypot(from.x-foot.x,from.y-foot.y)<=SUMMON_BUMPS.releaseRadius){if(distance>SUMMON_BUMPS.releaseRadius)t.bumpContact=false;return false;}
+  t.bumpContact=false;
+ }
+ if(t.bumpContact||segmentDistance(foot.x,foot.y,from.x,from.y,player.x,player.y)>SUMMON_BUMPS.radius)return false;
+ t.bumpContact=true;const surging=!!t.spawnPoint&&!t.disabled&&!totemsDisabled();
+ if(!damageTotem(t,summonBumpDamage(t),true))return false;
+ t.bumpFlashUntil=game.frame+.2;burst(foot.x,foot.y-12,8,combatTheme('safe').color);
+ if(surging&&!dashing)hurt(game.player.maxHp*(t.eliteSummon?SUMMON_BUMPS.royalBacklash:SUMMON_BUMPS.normalBacklash));
+ return true;
 }
 function spawnSummonedEnemy(owner,point,elite=false,guard=false,totem=null){
  if(!point||!game.enemies.includes(owner)||game.enemies.filter(e=>e.summoned).length>=8||elite&&game.enemies.filter(e=>e.summoned&&e.elite).length>=3)return null;
@@ -183,19 +202,23 @@ function paintExpandedWarning(enemy,cast,progress){
  if(!game.boss&&game.enemies.find(e=>e.cast)===enemy)encounterLabel(cast.hint,game.camX,game.camY+game.viewHeight/2-100,theme.hot,game.viewWidth<600?9:11);return true;
 }
 function paintSummonTotem(t){
- const theme=combatTheme(t.disabled||totemsDisabled()?'shield':'danger'),foot=encounterFoot(t),image=encounterImage(t.biome,'fury'),height=82,width=height*image.naturalWidth/Math.max(1,image.naturalHeight);
+ const disabled=totemsDisabled()||(t.disabledUntil||0)>game.frame,surging=!!t.spawnPoint&&!disabled,theme=combatTheme(disabled?'shield':surging?'danger':'safe'),foot=encounterFoot(t),image=encounterImage(t.biome,'fury'),height=82,width=height*image.naturalWidth/Math.max(1,image.naturalHeight),bumps=summonBumpsLeft(t);
  ellipse(t.x,foot.y,26,8,'#080d1480');ctx.save();ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(t.x,foot.y-2,27,10,0,0,Math.PI*2);ctx.stroke();
- if(t.disabled)ctx.globalAlpha=.48;
+ if(disabled)ctx.globalAlpha=.48;
  if(image.complete&&image.naturalWidth)ctx.drawImage(image,t.x-width/2,foot.y-height,width,height);
  else{poly([t.x-11,foot.y-4,t.x-15,foot.y-55,t.x,foot.y-76,t.x+15,foot.y-55,t.x+11,foot.y-4],theme.dark,theme.color,2);}
  ctx.restore();
  for(let i=0;i<3;i++){const a=i*Math.PI*2/3+(reducedMotion()?0:game.frame*.9),x=t.x+Math.cos(a)*20,y=foot.y-42+Math.sin(a)*9;glow(x,y,10,theme.color+'55');disc(x,y,2.5,theme.hot);}
  if(t.eliteSummon)encounterLabel('♛',t.x,foot.y-83,theme.hot,18);
  quad(t.x-24,foot.y-99,48,5,'#171822');quad(t.x-24,foot.y-99,48*clamp(t.hp/t.maxHp,0,1),5,theme.color);
- encounterLabel(t.disabled?'DISABLED':'DESTROY SPIRE',t.x,foot.y-106,theme.hot,9);
+ encounterLabel(bumps+' BUMP'+(bumps===1?'':'S')+' TO BREAK',t.x,foot.y-112,theme.hot,game.viewWidth<600?12:11);
+ const total=t.eliteSummon?SUMMON_BUMPS.royal:SUMMON_BUMPS.normal;
+ for(let i=1;i<total;i++)quad(t.x-24+48*i/total-.75,foot.y-99,1.5,5,'#171822');
+ encounterLabel(t.bumpContact?'STEP CLEAR · BUMP AGAIN':disabled?'DISABLED':surging?'SURGING · DASH OR WAIT':'BUMP TO BREAK',t.x,foot.y+26,theme.hot,game.viewWidth<600?10:9);
+ if((t.bumpFlashUntil||0)>game.frame)paintWarningCircle(foot.x,foot.y,31,1,combatTheme('safe'));
  if(t.spawnPoint){paintWarningCircle(t.spawnPoint.x,t.spawnPoint.y,22,1-t.spawnWarn/1.3,theme);encounterLabel('SUMMON',t.spawnPoint.x,t.spawnPoint.y-27,theme.hot,8);}
 }
-function combatGuideHtml(){return codexParagraph('Move, dash and attack automatically. Each warning uses both a color and a shape or label. Threats lock their aim when the warning appears.')+codexRuleList([['Red · danger','Hurts you only. Leave the marked area.'],['Violet · friendly fire','Hurts you and other enemies. Lure monsters into sweeps, charges, beams, eruptions and rebounding rings.'],['Gold / white · reflect','Stand inside the small white center to reflect. Hungry Mirrors heal their caster when missed.'],['Teal · safe / benefit','Safe quarters and circles, or a totem stream redirected to you.'],['Blue · shield','Break guards or a shield source to expose the protected target.'],['Spire · destroy','Summoning spires have a health bar. Attack them to stop reinforcements. Other totems can only be intercepted.'],['Reinforcements','Summoned monsters and guards drop no rewards and do not count toward the wave.']])+codexParagraph('Bosses change patterns at health thresholds. Rebounding rings arrive in three waves; growing shots widen; returning blades come back to their caster. Watch their shape as well as their color.');}
+function combatGuideHtml(){return codexParagraph('Move, dash and attack automatically. Each warning uses both a color and a shape or label. Threats lock their aim when the warning appears.')+codexRuleList([['Red · danger','Hurts you only. Leave the marked area.'],['Violet · friendly fire','Hurts you and other enemies. Lure monsters into sweeps, charges, beams, eruptions and rebounding rings.'],['Gold / white · reflect','Stand inside the small white center to reflect. Hungry Mirrors heal their caster when missed.'],['Teal · safe / benefit','Safe quarters and circles, or a totem stream redirected to you.'],['Blue · shield','Break guards or a shield source to expose the protected target.'],['Spire · bump to break','Walk into an ordinary spire once, or a crowned spire twice. Step clear of its base before another bump. Teal is safe; a red, surging spire retaliates for 8% / 12% maximum health before defenses. Dash through or wait for teal to avoid that damage. Weapons can still damage spires. Healing and power totems remain stream interceptions.'],['Reinforcements','Summoned monsters and guards drop no rewards and do not count toward the wave.']])+codexParagraph('Bosses change patterns at health thresholds. Rebounding rings arrive in three waves; growing shots widen; returning blades come back to their caster. Watch their shape as well as their color.');}
 
 function announceWeaponUpgradeTip(){
  if(data.weaponUpgradeTipSeen)return;data.weaponUpgradeTipSeen=true;toast('Strengthen your new weapon','Refine it at its crafting bench, then visit Warding to enchant it. Both improvements are permanent.');

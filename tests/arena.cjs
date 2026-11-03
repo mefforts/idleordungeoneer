@@ -33,7 +33,8 @@ function instrumentation(){
             if(eliteRewardOpen())closeEliteReward(true);
             const p=game.player,mirror=game.enemies.find(e=>['reflect','reversal'].includes(e.cast?.type)),spire=(game.totems||[]).find(t=>t.destructible),guard=game.enemies.find(e=>e.bastionGuard),stream=(game.totems||[]).find(t=>t.type==='mend'),nearest=combatTargets().sort((a,b)=>bodyDistance(a,p.x,p.y)-bodyDistance(b,p.x,p.y))[0];let target=null;
             if(mirror)target={x:mirror.cast.point.x,y:mirror.cast.point.y-13};
-            else if(spire||guard){const actor=spire||guard;target=bodyPoint(actor,p.x,p.y);}
+            else if(spire){const base=encounterFoot(spire),dx=p.x-base.x,dy=p.y+13-base.y,distance=Math.hypot(dx,dy),retreat=SUMMON_BUMPS.releaseRadius+8;target=spire.bumpContact?{x:base.x+(distance?dx/distance:1)*retreat,y:base.y+(distance?dy/distance:0)*retreat-13}:{x:base.x,y:base.y-13};}
+            else if(guard)target=bodyPoint(guard,p.x,p.y);
             else if(stream){const from=encounterFoot(stream.owner),to=encounterFoot(stream),distance=Math.hypot(to.x-from.x,to.y-from.y),fraction=Math.min(.5,55/Math.max(1,distance));target={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction-13};}
             else if(nearest&&bodyDistance(nearest,p.x,p.y)>attackReach()*.65)target=bodyPoint(nearest,p.x,p.y);
             const dx=target?target.x-p.x:0,dy=target?target.y-p.y:0;game.joystick.pointer=-1;game.joystick.x=Math.hypot(dx,dy)>6?dx:0;game.joystick.y=Math.hypot(dx,dy)>6?dy:0;

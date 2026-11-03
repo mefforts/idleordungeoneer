@@ -2,6 +2,8 @@
 
 Build 10.0 replaces individual Zone Shops with a permanent Dungeon Shop. All current Zones belong to The First Descent. The data model can assign future Zones to a new Dungeon with a separate wallet and purchases. Equipment, global Dungeoneering and Mastery retain their own roles.
 
+Build 10.1 adds physical counterplay to summoning spires: one bump breaks an ordinary spire; a crowned spire takes two. Leave the base between impacts. Teal is safe; red means a summoning surge. Dash through a surge or wait for teal to avoid retaliation.
+
 ## Equipment ceilings
 
 | Weapon | Style | Iron | Dedicated Iron | Steel | Dedicated Steel |
@@ -71,16 +73,18 @@ Ordinary kills grant no gold unless Golden Hunt is active. Existing gold jewelry
 | 3 | ~30 min | 160.0 |
 | 4 | ~35 min | 160.0 |
 
-- Live Zone 1: **9.5 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **20.3 min**, 570 rewarded defeats, 160.0 reference DPS.
+- Live Zone 1: **9.4 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **20.2 min**, 570 rewarded defeats, 160.0 reference DPS.
 - Live Zone 3: **31.0 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **36.0 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **35.6 min**, 960 rewarded defeats, 160.0 reference DPS.
 - Live Zone 9: **41.1 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 15: **41.4 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 15: **41.2 min**, 960 rewarded defeats, 160.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It moves to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 
 Bosses have 12% more health than the previous baseline and change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until destroyed or their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
+
+Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon or damage bonuses. Each bump removes one full impact segment from the existing health bar; weapon damage can help finish it. Contact uses a 28-unit ground radius and re-arms after leaving 40 units. A red summoning surge retaliates for 8% / 12% player maximum HP before normal defenses and invulnerability. Idle, disabled and silenced spires are safe to bump; dashing is always safe. A fast pass counts once, and destroying a spire cancels its pending arrival. Existing minions remain. Spires grant no rewards or wave progress.
 
 ## Warning language and ability library
 
@@ -106,8 +110,8 @@ The encounter library now has 28 patterns: the ten existing attacks plus the fol
 - **Outer Ruin**: Teal center · red outer ring.
 - **Inner Ruin**: Red center · move outside.
 - **Closing Jaws**: Two violet sweeps · use the gap.
-- **Calling Spire**: Destroy the spire · stop its reinforcements.
-- **Royal Calling**: Destroy the crowned spire · it calls elites.
+- **Calling Spire**: Bump once to break · dash or wait while red.
+- **Royal Calling**: Bump twice · step away between hits · dash or wait while red.
 - **Royal Guard**: Blue shield · defeat both guards.
 - **Hungry Mirror**: Gold center reflects · a missed mirror heals the boss.
 - **Marked Ground**: Red marks lock on cast · step between them.
