@@ -2,7 +2,7 @@
 
 The player uses an original illustrated 2D style with compact proportions, expressive eyes, bold outlines and two or three shading tones. Travel tunics, plain iron/steel armor, ranger leathers and linen/wool robes keep simple shapes. The renderer draws these shapes directly, so joint surfaces remain continuous as a limb bends.
 
-There are **42 independent SVG parts**: six physical slots for travel clothing and each of the six existing armor sets. Eight transparent WebP work tools complete the 50-asset catalog in `assets/player/parts/`. Warding uses a weaving shuttle; Artisan uses a jeweler’s chisel. The other six tools and all existing weapon illustrations retain their artwork. Only the eight tools need image decoding at entry.
+There are **60 independent SVG parts**: six physical slots for travel clothing and each of the nine armor sets. Eight transparent WebP work tools complete the 68-asset catalog in `assets/player/parts/`. Warding uses a weaving shuttle; Artisan uses a jeweler’s chisel. The other six tools and all existing weapon illustrations retain their artwork. Only the eight tools need image decoding at entry.
 
 | Physical slot | Attachment | Parts |
 | --- | --- | --- |
@@ -29,7 +29,7 @@ Mining, smithing and chopping now use distinct anticipation/impact/recovery timi
 
 Work clips retain anticipation, strike and recovery, plus continuous carving, weaving, engraving, gem working and searching motions. Starting and stopping blend over 180 / 240 ms. The rig and work scenes share one visual-rate table. Animation is separate from production. The visual rate caps at 2.5× for readability; resource production retains the full Skilling time multiplier. Dungeoneering speed does not enter this clock. Reduced motion uses stable working poses.
 
-Combat, all 20 skill activities, appearance previews and inventory portraits share this rig. Saved hair, eye, clothing and skin choices retain their identifiers and colors. Six hair shapes and four eye styles use the same face anchors.
+Combat, all 31 skill activities, appearance previews and inventory portraits share this rig. Saved hair, eye, clothing and skin choices retain their identifiers and colors. Six hair shapes and four eye styles use the same face anchors.
 
 To rebuild assets and matching portraits:
 
@@ -48,8 +48,10 @@ npm run review:player
 
 For a motion review, run `npm run review:motion` with FFmpeg available. It exports a 24-second MP4 of movement, six weapon families and eight work families, an MP4 of the eight actual work scenes including start/release transitions, and an eight-second looping GIF. The rig reel uses the production pose functions at 1× animation speed, with combat previews triggered once per second and facing changes every four seconds. Work loops show travel clothes first and armor in the second facing. The scene reel includes mining and warding in travel clothes to keep exposed arm connections visible. Work scenes use their real clocks and effects. Recording leaves the shipped HTML unchanged.
 
-`npm run review:skilling` captures the current work loops and bonus collection in actual scenes, plus a comparative sheet of both collection clips. `tests/skilling-bonuses.cjs` checks 27,104 collection poses for smooth hand motion, fixed bones and two-handed grips, alongside production, timing, touch and persistence regressions.
+`npm run review:skilling` captures the current work loops and bonus collection in actual scenes, plus a comparative sheet of both collection clips. `tests/skilling-bonuses.cjs` checks 38,720 collection poses for smooth hand motion, fixed bones and two-handed grips, alongside production, timing, touch and persistence regressions.
 
 The rig suite uses labelled render surfaces in isolated test responses to inspect 640 work/bonus crossing poses across both facings and all four material families. It checks visible arm/hand ownership at intersections, grips over the tool shaft and grip positions within the handle; these diagnostics never enter the standalone game.
 
 The progression suite samples 50,400 weaving/casting poses across both bonuses, release blends, outfits, facings and reduced motion, checking fixed bone lengths and zero arm-segment crossings.
+
+Mithril, Blue Ranged Leathers and Green Runewoven Robes retain the Steel-tier silhouettes and attachment points. Their main change is palette; a centered inset buckle and fine shoulder edging add small finishing details. Mithril weapon illustrations use the existing third row of the weapon atlas. The same renderer exports all 60 body parts and matching portraits.

@@ -149,7 +149,10 @@ const ARMOR_PALETTES=Object.freeze({
  ranged_1:{style:'ranged',mid:'#886447',light:'#b69a65',dark:'#513f31',trim:'#c3ac78',cloth:'#65774f',leather:'#745238'},
  ranged_2:{style:'ranged',mid:'#536c4e',light:'#91a174',dark:'#304b3b',trim:'#b5a276',cloth:'#3f5e46',leather:'#634b36'},
  magic_1:{style:'magic',mid:'#c5bca3',light:'#eee5c9',dark:'#897e66',trim:'#a89c7f',cloth:'#c5bca3',leather:'#75583c'},
- magic_2:{style:'magic',mid:'#526f9b',light:'#9bb2cf',dark:'#2c4367',trim:'#b5c2c9',cloth:'#526f9b',leather:'#68513c'}
+ magic_2:{style:'magic',mid:'#526f9b',light:'#9bb2cf',dark:'#2c4367',trim:'#b5c2c9',cloth:'#526f9b',leather:'#68513c'},
+ melee_3:{style:'melee',tier:3,mid:'#6494ad',light:'#c1ddea',dark:'#34546d',trim:'#c5d2c6',cloth:'#344c62',leather:'#594a39'},
+ ranged_3:{style:'ranged',tier:3,mid:'#49759d',light:'#9abbcf',dark:'#283f61',trim:'#c6b98b',cloth:'#385a82',leather:'#604a36'},
+ magic_3:{style:'magic',tier:3,mid:'#537f61',light:'#a5c7a3',dark:'#2c503d',trim:'#d0c393',cloth:'#537f61',leather:'#645039'}
 });
 function path(c,points,fill,outline=INK,width=1.2){c.beginPath();c.moveTo(points[0],points[1]);for(let i=2;i<points.length;i+=2)c.lineTo(points[i],points[i+1]);c.closePath();c.fillStyle=fill;c.fill();if(outline){c.strokeStyle=outline;c.lineWidth=width;c.lineJoin='round';c.stroke();}}
 function line(c,x,y,xx,yy,color,width=1){stroke(c,{x,y},{x:xx,y:yy},color,width);}
@@ -201,6 +204,7 @@ function paintShoulder(c,root,angle,side,kit,look){
  const p=paletteFor(kit,'shoulders',look);c.save();c.translate(root.x,root.y);c.rotate(angle*.4);if(side<0)c.scale(-1,1);
  if(p.style==='travel'){path(c,[-6.5,-2.3,-2.2,-4.1,5.7,-2.5,6.4,4.4,-5.0,5.3],p.mid,INK,1);line(c,-4.3,3.2,4.7,3.0,p.light,.9);}
  else{path(c,[-8,-1.3,-5.0,-5.4,1,-6.2,7.2,-3.0,8.5,3.8,3.3,6.1,-6.8,4.7],p.mid,INK,1.2);path(c,[-6,-1.9,-3.8,-4.1,1,-4.5,5.4,-2.5,2.1,-.6],p.light,'',0);line(c,-6.4,3.3,6.4,3.1,p.style==='magic'?p.trim:p.dark,1);}
+ if(p.tier===3){line(c,-6,2.8,5.8,2.7,p.trim,.8);ellipse(c,4.8,.2,.7,.7,p.light);}
  c.restore();
 }
 function paintArm(c,joints,side,kit,look){
@@ -213,7 +217,7 @@ function paintArm(c,joints,side,kit,look){
  const angle=Math.atan2(joints.elbow.y-joints.shoulder.y,joints.elbow.x-joints.shoulder.x)-Math.PI/2;paintShoulder(c,joints.shoulder,angle,side,kit,look);
 }
 function paintHand(c,point,angle,side,kit,look,handPose='rest'){
- const p=paletteFor(kit,'gloves',look),bare=p.style==='travel',color=bare?look.skinColor:p.style==='melee'&&kit.pieces.gloves.endsWith('_2')?p.mid:p.leather,light=shade(color,1.20),dark=shade(color,.72);
+ const p=paletteFor(kit,'gloves',look),bare=p.style==='travel',color=bare?look.skinColor:p.style==='melee'&&(kit.pieces.gloves.endsWith('_2')||kit.pieces.gloves.endsWith('_3'))?p.mid:p.leather,light=shade(color,1.20),dark=shade(color,.72);
  c.save();c.translate(point.x,point.y);c.rotate(handPose==='plant'?0:angle);if(side>0)c.scale(-1,1);
  if(handPose==='plant'){path(c,[-4,-3,2,-3,3,-.5,7,0,7.5,1.5,4.6,2.3,0,2.1,-3,1.3,-4.5,-.5],color,INK,.8);line(c,-2,-1.7,2,-1.5,light,.8);}
  else if(handPose==='reach'){
@@ -260,10 +264,11 @@ function paintCohesiveChest(c,p,hem){
   line(c,-8.2,-26.6,0,-18.3,p.trim,.65);line(c,0,-18.3,8.2,-26.6,p.trim,.65);
   line(c,-5,-12,-6.2,hem-1,shade(p.mid,.82),.85);line(c,5,-12,6.2,hem-1,shade(p.mid,1.18),.85);
  }
- // The same waist and buckle anchor every material and both armor tiers.
+ // Shared waist anchors keep every tier's belt centered.
  line(c,-12,-1,12,-1,p.leather,3.4);
  path(c,[-2.4,-3.3,3.1,-3.3,3.1,1.7,-2.4,1.7],p.trim,INK,.8);
  line(c,-.5,-1,1.5,-1,p.leather,.8);
+ if(p.tier===3){path(c,[-3.6,-3.8,4.3,-3.8,4.3,2.2,-3.6,2.2],p.trim,INK,.7);path(c,[-1.6,-2.1,2.2,-2.1,2.2,.5,-1.6,.5],p.dark,'',0);for(const x of [-8,8])ellipse(c,x,-1,.8,.8,p.trim);}
 }
 
 function paintBody(c,rig,kit,look){

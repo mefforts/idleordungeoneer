@@ -1,5 +1,8 @@
 /* Read-only recipe planning. All work and spending still use normal controls. */
 function preparationActivity(resource){
+ if(resource==='gold'&&canUseSkill('deepScavenge'))return 'deepScavenge';
+ if(resource==='arrows'&&canUseSkill('mithrilFletch'))return 'mithrilFletch';
+ if(resource==='runes'&&canUseSkill('verdantRune'))return 'verdantRune';
  if(resource==='gold')return canUseSkill('ancientScavenge')?'ancientScavenge':'scavenge';
  if(resource==='arrows'&&canUseSkill('steelFletch'))return 'steelFletch';
  if(resource==='runes'&&canUseSkill('greaterRune'))return 'greaterRune';
@@ -8,11 +11,11 @@ function preparationActivity(resource){
 function preparationRequirements(action){
  const [type,id]=String(action||'').split(':'),requirements=[];
  if(type==='promotion'&&STYLE_DEFS[id]){
-  requirements.push({label:'Zone 2 reached',ready:tier2Unlocked(),action:'delve'});
-  requirements.push({label:'Iron refinement '+data.styles[id].weapon+' / 10',ready:data.styles[id].weapon>=10,group:STYLE_DEFS[id].group,action:'refine'});
-  requirements.push({label:DISCIPLINES[STYLE_DEFS[id].group].name+' '+weaponCraftLevel(STYLE_DEFS[id].weapon)+' / 10',ready:weaponCraftLevel(STYLE_DEFS[id].weapon)>=10,group:STYLE_DEFS[id].group,action:'train'});
+  const p=promotionDetails(id);requirements.push({label:equipmentTierGate(p.tier),ready:equipmentTierUnlocked(p.tier),action:'delve',tier:p.tier});
+  requirements.push({label:TIER_LIMITS[p.tier-1].name+' refinement '+data.styles[id].weapon+' / '+p.rank,ready:data.styles[id].weapon>=p.rank,group:STYLE_DEFS[id].group,action:'refine'});
+  requirements.push({label:DISCIPLINES[STYLE_DEFS[id].group].name+' '+weaponCraftLevel(STYLE_DEFS[id].weapon)+' / '+p.level,ready:weaponCraftLevel(STYLE_DEFS[id].weapon)>=p.level,group:STYLE_DEFS[id].group,action:'train'});
  }else if(type==='weapon'&&WEAPON_TYPES[id])requirements.push({label:DISCIPLINES[STYLE_DEFS[styleForWeapon(id)].group].name+' '+weaponCraftLevel(id)+' / '+WEAPON_LEVELS[id],ready:weaponCraftLevel(id)>=WEAPON_LEVELS[id],group:STYLE_DEFS[styleForWeapon(id)].group,action:'train'});
- else if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];if(a.tier===2)requirements.push({label:'Zone 2 reached',ready:tier2Unlocked(),action:'delve'});requirements.push({label:DISCIPLINES[a.group].name+' '+levelRange(data[DISCIPLINES[a.group].xp]||0).lvl+' / '+a.level,ready:levelRange(data[DISCIPLINES[a.group].xp]||0).lvl>=a.level,group:a.group,action:'train'});}
+ else if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];if(a.tier>1)requirements.push({label:equipmentTierGate(a.tier),ready:equipmentTierUnlocked(a.tier),action:'delve',tier:a.tier});requirements.push({label:DISCIPLINES[a.group].name+' '+levelRange(data[DISCIPLINES[a.group].xp]||0).lvl+' / '+a.level,ready:levelRange(data[DISCIPLINES[a.group].xp]||0).lvl>=a.level,group:a.group,action:'train'});}
  return requirements;
 }
 function preparationPlan(action=data.craftGoal){
@@ -46,8 +49,8 @@ function preparationPlan(action=data.craftGoal){
  try{
   const [type,id]=String(action).split(':');
   if(type==='promotion'&&STYLE_DEFS[id]){
-   for(let rank=data.styles[id].weapon;rank<10;rank++)recipe(styleUpgradeBase(id,'weapon',rank),STYLE_DEFS[id].group,0);
-   recipe(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group,0);
+   for(let rank=data.styles[id].weapon;rank<promotionDetails(id).rank;rank++)recipe(styleUpgradeBase(id,'weapon',rank),STYLE_DEFS[id].group,0);
+   recipe(promotionDetails(id).cost,STYLE_DEFS[id].group,0);
   }else if(type==='ammo')ensure(id,goal.target,0);
   else recipe(goal.baseCost||goal.cost,goal.group,0);
  }catch(_){return {goal,steps:[],requirements:preparationRequirements(action),tooLarge:true};}
@@ -55,14 +58,14 @@ function preparationPlan(action=data.craftGoal){
 }
 function preparationNext(plan){
  if(!plan)return null;const missing=plan.requirements.find(r=>!r.ready);
- if(missing?.action==='delve')return {kind:'delve',label:'Reach Zone 2',...missing};
+ if(missing?.action==='delve')return {kind:'delve',label:missing.tier===3?'Complete Zone 4':'Reach Zone 2',...missing};
  if(missing?.action==='train'){
-  const step=plan.steps.find(s=>s.activity&&s.activity!=='prospect'&&disciplineFor(s.activity)===missing.group&&!s.blocked),activity=step?.activity||{blacksmithing:'mine',woodworking:'wood',warding:'ward',scavenging:'scavenge',artisan:canUseSkill('garnetSearch')?'garnetSearch':'polish'}[missing.group];
+  const step=plan.steps.find(s=>s.activity&&s.activity!=='prospect'&&disciplineFor(s.activity)===missing.group&&!s.blocked),activity=step?.activity||trainingActivity(missing.group);
   return {kind:'activity',activity,label:'Train '+DISCIPLINES[missing.group].name};
  }
- const blocked=plan.steps.find(s=>s.blocked&&s.activity&&SKILLS[s.activity]);if(blocked){if(SKILLS[blocked.activity].tier===2&&!tier2Unlocked())return {kind:'delve',label:'Reach Zone 2'};const group=disciplineFor(blocked.activity),activity={blacksmithing:'mine',woodworking:'wood',warding:'ward',scavenging:'scavenge',artisan:'polish'}[group];return {kind:'activity',activity,label:'Train '+DISCIPLINES[group].name+' to 10'};}
+ const blocked=plan.steps.find(s=>s.blocked&&s.activity&&SKILLS[s.activity]);if(blocked){const tier=SKILLS[blocked.activity].tier||1;if(!equipmentTierUnlocked(tier))return {kind:'delve',label:tier===3?'Complete Zone 4':'Reach Zone 2'};const group=disciplineFor(blocked.activity),activity=trainingActivity(group);return {kind:'activity',activity,label:'Train '+DISCIPLINES[group].name+' to '+((tier-1)*10)};}
  if(plan.steps[0]){const step=plan.steps[0];return {kind:step.activity==='prospect'?'prospect':step.activity?'activity':'resource',activity:step.activity,resource:step.resource,label:step.activity==='prospect'?'Prospect opals':step.activity?SKILLS[step.activity].name:'Earn '+RESOURCE_LABEL[step.resource]};}
- if(missing?.action==='refine')return {kind:'bench',group:missing.group,label:'Refine Iron weapon'};
+ if(missing?.action==='refine')return {kind:'bench',group:missing.group,label:'Refine weapon'};
  return {kind:'bench',group:plan.goal.group,view:plan.goal.view,label:'Return to '+plan.goal.name};
 }
 function openPreparationStep(action=data.craftGoal){

@@ -364,6 +364,181 @@
       "scene": "polish",
       "color": "#edcc83",
       "icon": "◇"
+    },
+    "mithrilMine": {
+      "name": "Mithril Mining",
+      "resource": "mithrilOre",
+      "item": "Mithril Ore",
+      "seconds": 14,
+      "amount": 1,
+      "xp": "miningXp",
+      "gain": 26,
+      "tier": 3,
+      "verb": "MINE",
+      "pose": "mine",
+      "scene": "mine",
+      "color": "#88bddb",
+      "icon": "◇"
+    },
+    "mithrilSmelt": {
+      "name": "Mithril Smelting",
+      "resource": "mithrilBars",
+      "item": "Mithril Bar",
+      "seconds": 18,
+      "amount": 1,
+      "xp": "smithingXp",
+      "gain": 38,
+      "tier": 3,
+      "verb": "SMELT",
+      "pose": "smith",
+      "scene": "forge",
+      "color": "#88bddb",
+      "icon": "◇",
+      "cost": {
+        "mithrilOre": 2,
+        "coal": 2
+      }
+    },
+    "yew": {
+      "name": "Yew Woodcutting",
+      "resource": "yewLogs",
+      "item": "Yew Log",
+      "seconds": 15,
+      "amount": 1,
+      "xp": "woodXp",
+      "gain": 28,
+      "tier": 3,
+      "verb": "CHOP",
+      "pose": "wood",
+      "scene": "wood",
+      "color": "#88bddb",
+      "icon": "◇"
+    },
+    "mithrilFletch": {
+      "name": "Mithril Fletching",
+      "resource": "arrows",
+      "item": "Arrows",
+      "seconds": 16,
+      "amount": 18,
+      "xp": "fletchXp",
+      "gain": 38,
+      "tier": 3,
+      "verb": "CRAFT",
+      "pose": "fletch",
+      "scene": "fletch",
+      "color": "#88bddb",
+      "icon": "◇",
+      "cost": {
+        "yewLogs": 2,
+        "mithrilBars": 1
+      }
+    },
+    "verdantWeave": {
+      "name": "Verdant Weaving",
+      "resource": "verdantCloth",
+      "item": "Verdant Cloth",
+      "seconds": 16,
+      "amount": 2,
+      "xp": "wardXp",
+      "gain": 32,
+      "tier": 3,
+      "verb": "WEAVE",
+      "pose": "ward",
+      "scene": "ward",
+      "color": "#88bddb",
+      "icon": "◇",
+      "cost": {
+        "runicCloth": 2,
+        "yewLogs": 1
+      }
+    },
+    "verdantRune": {
+      "name": "Verdant Runecrafting",
+      "resource": "runes",
+      "item": "Runes",
+      "seconds": 17,
+      "amount": 16,
+      "xp": "runeXp",
+      "gain": 40,
+      "tier": 3,
+      "verb": "INSCRIBE",
+      "pose": "rune",
+      "scene": "rune",
+      "color": "#88bddb",
+      "icon": "◇",
+      "cost": {
+        "verdantCloth": 2,
+        "enchantedFragments": 2
+      }
+    },
+    "deepScavenge": {
+      "name": "Enchanted Scavenging",
+      "resource": "enchantedSalvage",
+      "item": "Enchanted Salvage",
+      "seconds": 28,
+      "amount": 1,
+      "xp": "scavengeXp",
+      "gain": 28,
+      "tier": 3,
+      "verb": "SEARCH",
+      "pose": "scavenge",
+      "scene": "scavenge",
+      "color": "#88bddb",
+      "icon": "◇",
+      "goldGain": 4
+    },
+    "restoreEnchanted": {
+      "name": "Enchanted Restoration",
+      "resource": "enchantedFragments",
+      "item": "Enchanted Fragments",
+      "seconds": 17,
+      "amount": 2,
+      "xp": "scavengeXp",
+      "gain": 36,
+      "tier": 3,
+      "verb": "CLEAN",
+      "pose": "clean",
+      "scene": "polish",
+      "color": "#88bddb",
+      "icon": "◇",
+      "cost": {
+        "enchantedSalvage": 2
+      },
+      "workPose": "clean"
+    },
+    "sapphireSearch": {
+      "name": "Sapphire Prospecting",
+      "resource": "sapphires",
+      "item": "Rough Sapphire",
+      "seconds": 35,
+      "amount": 1,
+      "xp": "artisanXp",
+      "gain": 240,
+      "tier": 3,
+      "verb": "CLEAN",
+      "pose": "clean",
+      "scene": "polish",
+      "color": "#88bddb",
+      "icon": "◇",
+      "workPose": "clean"
+    },
+    "sapphireCut": {
+      "name": "Sapphire Cutting",
+      "resource": "cutSapphires",
+      "item": "Cut Sapphire",
+      "seconds": 28,
+      "amount": 1,
+      "xp": "artisanXp",
+      "gain": 384,
+      "tier": 3,
+      "verb": "CUT",
+      "pose": "polish",
+      "scene": "polish",
+      "color": "#88bddb",
+      "icon": "◇",
+      "cost": {
+        "sapphires": 1
+      }
     }
   },
   "ACTIVE_INTERVAL": {
@@ -387,7 +562,17 @@
     "greaterRune": 3.6,
     "garnetSearch": 4.5,
     "garnetCut": 4,
-    "relicClean": 4
+    "relicClean": 4,
+    "mithrilMine": 3.8,
+    "mithrilSmelt": 4.2,
+    "yew": 3.6,
+    "mithrilFletch": 4,
+    "verdantWeave": 3.6,
+    "verdantRune": 4.2,
+    "deepScavenge": 4.6,
+    "restoreEnchanted": 4.2,
+    "sapphireSearch": 5,
+    "sapphireCut": 4.6
   },
   "DISCIPLINES": {
     "blacksmithing": {
@@ -399,7 +584,9 @@
         "silverMine",
         "silverSmelt",
         "coal",
-        "steelSmelt"
+        "steelSmelt",
+        "mithrilMine",
+        "mithrilSmelt"
       ],
       "xp": "blacksmithXp",
       "color": "#b8d4d2",
@@ -412,7 +599,9 @@
         "wood",
         "fletch",
         "willow",
-        "steelFletch"
+        "steelFletch",
+        "yew",
+        "mithrilFletch"
       ],
       "xp": "woodworkingXp",
       "color": "#a6d57a",
@@ -425,7 +614,9 @@
         "ward",
         "rune",
         "aetherWeave",
-        "greaterRune"
+        "greaterRune",
+        "verdantWeave",
+        "verdantRune"
       ],
       "xp": "wardingSkillXp",
       "color": "#c3a3f0",
@@ -438,7 +629,9 @@
         "scavenge",
         "relicClean",
         "ancientScavenge",
-        "cleanAncient"
+        "cleanAncient",
+        "deepScavenge",
+        "restoreEnchanted"
       ],
       "xp": "scavengingXp",
       "color": "#edcc83",
@@ -450,7 +643,9 @@
       "actions": [
         "polish",
         "garnetSearch",
-        "garnetCut"
+        "garnetCut",
+        "sapphireSearch",
+        "sapphireCut"
       ],
       "xp": "artisanDisciplineXp",
       "color": "#e6b4f7",
@@ -479,7 +674,15 @@
     "garnets": "Rough Garnets",
     "cutGarnets": "Cut Garnets",
     "runicCloth": "Runic Cloth",
-    "zoneMaterials": "Zone materials"
+    "zoneMaterials": "Zone materials",
+    "mithrilOre": "Mithril Ore",
+    "mithrilBars": "Mithril Bars",
+    "yewLogs": "Yew Logs",
+    "verdantCloth": "Verdant Cloth",
+    "enchantedSalvage": "Enchanted Salvage",
+    "enchantedFragments": "Enchanted Fragments",
+    "sapphires": "Rough Sapphires",
+    "cutSapphires": "Cut Sapphires"
   },
   "RESOURCE_ART": {
     "gold": "coins",
@@ -503,7 +706,15 @@
     "garnets": "resource-garnets",
     "cutGarnets": "resource-cutGarnets",
     "runicCloth": "resource-runicCloth",
-    "zoneMaterials": "codex-loot_0"
+    "zoneMaterials": "codex-loot_0",
+    "mithrilOre": "resource-mithrilOre",
+    "mithrilBars": "resource-mithrilBars",
+    "yewLogs": "resource-yewLogs",
+    "verdantCloth": "resource-verdantCloth",
+    "enchantedSalvage": "resource-enchantedSalvage",
+    "enchantedFragments": "resource-enchantedFragments",
+    "sapphires": "resource-sapphires",
+    "cutSapphires": "resource-cutSapphires"
   },
   "RESOURCE_SOURCE": {
     "ore": "mine",
@@ -524,7 +735,15 @@
     "ancientFragments": "cleanAncient",
     "garnets": "garnetSearch",
     "cutGarnets": "garnetCut",
-    "runicCloth": "aetherWeave"
+    "runicCloth": "aetherWeave",
+    "mithrilOre": "mithrilMine",
+    "mithrilBars": "mithrilSmelt",
+    "yewLogs": "yew",
+    "verdantCloth": "verdantWeave",
+    "enchantedSalvage": "deepScavenge",
+    "enchantedFragments": "restoreEnchanted",
+    "sapphires": "sapphireSearch",
+    "cutSapphires": "sapphireCut"
   },
   "TALENTS": {
     "onslaught": {

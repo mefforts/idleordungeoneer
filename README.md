@@ -4,6 +4,16 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.6.0** slows skill progression after level 10. Levels 1–10 keep their existing requirements; level 20 now needs **32,166 total XP** instead of 7,410. Tier-1 work gives **10% XP after level 10**, and tier-2 work gives **10% after level 20**, while material yields and production speeds stay the same. Active work, idling, offline work, refining discoveries and equipment upgrades share these rules. Existing saves retain their earned levels and fractional progress through a one-time conversion.
+
+**Mithril equipment unlocks after completing Zone 4**, with level **20** in the matching discipline. Promote Steel at refinement 20 to open **ranks 21–30**; armor is crafted independently. The three sets use **Mithril blue metal, blue ranged leathers and green Runewoven robes**, retaining the current full helms, slim caps and wizard hats, with small buckle and shoulder-trim changes. Mithril ore/bars, yew, verdant cloth, enchanted salvage/fragments and sapphires supply ten new activities with the same Zone/skill gate. Every tier remains visible before unlock.
+
+The two work-scene shortcuts now have distinct purposes: **Skills** opens the current discipline and **Gather / Refine** switches directly to related work, including ore ↔ bars, logs ↔ arrows, salvage ↔ cleaned relics and rough ↔ cut gems. Multi-step refining can jump straight to its input source. Switching releases the active hold and leaves idle assignments in place.
+
+[Compare Steel and Mithril outfits](preview-tier-three-comparison.png) · [Mithril mining](preview-mithril-mining-mobile.png) · [Direct Gather / Refine controls](preview-direct-refining-mobile.png) · [Blue ranger](preview-blue-ranger-mobile.png) · [Green Mage](preview-green-mage-mobile.png) · [Visible tier-3 requirements](preview-tier-three-locked-mobile.png) · [Training bands](preview-training-curve-mobile.png) · [Mithril promotion](preview-mithril-promotion-mobile.png).
+
+The health experiment applies across all Zones: **regular elites +75%**, **rares +50%**, and **bosses / guardian Echoes +50%**. Ordinary health calibration, spawn counts, player damage and loot stay the same, so fights last longer. Rare and boss-elite bonuses do not stack with the regular elite multiplier. [BALANCE.md](BALANCE.md) records the revised forecasts and playtest results.
+
 **Build 11.5.0** consolidates crafting: Gather and Refine show both material tiers together, including locked recipes. Every tier-2 activity needs **Zone 2 access and level 10 in its matching discipline**, including idle/offline work. Steel promotions sit directly below their weapon; station and tool upgrades use the same compact rows in Equipment. The separate Tools tab and station footer are gone. [Equipment](preview-unified-equipment-mobile.png) · [Workshop upgrades](preview-unified-workshop-upgrades-mobile.png) · [Visible tier-2 requirements](preview-visible-tier-two-mobile.png).
 
 **Artisan work now awards 8× its former XP**, with the same one-time catch-up for existing Artisan XP. Owned jewelry has 50 small refinements: each adds **0.25% of its base effect**, so a Leech Ring rank adds only **0.00125 percentage points** of lifesteal. Tools you own can gain ten refinements of +0.5 percentage points of active speed. Vouchers now name a specific rank upgrade—refinement, speed, reach, reinforcement, enchantment, jewelry, a particular tool or a named station. New item crafting and Steel promotions require materials. Old wildcard balances convert once to named upgrades without losing their count, and existing owned items remain. [Jewelry refinements](preview-jewelry-refinement-mobile.png).
@@ -26,7 +36,7 @@ Reflect casters keep moving. Touching the gold center triggers the counter immed
 
 Zone 2 takes a firmer step up: **25% more incoming damage**, and its first guardian and corresponding elite echoes introduce **growing stars that return toward their moving caster**. Summoning spires can receive an elite shield link. In v11.5.0 weapons ignore spires; physical impacts always retain full strength. **Every fresh dash through a spire counts as one full, safe bump**, even when already touching its base or clipping its edge; an ordinary spire needs one impact and a crowned spire needs two. [Shielded spire](preview-shielded-spire-mobile.png).
 
-Repeated delving blessings stack with independent expiry times. The vertical HUD and blessing picker now show their combined strength, and details show every stack's remaining time. [Stacked blessings](preview-stacked-blessings-mobile.png). The deterministic pressure check uses basic ranged armor and ~55 DPS with real damage: stationary play died in 5.9–6.7 combat seconds, while a moving bot using counters and dashes defeated the first Zone 2 guardian with 111–144 of 144 HP. This is a short controller comparison, not a human difficulty rating.
+Repeated delving blessings stack with independent expiry times. The vertical HUD and blessing picker now show their combined strength, and details show every stack's remaining time. [Stacked blessings](preview-stacked-blessings-mobile.png). With the current health experiment, the deterministic pressure check uses basic ranged armor and ~55 DPS with real damage: stationary play died in 6.3–6.9 combat seconds, while a moving bot using counters and dashes defeated the first Zone 2 guardian with 46–87 of 144 HP. This is a short controller comparison, not a human difficulty rating.
 
 **Build 11.3.0** makes monster loot physical: gold, Sigils, essence, resources and vouchers land first, draw in within pickup radius, then show the familiar receipt. Pickup jewelry now helps collect these drops. Unclaimed loot survives retries, reloads and floor travel; completing a floor gathers leftovers. Temporary delve buffs now form a vertical, scrollable column. [Phone loot and buffs](preview-ground-loot-mobile.png).
 
@@ -119,22 +129,23 @@ Press **Delve while delving** to replay a cleared floor or return to the frontie
 
 ## Equipment and pacing
 
-| Build | Zone 1 / Iron | Zone 2 / Steel |
-| --- | ---: | ---: |
-| Maximum equipment, base proficiency | 80 DPS | 160 DPS |
-| Dedicated equipment training | ~86 DPS | ~173 DPS |
-| Single-target soft budget | 100 DPS | 200 DPS |
+| Build | Zone 1 / Iron | Zone 2 / Steel | Zone 5 / Mithril |
+| --- | ---: | ---: | ---: |
+| Maximum equipment, base proficiency | 80 DPS | 160 DPS | 240 DPS |
+| Dedicated equipment training | ~86 DPS | ~173 DPS | ~259 DPS |
+| Single-target soft budget | 100 DPS | 200 DPS | 300 DPS |
 
 Weapon refinement, attack-speed training, proficiency and matching crafting levels provide core damage. Above the Zone’s single-target budget, each extra calculated DPS contributes at 25%; real hit damage uses the same adjustment. Conditional elemental damage and additional targets can add more. Abilities have finite ranks and increasingly expensive prices.
 
-| Zone | Target at 1× | Reference DPS |
+| Zone | Forecast at 1× | Reference DPS |
 | --- | --- | ---: |
-| 1 | ~10 minutes | ~80 |
-| 2 | ~20 minutes | ~160 |
-| 3 | ~44 minutes | Current Steel reference |
-| 4 | ~50 minutes | Current Steel reference |
+| 1 | ~12 minutes | ~80 |
+| 2 | ~24 minutes | ~160 |
+| 3 | ~55 minutes | Current Steel reference |
+| 4 | ~61 minutes | Current Steel reference |
+| 5 | ~44 minutes | Mithril reference, ~240 |
 
-References use complete Iron / Steel equipment at base proficiency, with no required Dungeon abilities. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Later equipment progression remains reserved.
+References use complete Iron / Steel / Mithril equipment at base proficiency, with no required Dungeon abilities. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Mithril begins after Zone 4; later tiers remain reserved.
 
 Ordinary monsters drop **no gold**. Baseline clears pay **191 gold in Zone 1 / 293 in Zone 2**, mainly from guardians and floor caches, before elites and jewelry. Those per-Zone gold budgets stay the same across the longer floor counts; guardian XP is also spread across each Zone. Scavenging remains another gold source. Fractional rewards survive reload; existing balances and crafting costs are preserved.
 
@@ -177,7 +188,7 @@ Resource costs link to their sources, and tracked recipes follow you back to the
 
 Crafted pickaxes, hatchets and mattocks equip automatically, appear in gathering scenes, work **8% faster actively**, and add one material to gathering bonuses. Each station has five upgrades, each granting **2% ingredient conservation and 3% work speed**. Conservation carries between crafts until it saves a whole ingredient; viewing costs never consumes that credit.
 
-Both resource tiers appear in the same menus. Tier-2 work requires Zone 2 access and level 10 in the matching discipline; active, idle and offline production enforce the same gate. Existing inventories and owned gear remain intact.
+All three resource tiers appear in the same menus. Tier-2 work requires Zone 2 access and level 10 in the matching discipline; active, idle and offline production enforce the same gate. Existing inventories and owned gear remain intact.
 
 | Discipline | Zone 2 gathering / refining |
 | --- | --- |
@@ -187,7 +198,7 @@ Both resource tiers appear in the same menus. Tier-2 work requires Zone 2 access
 | Warding | 2 Warded Cloth + 1 Willow → 2 Runic Cloth; 2 cloth + 2 fragments → 10 runes |
 | Artisan | Rough Garnet → Cut Garnet |
 
-All 21 activities support their appropriate scenes, active bonuses and visible tools. Existing starter recipes cross disciplines too: arrows use oak and iron; runes use cloth and fragments; armor uses different proportions of cloth, metal and wood. Existing opal jewelry remains available.
+All 31 activities support their appropriate scenes, active bonuses and visible tools. Existing starter recipes cross disciplines too: arrows use oak and iron; runes use cloth and fragments; armor uses different proportions of cloth, metal and wood. Existing opal jewelry remains available.
 
 ## Weapons and armor
 
@@ -195,13 +206,13 @@ Each arrow supplies **10 seconds of bow firing time**, and each rune **10 second
 
 One weapon selects your Melee, Ranged or Mage style. Each style has separate refinement, speed, reach, enchantment and proficiency. Iron caps at refinement **10**, speed/reach **5**, reinforcement **5** and enchantment **2**. Steel caps at **20 / 10 / 10 / 4**. Clear Zone 1, reach refinement 10 and crafting level 10, then pay a Steel promotion to open the next ranks for that style.
 
-Combat proficiency grants up to **3% damage** and matching crafting levels up to **5%** more. Equipment-only dedicated limits are approximately **86 / 173 DPS**. Zone elemental upgrades work with every combat style.
+Combat proficiency grants up to **3% damage** and matching crafting levels up to **5%** more. Equipment-only dedicated limits are approximately **86 / 173 / 259 DPS** for Iron / Steel / Mithril. Zone elemental upgrades work with every combat style.
 
-The Opal Leech Ring starts at **0.5%** lifesteal. Armor equips independently of the weapon. Melee, Ranged and Mage each have two illustrated sets: Iron/Steel armor, Plain/Cured leathers, and Linen/Blue Wool robes. The worn set supplies its own health and protection, movement or Mage bonus. Reinforcement adds 8 HP per rank, limited by that set’s tier. Switching owned armor never heals you. Promotions change held weapon art; bows aim toward targets while retreating, and articulated hands, collars and weapon grips stay joined across poses.
+The Opal Leech Ring starts at **0.5%** lifesteal. Armor equips independently of the weapon. Melee, Ranged and Mage each have three illustrated sets: Iron/Steel/Mithril armor, Plain/Cured/Blue leathers, and Linen/Blue Wool/Green Runewoven robes. The worn set supplies its own health and protection, movement or Mage bonus. Reinforcement adds 8 HP per rank, limited by that set’s tier. Switching owned armor never heals you. Promotions change held weapon art; bows aim toward targets while retreating, and articulated hands, collars and weapon grips stay joined across poses.
 
 ## Player and animation
 
-The player has a compact, illustrated 2D style: expressive faces, crisp outlines, simple shading and plain starter clothing. **42 vector parts** cover travel clothes and the six existing armor sets, with independent head, shoulder, chest, leg, boot and glove attachments. Arms and legs have continuous outlines across their joints. Near and far arms use separate layers, with inward-facing thumbs and forearms that can cross the chest. The work tools include a weaving shuttle and jeweler’s chisel; weapon art keeps its existing detail.
+The player has a compact, illustrated 2D style: expressive faces, crisp outlines, simple shading and plain starter clothing. **60 vector parts** cover travel clothes and the nine armor sets, with independent head, shoulder, chest, leg, boot and glove attachments. Arms and legs have continuous outlines across their joints. Near and far arms use separate layers, with inward-facing thumbs and forearms that can cross the chest. The work tools include a weaving shuttle and jeweler’s chisel; weapon art keeps its existing detail.
 
 The same rig serves combat, gathering, crafting, appearance previews and inventory portraits. Relaxed hands rest below the waist; combat has distinct ready stances and two-handed tools and weapons share calibrated grips. Work has continuous anticipation, strikes and recovery, plus distinct carving, weaving, engraving, gem working and kneeling searches. Starting and stopping blend smoothly. Saved appearance choices retain their colors and styles. [Outfits](preview-player-sets.png) · [Motion phases](preview-player-actions.png) · [Mining on phone](preview-player-mining-mobile.png) · [Weaving](preview-player-warding.png) · [Animation recording](preview-player-motion.webm). [CHARACTER_ART.md](CHARACTER_ART.md) describes the assets and attachment system.
 
@@ -238,7 +249,7 @@ Known guardians still return as elite echoes, up to **one / two / three per wave
 
 ## Rare elites and blessings
 
-All **42 ordinary creature forms** have a distinct painted rare elite form with **3.5× health**. Eligible spawns have a **3% chance**, capped at one rare per ordinary wave. Zone 2’s final floor uses 10% and permits three rares. Rares and other elites share a **35%** chance of blessing spoils and the same loot/healing rules.
+All **42 ordinary creature forms** have a distinct painted rare elite form with **5.25× ordinary health**. Eligible spawns have a **3% chance**, capped at one rare per ordinary wave. Zone 2’s final floor uses 10% and permits three rares. Rares and other elites share a **35%** chance of blessing spoils and the same loot/healing rules.
 
 **Walk over spoils** to pause the delve and see three A/B/C options. Touch/click a card or press **1 / 2 / 3**. Movement and Escape cannot choose or dismiss the screen. **Skip blessing** explicitly discards that drop. Choice contents are fixed when dropped and survive reload.
 
@@ -246,7 +257,7 @@ The ten blessings last **40–60 seconds**: Battle Fervor, Windstep, Stonebreake
 
 **Different blessings and repeated copies stack**, with independent timers and visible stack counts. Menus, pause and skilling freeze their duration. They carry across Zones in this Dungeon. Unclaimed spoils stay in their original Zone. Delve speed advances combat time.
 
-The Opal Leech Ring remains at **0.5%** of actual direct-hit health removed, with no overkill healing.
+The Opal Leech Ring starts at **0.5%** of actual direct-hit health removed, with no overkill healing; fifty fine refinements raise it to **0.5625%**.
 
 [Phone choices](preview-blessings-mobile.png) · [Landscape choices](preview-blessings-landscape.png).
 
@@ -289,7 +300,7 @@ npm run review:ui
 
 Dungeon progression, global XP, migration and combat math live in `src/zone-shop.js`; shop UI/styles in `src/zone-shop-ui.js` and `src/zone-shop.css`. Player presentation and Codex remain in `src/presentation.*` / `src/codex.js`. Skill definitions live in `src/game-data.json`, tier rules in `src/zone-progression.js`, and the shared character rig in `src/avatar-rig.js`. Gold rewards are in `src/economy.js`; test travel in `src/testing.js`. The expanded ability library, geometry and combat language live in `src/combat-expansion.js`; guardian patterns, counterplay and elite scheduling live in `src/encounters.js`, with embedded sprites in `src/encounter-art.js`. Work animations, gold receipts and painted foreground props live in `src/workshop.*` / `src/workshop-art.js`; ammunition timing in `src/ammunition.js`; healing drops in `src/restoration.js`. Milestones and game-time ranks live in `src/time-progression.js`, preparation routes in `src/preparation.js`, loot and vouchers in `src/loot.js`, physical drops in `src/ground-loot.js`, named voucher rules in `src/specific-vouchers.js`, fine crafting and unified menus in `src/crafting-update.js`, the long-blessing store in `src/blessing-shop.js`, Crypt/finale mechanics in `src/zone-challenge.js`, shared Zone materials in `src/zone-materials.js`, contextual tips in `src/progression-guidance.js`, and the visible buff strip in `src/temporary-buffs.js`. Rare creatures, timed blessings and enemy area damage live in `src/rare-elites.js`; floor coordinates and migration in `src/zone-layout.js`, with the expanded bestiary and elite roles in `src/deep-encounters.js`; `npm run art:rare-elites` exports their source art and `npm run review:rare-elites` captures actual game previews. The early loading screen lives in `src/loading.*` and `src/loading-runtime.js`. Mobile controls, navigation and material inventory live in `src/mobile.js` / `src/mobile.css`; themed ability definitions, migration and pricing in `src/zone-abilities.js`. Reflect variants and their artwork live in `src/reflect-wards.js`; regional incoming damage, dash identity, death-to-skilling navigation and combined blessing descriptions live in `src/delve-update.js`. The original engine and compiled standalone output are in `index.html`.
 
-Forty browser suites cover save migration, shared Dungeon progression, automatic and explicitly dismissed buff choices, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and distinct collection and guide icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. Native-gesture regressions cover sustained mining/movement holds, bonus dragging, lost capture and interruption cleanup, menu swipes, clipboard editing, save controls and keyboard focus. Spire collision tests cover ordinary/crowned impacts, full-speed dash crossings, red-window retaliation, disabled spires, weapon immunity, reward isolation, cleanup and actual touch/keyboard movement. A complete 55-floor progression test verifies Zone endings, Mastery gates and migration. Skilling discovery regressions cover every rarity, exact expiry, ingredient costs, strongest-only boosts, earned-time composition, release/menu pauses, idle/offline isolation, save restoration, real phone touches and 27,104 collection-flourish poses. Journey regressions cover milestone rewards, both time paths, offline batches, compound preparation, loot/vouchers, fading reminders, independent buff timers and real two-finger double-tap dashes. Full combat simulations verify the first four Zones and later pacing. Startup tests hold back the game download to verify the loading screen actually paints first; they also cover reduced motion, asset readiness and retry. Core phase, biome, gear and jewelry definitions remain guarded by manifests; the approved style-name copy is updated.
+Forty-two browser suites cover save migration, shared Dungeon progression, automatic and explicitly dismissed buff choices, actual damage/cadence across all weapons, equipment limits, shop costs, global Mastery, all activities, active bonuses, touch/keyboard controls, Idle navigation, bosses, rewards, layouts and distinct collection and guide icons. Counterplay tests cover reflect timing, stream geometry, all six weapons, cleanup, overlap limits and phone placement. Real touch tests cover movement, cancellation, multiple fingers, whole-card gear selection, guidance and over 90% visible icon coverage on both rail sides. Native-gesture regressions cover sustained mining/movement holds, bonus dragging, lost capture and interruption cleanup, menu swipes, clipboard editing, save controls and keyboard focus. Spire collision tests cover ordinary/crowned impacts, full-speed dash crossings, red-window retaliation, disabled spires, weapon immunity, reward isolation, cleanup and actual touch/keyboard movement. A complete 55-floor progression test verifies Zone endings, Mastery gates and migration. Skilling discovery regressions cover every rarity, exact expiry, ingredient costs, strongest-only boosts, earned-time composition, release/menu pauses, idle/offline isolation, save restoration, real phone touches and 38,720 collection-flourish poses. Journey regressions cover milestone rewards, both time paths, offline batches, compound preparation, loot/vouchers, fading reminders, independent buff timers and real two-finger double-tap dashes. Full combat simulations verify the first four Zones and later pacing. Startup tests hold back the game download to verify the loading screen actually paints first; they also cover reduced motion, asset readiness and retry. Core phase, biome, gear and jewelry definitions remain guarded by manifests; the approved style-name copy is updated.
 
 For an on-device iOS Safari or in-app browser check, hold both the work button and mining scene for at least five seconds, drag over a bonus, then release or interrupt the touch. Hold and drag in the arena, then lift, switch apps or rotate. Gameplay should never show text handles or Copy/Look Up, and work/movement should stop after interruption. Swipe a long menu and Codex overlay, copy/paste in Settings and Codex search, and open save backup/restore. Automated Chromium touch tests cover these game behaviors; the operating system's Safari callout UI still needs an actual iOS device check.
 
@@ -318,3 +329,5 @@ Generated icon sheets, calibrated regions and alignment metrics live in `assets/
 `npm run review:reflects` captures all three reflect variants, shielded spires, free speed controls, Inventory Codex, defeat navigation and stacked blessings, plus a short motion preview. Use `-- --stills` to skip recording. New regressions exercise 96 dash angles/latch combinations, edge grazes, real dash cooldowns, underfoot rune exit/return, immediate and late contacts, moving casters, remote expiry penalties, pause clocks, all ten blessings through the normal picker, save/reload and real death-to-crafting input. `tests/zone-pressure.cjs` compares stationary and moving controllers with real Zone 2 damage at ~55 DPS; it does not suppress incoming damage or claim a human playthrough.
 
 `npm run review:workshop-update` captures unified recipes, visible tier-2 gates, fine jewelry upgrades, transmutation, compact Delving buffs, transparent blessing choices, cleaning poses and new Embervault/Crypt attacks. Add `-- --stills` to skip recording. The five new suites verify matching skill gates through real production paths, voucher type/ownership/migration, long-blessing costs and timer persistence, bump-only orphan spires, and actual 150-DPS opening encounters with normal health and damage.
+
+`npm run review:skill-tiers` captures the Steel/Mithril outfit comparison, tier-3 work and locked recipes, promotions, training guidance and direct work controls at phone size. `npm run art:tier-three` exports the resource and work medallions. Shared XP requirements and save conversion live in `src/skill-progression.js`, tier-3 unlocks and promotion costs in `src/tier-three.js`, work partners in `src/work-navigation.js`, and the enemy health experiment in `src/encounter-health.js`. New regressions cover level/fraction retention, exact active/offline XP, matching skill and Zone gates, crafted Mithril save/reload, all six weapon ceilings, ingredient-free navigation by touch/keyboard, and exact before/after health comparisons in fifteen Zones.

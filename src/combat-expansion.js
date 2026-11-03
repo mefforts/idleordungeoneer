@@ -121,7 +121,7 @@ function bumpSummonTotem(t,from=encounterFoot(game.player),dashing=false){
 function spawnSummonedEnemy(owner,point,elite=false,guard=false,totem=null){
  if(!point||!game.enemies.includes(owner)&&!(totem&&(game.totems||[]).includes(totem)&&totem.hp>0)||game.enemies.filter(e=>e.summoned).length>=8||elite&&game.enemies.filter(e=>e.summoned&&e.elite).length>=3)return null;
  const e=spawnBaseEnemy(false,0);Object.assign(e,{x:point.x,y:point.y,biome:owner.biome,summoned:true,summonedBy:owner,summonTotem:totem,bastionGuard:guard,castCooldown:2,mechanicIndex:0,mechanicsUsed:[]});
- if(elite){e.elite=true;e.bossIndex=(owner.bossIndex||0)%3;e.rad=21;e.hp=e.maxHp=zoneEnemyHp(false,0)*1.7;e.speed*=.85;e.name=guard?'Royal Guard':'Summoned Elite';}else e.name='Summoned '+e.name;
+ if(elite){e.elite=true;e.bossIndex=(owner.bossIndex||0)%3;e.rad=21;e.hp=e.maxHp=zoneEnemyHp(false,0)*1.7*encounterHealthMultiplier(e);e.speed*=.85;e.name=guard?'Royal Guard':'Summoned Elite';}else e.name='Summoned '+e.name;
  assignEnemyAppearance(e);burst(e.x,e.y,8,combatTheme('shield').color);return e;
 }
 function tickSummonTotem(t,dt){

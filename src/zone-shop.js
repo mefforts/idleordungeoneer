@@ -12,7 +12,7 @@ const SHOP_TRAINING=[0,.25,.43,.58,.72,.84,.93,1,1.035,1.08,1.14,1.22,1.32,1.45,
 const DUNGEONEERING_XP_STEP=1600;
 let shopZone=0,shopCategory='offense',shopSignature='',shopUiInstalled=false;
 
-function shopBudget(index=zoneNumber()){return index===0?100:200;}
+function shopBudget(index=zoneNumber()){return index>=4?300:index===0?100:200;}
 function zoneCurrency(){return {name:'Dungeon Sigils',art:'currency-rift'};}
 function zoneShopUnlocked(index=zoneNumber()){return Number.isInteger(index)&&index>=0&&index<=9999;}
 function zoneShopFor(index=zoneNumber()){return dungeonShopFor(index);}
@@ -79,7 +79,7 @@ function weaponDps(id=data.weaponType,options={}){
  const style=styleForWeapon(id),w=WEAPON_TYPES[id],stats=styleStats(style);
  if(options.ceiling||options.equipmentOnly){
   const rank=options.ceiling?styleUpgradeCap(style,'weapon'):data.styles[style].weapon+(options.next?1:0),speed=options.ceiling?styleUpgradeCap(style,'speed')*2:stats.speedPercent;
-  const percent=options.ceiling?(style==='magic'?(styleTier(style)===2?8:4):0)+(options.dedicated?8:0):stats.damagePercent;
+  const percent=options.ceiling?(style==='magic'?(styleTier(style)*4):0)+(options.dedicated?8:0):stats.damagePercent;
   return weaponDamageBase(id,rank)*w.power*(1+percent/100)*(1+speed/100)/w.cooldown*1.05;
  }
  return zoneCombatProfile(id,{rank:data.styles[style].weapon+(options.next?1:0)}).dps*(options.run?eliteBoonValue('damage')*eliteBoonValue('attackSpeed'):1);
@@ -158,21 +158,21 @@ function clearFloor(){
 function expectedAttacks(hp,damage,crit=.05){const n=Math.max(1,Math.ceil(hp/damage-1e-9));let previous=0,current=1;for(let i=2;i<=n;i++){const next=1+(1-crit)*current+crit*previous;previous=current;current=next;}return current;}
 function zoneBalance(index=zoneNumber()){
  index=Math.max(0,Math.floor(Number(index)||0));if(ZONE_BALANCE_CACHE.has(index))return ZONE_BALANCE_CACHE.get(index);
- const minutes=index===0?10:index===1?20:index===2?30:Math.min(40,35+index-3),floors=zoneFloorCount(index),gearTier=index===0?1:2,weaponRank=index===0?10:20,speedRank=index===0?5:10;
- const base=14/.88*1.05,first=80/1.1,second=160/1.2,gear=(weaponRank<=10?base+(first-base)*weaponRank/10:first+(second-first)*(weaponRank-10)/10)*(1+speedRank*.02);
+ const minutes=index===0?10:index===1?20:index===2?30:Math.min(40,35+index-3),floors=zoneFloorCount(index),gearTier=index>=4?3:index===0?1:2,weaponRank=gearTier*10,speedRank=gearTier*5;
+ const base=14/.88*1.05,first=80/1.1,second=160/1.2,third=240/1.3,gear=(weaponRank<=10?base+(first-base)*weaponRank/10:weaponRank<=20?first+(second-first)*(weaponRank-10)/10:second+(third-second)*(weaponRank-20)/10)*(1+speedRank*.02);
  const core=gear,crit=.05,cooldown=.88/(1+speedRank*.02),raw=core*(1+crit)/1.05,dps=raw<=shopBudget(index)?raw:shopBudget(index)+(raw-shopBudget(index))*.25,hit=dps*cooldown/(1+crit);
  const counts=[SWARM_TARGETS[0],SWARM_TARGETS[2],SWARM_TARGETS[4]].map(n=>Math.max(7,Math.round(n*.4*Math.min(2.5,1+index*.5)*3/floors))),targets=[counts[0],0,counts[1],0,counts[2],0],swarmCount=counts.reduce((a,b)=>a+b,0)*floors;
  const model={index,minutes,seconds:minutes*60,floors,weaponRank,speedRank,proficiency:1,gearTier,shopRanks:{},crit,hit,cooldown,dps,targets,swarmCount,spawnSeconds:minutes*60*.55/swarmCount,hpScale:1};
- const forecast=scale=>{let seconds=floors*6*.72;for(let floor=0;floor<floors;floor++)for(let phase=0;phase<6;phase++){
+ const forecast=(scale,health=false)=>{let seconds=floors*6*.72;for(let floor=0;floor<floors;floor++)for(let phase=0;phase<6;phase++){
   const boss=phase%2===1,progress=2*floor/Math.max(1,floors-1),baseHp=boss?[160,230,360][Math.floor(phase/2)]*(phase===5?(floor===floors-1?3.2:1.75):1):30+phase*4,hp=baseHp*Math.pow(1.14,progress)*scale;
-  if(boss)seconds+=expectedAttacks(hp,hit,crit)*cooldown+1.5;
+  if(boss)seconds+=expectedAttacks(hp*(health?ENCOUNTER_HEALTH.boss:1),hit,crit)*cooldown+1.5;
   else{const echoes=index===1&&floor===floors-1?6:floor===0?(phase===0?0:1):zoneVisualBand(index,floor+1),eligible=Math.max(0,targets[phase]-3-echoes),rare=expectedRareCount(eligible,rareEliteSpawnChance(index,floor+1),rareEliteQuota(index,floor+1)),regular=Math.max(0,targets[phase]-echoes-rare);let attacks=0;
-   for(let sample=0;sample<21;sample++)attacks+=(regular*expectedAttacks(hp*(.9+sample*.01),hit,crit)+echoes*expectedAttacks(hp*(.9+sample*.01)*2.8,hit,crit)+rare*expectedAttacks(hp*(.9+sample*.01)*3.5,hit,crit))/21;
+   for(let sample=0;sample<21;sample++)attacks+=(regular*expectedAttacks(hp*(.9+sample*.01),hit,crit)+echoes*expectedAttacks(hp*(.9+sample*.01)*2.8*(health?ENCOUNTER_HEALTH.bossElite:1),hit,crit)+rare*expectedAttacks(hp*(.9+sample*.01)*3.5*(health?ENCOUNTER_HEALTH.rare:1),hit,crit))/21;
    seconds+=Math.max(attacks*cooldown,(targets[phase]-1)*model.spawnSeconds+1.5);
   }
  }return seconds;};
  let lo=.001,hi=1;while(forecast(hi)<model.seconds)hi*=2;for(let n=0;n<38;n++){const mid=(lo+hi)/2;if(forecast(mid)<model.seconds)lo=mid;else hi=mid;}
- model.hpScale=Math.max((lo+hi)/2,index>=2?zoneBalance(1).hpScale*Math.pow(1.14,2)*1.25:0);model.forecastSeconds=forecast(model.hpScale);if(index>=2){model.previousTargetSeconds=model.seconds;model.seconds=Math.ceil(model.forecastSeconds/60)*60;model.minutes=model.seconds/60;}ZONE_BALANCE_CACHE.set(index,model);return model;
+ model.hpScale=Math.max((lo+hi)/2,index>=2?zoneBalance(1).hpScale*Math.pow(1.14,2)*1.25:0);model.previousTargetSeconds=model.seconds;model.baseForecastSeconds=forecast(model.hpScale);model.forecastSeconds=forecast(model.hpScale,true);model.seconds=Math.ceil(model.forecastSeconds);model.minutes=Math.ceil(model.seconds/60);ZONE_BALANCE_CACHE.set(index,model);return model;
 }
 
 function investMastery(branch){

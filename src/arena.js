@@ -38,7 +38,7 @@ function announce(msg,seconds=2){
 
 function zoneEnemyHp(boss=false,bossIndex=0,variance=1){
   const model=zoneBalance(),base=boss?[160,230,360][bossIndex]*(bossIndex===2?(isZoneFinal()?3.2:1.75):1):30+game.phase*4;
-  return base*Math.pow(1.14,combatDepth()-zoneNumber()*3-1)*model.hpScale*(boss?1.12:variance);
+  return base*Math.pow(1.14,combatDepth()-zoneNumber()*3-1)*model.hpScale*(boss?1.12*ENCOUNTER_HEALTH.boss:variance);
 }
 
 function bonusPosition(){

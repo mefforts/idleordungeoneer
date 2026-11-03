@@ -22,3 +22,7 @@ body.blessing-choices-open .elite-reward-choices{gap:9px}body.blessing-choices-o
 .compact-buffs .temporary-buff>span{position:absolute;inset:0;pointer-events:none}.compact-buffs .temporary-buff b,.compact-buffs .temporary-buff-effect,.compact-buffs .temporary-buff i{display:none}
 .compact-buffs .temporary-buff small{position:absolute;top:0;left:0;width:44px;text-align:center;color:#fff4d5;font:bold 11px/1.15 system-ui;text-shadow:-1px -1px 1px #111,1px -1px 1px #111,-1px 1px 1px #111,1px 1px 1px #111,0 1px 3px #000}
 @media(max-width:390px){.player-ui .craft-tile{gap:8px;padding:9px}.player-ui .craft-tile .craft-tile-icon,.player-ui .craft-tile>img{width:39px;height:39px}.player-ui .craft-tile-body>strong{font-size:14px}.player-ui .craft-tile .recipe-actions>button{max-width:82px;padding:7px 6px}}
+
+.training-band{font:10px/1.5 system-ui;color:#c4b995;margin:8px 0 12px}.work-tier-tag{line-height:1.45}
+
+.player-ui .skill-mode-choices #skillGather,.player-ui .skill-mode-choices #skillCraft{width:52px;min-width:44px;height:44px;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:3px;font:9px/1.1 system-ui}.player-ui .skill-mode-choices :is(#skillGather,#skillCraft) .ui-glyph{width:18px;height:18px}

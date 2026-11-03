@@ -52,28 +52,56 @@ Timers count real seconds while actively working on that activity, including whi
 
 A seeded five-minute active refining check at 1× made **107 bars without pickups / 252 bars collecting all 72 discoveries**. This includes 82 instantly crafted bars. All 252 bars consumed 504 ore: exactly two per crafted bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
 
+## Skill curve and Mithril progression
+
+Levels 1–10 retain their original thresholds. Level 20 now requires 32,166 total XP instead of 7,410. After each work tier’s training band (10 / 20 / 30), that older work gives 10% XP while keeping its full material yield and production speed. The reward splits exactly at the boundary. Active/idle/offline production, instant refining batches, jewelry/tool refinements, new armor, equipment ranks and transmutation use the shared award path. Artisan retains its eightfold base XP.
+
+| Skill level | Total XP |
+| --- | ---: |
+| 10 | 1710 |
+| 11 | 3210 |
+| 12 | 4935 |
+| 13 | 6919 |
+| 14 | 9201 |
+| 15 | 11824 |
+| 16 | 14841 |
+| 17 | 18311 |
+| 18 | 22301 |
+| 19 | 26889 |
+| 20 | 32166 |
+
+A one-time save conversion retains each existing skill level and fractional progress, rather than dropping earned levels when the curve changes. Levels, equipment, materials and earlier unlocks survive actual reloads. New gains use the slower curve.
+
+Completing Zone 4 unlocks Mithril resources and equipment at matching discipline level 20. Steel refinement 20 promotes into ranks 21–30; speed/reach/reinforcement cap at 15 and enchantment at 6. Armor is crafted separately. Mithril metal, blue ranged leathers and green Runewoven robes use the same silhouettes and joints, with small belt and shoulder changes. Ten activities introduce mithril ore/bars, yew, verdant cloth, enchanted salvage/fragments and sapphires. No new authored Zone layouts or attacks are added. Zone 5 and later existing repeat layouts use the 240-DPS Mithril reference and a 300-DPS soft budget.
+
+The work-scene controls now separate Skills navigation from direct Gather/Refine or input-source swaps. A swap clears held input, consumes no materials and leaves assigned idle tasks untouched.
+
 ## Unified crafting and fine refinements
 
-Gather and Refine list both tiers together, including locked rows. Every tier-2 activity requires Zone 2 access and level 10 in its matching discipline, across active/idle/offline work; existing inventories and owned gear remain. Preparation falls back to available tier-1 ammunition/gold sources and directs blocked material work toward training. Steel promotions sit directly below their weapon list. Stations and tools use ordinary compact rows in Equipment, with no separate Tools tab or station footer.
+Gather and Refine list all three tiers together, including locked rows. Every tier-2 activity requires Zone 2 access and level 10 in its matching discipline, across active/idle/offline work; existing inventories and owned gear remain. Preparation falls back to available tier-1 ammunition/gold sources and directs blocked material work toward training. Steel promotions sit directly below their weapon list. Stations and tools use ordinary compact rows in Equipment, with no separate Tools tab or station footer.
 
-Artisan gathering/cutting XP is multiplied by eight and jewelry crafting gives 400 XP. Existing Artisan XP receives the same eightfold catch-up once. Owned jewelry supports 50 optional refinements, each adding 0.25% of its base effect, with 80 Artisan XP per successful rank. The Leech Ring gains 0.00125 percentage points of lifesteal per rank, from 0.5% to at most 0.5625%. Costs start at one silver bar and 10 gold, grow every ten ranks in silver and by three gold per rank, and add one cut opal each fifth rank.
+Artisan gathering/cutting XP is multiplied by eight and jewelry crafting gives 400 XP. Existing Artisan XP receives the same eightfold catch-up once. Owned jewelry supports 50 optional refinements, each adding 0.25% of its base effect, with 80 base Artisan XP per successful rank before the old-tier reduction. The Leech Ring gains 0.00125 percentage points of lifesteal per rank, from 0.5% to at most 0.5625%. Costs start at one silver bar and 10 gold, grow every ten ranks in silver and by three gold per rank, and add one cut opal each fifth rank.
 
 Crafted tools retain 8% active speed and support ten refinements of +0.5 percentage points each, with normal material/gold costs. They do not accelerate idle work. Relic prospecting is now a normal ingredient-paid activity: 12 fragments for one rough opal, 4s active / 20s idle before bonuses. Prospecting and ancient cleaning use a standing brush-and-relic pose at a bench, with no digging animation. Warding Refine offers a compact resource selector: exactly 100 essence for a random 1–10 chosen raw resources. Unlocks apply and conservation does not discount this essence cost.
 
 The Dungeon Shop has a Long blessings sub-store. Most effects cost 60 interchangeable Zone materials, Golden/Plentiful Hunt cost 80 and Silence/Stillworld cost 100. Purchase activates one independent stack at five times normal combat duration (200–300s), with existing pause, stacking, save and Dungeon rules. The 128-stack limit is checked before spending.
 
+## Encounter health experiment
+
+Compared with the previous build, regular elites have 75% more health. Rares, guardian Echoes (boss elites), and full bosses have 50% more. Rare and boss-elite flags take precedence, so a rare is not multiplied again as an elite. Ordinary monsters and summoning spires retain their health; bump counts remain one or two. These multipliers apply after the existing health-scale calibration: player damage, rewards, spawn counts and cadence are preserved. Forecast times below include the extra durability.
+
 ## Equipment ceilings
 
-| Weapon | Style | Iron | Dedicated Iron | Steel | Dedicated Steel |
-| --- | --- | ---: | ---: | ---: | ---: |
-| Arming Sword | Melee | 80.0 | 86.4 | 160.0 | 172.8 |
-| Sword & Shield | Melee | 80.0 | 86.4 | 160.0 | 172.8 |
-| Halberd | Melee | 80.0 | 86.4 | 160.0 | 172.8 |
-| Greatsword | Melee | 80.0 | 86.4 | 160.0 | 172.8 |
-| Hunting Bow | Ranged | 80.0 | 86.4 | 160.0 | 172.8 |
-| Focus Staff | Mage | 80.0 | 86.2 | 160.0 | 171.9 |
+| Weapon | Style | Iron | Dedicated Iron | Steel | Dedicated Steel | Mithril | Dedicated Mithril |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Arming Sword | Melee | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
+| Sword & Shield | Melee | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
+| Halberd | Melee | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
+| Greatsword | Melee | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
+| Hunting Bow | Ranged | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
+| Focus Staff | Mage | 80.0 | 86.2 | 160.0 | 171.9 | 240.0 | 257.1 |
 
-These figures use maximum refinement and speed, 5% base critical chance and matching robes for Mage. Proficiency adds up to 3% damage and matching crafting levels up to 5%. Iron refinement ends at 10, speed/reach at 5, reinforcement at 5 and enchantment at 2. Steel ends at 20 / 10 / 10 / 4. Primary material curves, jewelry and armor prices and equipment limits are retained. Occasional one-item Zone-material costs below are additional.
+These figures use maximum refinement and speed, 5% base critical chance and matching robes for Mage. Proficiency adds up to 3% damage and matching crafting levels up to 5%. Iron refinement ends at 10, speed/reach at 5, reinforcement at 5 and enchantment at 2. Steel ends at 20 / 10 / 10 / 4; Mithril ends at 30 / 15 / 15 / 6. Primary material curves, jewelry and armor prices and equipment limits are retained. Occasional one-item Zone-material costs below are additional.
 
 ## Preparation costs and equipment work
 
@@ -87,7 +115,7 @@ Iron refinement costs 18 + 9 × current rank; Iron speed costs 20 + 10 × curren
 
 Older saves receive a one-time gold credit equal to the price reduction on currently owned refinement/speed ranks and Steel promotions. This preserves the value of owned upgrades without estimating a full spending history; no materials, gear, balances or allocations are removed and no retrospective skill XP is added. The credit is recorded in Settings → Messages. [Preparation comparison](PREPARATION.md) separates steady and lean routes, active work, combat/retries and the Steel handoff.
 
-Above 100 single-target DPS in Zone 1 or 200 in later Zones, each additional calculated DPS contributes 0.25 actual DPS. Live primary damage uses the same adjustment. Ranged extra arrows contribute 15% each and are included in that figure. Conditional effects, burns, chains, ricochets, secondary targets and temporary blessings are additional.
+Above the single-target budget (100 DPS in Zone 1, 200 in Zones 2–4, 300 from Zone 5), each additional calculated DPS contributes 0.25 actual DPS. Live primary damage uses the same adjustment. Ranged extra arrows contribute 15% each and are included in that figure. Conditional effects, burns, chains, ricochets, secondary targets and temporary blessings are additional.
 
 ## Dungeon Shop
 
@@ -144,31 +172,32 @@ Monster gold, Sigils, essence, rare materials and vouchers first land on the gro
 | elite | 8.0% | 3 | 16% |
 | boss | 18.0% | 6 | 28% |
 
-Only raw materials drop. Zone 1 uses ore, oak, cloth and fragments; later Zones use ore, coal, willow, ancient salvage and cloth. As a baseline reference, 360 ordinary kills would average 5.4 raw materials; 15 guardians average 16.2. Actual waves substitute some elites for ordinary monsters. Elites add occasional three-item bundles. This remains a supplement to gathering, not a replacement for skilling/refining. Discovery and the Scholar Ring increase material luck; Plentiful Hunt adds 50% chance while active, within the per-enemy caps. Elites and bosses never guarantee material drops.
+Only raw materials drop. Zone 1 uses ore, oak, cloth and fragments; later Zones use ore, coal, willow, ancient salvage and cloth. From Zone 5, unlocked tier-3 gathering sources join the raw-material pool. As a baseline reference, 360 ordinary kills would average 5.4 raw materials; 15 guardians average 16.2. Actual waves substitute some elites for ordinary monsters. Elites add occasional three-item bundles. This remains a supplement to gathering, not a replacement for skilling/refining. Discovery and the Scholar Ring increase material luck; Plentiful Hunt adds 50% chance while active, within the per-enemy caps. Elites and bosses never guarantee material drops.
 
-Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the first defeat of each guardian rolls, including across retries and reloads; completed-floor replays do not roll. The expected Zone 1 supply is about 0.99 vouchers. Each voucher names one rank upgrade: weapon refinement, attack speed, reach, reinforcement, enchantment, jewelry refinement, a specific owned tool, or a named station. Crafting weapons, armor, jewelry or tools and promoting a style to Steel require their normal materials. Iron covers jewelry/tools; either tier can cover its named station. Ownership, matching kind/tier and normal caps apply. Old wildcard inventory and ground balances split deterministically into named upgrades with their total count retained. Existing crafted items remain owned. Redemption is explicit on the matching row. Dungeon Shop and game-time purchases keep their own currencies. Summons and totems grant neither resources nor vouchers.
+Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the first defeat of each guardian rolls, including across retries and reloads; completed-floor replays do not roll. The expected Zone 1 supply is about 0.99 vouchers. Each voucher names one rank upgrade: weapon refinement, attack speed, reach, reinforcement, enchantment, jewelry refinement, a specific owned tool, or a named station. Crafting weapons, armor, jewelry or tools and promoting a style to Steel or Mithril require their normal materials. Iron covers jewelry/tools; all three tiers can cover their named station. Zone 5 guardians roll Mithril vouchers. Ownership, matching kind/tier and normal caps apply. Old wildcard inventory and ground balances split deterministically into named upgrades with their total count retained. Existing crafted items remain owned. Redemption is explicit on the matching row. Dungeon Shop and game-time purchases keep their own currencies. Summons and totems grant neither resources nor vouchers.
 
-Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of any Zone-material cost, in any combination. Earlier Zone banks are spent first; existing balances stay intact. Each even refinement, each final speed / reach / reinforcement / enchantment rank per tier, Steel promotion and station ranks 3 and 5 costs one. Starter weapon, armor and tool recipes gain no such cost. A full refinement + speed tier uses six; all five equipment paths use nine. Drop chances remain unchanged. Cost chips show the combined balance and explain the accepted materials; tracked preparation leads back to delving. Vouchers waive these ingredients too.
+Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of any Zone-material cost, in any combination. Earlier Zone banks are spent first; existing balances stay intact. Each even refinement, each final speed / reach / reinforcement / enchantment rank per tier, Steel promotion and station ranks 3 and 5 costs one; Mithril promotion costs two. Starter weapon, armor and tool recipes gain no such cost. A full refinement + speed tier uses six; all five equipment paths use nine. Drop chances remain unchanged. Cost chips show the combined balance and explain the accepted materials; tracked preparation leads back to delving. Vouchers waive these ingredients too.
 
 ## Pacing and counterplay
 
 | Zone | Forecast at 1× | Reference DPS |
 | --- | --- | ---: |
-| 1 | ~10 min | 80.0 |
-| 2 | ~20 min | 160.0 |
-| 3 | ~44 min | 160.0 |
-| 4 | ~50 min | 160.0 |
+| 1 | ~12 min | 80.0 |
+| 2 | ~24 min | 160.0 |
+| 3 | ~55 min | 160.0 |
+| 4 | ~61 min | 160.0 |
+| 5 | ~44 min | 240.0 |
 
-- Live Zone 1: **9.4 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **19.9 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **43.3 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **47.9 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **48.9 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 15: **48.9 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 1: **11.0 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **23.7 min**, 570 rewarded defeats, 160.0 reference DPS.
+- Live Zone 3: **56.4 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **61.7 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **50.7 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 15: **51.1 min**, 960 rewarded defeats, 240.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 
-Bosses have 12% more health than the previous baseline and change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
+Boss health retains the earlier 1.12× baseline adjustment, followed by this build’s 1.5× health experiment. Bosses change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
 
 Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon or damage bonuses. Each bump removes one full impact segment from the existing health bar; weapons cannot target or damage them through any primary or secondary path. Contact uses a 28-unit ground radius and re-arms after leaving 40 units. A red summoning surge retaliates for 8% / 12% player maximum HP before regional damage scaling, normal defenses and invulnerability. Idle, disabled and silenced spires are safe to bump; dashing is always safe. Each accepted dash uses swept contact across the visible base, counts once per spire, bypasses existing walking contact and retains a full impact through shields. Shielding elites can link summoning spires within 340 units. Their shields do not block bump/dash impacts and disappear with either endpoint. Spires keep summoning after their caster dies; the phase waits for the remaining spires and their minions, with no additional rewards from either. Retry, defeat and phase transitions clear transient encounter state. A fast pass counts once, and destroying a spire cancels its pending arrival. Existing minions remain. Spires grant no rewards or wave progress.
 
@@ -176,7 +205,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. Existing 80/160 equipment ceilings and earned DPS are retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with two expanding Grave Pulse rims; dash across or outrun them. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 12.9–13.7s on Zone 2’s finale and 8.4–9.9s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 189 HP remained in the finale trials and 102.1–189 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.7s on Zone 2’s finale and 8.4–9.3s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 130.9–189 HP remained in the finale trials and 79.4–189 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 Codex is nested inside Inventory (C still opens it). Defeat can open the last available skill directly without reviving or restarting the floor; returning to Delve offers the regular retry. All ten chosen blessings stack through the normal picker, multiply or add according to their effect, retain independent saved timers and show combined strength; chain chance retains its 85% cap and Silence lasts while any copy remains.
 

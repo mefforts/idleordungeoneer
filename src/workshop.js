@@ -29,8 +29,8 @@ function produce(key,active=false){
  const skill=SKILLS[key];if(!skill||!canUseSkill(key)||!spendAtStation(skill.cost||{},disciplineFor(key)))return false;
  const amount=skillYield(key);data[skill.resource]=(data[skill.resource]||0)+amount;let gold=0,found='';
  if(skill.goldGain){gold=skillGoldYield(key);data.gold+=gold;data.scavengeDry=(data.scavengeDry||0)+1;
-  if(Math.random()<.07+trinketBonus('find')||data.scavengeDry>=20){data.scavengeDry=0;found=skill.tier===2?'garnets':'opals';data[found]++;codexDiscover('resource_'+found);if(active)toast(found==='garnets'?'Garnet found!':'Opal found!','A rough gem for Artisan');}}
- const xp=active?Math.max(5,Math.floor(skill.gain*.65)):skill.gain;data[skill.xp]=(data[skill.xp]||0)+xp;const group=disciplineOf(key);data[group.xp]=(data[group.xp]||0)+xp;
+  if(Math.random()<.07+trinketBonus('find')||data.scavengeDry>=20){data.scavengeDry=0;found=skill.tier===3?'sapphires':skill.tier===2?'garnets':'opals';data[found]++;codexDiscover('resource_'+found);if(active)toast(found==='sapphires'?'Sapphire found!':found==='garnets'?'Garnet found!':'Opal found!','A rough gem for Artisan');}}
+ awardDisciplineXp(disciplineFor(key),active?Math.max(5,Math.floor(skill.gain*.65)):skill.gain,skill.tier||1,skill.xp);
  recordWorkshopReward(key,amount,gold,found);codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
 }
 function goToSource(resource){
@@ -71,14 +71,14 @@ function paintWorkshopWorkpiece(frame,rig,c=ctx){
  const {pose,working,key,theme}=frame,piece=rig.workPiece;if(!piece)return;const {x,y}=piece;
  if(pose==='ward'){
   const half=(piece.width||30)/2;
-  c.fillStyle=SKILLS[key].tier===2?'#94aac6':'#c5b3ce';c.strokeStyle='#4e4351';c.lineWidth=.8;c.beginPath();c.moveTo(x-half,y-2);c.quadraticCurveTo(x,y,x+half,y-2);c.lineTo(x+half-1,y+10);c.quadraticCurveTo(x,y+8,x-half+1,y+10);c.closePath();c.fill();c.stroke();
+  c.fillStyle=SKILLS[key].tier===3?'#84ae88':SKILLS[key].tier===2?'#94aac6':'#c5b3ce';c.strokeStyle='#4e4351';c.lineWidth=.8;c.beginPath();c.moveTo(x-half,y-2);c.quadraticCurveTo(x,y,x+half,y-2);c.lineTo(x+half-1,y+10);c.quadraticCurveTo(x,y+8,x-half+1,y+10);c.closePath();c.fill();c.stroke();
   for(let row=0;row<5;row++){c.strokeStyle=row%2?theme.light:'#e2d6d7';c.lineWidth=.45;c.beginPath();c.moveTo(x-half+2,y+row*2);c.quadraticCurveTo(x,y+2+row*2,x+half-2,y+row*2);c.stroke();}
  }else if(pose==='rune'){
   c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#626d72';c.strokeStyle='#263438';c.lineWidth=1;c.beginPath();c.ellipse(0,0,8,5,-.2,0,Math.PI*2);c.fill();c.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);c.restore();
  }else if(pose==='clean'){
   c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#bcae7b';c.strokeStyle='#4f5142';c.lineWidth=1;c.beginPath();c.moveTo(-12,-3);c.lineTo(-5,-8);c.lineTo(9,-6);c.lineTo(13,1);c.lineTo(4,7);c.lineTo(-10,5);c.closePath();c.fill();c.stroke();c.strokeStyle=theme.deep;c.beginPath();c.arc(0,-1,4,.2,5.1);c.moveTo(-6,0);c.lineTo(7,1);c.stroke();c.globalAlpha=.35+(1-Math.cos(rig.phase*Math.PI*2))*.22;c.fillStyle='#756d57';for(let i=0;i<8;i++){c.beginPath();c.ellipse(-8+i*2.6,Math.sin(i*2)*3,2,1.4,0,0,Math.PI*2);c.fill();}c.restore();
  }else if(pose==='polish'){
-  c.save();c.translate(x,y);c.rotate(piece.angle);c.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';c.strokeStyle='#3a4b4c';c.lineWidth=.7;c.beginPath();c.moveTo(0,-5);c.lineTo(5,-1);c.lineTo(2,4);c.lineTo(-4,2);c.lineTo(-5,-2);c.closePath();c.fill();c.stroke();c.strokeStyle='#e4eee0';c.beginPath();c.moveTo(0,-5);c.lineTo(-1,0);c.lineTo(5,-1);c.moveTo(-1,0);c.lineTo(2,4);c.stroke();c.restore();
+  c.save();c.translate(x,y);c.rotate(piece.angle);c.fillStyle=SKILLS[key].tier===3?'#6498c8':SKILLS[key].tier===2?'#a7523a':'#a8d9ce';c.strokeStyle='#3a4b4c';c.lineWidth=.7;c.beginPath();c.moveTo(0,-5);c.lineTo(5,-1);c.lineTo(2,4);c.lineTo(-4,2);c.lineTo(-5,-2);c.closePath();c.fill();c.stroke();c.strokeStyle='#e4eee0';c.beginPath();c.moveTo(0,-5);c.lineTo(-1,0);c.lineTo(5,-1);c.moveTo(-1,0);c.lineTo(2,4);c.stroke();c.restore();
  }else if(pose==='fletch'){
   c.strokeStyle=SKILLS[key].tier===2?'#b8a27b':'#c5a276';c.lineWidth=1.8;c.beginPath();c.moveTo(x-19,y+1);c.lineTo(x+12,y-1);c.stroke();c.fillStyle='#a6b6ba';c.beginPath();c.moveTo(x+12,y-3);c.lineTo(x+18,y-2);c.lineTo(x+12,y+1);c.fill();c.strokeStyle='#d6d3b8';c.lineWidth=1;for(let i=0;i<3;i++){c.beginPath();c.moveTo(x-18+i*2,y+1);c.lineTo(x-22+i*2,y-2);c.stroke();}
  }

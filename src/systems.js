@@ -27,7 +27,7 @@ function normalizeProgression(){
   const old=data.styles&&typeof data.styles==='object'?data.styles:{};
   data.styles=Object.fromEntries(Object.keys(STYLE_DEFS).map(id=>{
     const s=old[id]&&typeof old[id]==='object'?old[id]:legacy;
-    return [id,{weapon:finiteRank(s.weapon),armor:finiteRank(s.armor),enchant:finiteRank(s.enchant),speed:Math.min(20,finiteRank(s.speed)),reach:Math.min(20,finiteRank(s.reach)),xp:Math.max(0,Math.min(1e10,Number(s.xp)||0)),tier:s.tier===2?2:1,lastWeapon:s.lastWeapon||STYLE_DEFS[id].weapon}];
+    return [id,{weapon:finiteRank(s.weapon),armor:finiteRank(s.armor),enchant:finiteRank(s.enchant),speed:Math.min(20,finiteRank(s.speed)),reach:Math.min(20,finiteRank(s.reach)),xp:Math.max(0,Math.min(1e10,Number(s.xp)||0)),tier:Math.max(1,Math.min(3,Math.floor(Number(s.tier)||1))),lastWeapon:s.lastWeapon||STYLE_DEFS[id].weapon}];
   }));
   data.tools=Object.fromEntries(Object.keys(TOOL_DEFS).map(id=>[id,!!data.tools?.[id]]));
   data.stationLevels=Object.fromEntries(Object.keys(DISCIPLINES).map(id=>[id,Math.min(5,finiteRank(data.stationLevels?.[id]??(data.skillBoosts?.[id]?1:0)))]));
@@ -41,7 +41,7 @@ function normalizeProgression(){
   data.skillsNudgeSeen=!!data.skillsNudgeSeen||data.unlockedWeapons?.length>1;
   data.idleNoticeSlots=Math.min(2,finiteRank(data.idleNoticeSlots));data.idleFirstAssigned=!!data.idleFirstAssigned||data.idleJobs?.some(Boolean)||false;
   if(data.idleJobs?.filter(Boolean).length>=idleSlotsUnlocked()&&idleSlotsUnlocked()>0)data.idleNoticeSlots=idleSlotsUnlocked();
-  data.progressionVersion=5;normalizeArtisanProgression();normalizeSkillingBuffs();normalizeArenaData();normalizeMonsterLoot();normalizeEquipment();normalizeTierProgression();normalizePreparationEconomy();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
+  data.progressionVersion=5;normalizeArtisanProgression();normalizeSkillXpCurve();normalizeSkillingBuffs();normalizeArenaData();normalizeMonsterLoot();normalizeEquipment();normalizeTierProgression();normalizePreparationEconomy();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
 }
 
 function stationRank(group){return data.stationLevels?.[group]||0;}
@@ -196,7 +196,7 @@ function prospectOpal(){return enterActivity('relicClean');}
 function makeTrinket(id,voucher){
   const item=TRINKETS[id];if(!item||data.trinkets.includes(id)||!(voucher===undefined?spendAtStation(trinketBase(id),'artisan'):spendUpgradeVoucher('trinket:'+id,voucher)))return false;
   data.trinkets.push(id);if(item.type==='ring'){if(data.equippedRings.length<4)data.equippedRings.push(id);data.equippedRing=data.equippedRings[0]||'';}else data.equippedAmulet=id;
-  data.artisanDisciplineXp=(data.artisanDisciplineXp||0)+400;data.artisanXp=(data.artisanXp||0)+400;codexDiscover('trinket_'+id);
+  awardDisciplineXp('artisan',400,1,'artisanXp');codexDiscover('trinket_'+id);
   toast(item.name+' crafted!',(item.type==='ring'&&!data.equippedRings.includes(id)?'Saved to Equipment · ':'Equipped · ')+item.effect);syncTrinketHealth();save();refreshUI();renderDisciplineDrawer();return true;
 }
 

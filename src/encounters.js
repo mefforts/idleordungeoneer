@@ -165,7 +165,7 @@ function spawnEnemy(boss=false,bossIndex=0){
   const known=(data.seenElites[biomeIndex()]||[]).map((seen,i)=>seen?i:-1).filter(i=>i>=0);
   if(known.length){
    const unused=known.filter(i=>!(game.eliteKinds||[]).includes(i)),pool=unused.length?unused:known;
-   e.elite=true;e.bossIndex=pool[Math.floor(Math.random()*pool.length)];e.name=biome().boss[e.bossIndex]+' Echo';e.rad=23;e.hp=e.maxHp=zoneEnemyHp(false,0)*2.8;e.speed*=.82;e.castCooldown=.7+count*.7;
+   e.elite=e.bossElite=true;e.bossIndex=pool[Math.floor(Math.random()*pool.length)];e.name=biome().boss[e.bossIndex]+' Echo';e.rad=23;e.hp=e.maxHp=zoneEnemyHp(false,0)*2.8*encounterHealthMultiplier(e);e.speed*=.82;e.castCooldown=.7+count*.7;
    game.eliteCount=count+1;(game.eliteKinds||(game.eliteKinds=[])).push(e.bossIndex);game.waveEliteSpawned=true;
   }
  }

@@ -234,6 +234,84 @@
     "bytes": 1057
   },
   {
+    "key": "armor-melee_3-head",
+    "slot": "head",
+    "set": "melee_3",
+    "viewBox": [
+      -34,
+      -55,
+      70,
+      83
+    ],
+    "paths": 57,
+    "bytes": 9976
+  },
+  {
+    "key": "armor-melee_3-shoulders",
+    "slot": "shoulders",
+    "set": "melee_3",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 6,
+    "bytes": 1012
+  },
+  {
+    "key": "armor-melee_3-chest",
+    "slot": "chest",
+    "set": "melee_3",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 30,
+    "bytes": 4766
+  },
+  {
+    "key": "armor-melee_3-legs",
+    "slot": "legs",
+    "set": "melee_3",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 22,
+    "bytes": 4514
+  },
+  {
+    "key": "armor-melee_3-boots",
+    "slot": "boots",
+    "set": "melee_3",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 7,
+    "bytes": 1109
+  },
+  {
+    "key": "armor-melee_3-gloves",
+    "slot": "gloves",
+    "set": "melee_3",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
     "key": "armor-ranged_1-head",
     "slot": "head",
     "set": "ranged_1",
@@ -390,6 +468,84 @@
     "bytes": 1057
   },
   {
+    "key": "armor-ranged_3-head",
+    "slot": "head",
+    "set": "ranged_3",
+    "viewBox": [
+      -30,
+      -51,
+      65,
+      78
+    ],
+    "paths": 51,
+    "bytes": 8325
+  },
+  {
+    "key": "armor-ranged_3-shoulders",
+    "slot": "shoulders",
+    "set": "ranged_3",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 6,
+    "bytes": 1012
+  },
+  {
+    "key": "armor-ranged_3-chest",
+    "slot": "chest",
+    "set": "ranged_3",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 21,
+    "bytes": 3324
+  },
+  {
+    "key": "armor-ranged_3-legs",
+    "slot": "legs",
+    "set": "ranged_3",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 14,
+    "bytes": 3097
+  },
+  {
+    "key": "armor-ranged_3-boots",
+    "slot": "boots",
+    "set": "ranged_3",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 7,
+    "bytes": 1158
+  },
+  {
+    "key": "armor-ranged_3-gloves",
+    "slot": "gloves",
+    "set": "ranged_3",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
     "key": "armor-magic_1-head",
     "slot": "head",
     "set": "magic_1",
@@ -536,6 +692,84 @@
     "key": "armor-magic_2-gloves",
     "slot": "gloves",
     "set": "magic_2",
+    "viewBox": [
+      -10,
+      -10,
+      20,
+      20
+    ],
+    "paths": 6,
+    "bytes": 1057
+  },
+  {
+    "key": "armor-magic_3-head",
+    "slot": "head",
+    "set": "magic_3",
+    "viewBox": [
+      -33,
+      -49,
+      66,
+      79
+    ],
+    "paths": 50,
+    "bytes": 8356
+  },
+  {
+    "key": "armor-magic_3-shoulders",
+    "slot": "shoulders",
+    "set": "magic_3",
+    "viewBox": [
+      -12,
+      -10,
+      25,
+      21
+    ],
+    "paths": 6,
+    "bytes": 1012
+  },
+  {
+    "key": "armor-magic_3-chest",
+    "slot": "chest",
+    "set": "magic_3",
+    "viewBox": [
+      -19,
+      -35,
+      38,
+      51
+    ],
+    "paths": 19,
+    "bytes": 2976
+  },
+  {
+    "key": "armor-magic_3-legs",
+    "slot": "legs",
+    "set": "magic_3",
+    "viewBox": [
+      -18,
+      -5,
+      36,
+      48
+    ],
+    "paths": 12,
+    "bytes": 2912
+  },
+  {
+    "key": "armor-magic_3-boots",
+    "slot": "boots",
+    "set": "magic_3",
+    "viewBox": [
+      -12,
+      -11,
+      27,
+      22
+    ],
+    "paths": 5,
+    "bytes": 822
+  },
+  {
+    "key": "armor-magic_3-gloves",
+    "slot": "gloves",
+    "set": "magic_3",
     "viewBox": [
       -10,
       -10,

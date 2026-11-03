@@ -38,7 +38,7 @@ function rareEliteImage(kind,variant){
 function primeRareElites(kind){for(let variant=0;variant<ENVIRONMENT_ZONES[kind].monsters.length;variant++)rareEliteImage(kind,variant);}
 function promoteRareElite(enemy,roll=Math.random()){
  if(!enemy||enemy.summoned||enemy.boss||enemy.elite||game.phase%2!==0||game.phase>=6||game.phaseSpawned<3||game.rareEliteSpawned||(game.rareEliteCount||0)>=rareEliteQuota()||game.enemies.filter(other=>other.champion).length>=rareEliteQuota()||roll>=rareEliteSpawnChance())return false;
- enemy.champion=enemy.elite=true;enemy.baseRadius=enemy.rad;enemy.rad=Math.min(22,enemy.rad*1.2);enemy.hp=enemy.maxHp=enemy.maxHp*3.5;enemy.speed*=.90;enemy.castCooldown=1.4;
+ enemy.champion=enemy.elite=true;enemy.baseRadius=enemy.rad;enemy.rad=Math.min(22,enemy.rad*1.2);enemy.hp=enemy.maxHp=enemy.maxHp*3.5*encounterHealthMultiplier(enemy);enemy.speed*=.90;enemy.castCooldown=1.4;
  enemy.name=RARE_ELITE_NAMES[enemy.biome??biomeIndex()][enemy.visualType||0];game.rareEliteCount=(game.rareEliteCount||0)+1;game.rareEliteSpawned=game.rareEliteCount>=rareEliteQuota();codexDiscover('rare_elites');return true;
 }
 function paintRareElite(enemy){

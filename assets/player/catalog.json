@@ -12,15 +12,18 @@
   "armorSets": [
     "melee_1",
     "melee_2",
+    "melee_3",
     "ranged_1",
     "ranged_2",
+    "ranged_3",
     "magic_1",
-    "magic_2"
+    "magic_2",
+    "magic_3"
   ],
   "hairstyles": 6,
-  "vectorParts": 42,
+  "vectorParts": 60,
   "tools": 8,
-  "assets": 50,
+  "assets": 68,
   "coordinateSystem": "Foot origin; shared shoulders, elbows, knees, wrists and ankles",
   "renderer": "src/avatar-rig.js",
   "sourceSheets": [

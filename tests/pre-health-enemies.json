@@ -1,0 +1,497 @@
+[
+  {
+    "zone": 1,
+    "normal": 37.557325787155655,
+    "rare": 131.4506402550448,
+    "echo": 105.16051220403583,
+    "echoIsBossElite": false,
+    "summon": 63.84745383816461,
+    "guard": 63.84745383816461,
+    "bosses": [
+      224.34242603527645,
+      322.4922374257099,
+      883.3483025139011
+    ],
+    "finalBosses": [
+      291.5554168754453,
+      419.1109117584525,
+      2099.1990015032056
+    ],
+    "hpScale": 1.251910859571855,
+    "spawnSeconds": 0.9166666666666666,
+    "targets": [
+      14,
+      0,
+      24,
+      0,
+      34,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 600,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 2,
+    "normal": 93.24408596647126,
+    "rare": 326.3543008826494,
+    "echo": 261.0834407061195,
+    "echoIsBossElite": false,
+    "summon": 158.51494614300114,
+    "guard": 158.51494614300114,
+    "bosses": [
+      556.9780068397217,
+      800.6558848321,
+      2193.100901931404
+    ],
+    "finalBosses": [
+      723.8486176889022,
+      1040.5323879277971,
+      5211.710047360097
+    ],
+    "hpScale": 3.1081361988823755,
+    "spawnSeconds": 1.2222222222222223,
+    "targets": [
+      11,
+      0,
+      18,
+      0,
+      25,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 1200,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 3,
+    "normal": 151.47501765253256,
+    "rare": 530.1625617838639,
+    "echo": 424.13004942709114,
+    "echoIsBossElite": false,
+    "summon": 257.50753000930536,
+    "guard": 257.50753000930536,
+    "bosses": [
+      904.8107721111279,
+      1300.6654849097463,
+      3562.692415187566
+    ],
+    "finalBosses": [
+      1175.8920794356216,
+      1690.344864188706,
+      8466.422971936476
+    ],
+    "hpScale": 5.049167255084418,
+    "spawnSeconds": 1.3750000000000002,
+    "targets": [
+      7,
+      0,
+      12,
+      0,
+      17,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2640,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 4,
+    "normal": 151.47501765253256,
+    "rare": 530.1625617838639,
+    "echo": 424.13004942709114,
+    "echoIsBossElite": false,
+    "summon": 257.50753000930536,
+    "guard": 257.50753000930536,
+    "bosses": [
+      904.8107721111279,
+      1300.6654849097463,
+      3562.692415187566
+    ],
+    "finalBosses": [
+      1175.8920794356216,
+      1690.344864188706,
+      8466.422971936476
+    ],
+    "hpScale": 5.049167255084418,
+    "spawnSeconds": 1.2833333333333334,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 3000,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 5,
+    "normal": 154.98430592935884,
+    "rare": 542.4450707527559,
+    "echo": 433.95605660220474,
+    "echoIsBossElite": false,
+    "summon": 263.47332007991,
+    "guard": 263.47332007991,
+    "bosses": [
+      925.7729207513703,
+      1330.7985735800949,
+      3645.23087545852
+    ],
+    "finalBosses": [
+      1203.1344878084808,
+      1729.5058262246907,
+      8662.568312221061
+    ],
+    "hpScale": 5.166143530978628,
+    "spawnSeconds": 1.32,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2220,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 6,
+    "normal": 161.22176787334752,
+    "rare": 564.2761875567163,
+    "echo": 451.420950045373,
+    "echoIsBossElite": false,
+    "summon": 274.0770053846908,
+    "guard": 274.0770053846908,
+    "bosses": [
+      963.0313600967959,
+      1384.3575801391441,
+      3791.9359803811344
+    ],
+    "finalBosses": [
+      1251.5555555817957,
+      1799.1111111488315,
+      9011.20000018893
+    ],
+    "hpScale": 5.374058929111584,
+    "spawnSeconds": 1.3566666666666667,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2280,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 7,
+    "normal": 167.20808944650304,
+    "rare": 585.2283130627607,
+    "echo": 468.1826504502085,
+    "echoIsBossElite": false,
+    "summon": 284.25375205905516,
+    "guard": 284.25375205905516,
+    "bosses": [
+      998.7896542937782,
+      1435.7601280473061,
+      3932.7342637817515
+    ],
+    "finalBosses": [
+      1298.027034720194,
+      1865.9138624102786,
+      9345.794649985397
+    ],
+    "hpScale": 5.573602981550101,
+    "spawnSeconds": 1.3933333333333333,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2340,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 8,
+    "normal": 172.7585994570322,
+    "rare": 604.6550980996127,
+    "echo": 483.72407847969015,
+    "echoIsBossElite": false,
+    "summon": 293.6896190769547,
+    "guard": 293.6896190769547,
+    "bosses": [
+      1031.9447007566725,
+      1483.4205073377166,
+      4063.282259229398
+    ],
+    "finalBosses": [
+      1341.1153331033715,
+      1927.8532913360964,
+      9656.030398344274
+    ],
+    "hpScale": 5.758619981901074,
+    "spawnSeconds": 1.43,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2340,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 9,
+    "normal": 178.15001248231437,
+    "rare": 623.5250436881003,
+    "echo": 498.8200349504802,
+    "echoIsBossElite": false,
+    "summon": 302.85502121993443,
+    "guard": 302.85502121993443,
+    "bosses": [
+      1064.1494078943579,
+      1529.7147738481394,
+      4190.088293584035
+    ],
+    "finalBosses": [
+      1382.9685704995072,
+      1988.017320093042,
+      9957.373707596453
+    ],
+    "hpScale": 5.938333749410479,
+    "spawnSeconds": 1.4666666666666666,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2400,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 10,
+    "normal": 178.15001248231437,
+    "rare": 623.5250436881003,
+    "echo": 498.8200349504802,
+    "echoIsBossElite": false,
+    "summon": 302.85502121993443,
+    "guard": 302.85502121993443,
+    "bosses": [
+      1064.1494078943579,
+      1529.7147738481394,
+      4190.088293584035
+    ],
+    "finalBosses": [
+      1382.9685704995072,
+      1988.017320093042,
+      9957.373707596453
+    ],
+    "hpScale": 5.938333749410479,
+    "spawnSeconds": 1.4666666666666666,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2400,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 11,
+    "normal": 178.15001248231437,
+    "rare": 623.5250436881003,
+    "echo": 498.8200349504802,
+    "echoIsBossElite": false,
+    "summon": 302.85502121993443,
+    "guard": 302.85502121993443,
+    "bosses": [
+      1064.1494078943579,
+      1529.7147738481394,
+      4190.088293584035
+    ],
+    "finalBosses": [
+      1382.9685704995072,
+      1988.017320093042,
+      9957.373707596453
+    ],
+    "hpScale": 5.938333749410479,
+    "spawnSeconds": 1.4666666666666666,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2400,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 12,
+    "normal": 178.15001248231437,
+    "rare": 623.5250436881003,
+    "echo": 498.8200349504802,
+    "echoIsBossElite": false,
+    "summon": 302.85502121993443,
+    "guard": 302.85502121993443,
+    "bosses": [
+      1064.1494078943579,
+      1529.7147738481394,
+      4190.088293584035
+    ],
+    "finalBosses": [
+      1382.9685704995072,
+      1988.017320093042,
+      9957.373707596453
+    ],
+    "hpScale": 5.938333749410479,
+    "spawnSeconds": 1.4666666666666666,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2400,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 13,
+    "normal": 178.15001248231437,
+    "rare": 623.5250436881003,
+    "echo": 498.8200349504802,
+    "echoIsBossElite": false,
+    "summon": 302.85502121993443,
+    "guard": 302.85502121993443,
+    "bosses": [
+      1064.1494078943579,
+      1529.7147738481394,
+      4190.088293584035
+    ],
+    "finalBosses": [
+      1382.9685704995072,
+      1988.017320093042,
+      9957.373707596453
+    ],
+    "hpScale": 5.938333749410479,
+    "spawnSeconds": 1.4666666666666666,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2400,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 14,
+    "normal": 178.15001248231437,
+    "rare": 623.5250436881003,
+    "echo": 498.8200349504802,
+    "echoIsBossElite": false,
+    "summon": 302.85502121993443,
+    "guard": 302.85502121993443,
+    "bosses": [
+      1064.1494078943579,
+      1529.7147738481394,
+      4190.088293584035
+    ],
+    "finalBosses": [
+      1382.9685704995072,
+      1988.017320093042,
+      9957.373707596453
+    ],
+    "hpScale": 5.938333749410479,
+    "spawnSeconds": 1.4666666666666666,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2400,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  },
+  {
+    "zone": 15,
+    "normal": 178.15001248231437,
+    "rare": 623.5250436881003,
+    "echo": 498.8200349504802,
+    "echoIsBossElite": false,
+    "summon": 302.85502121993443,
+    "guard": 302.85502121993443,
+    "bosses": [
+      1064.1494078943579,
+      1529.7147738481394,
+      4190.088293584035
+    ],
+    "finalBosses": [
+      1382.9685704995072,
+      1988.017320093042,
+      9957.373707596453
+    ],
+    "hpScale": 5.938333749410479,
+    "spawnSeconds": 1.4666666666666666,
+    "targets": [
+      9,
+      0,
+      15,
+      0,
+      21,
+      0
+    ],
+    "playerDps": 16.704545454545453,
+    "playerCooldown": 0.88,
+    "reportedSeconds": 2400,
+    "rewards": "[{\"normal\":{\"chance\":0.015,\"amount\":1,\"cap\":0.06},\"elite\":{\"chance\":0.08,\"amount\":3,\"cap\":0.16},\"boss\":{\"chance\":0.18,\"amount\":6,\"cap\":0.28},\"voucher\":0.06,\"finalVoucher\":0.15},{\"monsterChance\":0.003,\"eliteChance\":0.35,\"elite\":1,\"rare\":1,\"guardians\":[1,1,2],\"zoneFinalBonus\":3}]"
+  }
+]

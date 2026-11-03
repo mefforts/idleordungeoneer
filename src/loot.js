@@ -18,14 +18,14 @@ function monsterMaterialChance(enemy){
 function monsterMaterialDrops(enemy){
  if(enemy.summoned||enemy.totem)return [];const drops=[],rule=MONSTER_LOOT[enemy.boss?'boss':enemy.elite?'elite':'normal'];
  if(Math.random()<monsterMaterialChance(enemy)){
-  const pool=zoneNumber()===0?['ore','logs','cloth','scraps']:['ore','coal','willowLogs','ancientSalvage','cloth'],available=pool.filter(key=>!SKILLS[RESOURCE_SOURCE[key]]?.tier||canUseSkill(RESOURCE_SOURCE[key])),key=available[Math.floor(Math.random()*available.length)],amount=rule.amount;
+  const pool=zoneNumber()>=4?['ore','coal','cloth','mithrilOre','yewLogs','enchantedSalvage']:zoneNumber()===0?['ore','logs','cloth','scraps']:['ore','coal','willowLogs','ancientSalvage','cloth'],available=pool.filter(key=>!SKILLS[RESOURCE_SOURCE[key]]?.tier||canUseSkill(RESOURCE_SOURCE[key])),key=available[Math.floor(Math.random()*available.length)],amount=rule.amount;
   drops.push({key,amount});
  }
  const rollKey=data.floor+':'+enemy.bossIndex;
  if(enemy.boss&&data.floor>data.cleared&&!data.voucherRolls[rollKey]){
   data.voucherRolls[rollKey]=true;
   if(Math.random()<(enemy.bossIndex===2&&isZoneFinal()?MONSTER_LOOT.finalVoucher:MONSTER_LOOT.voucher)){
-   const tier=zoneNumber()===0?'iron':'steel',kinds=dropVoucherKinds(tier),kind=kinds[Math.floor(Math.random()*kinds.length)];drops.push({key:'voucher_'+tier+'_'+kind,amount:1});
+   const tier=zoneNumber()>=4?'mithril':zoneNumber()===0?'iron':'steel',kinds=dropVoucherKinds(tier),kind=kinds[Math.floor(Math.random()*kinds.length)];drops.push({key:'voucher_'+tier+'_'+kind,amount:1});
   }
  }
  return drops;
@@ -55,7 +55,7 @@ function paintLootReceipts(){
   });ctx.restore();
  }
 }
-function voucherTier(style,kind='weapon'){return (kind==='armor'&&tier2Unlocked()&&data.ownedArmor.includes(style+'_2')?2:styleTier(style))===2?'steel':'iron';}
+function voucherTier(style,kind='weapon'){return equipmentVoucherBank(kind==='armor'?ownedArmorTier(style):styleTier(style));}
 function workshopVoucherOffer(action){
  const [type,id,kind,...extra]=String(action).split(':');if(extra.length)return null;
  const ownedStyle=style=>data.unlockedWeapons.some(w=>styleForWeapon(w)===style);
@@ -63,7 +63,7 @@ function workshopVoucherOffer(action){
  if(kind!==undefined)return null;
  if(type==='jewelry'&&TRINKETS[id])return {name:TRINKETS[id].name+' refinement',kind:'jewelry',tiers:['iron'],eligible:data.trinkets.includes(id)&&jewelryRank(id)<JEWELRY_REFINEMENT.maximum};
  if(type==='tool-upgrade'&&TOOL_DEFS[id])return {name:TOOL_DEFS[id].name+' refinement',kind:'tool-'+id,tiers:['iron'],eligible:!!data.tools[id]&&toolRank(id)<TOOL_REFINEMENT.maximum};
- if(type==='station'&&DISCIPLINES[id])return {name:DISCIPLINES[id].name+' station upgrade',kind:'station-'+id,tiers:['iron','steel'],eligible:stationRank(id)<5};
+ if(type==='station'&&DISCIPLINES[id])return {name:DISCIPLINES[id].name+' station upgrade',kind:'station-'+id,tiers:['iron','steel','mithril'],eligible:stationRank(id)<5};
  return null;
 }
 function canRedeemWorkshopVoucher(action,tier){const offer=workshopVoucherOffer(action);return !!offer?.eligible&&offer.tiers.includes(tier)&&(data.specificVouchers?.[tier+'_'+offer.kind]||0)>0;}
@@ -77,7 +77,7 @@ function canRedeemVoucher(style,kind='weapon'){return !!STYLE_DEFS[style]&&canRe
 function redeemUpgradeVoucher(style,kind='weapon'){return !!STYLE_DEFS[style]&&redeemWorkshopVoucher('upgrade:'+style+':'+kind,voucherTier(style,kind));}
 function workshopVoucherButtonHtml(action){
  const offer=workshopVoucherOffer(action);if(!offer)return '';
- return offer.tiers.filter(tier=>(data.specificVouchers?.[tier+'_'+offer.kind]||0)>0).map(tier=>{const name=(tier==='iron'?'Iron':'Steel')+' '+voucherKindName(offer.kind).toLowerCase();return '<button type="button" class="voucher-redeem" data-redeem-voucher="'+action+'" data-voucher-tier="'+tier+'" data-focus-key="voucher-'+action+'-'+tier+'" aria-label="Use '+escapeHTML(name)+' voucher for '+escapeHTML(offer.name)+'" '+(offer.eligible?'':'disabled')+'>Use '+escapeHTML(name)+' voucher · '+data.specificVouchers[tier+'_'+offer.kind]+' owned</button>';}).join('');
+ return offer.tiers.filter(tier=>(data.specificVouchers?.[tier+'_'+offer.kind]||0)>0).map(tier=>{const name=(tierVoucherName(tier))+' '+voucherKindName(offer.kind).toLowerCase();return '<button type="button" class="voucher-redeem" data-redeem-voucher="'+action+'" data-voucher-tier="'+tier+'" data-focus-key="voucher-'+action+'-'+tier+'" aria-label="Use '+escapeHTML(name)+' voucher for '+escapeHTML(offer.name)+'" '+(offer.eligible?'':'disabled')+'>Use '+escapeHTML(name)+' voucher · '+data.specificVouchers[tier+'_'+offer.kind]+' owned</button>';}).join('');
 }
 function voucherButtonHtml(style,kind='weapon'){return workshopVoucherButtonHtml('upgrade:'+style+':'+kind);}
 
