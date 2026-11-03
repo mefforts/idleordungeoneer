@@ -29,6 +29,8 @@ Build 11 starts Dungeoneering at level 0. Reaching Zones 2, 5, 10, 20, 40 and so
 
 Each permanent rank costs one point. The first choice is 1.25× Delving or 2× Skilling. Delving adds 0.25× per rank. Skilling advances in ones to 10×, then in twos. Skilling applies to active work, online idle and up to eight real hours of offline production. The offline cap is applied before the earned multiplier. Selected earned rates persist; testing speed remains separate and does not multiply offline production. Existing unlocked 2× Delving is retained on migration.
 
+Build 11.2.1 keeps the Speed button visible in every scene after either time path is purchased. Its separate Delving and Skilling selectors offer 1× and every purchased rank; selections persist. Code-unlocked testing multipliers remain separate choices in the same menu. The quick badge reports the combined game-time rate.
+
 Optional Mastery allocations share the bank after the first speed choice. Refunding these allocations does not refund permanent time ranks. Existing point balances and allocated ranks are retained; earlier XP-based combat-perk unlocks remain available.
 
 ## Active skilling discoveries
@@ -43,6 +45,8 @@ Build 11.1 replaces 35% instant crafting progress with timed work speed. Every d
 | Very rare | 2% | +100% | 15s |
 
 Discoveries appear after 1.2 seconds of engagement, then every 4.2 real seconds, with six seconds to collect. The strongest current boost applies; equal pickups refresh its bounded duration and stronger pickups improve it. Weaker pickups leave the timers untouched and grant their displayed resource quantity instead. Earlier timers count down concurrently. There is no multiplying or unlimited time bank. Collecting a pickup alone does not sustain further discoveries without working.
+
+Build 11.2.1 removes visible rarity names from skilling pickups, collection feedback and active buff displays; colors, effects, timers and accessible descriptions remain. Work hand motion is slower at 1× and 2× and stops accelerating beyond 4× game speed. Above 4×, bounded sparks indicate extra speed; 10× adds short bursts and 24× adds occasional fans above the character. Production keeps its full selected rate. Reduced motion suppresses decorative bursts.
 
 Timers count real seconds while actively working on that activity, including while earned Skilling speed accelerates production. Release, missing ingredients, menus, other activities and backgrounding pause them. Remaining time survives saves. These bonuses do not accelerate idle or offline work. Permanent Skilling game time and station/tool benefits retain their normal effects. Every accelerated craft still consumes its complete station-adjusted recipe.
 
@@ -145,10 +149,10 @@ Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the
 
 - Live Zone 1: **9.4 min**, 375 rewarded defeats, 80.0 reference DPS.
 - Live Zone 2: **20.2 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **31.0 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **35.8 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **40.9 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 15: **40.7 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 3: **31.1 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **35.7 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **41.1 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 15: **40.8 min**, 960 rewarded defeats, 160.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It moves to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 

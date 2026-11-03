@@ -42,6 +42,8 @@ function goToSource(resource){
 }
 
 const WORKSHOP_THEMES=[{light:'#bed99a',deep:'#527b46',spark:'#e5d79c'},{light:'#f1c082',deep:'#b96835',spark:'#ffe3a1'},{light:'#cfb7ef',deep:'#8060a7',spark:'#e9dcff'},{light:'#a2e3e8',deep:'#4d95b1',spark:'#e5fbff'}];
+function workAnimationSpeed(rate){return .6+.15*(Math.min(4,Math.max(1,rate))-1);}
+function workSpeedTier(rate){return rate<=4?0:rate<10?1:rate<24?2:3;}
 function workshopAnimation(key,active,working){
  const base=SKILLS[key].scene||key,pose={mine:'mine',silverMine:'mine',forge:'smith',silverSmelt:'smith',wood:'wood',fletch:'fletch',ward:'ward',rune:'rune',polish:'polish',scavenge:'scavenge'}[base]||'scavenge';
  const interval=skillInterval(key,active),elapsed=active?(game.activeClockMs-(game.lastActiveAt?.[key]??game.activeClockMs))/1000:(data.jobTimers[key]||0),phase=working&&!reducedMotion()?Math.min(.9999,Math.max(0,elapsed/interval)):.3;
@@ -51,6 +53,7 @@ function workshopAnimation(key,active,working){
  const visualPhase=working&&!reducedMotion()?((time*DeepwellAvatar.workRate(pose))%1):.65;
  const reaction=game.workBonusReaction?.key===key?game.workBonusReaction:null;
  const frame={key,base,pose,working,phase:visualPhase,productionPhase:phase,time,workCycle:Math.floor(time*DeepwellAvatar.workRate(pose)),workBlend:reducedMotion()?(working?1:0):presentation.blend,workPhase:visualPhase,bonusReaction:reaction&&!reducedMotion()?{progress:reaction.age/reaction.duration,variant:reaction.variant}:null,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
+ frame.speedRate=skillingTimeMultiplier()*(active?skillBuffMultiplier(key):1);frame.speedTier=workSpeedTier(frame.speedRate);
  const rig=DeepwellAvatar.poseRig(frame);
  if(working&&!reducedMotion()&&rig.contact&&!presentation.lastContact&&['mine','smith','wood','polish'].includes(pose))presentation.impact={point:rig.toolTip,at:now,seed:frame.workCycle};
  presentation.lastContact=rig.contact;return frame;
@@ -102,7 +105,20 @@ function paintWorkshopSceneEffects(frame,anchor,layer){
   const origin=striking?impact.point:rig.toolTip||center,count=pose==='smith'?10:pose==='ward'?7:5;
   for(let i=0;i<count;i++){const age=striking?clamp(impactAge/.36,0,1):((time*.5+i/count)%1),a=i*2.399+(impact?.seed||0)*.3,dist=age*(magical?16:pose==='smith'?19:11);ctx.globalAlpha=(1-age)*.8;ctx.strokeStyle=pose==='smith'?'#f5bf75':magical?theme.light:pose==='wood'||pose==='fletch'?'#c8a16a':pose==='scavenge'?'#b4a080':'#a7b6b7';ctx.lineWidth=pose==='smith'?.8:1;ctx.beginPath();ctx.moveTo(origin.x+Math.cos(a)*dist,origin.y+Math.sin(a)*dist*.6-age*6);ctx.lineTo(origin.x+Math.cos(a)*(dist+2.4),origin.y+Math.sin(a)*(dist+2.4)*.6-age*6);ctx.stroke();}
  }
- ctx.restore();paintWorkshopBonusCapture(frame,anchor,rig);
+ ctx.restore();paintWorkshopBonusCapture(frame,anchor,rig);paintWorkshopSpeedEffects(frame,anchor,rig);
+}
+
+function paintWorkshopSpeedEffects(frame,anchor,rig){
+ const tier=frame.speedTier;if(!tier||!frame.working||reducedMotion()||!activeSkillCanAdvance(frame.key))return;
+ const clock=game.workEffectsClock||0,point=rig.workPiece||rig.toolTip||rig.main,color=['wood','fletch','scavenge'].includes(frame.pose)?'#d9bc83':['ward','rune'].includes(frame.pose)?frame.theme.light:frame.pose==='smith'?'#ffd18a':'#c7dce3',count=3+tier*3;
+ ctx.save();ctx.translate(anchor.x,anchor.y);ctx.scale(anchor.scale,anchor.scale);ctx.lineCap='round';
+ // A bounded number of motes communicates speed beyond the hand-motion cap.
+ for(let i=0;i<count;i++){const age=(clock*.7+i/count)%1,a=i*2.399,travel=age*(10+tier*4),x=point.x+Math.cos(a)*travel,y=point.y+Math.sin(a)*travel*.5-age*10;ctx.globalAlpha=(1-age)*.65;ctx.strokeStyle=i%3?color:frame.theme.spark;ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*2,y+Math.sin(a)*2);ctx.stroke();}
+ if(tier>=2){
+  const cycle=clock%(tier===3?2:2.6),age=cycle/.8;
+  if(age<1){const center=tier===3?{x:0,y:-80}:point;ctx.globalAlpha=Math.sin(Math.PI*age)*.65;for(let i=0;i<count;i++){const a=-Math.PI*.9+i*Math.PI*.8/(count-1),d=5+age*(tier===3?27:19),x=center.x+Math.cos(a)*d,y=center.y+Math.sin(a)*d;ctx.strokeStyle=i%2?frame.theme.light:color;ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*2.8,y+Math.sin(a)*2.8);ctx.stroke();if(i%3===0)workshopGlyph(ctx,x,y,1.4,i%4,frame.theme.spark);}}
+ }
+ ctx.restore();
 }
 
 function paintWorkshopBonusCapture(frame,anchor,rig){

@@ -1,5 +1,5 @@
 {
-  "version": "11.2.0",
+  "version": "11.2.1",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1698,7 +1698,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 565.3200000000306,
+      "seconds": 563.2000000000303,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
@@ -1706,7 +1706,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1214.9200000000708,
+      "seconds": 1211.7600000000696,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
@@ -1714,7 +1714,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1859.2800000000664,
+      "seconds": 1865.9600000000678,
       "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 1800
@@ -1722,7 +1722,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2145.4400000001074,
+      "seconds": 2139.440000000107,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2100
@@ -1730,7 +1730,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2453.0000000001414,
+      "seconds": 2465.1600000001413,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
@@ -1738,7 +1738,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2443.2800000001407,
+      "seconds": 2450.040000000136,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400

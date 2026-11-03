@@ -123,7 +123,7 @@ function spawnSkillBonus(){
   if(!p)return false;
   const id=++s.serial,el=document.createElement('button');el.type='button';el.className='skill-bonus '+(craft?'craft-bonus':'gather-bonus');el.dataset.skillBonus=id;
   el.dataset.rarity=rarity.id;el.style.setProperty('--skill-rarity',rarity.color);
-  el.style.left=p.x+'px';el.style.top=p.y+'px';el.innerHTML=artHTML(def.art)+`<em aria-hidden="true">${rarity.name}</em><span></span>`;
+  el.style.left=p.x+'px';el.style.top=p.y+'px';el.innerHTML=artHTML(def.art)+'<span></span>';
   el.onclick=e=>{if(claimSkillBonus(id)&&e.detail===0)$('skillHold').focus({preventScroll:true});};
   const node={id,key,craft,amount,windfall:1+Math.floor(Math.random()*5),rarity:rarity.id,...p,left:6,el};s.nodes.push(node);$('skillBonusLayer').append(el);refreshSkillBonusOffer(node);return id;
 }
@@ -140,7 +140,7 @@ function claimSkillBonus(id){
     if(!instant)reward+=' · +'+amount+' '+SKILLS[key].item;
   }
   game.workAction=.48;game.lastActiveSkill=key;
-  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+rarity.name+(instant?' find':'')+'</strong><span>'+(instant?'+'+amount+' '+SKILLS[key].item:'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s')+'</span>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
+  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+(instant?'+'+amount+' '+SKILLS[key].item:'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s')+'</strong>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
   $('skillBonusStatus').textContent=rarity.name+' '+BONUS_DEFS[key].name+' collected. '+reward;refreshUI();save();return true;
 }
 function tickSkillBonuses(dt){

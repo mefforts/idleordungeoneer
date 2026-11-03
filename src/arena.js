@@ -71,7 +71,17 @@ function moveHudPin(id,direction){
 function setArenaSpeed(value){
  if(data.devSpeedUnlocked){if(![1,2,5,10,25,50,100,500].includes(value))return;settleIdleTime();if(game.scene==='combat')game.devSpeed=value;else game.skillSpeed=value;}
  else if(!setTimeRate(game.scene==='combat'?'delve':'skilling',value))return;
- $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');refreshArenaUI();
+ closeSpeedChoices(true);refreshArenaUI();
+}
+function closeSpeedChoices(restoreFocus=false){
+ $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');if(restoreFocus)$('speedToggle').focus({preventScroll:true});
+}
+function positionSpeedChoices(){
+ const host=$('speedOptions');if(host.classList.contains('hidden'))return;
+ const button=$('speedToggle').getBoundingClientRect(),parent=$('speedControl').getBoundingClientRect(),stage=$('stageWrap').getBoundingClientRect(),box=host.getBoundingClientRect();
+ const left=clamp(data.hudLayout.side==='left'?button.right+12:button.left-box.width-12,Math.max(8,stage.left+8),Math.max(8,Math.min(innerWidth,stage.right)-box.width-8));
+ const top=clamp(button.top,Math.max(8,stage.top+8),Math.max(8,Math.min(innerHeight,stage.bottom)-box.height-8));
+ host.style.left=(left-parent.left)+'px';host.style.right='auto';host.style.top=(top-parent.top)+'px';host.style.bottom='auto';
 }
 
 function installArenaUI(){installZoneShopPin();
@@ -79,7 +89,7 @@ function installArenaUI(){installZoneShopPin();
   $('quickPause').classList.add('hud-icon');$('quickPause').removeAttribute('title');
   $('speedToggle').classList.add('hud-icon');$('speedToggle').innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="m5 7 11 9L5 25V7Zm12 0 11 9-11 9V7Z" fill="currentColor"/></svg><span class="speed-badge">1×</span>';
   $('speedToggle').setAttribute('aria-expanded','false');$('speedToggle').setAttribute('aria-controls','speedOptions');
-  $('speedToggle').onclick=()=>{const expanded=$('speedOptions').classList.toggle('hidden')===false;$('speedToggle').setAttribute('aria-expanded',String(expanded));if(expanded)$('speedOptions').querySelector('.active')?.focus({preventScroll:true});};
+  $('speedToggle').onclick=()=>{const host=$('speedOptions'),expanded=host.classList.toggle('hidden')===false;$('speedToggle').setAttribute('aria-expanded',String(expanded));if(expanded){refreshSpeedChoices();positionSpeedChoices();host.querySelector('.active')?.focus({preventScroll:true});}};
   $('speedOptions').querySelectorAll('[data-speed]').forEach(b=>b.onclick=()=>setArenaSpeed(Number(b.dataset.speed)));
   for(const pin of ARENA_PINS){const button=pin.id==='speed'?$('speedToggle'):$(pin.element);button.dataset.tooltip=pin.name;if(pin.id!=='pause')button.removeAttribute('title');}
   $('stageWrap').insertAdjacentHTML('beforeend','<aside class="notice-column" id="noticeColumn" aria-label="Warnings and recent notifications"><button type="button" id="noticeHistoryButton" class="notice-history-button '+((data.noticeHistory||[]).length?'':'hidden')+'" aria-label="Read recent messages" title="Read recent messages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Zm4 4h8M8 12h6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button></aside>');
@@ -87,8 +97,9 @@ function installArenaUI(){installZoneShopPin();
   $('toastStack').classList.add('arena-notices');$('noticeHistoryButton').onclick=()=>{openDrawer('settings');const history=$('recentMessages');history.open=true;history.scrollIntoView({block:'start'});history.querySelector('summary').focus();};
   $('damageStat').closest('.panel-section').insertAdjacentHTML('afterend','<section class="panel-section combat-readiness" id="combatReadiness"></section>');
   $('stageWrap').dataset.hudSide=data.hudLayout.side;arenaInstalled=true;applyHudLayout();refreshArenaUI();
-  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#speedControl')){$('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');}});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('speedOptions').classList.contains('hidden')){e.preventDefault();e.stopImmediatePropagation();$('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');$('speedToggle').focus();}},true);
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#speedControl'))closeSpeedChoices();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('speedOptions').classList.contains('hidden')){e.preventDefault();e.stopImmediatePropagation();closeSpeedChoices(true);}},true);
+  window.addEventListener('resize',positionSpeedChoices);
 }
 function resetRun(){
  game.healthDrops=[];game.lootDrops=[];game.rareEliteSpawned=false;game.workBonusReaction=null;

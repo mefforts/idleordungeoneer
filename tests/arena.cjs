@@ -126,7 +126,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);
     const seed=await speed.evaluate(()=>{const d=__deepwell.getState().data;d.dungeonMastery={points:0,earned:4,delveSpeed:4,skillingSpeed:0,onslaught:0,fortune:0,adaptation:0,intensity:0};d.timeRates={delve:2,skilling:1};return d;});
     await speed.addInitScript(d=>localStorage.setItem('deepwell-prototype-v1',JSON.stringify({...d,savedAt:Date.now()})),seed);
-    await speed.reload();await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);await speed.evaluate(()=>__deepwell.start());assert.ok(await speed.locator('#speedControl').isVisible());
+    await speed.reload();await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),true);await speed.evaluate(()=>__deepwell.start());assert.ok(await speed.locator('#speedControl').isVisible());
     await speed.click('#speedToggle');assert.ok(await speed.locator('#speedOptions [data-speed="2"]').isVisible());assert.equal(await speed.locator('#speedOptions [data-speed="5"]').isVisible(),false);
     await speed.click('#speedOptions [data-speed="2"]');assert.equal(await speed.evaluate(()=>__deepwell.getState().data.timeRates.delve),2);
     await speed.click('#quickSettings');await speed.click('#settingsCodes');await speed.fill('#codeInput',testingCodes.speed);await speed.click('#codeRedeem');await speed.click('#drawerClose');await speed.click('#speedToggle');await speed.click('#speedOptions [data-speed="25"]');assert.equal(await speed.evaluate(()=>__deepwell.getState().devSpeed),25);

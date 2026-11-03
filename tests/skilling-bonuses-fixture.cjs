@@ -2,7 +2,7 @@
 function skillingBonusesFixture(){
  const realUpdate=update;let manual=true;update=dt=>{if(!manual)realUpdate(dt);};
  function fresh(key='forge',armor='melee_1',zone=0){
-  manual=true;__workshopTest.fresh(key,armor,zone);game.holdAccum=0;game.workVisualClock=0;game.workPresentation=null;game.workBonusReaction=null;game.workBonusSerial=0;game.workReward=null;
+  manual=true;__workshopTest.fresh(key,armor,zone);game.holdAccum=0;game.workVisualClock=game.workEffectsClock=0;game.workPresentation=null;game.workBonusReaction=null;game.workBonusSerial=0;game.workReward=null;
   data.skillingBuffs=[];data.idleJobs=['',''];game.lastActiveAt={[key]:game.activeClockMs};refreshUI();render();
  }
  function spawn(rarity='common',amount){
@@ -11,6 +11,13 @@ function skillingBonusesFixture(){
  }
  function snapshot(){return {key:game.scene,hits:game.activeHits,clock:game.activeClockMs,interval:skillInterval(game.scene),ore:data.ore,bars:data.bars,output:data[SKILLS[game.scene]?.resource],buffs:structuredClone(data.skillingBuffs),multiplier:skillBuffMultiplier(game.scene),reaction:game.workBonusReaction&&{...game.workBonusReaction},hold:game.holdSkill};}
  window.__skillBonusTest={fresh,spawn,snapshot,activities:()=>Object.keys(SKILLS),
+  details(){showSkillBuffDetails();},
+  setSpeed(rate){const m=masteryFor();data.devSpeedUnlocked=rate===500;game.skillSpeed=rate===500?500:1;m.skillingSpeed=rate===500?0:rate<=10?rate-1:(rate-10)/2+9;m.earned=masterySpent(m)+m.points;data.timeRates.skilling=rate===500?1:rate;refreshUI();},
+  tempo(rate,seconds=1){fresh();this.setSpeed(rate);data.ore=1000000;game.holdSkill=game.scene;const before=game.activeClockMs;realUpdate(seconds);const frame=workshopAnimation(game.scene,true,true);return {visual:game.workVisualClock,effects:game.workEffectsClock,production:game.activeClockMs-before,tier:frame.speedTier,rate:frame.speedRate};},
+  effectPixels(reduced=false,working=true){
+   data.reducedMotion=reduced;game.workEffectsClock=.45;const frame=workshopAnimation(game.scene,true,working),rig=DeepwellAvatar.poseRig(frame),before=JSON.stringify(data);
+   ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);paintWorkshopSpeedEffects(frame,{x:120,y:300,scale:2},rig);ctx.restore();const p=ctx.getImageData(0,0,canvas.width,canvas.height).data;let count=0;for(let i=0;i<p.length;i+=4)if(p[i]||p[i+1]||p[i+2])count++;return {count,unchanged:before===JSON.stringify(data)};
+  },
   collect(rarity,amount){const id=spawn(rarity,amount);return {id,result:claimSkillBonus(id)};},
   takeAll(){for(const node of [...bonusState().nodes])claimSkillBonus(node.id);},
   tick(seconds,hold=true){game.holdSkill=hold?game.scene:null;game.lastJobsAt=Date.now();realUpdate(seconds);refreshUI();render();return snapshot();},

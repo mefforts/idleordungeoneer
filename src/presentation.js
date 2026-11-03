@@ -104,7 +104,7 @@ function refreshArenaUI(){
  if(!arenaInstalled)return;const dps=weaponDps(data.weaponType,{run:true});$('quickDamage').textContent=Math.round(dps);$('hudWeapon').querySelector('small').textContent='DPS';$('hudWeapon').title=dps.toFixed(1)+' DPS';$('hudWeapon').setAttribute('aria-label','Equipment · '+dps.toFixed(1)+' damage per second');
  const side=data.hudLayout?.side||'right';if($('stageWrap').dataset.hudSide!==side||document.querySelector('.hud-actions').dataset.order!==data.hudLayout.order.join(','))applyHudLayout();
  $('speedControl').classList.toggle('hidden',!speedControlVisible());refreshSpeedChoices();
- const speed=$('speedToggle');speed.dataset.tooltip=speedControlName()+' · '+selectedSceneSpeed()+'×';speed.setAttribute('aria-label',speedControlName()+' '+selectedSceneSpeed()+' times');speed.querySelector('.speed-badge').textContent=selectedSceneSpeed()+'×';$('quickPause').dataset.tooltip=game.manualPaused?'Resume':'Pause';
+ const speed=$('speedToggle'),rate=displayedSceneSpeed();speed.dataset.tooltip=speedControlName()+' · '+rate+'×';speed.setAttribute('aria-label',speedControlName()+' '+rate+' times. Adjust Delving and Skilling.');speed.querySelector('.speed-badge').textContent=rate+'×';$('quickPause').dataset.tooltip=game.manualPaused?'Resume':'Pause';
  refreshEquipmentUI();refreshDungeoneeringUI();const host=$('combatReadiness'),signature=equipmentUIState();if(host&&drawerKind==='gear'&&host.dataset.signature!==signature){host.innerHTML=pacingReadinessHtml();host.dataset.signature=signature;}
 }
 function pacingReadinessHtml(){

@@ -856,10 +856,9 @@ button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation
 .skill-bonus[data-rarity]{border-color:var(--skill-rarity);background:conic-gradient(var(--skill-rarity) var(--bonus-life),#302f2777 0);box-shadow:0 3px 13px #0a171b99,0 0 0 3px color-mix(in srgb,var(--skill-rarity) 25%,transparent)}
 .skill-bonus[data-rarity]>span{border-color:var(--skill-rarity);background:#2b2b24;color:#f6efdb;font-size:10px;padding:3px 5px;border-radius:3px}
 .skill-bonus[data-reward="resource"]>span{display:flex;align-items:center;gap:3px;font-size:11px}.skill-bonus[data-reward="resource"]>span img{width:16px;height:16px;display:inline-block;object-fit:contain}
-.player-ui .skill-bonus>em{position:absolute;left:50%;right:auto;top:-9px;transform:translateX(-50%);height:15px;min-width:32px;padding:1px 4px;display:grid;place-items:center;border:1px solid var(--skill-rarity);border-radius:3px;background:#25251d;color:var(--skill-rarity);font:600 8px/1 system-ui;white-space:nowrap;pointer-events:none}
 .skill-bonus[data-rarity="rare"],.skill-bonus[data-rarity="very-rare"]{box-shadow:0 0 18px color-mix(in srgb,var(--skill-rarity) 32%,transparent),0 0 0 4px color-mix(in srgb,var(--skill-rarity) 20%,transparent)}
 .player-ui .skill-bonus-pop{border:1px solid var(--skill-rarity);background:#24291fef;padding:6px 9px;display:flex;align-items:center;gap:5px;max-width:210px;white-space:normal;animation-duration:1.35s;border-radius:4px;flex-wrap:wrap}
-.skill-bonus-pop strong{color:var(--skill-rarity);font:700 12px Georgia}.skill-bonus-pop>span{flex-basis:100%;font:11px system-ui}
+.skill-bonus-pop strong{color:var(--skill-rarity);font:700 12px Georgia}
 .skill-work-buff{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;width:214px;max-width:100%;min-height:46px;text-align:left;padding:7px 10px;border:1px solid var(--skill-rarity,#b9c99b);border-radius:5px;background:#25291fe8;color:#efe6cf;box-shadow:0 2px 8px #0004;cursor:pointer}
 .skill-work-buff>svg{width:24px;height:24px;color:var(--skill-rarity);flex-shrink:0}.skill-work-buff>span{flex:1;min-width:0}.skill-work-buff b{display:block;font:600 11px/1.3 system-ui}.skill-work-buff small{display:block;font:10px/1.4 system-ui;color:var(--skill-rarity);margin-top:2px}.skill-work-buff:focus-visible{outline:2px solid #f9edc9;outline-offset:3px}
 .skill-buff-meter{display:block;height:2px;background:#e6dcba22;margin-top:4px}.skill-buff-meter i{display:block;height:100%;background:var(--skill-rarity)}
@@ -1352,6 +1351,9 @@ body.codex-modal-open .stage-wrap,body.mastery-modal-open .stage-wrap{z-index:20
 .voucher-redeem{display:block;width:100%;min-height:38px;margin:10px 0 0;padding:8px;font:11px system-ui;color:#f4d794!important;border:1px solid #b49a66!important}.loot-history{font:12px/1.7 system-ui;margin:22px 0}.loot-history summary{cursor:pointer;min-height:44px;padding:10px 0}.loot-history ol{padding:0;list-style:none}.loot-history li{padding:7px 0;border-bottom:1px solid #b8a06b33}.loot-history li small{float:right;color:#bbaa8b;font-size:10px}
 
 .temporary-buffs{position:absolute;z-index:15;pointer-events:auto;color:#ebdfc4;max-width:calc(100% - 76px)}.temporary-buff-count{display:block;font:9px/1.3 system-ui;color:#d8c59f;text-shadow:0 1px 3px #000;margin-bottom:4px}.temporary-buff-strip{display:flex;gap:7px;overflow-x:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-bottom:3px;touch-action:pan-x}.temporary-buff{display:flex;gap:6px;align-items:center;position:relative;flex:0 0 auto;min-width:119px;min-height:44px;padding:5px 9px 5px 4px!important;border:1px solid #baa66e77!important;border-radius:5px!important;background:#152b2beb!important;color:#efe2bd!important;box-shadow:none!important;text-align:left}.temporary-buff>img{width:29px;height:29px;object-fit:contain}.temporary-buff>span{display:grid;gap:3px}.temporary-buff b{font:10px system-ui}.temporary-buff small{font:700 11px system-ui;font-variant-numeric:tabular-nums;color:#ffe1a0}.temporary-buff i{font:700 9px system-ui;color:#c8e8c3;margin-left:3px}.has-temporary-buffs .notice-column{top:var(--notice-after-buffs)!important}
+.player-ui .icon-rail .speed-options{display:block;width:236px;padding:12px;max-height:min(65vh,calc(100vh - 20px));overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+.speed-option-group{margin:0 0 10px;padding:0 0 10px;border-bottom:1px solid #b8a16a66}.speed-option-group h3{font:18px/1.2 Georgia;margin:0;color:#f1dfbc}.speed-option-group p{font:10px/1.4 system-ui;color:#c9bca2;margin:4px 0 9px}.speed-rate-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.player-ui .speed-options .speed-rate-grid button{min-height:44px;min-width:0;padding:5px 2px;font:11px system-ui}.player-ui .speed-options>.speed-shop-link{width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:5px;font:12px system-ui}
 
 /* END LIVING SKILLS CSS */
 </style>
@@ -2568,7 +2570,7 @@ function spawnSkillBonus(){
   if(!p)return false;
   const id=++s.serial,el=document.createElement('button');el.type='button';el.className='skill-bonus '+(craft?'craft-bonus':'gather-bonus');el.dataset.skillBonus=id;
   el.dataset.rarity=rarity.id;el.style.setProperty('--skill-rarity',rarity.color);
-  el.style.left=p.x+'px';el.style.top=p.y+'px';el.innerHTML=artHTML(def.art)+`<em aria-hidden="true">${rarity.name}</em><span></span>`;
+  el.style.left=p.x+'px';el.style.top=p.y+'px';el.innerHTML=artHTML(def.art)+'<span></span>';
   el.onclick=e=>{if(claimSkillBonus(id)&&e.detail===0)$('skillHold').focus({preventScroll:true});};
   const node={id,key,craft,amount,windfall:1+Math.floor(Math.random()*5),rarity:rarity.id,...p,left:6,el};s.nodes.push(node);$('skillBonusLayer').append(el);refreshSkillBonusOffer(node);return id;
 }
@@ -2586,7 +2588,7 @@ function claimSkillBonus(id){
     if(!instant)reward+=' · +'+amount+' '+SKILLS[key].item;
   }
   game.workAction=.48;game.lastActiveSkill=key;
-  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+rarity.name+(instant?' find':'')+'</strong><span>'+(instant?'+'+amount+' '+SKILLS[key].item:'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s')+'</span>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
+  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+(instant?'+'+amount+' '+SKILLS[key].item:'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s')+'</strong>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
   $('skillBonusStatus').textContent=rarity.name+' '+BONUS_DEFS[key].name+' collected. '+reward;refreshUI();save();return true;
 }
 
@@ -2730,7 +2732,19 @@ function moveHudPin(id,direction){
 function setArenaSpeed(value){
  if(data.devSpeedUnlocked){if(![1,2,5,10,25,50,100,500].includes(value))return;settleIdleTime();if(game.scene==='combat')game.devSpeed=value;else game.skillSpeed=value;}
  else if(!setTimeRate(game.scene==='combat'?'delve':'skilling',value))return;
- $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');refreshArenaUI();
+ closeSpeedChoices(true);refreshArenaUI();
+}
+
+function closeSpeedChoices(restoreFocus=false){
+ $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');if(restoreFocus)$('speedToggle').focus({preventScroll:true});
+}
+
+function positionSpeedChoices(){
+ const host=$('speedOptions');if(host.classList.contains('hidden'))return;
+ const button=$('speedToggle').getBoundingClientRect(),parent=$('speedControl').getBoundingClientRect(),stage=$('stageWrap').getBoundingClientRect(),box=host.getBoundingClientRect();
+ const left=clamp(data.hudLayout.side==='left'?button.right+12:button.left-box.width-12,Math.max(8,stage.left+8),Math.max(8,Math.min(innerWidth,stage.right)-box.width-8));
+ const top=clamp(button.top,Math.max(8,stage.top+8),Math.max(8,Math.min(innerHeight,stage.bottom)-box.height-8));
+ host.style.left=(left-parent.left)+'px';host.style.right='auto';host.style.top=(top-parent.top)+'px';host.style.bottom='auto';
 }
 
 function installArenaUI(){installZoneShopPin();
@@ -2738,7 +2752,7 @@ function installArenaUI(){installZoneShopPin();
   $('quickPause').classList.add('hud-icon');$('quickPause').removeAttribute('title');
   $('speedToggle').classList.add('hud-icon');$('speedToggle').innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="m5 7 11 9L5 25V7Zm12 0 11 9-11 9V7Z" fill="currentColor"/></svg><span class="speed-badge">1×</span>';
   $('speedToggle').setAttribute('aria-expanded','false');$('speedToggle').setAttribute('aria-controls','speedOptions');
-  $('speedToggle').onclick=()=>{const expanded=$('speedOptions').classList.toggle('hidden')===false;$('speedToggle').setAttribute('aria-expanded',String(expanded));if(expanded)$('speedOptions').querySelector('.active')?.focus({preventScroll:true});};
+  $('speedToggle').onclick=()=>{const host=$('speedOptions'),expanded=host.classList.toggle('hidden')===false;$('speedToggle').setAttribute('aria-expanded',String(expanded));if(expanded){refreshSpeedChoices();positionSpeedChoices();host.querySelector('.active')?.focus({preventScroll:true});}};
   $('speedOptions').querySelectorAll('[data-speed]').forEach(b=>b.onclick=()=>setArenaSpeed(Number(b.dataset.speed)));
   for(const pin of ARENA_PINS){const button=pin.id==='speed'?$('speedToggle'):$(pin.element);button.dataset.tooltip=pin.name;if(pin.id!=='pause')button.removeAttribute('title');}
   $('stageWrap').insertAdjacentHTML('beforeend','<aside class="notice-column" id="noticeColumn" aria-label="Warnings and recent notifications"><button type="button" id="noticeHistoryButton" class="notice-history-button '+((data.noticeHistory||[]).length?'':'hidden')+'" aria-label="Read recent messages" title="Read recent messages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Zm4 4h8M8 12h6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button></aside>');
@@ -2746,8 +2760,9 @@ function installArenaUI(){installZoneShopPin();
   $('toastStack').classList.add('arena-notices');$('noticeHistoryButton').onclick=()=>{openDrawer('settings');const history=$('recentMessages');history.open=true;history.scrollIntoView({block:'start'});history.querySelector('summary').focus();};
   $('damageStat').closest('.panel-section').insertAdjacentHTML('afterend','<section class="panel-section combat-readiness" id="combatReadiness"></section>');
   $('stageWrap').dataset.hudSide=data.hudLayout.side;arenaInstalled=true;applyHudLayout();refreshArenaUI();
-  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#speedControl')){$('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');}});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('speedOptions').classList.contains('hidden')){e.preventDefault();e.stopImmediatePropagation();$('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');$('speedToggle').focus();}},true);
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#speedControl'))closeSpeedChoices();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('speedOptions').classList.contains('hidden')){e.preventDefault();e.stopImmediatePropagation();closeSpeedChoices(true);}},true);
+  window.addEventListener('resize',positionSpeedChoices);
 }
 
 function renderLegacySettingsDrawer(){
@@ -3159,11 +3174,13 @@ async function redeemCodeAction(value){
 
 function skillingTimeMultiplier(){return selectedTimeRate('skilling')*(data.devSpeedUnlocked?(game.skillSpeed||1):1);}
 
-function speedControlVisible(){return !!data.devSpeedUnlocked||masteryFor().points>0||timeRank(game.scene==='combat'?'delve':'skilling')>0;}
+function speedControlVisible(){return !!data.devSpeedUnlocked||masteryFor().points>0||timeRank('delve')>0||timeRank('skilling')>0;}
 
 function speedControlName(){return game.scene==='combat'?'Delve speed':'Skilling speed';}
 
 function selectedSceneSpeed(){return data.devSpeedUnlocked?(game.scene==='combat'?(game.devSpeed||1):(game.skillSpeed||1)):selectedTimeRate(game.scene==='combat'?'delve':'skilling');}
+
+function displayedSceneSpeed(){return game.scene==='combat'?delvingTimeMultiplier():skillingTimeMultiplier();}
 
 function advanceActiveWork(seconds){
  if(!game.holdSkill){game.activeClockMs+=seconds*1000;return;}
@@ -3271,7 +3288,7 @@ function refreshArenaUI(){
  if(!arenaInstalled)return;const dps=weaponDps(data.weaponType,{run:true});$('quickDamage').textContent=Math.round(dps);$('hudWeapon').querySelector('small').textContent='DPS';$('hudWeapon').title=dps.toFixed(1)+' DPS';$('hudWeapon').setAttribute('aria-label','Equipment · '+dps.toFixed(1)+' damage per second');
  const side=data.hudLayout?.side||'right';if($('stageWrap').dataset.hudSide!==side||document.querySelector('.hud-actions').dataset.order!==data.hudLayout.order.join(','))applyHudLayout();
  $('speedControl').classList.toggle('hidden',!speedControlVisible());refreshSpeedChoices();
- const speed=$('speedToggle');speed.dataset.tooltip=speedControlName()+' · '+selectedSceneSpeed()+'×';speed.setAttribute('aria-label',speedControlName()+' '+selectedSceneSpeed()+' times');speed.querySelector('.speed-badge').textContent=selectedSceneSpeed()+'×';$('quickPause').dataset.tooltip=game.manualPaused?'Resume':'Pause';
+ const speed=$('speedToggle'),rate=displayedSceneSpeed();speed.dataset.tooltip=speedControlName()+' · '+rate+'×';speed.setAttribute('aria-label',speedControlName()+' '+rate+' times. Adjust Delving and Skilling.');speed.querySelector('.speed-badge').textContent=rate+'×';$('quickPause').dataset.tooltip=game.manualPaused?'Resume':'Pause';
  refreshEquipmentUI();refreshDungeoneeringUI();const host=$('combatReadiness'),signature=equipmentUIState();if(host&&drawerKind==='gear'&&host.dataset.signature!==signature){host.innerHTML=pacingReadinessHtml();host.dataset.signature=signature;}
 }
 
@@ -4245,6 +4262,10 @@ function paintWorkshopReward(anchor){
  items.forEach(([key,amount],index)=>{const x=clamp(anchor.x-width/2+index*82,16,game.viewWidth-80),image=presentationResourceImage(key);if(image.complete&&image.naturalWidth)ctx.drawImage(image,x,y-13,25,25);ctx.font='700 15px system-ui';ctx.textAlign='left';ctx.lineWidth=4;ctx.strokeStyle='#151710';ctx.strokeText('+'+amount,x+29,y+5);ctx.fillStyle=key==='gold'?'#f4d287':'#f0e3c7';ctx.fillText('+'+amount,x+29,y+5);});ctx.restore();
 }
 
+function workAnimationSpeed(rate){return .6+.15*(Math.min(4,Math.max(1,rate))-1);}
+
+function workSpeedTier(rate){return rate<=4?0:rate<10?1:rate<24?2:3;}
+
 function workshopAnimation(key,active,working){
  const base=SKILLS[key].scene||key,pose={mine:'mine',silverMine:'mine',forge:'smith',silverSmelt:'smith',wood:'wood',fletch:'fletch',ward:'ward',rune:'rune',polish:'polish',scavenge:'scavenge'}[base]||'scavenge';
  const interval=skillInterval(key,active),elapsed=active?(game.activeClockMs-(game.lastActiveAt?.[key]??game.activeClockMs))/1000:(data.jobTimers[key]||0),phase=working&&!reducedMotion()?Math.min(.9999,Math.max(0,elapsed/interval)):.3;
@@ -4254,6 +4275,7 @@ function workshopAnimation(key,active,working){
  const visualPhase=working&&!reducedMotion()?((time*DeepwellAvatar.workRate(pose))%1):.65;
  const reaction=game.workBonusReaction?.key===key?game.workBonusReaction:null;
  const frame={key,base,pose,working,phase:visualPhase,productionPhase:phase,time,workCycle:Math.floor(time*DeepwellAvatar.workRate(pose)),workBlend:reducedMotion()?(working?1:0):presentation.blend,workPhase:visualPhase,bonusReaction:reaction&&!reducedMotion()?{progress:reaction.age/reaction.duration,variant:reaction.variant}:null,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
+ frame.speedRate=skillingTimeMultiplier()*(active?skillBuffMultiplier(key):1);frame.speedTier=workSpeedTier(frame.speedRate);
  const rig=DeepwellAvatar.poseRig(frame);
  if(working&&!reducedMotion()&&rig.contact&&!presentation.lastContact&&['mine','smith','wood','polish'].includes(pose))presentation.impact={point:rig.toolTip,at:now,seed:frame.workCycle};
  presentation.lastContact=rig.contact;return frame;
@@ -4308,7 +4330,20 @@ function paintWorkshopSceneEffects(frame,anchor,layer){
   const origin=striking?impact.point:rig.toolTip||center,count=pose==='smith'?10:pose==='ward'?7:5;
   for(let i=0;i<count;i++){const age=striking?clamp(impactAge/.36,0,1):((time*.5+i/count)%1),a=i*2.399+(impact?.seed||0)*.3,dist=age*(magical?16:pose==='smith'?19:11);ctx.globalAlpha=(1-age)*.8;ctx.strokeStyle=pose==='smith'?'#f5bf75':magical?theme.light:pose==='wood'||pose==='fletch'?'#c8a16a':pose==='scavenge'?'#b4a080':'#a7b6b7';ctx.lineWidth=pose==='smith'?.8:1;ctx.beginPath();ctx.moveTo(origin.x+Math.cos(a)*dist,origin.y+Math.sin(a)*dist*.6-age*6);ctx.lineTo(origin.x+Math.cos(a)*(dist+2.4),origin.y+Math.sin(a)*(dist+2.4)*.6-age*6);ctx.stroke();}
  }
- ctx.restore();paintWorkshopBonusCapture(frame,anchor,rig);
+ ctx.restore();paintWorkshopBonusCapture(frame,anchor,rig);paintWorkshopSpeedEffects(frame,anchor,rig);
+}
+
+function paintWorkshopSpeedEffects(frame,anchor,rig){
+ const tier=frame.speedTier;if(!tier||!frame.working||reducedMotion()||!activeSkillCanAdvance(frame.key))return;
+ const clock=game.workEffectsClock||0,point=rig.workPiece||rig.toolTip||rig.main,color=['wood','fletch','scavenge'].includes(frame.pose)?'#d9bc83':['ward','rune'].includes(frame.pose)?frame.theme.light:frame.pose==='smith'?'#ffd18a':'#c7dce3',count=3+tier*3;
+ ctx.save();ctx.translate(anchor.x,anchor.y);ctx.scale(anchor.scale,anchor.scale);ctx.lineCap='round';
+ // A bounded number of motes communicates speed beyond the hand-motion cap.
+ for(let i=0;i<count;i++){const age=(clock*.7+i/count)%1,a=i*2.399,travel=age*(10+tier*4),x=point.x+Math.cos(a)*travel,y=point.y+Math.sin(a)*travel*.5-age*10;ctx.globalAlpha=(1-age)*.65;ctx.strokeStyle=i%3?color:frame.theme.spark;ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*2,y+Math.sin(a)*2);ctx.stroke();}
+ if(tier>=2){
+  const cycle=clock%(tier===3?2:2.6),age=cycle/.8;
+  if(age<1){const center=tier===3?{x:0,y:-80}:point;ctx.globalAlpha=Math.sin(Math.PI*age)*.65;for(let i=0;i<count;i++){const a=-Math.PI*.9+i*Math.PI*.8/(count-1),d=5+age*(tier===3?27:19),x=center.x+Math.cos(a)*d,y=center.y+Math.sin(a)*d;ctx.strokeStyle=i%2?frame.theme.light:color;ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*2.8,y+Math.sin(a)*2.8);ctx.stroke();if(i%3===0)workshopGlyph(ctx,x,y,1.4,i%4,frame.theme.spark);}}
+ }
+ ctx.restore();
 }
 
 function paintWorkshopBonusCapture(frame,anchor,rig){
@@ -5123,12 +5158,12 @@ function buyTimeUpgrade(kind){
  if(!['delve','skilling'].includes(kind)||masteryFor().points<1)return false;
  settleIdleTime();const m=masteryFor(),key=kind==='delve'?'delveSpeed':'skillingSpeed';m[key]++;m.points--;
  data.timeRates[kind]=earnedTimeRate(kind);masteryDraft=null;shopSignature='';
- toast((kind==='delve'?'Delving':'Skilling')+' '+earnedTimeRate(kind)+'×',kind==='skilling'?'Gathering, crafting and idle work, including offline.':'Combat, enemies and ammunition advance together.');
+ toast((kind==='delve'?'Delving':'Skilling')+' '+earnedTimeRate(kind)+'×',(kind==='skilling'?'Gathering, crafting and idle work, including offline.':'Combat, enemies and ammunition advance together.')+' Use the Speed button to choose your rate.');
  save();refreshUI();return true;
 }
 
 function setTimeRate(kind,value){
- if(!timeRateChoices(kind).includes(value))return false;settleIdleTime();data.timeRates[kind]=value;save();return true;
+ if(!['delve','skilling'].includes(kind)||!timeRateChoices(kind).includes(value))return false;settleIdleTime();data.timeRates[kind]=value;save();return true;
 }
 
 function gameTimeShopHtml(){
@@ -5140,14 +5175,23 @@ function gameTimeShopHtml(){
 }
 
 function refreshSpeedChoices(){
- const host=$('speedOptions'),kind=game.scene==='combat'?'delve':'skilling',choices=data.devSpeedUnlocked?[1,2,5,10,25,50,100,500]:timeRateChoices(kind),signature=JSON.stringify([kind,choices,data.devSpeedUnlocked]);
+ const host=$('speedOptions'),kind=game.scene==='combat'?'delve':'skilling',signature=JSON.stringify([kind,timeRank('delve'),timeRank('skilling'),!!data.devSpeedUnlocked]);
+ if(host.dataset.context&&host.dataset.context!==kind)closeSpeedChoices();host.dataset.context=kind;
  if(host.dataset.choices!==signature){
-  host.dataset.choices=signature;host.innerHTML=choices.map(rate=>'<button type="button" data-speed="'+rate+'">'+rate+'×</button>').join('')+'<button type="button" class="speed-shop-link" id="speedShopLink">Game time '+uiIcon('arrow')+'</button>';
-  host.querySelectorAll('[data-speed]').forEach(button=>button.onclick=()=>setArenaSpeed(Number(button.dataset.speed)));
-  $('speedShopLink').onclick=()=>{host.classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');openZoneShop();};
+  host.dataset.choices=signature;host.setAttribute('aria-label','Game speed');
+  const testing=data.devSpeedUnlocked?'<section class="speed-option-group" aria-labelledby="testingSpeedTitle"><h3 id="testingSpeedTitle">Testing · '+(kind==='delve'?'Delving':'Skilling')+'</h3><p>Additional multiplier</p><div class="speed-rate-grid">'+[1,2,5,10,25,50,100,500].map(rate=>'<button type="button" data-speed="'+rate+'" aria-label="Testing '+(kind==='delve'?'Delving':'Skilling')+' multiplier '+rate+' times">'+rate+'×</button>').join('')+'</div></section>':'';
+  host.innerHTML=testing+[kind,kind==='delve'?'skilling':'delve'].map(path=>{
+   const name=path==='delve'?'Delving':'Skilling';
+   return '<section class="speed-option-group" aria-labelledby="'+path+'SpeedTitle"><h3 id="'+path+'SpeedTitle">'+name+'</h3><p>'+(path==='delve'?'Combat and encounters':'Includes active work and idling')+'</p><div class="speed-rate-grid">'+timeRateChoices(path).map(rate=>'<button type="button" data-time-kind="'+path+'" data-time-rate="'+rate+'" '+(!data.devSpeedUnlocked&&path===kind?'data-speed="'+rate+'" ':'')+'aria-label="'+name+' speed '+rate+' times">'+rate+'×</button>').join('')+'</div></section>';
+  }).join('')+'<button type="button" class="speed-shop-link" id="speedShopLink">Unlock more speeds '+uiIcon('arrow')+'</button>';
+  host.querySelectorAll('[data-time-rate]').forEach(button=>button.onclick=()=>{if(setTimeRate(button.dataset.timeKind,Number(button.dataset.timeRate))){closeSpeedChoices(true);refreshArenaUI();}});
+  host.querySelectorAll('[data-speed]:not([data-time-rate])').forEach(button=>button.onclick=()=>setArenaSpeed(Number(button.dataset.speed)));
+  $('speedShopLink').onclick=()=>{closeSpeedChoices();openZoneShop();};
   host.querySelectorAll('button').forEach(bindTouchNavigation);
  }
- host.querySelectorAll('[data-speed]').forEach(button=>button.classList.toggle('active',Number(button.dataset.speed)===selectedSceneSpeed()));
+ host.querySelectorAll('[data-time-rate]').forEach(button=>{const active=Number(button.dataset.timeRate)===selectedTimeRate(button.dataset.timeKind);button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+ host.querySelectorAll('[data-speed]:not([data-time-rate])').forEach(button=>{const active=Number(button.dataset.speed)===selectedSceneSpeed();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+ if(!host.classList.contains('hidden'))positionSpeedChoices();
 }
 
 function dungeonPerkUnlocked(p){return !!p&&(p.level<=1||Math.max(dungeonProgress().level,data.legacyDungeoneeringLevel||0)>=p.level);}
@@ -5405,7 +5449,7 @@ function refreshSkillBonusOffer(node){
  const reward=skillBonusReward(node),rarity=reward.rarity,skill=SKILLS[node.key],effect=reward.instant?'+'+reward.amount+' '+skill.item+' instantly':'+'+Math.round(rarity.speed*100)+'% '+(node.craft?'crafting':'gathering')+' speed for '+rarity.seconds+' seconds of active work',signature=(reward.instant?'resource:':'speed:')+effect;
  if(node.el.dataset.effect===signature)return;
  node.el.dataset.effect=signature;node.el.dataset.reward=reward.instant?'resource':'speed';const badge=node.el.querySelector(':scope > span');if(reward.instant)badge.innerHTML=artHTML(RESOURCE_ART[skill.resource])+'+'+reward.amount;else badge.textContent='+'+Math.round(rarity.speed*100)+'% · '+rarity.seconds+'s';
- node.el.setAttribute('aria-label',rarity.name+' '+BONUS_DEFS[node.key].name+': '+effect+(reward.instant?' · stronger speed bonus already active':node.craft?'':', plus '+node.amount+' '+skill.item));node.el.title=rarity.name+' · '+effect+' · tap or drag across';
+ node.el.setAttribute('aria-label',rarity.name+' '+BONUS_DEFS[node.key].name+': '+effect+(reward.instant?' · stronger speed bonus already active':node.craft?'':', plus '+node.amount+' '+skill.item));node.el.title=effect+' · tap or drag across';
 }
 
 function grantSkillBuff(key,rarity){
@@ -5429,7 +5473,7 @@ function advanceSkillWork(seconds,speed=skillingTimeMultiplier()){
 
 function beginSkillBonusReaction(key,rarity,origin){
  game.workBonusSerial=(game.workBonusSerial||0)+1;
- game.workBonusReaction={key,age:0,duration:rarity.speed>=.75?1.25:1.05,variant:game.workBonusSerial%2,rarity:rarity.id,color:rarity.color,origin:origin?{x:origin.x,y:origin.y}:null};
+ game.workBonusReaction={key,age:0,duration:rarity.speed>=.75?1.6:1.35,variant:game.workBonusSerial%2,rarity:rarity.id,color:rarity.color,origin:origin?{x:origin.x,y:origin.y}:null};
 }
 
 function tickSkillBonusReaction(dt){
@@ -5446,14 +5490,14 @@ function refreshSkillBuffUI(){
  const rarity=buff.definition,working=game.holdSkill===key&&activeSkillCanAdvance(key);
  host.style.setProperty('--skill-rarity',rarity.color);host.dataset.rarity=rarity.id;
  host.querySelector('b').textContent='+'+Math.round(rarity.speed*100)+'% '+(SKILLS[key].cost||key==='ward'?'crafting':'gathering')+' speed';
- host.querySelector('small').textContent=rarity.name+' · '+buff.left.toFixed(1)+'s'+(working?'':' · ready');
+ host.querySelector('small').textContent=buff.left.toFixed(1)+'s remaining'+(working?'':' · paused');
  host.querySelector('i').style.width=Math.min(100,buff.left/rarity.seconds*100)+'%';
  host.setAttribute('aria-label',skillBuffLabel(buff)+(working?'':'. Paused until you work.'));
 }
 
 function showSkillBuffDetails(){
  const key=game.scene,buffs=skillBuffs(key);if(!buffs.length)return;
- showOverlay('<p class="overlay-kicker">ACTIVE SKILLING BONUS</p><h2>'+SKILLS[key].name+'</h2>'+codexRuleList(buffs.map(b=>[b.definition.name,'+'+Math.round(b.definition.speed*100)+'% speed · '+b.left.toFixed(1)+'s remaining']))+'<p>The strongest bonus applies. Timers count real seconds of active work in this activity. Equal pickups refresh it; stronger pickups improve it. Weaker pickups give 1–5 of this activity’s output instantly instead, as free bonus items. Normal crafting still consumes ingredients. Idling and offline work keep their normal rate.</p><button type="button" class="primary-button" id="skillBuffReturn">Return to work</button>','skill-buff');
+ showOverlay('<p class="overlay-kicker">ACTIVE SKILLING BONUS</p><h2>'+SKILLS[key].name+'</h2>'+codexRuleList(buffs.map(b=>['+'+Math.round(b.definition.speed*100)+'% speed',b.left.toFixed(1)+'s remaining']))+'<p>The strongest bonus applies. Timers count real seconds of active work in this activity. Equal pickups refresh it; stronger pickups improve it. Weaker pickups give 1–5 of this activity’s output instantly instead, as free bonus items. Normal crafting still consumes ingredients. Idling and offline work keep their normal rate.</p><button type="button" class="primary-button" id="skillBuffReturn">Return to work</button>','skill-buff');
  $('skillBuffReturn').onclick=()=>{hideOverlay();$('skillHold').focus({preventScroll:true});};
 }
 /* END LIVING SKILLS */
@@ -5802,7 +5846,8 @@ function update(dt){
  const simDt=dt*delvingTimeMultiplier(),skillSpeed=skillingTimeMultiplier();
  game.tipClock=(game.tipClock||0)+dt;tickLootReceipts(dt);
  const visualBoost=game.holdSkill===game.scene&&SKILLS[game.scene]?skillBuffMultiplier(game.scene):1;
- game.workVisualClock=(game.workVisualClock||0)+dt*Math.min(2.5,skillSpeed*visualBoost);
+ game.workVisualClock=(game.workVisualClock||0)+dt*workAnimationSpeed(skillSpeed*visualBoost);
+ if(SKILLS[game.scene]&&(game.holdSkill===game.scene||data.idleJobs.includes(game.scene))&&activeSkillCanAdvance(game.scene))game.workEffectsClock=(game.workEffectsClock||0)+dt;
  tickSkillBonusReaction(dt);
  game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);
  advanceSkillWork(dt,skillSpeed);

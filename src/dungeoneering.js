@@ -238,7 +238,8 @@ function update(dt){
  const simDt=dt*delvingTimeMultiplier(),skillSpeed=skillingTimeMultiplier();
  game.tipClock=(game.tipClock||0)+dt;tickLootReceipts(dt);
  const visualBoost=game.holdSkill===game.scene&&SKILLS[game.scene]?skillBuffMultiplier(game.scene):1;
- game.workVisualClock=(game.workVisualClock||0)+dt*Math.min(2.5,skillSpeed*visualBoost);
+ game.workVisualClock=(game.workVisualClock||0)+dt*workAnimationSpeed(skillSpeed*visualBoost);
+ if(SKILLS[game.scene]&&(game.holdSkill===game.scene||data.idleJobs.includes(game.scene))&&activeSkillCanAdvance(game.scene))game.workEffectsClock=(game.workEffectsClock||0)+dt;
  tickSkillBonusReaction(dt);
  game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);
  advanceSkillWork(dt,skillSpeed);

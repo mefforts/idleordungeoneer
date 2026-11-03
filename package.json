@@ -1,11 +1,11 @@
 {
   "name": "idle-or-dungeoneer",
-  "version": "11.2.0",
+  "version": "11.2.1",
   "private": true,
   "description": "A standalone fantasy RPG with a minimal runestone HUD, linked crafting and a readable Codex.",
   "scripts": {
     "start": "python3 -m http.server 8000 --bind 0.0.0.0",
-    "test": "node tests/smoke.cjs && node tests/combat.cjs && node tests/quality.cjs && node tests/systems.cjs && node tests/gestures.cjs && node tests/native-gestures.cjs && node tests/arena.cjs && node tests/dungeoneering.cjs && node tests/tiers.cjs && node tests/presentation.cjs && node tests/revision.cjs && node tests/zone-shop.cjs && node tests/testing-speed.cjs && node tests/environments.cjs && node tests/encounters.cjs && node tests/mobile.cjs && node tests/loading.cjs && node tests/ammunition.cjs && node tests/workshop.cjs && node tests/restoration.cjs && node tests/delve-travel.cjs && node tests/rare-elites.cjs && node tests/zone-depths.cjs && node tests/player-rig.cjs && node tests/skilling-bonuses.cjs && node tests/spire-collisions.cjs && node tests/dungeon-combat.cjs && node tests/journey.cjs && node tests/ability-effects.cjs",
+    "test": "node tests/smoke.cjs && node tests/combat.cjs && node tests/quality.cjs && node tests/systems.cjs && node tests/gestures.cjs && node tests/native-gestures.cjs && node tests/arena.cjs && node tests/dungeoneering.cjs && node tests/tiers.cjs && node tests/presentation.cjs && node tests/revision.cjs && node tests/zone-shop.cjs && node tests/testing-speed.cjs && node tests/environments.cjs && node tests/encounters.cjs && node tests/mobile.cjs && node tests/loading.cjs && node tests/ammunition.cjs && node tests/workshop.cjs && node tests/restoration.cjs && node tests/delve-travel.cjs && node tests/rare-elites.cjs && node tests/zone-depths.cjs && node tests/player-rig.cjs && node tests/skilling-bonuses.cjs && node tests/spire-collisions.cjs && node tests/dungeon-combat.cjs && node tests/journey.cjs && node tests/ability-effects.cjs && node tests/speed-controls.cjs",
     "build": "node scripts/sync-systems.cjs",
     "report:balance": "node scripts/report-tier-balance.cjs",
     "review:ui": "node scripts/presentation-review.cjs",
@@ -36,7 +36,8 @@
     "review:headwear": "node scripts/review-headwear.cjs",
     "review:skilling": "node scripts/review-skilling.cjs",
     "review:arms": "node scripts/review-arm-layering.cjs",
-    "review:abilities": "node scripts/review-ability-effects.cjs"
+    "review:abilities": "node scripts/review-ability-effects.cjs",
+    "review:speeds": "node scripts/review-speed-controls.cjs"
   },
   "devDependencies": {
     "acorn": "8.19.0",

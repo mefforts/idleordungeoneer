@@ -8,9 +8,10 @@ async function redeemCodeAction(value){
  return REDEEM_CODE_ACTIONS[fingerprint]||'';
 }
 function skillingTimeMultiplier(){return selectedTimeRate('skilling')*(data.devSpeedUnlocked?(game.skillSpeed||1):1);}
-function speedControlVisible(){return !!data.devSpeedUnlocked||masteryFor().points>0||timeRank(game.scene==='combat'?'delve':'skilling')>0;}
+function speedControlVisible(){return !!data.devSpeedUnlocked||masteryFor().points>0||timeRank('delve')>0||timeRank('skilling')>0;}
 function speedControlName(){return game.scene==='combat'?'Delve speed':'Skilling speed';}
 function selectedSceneSpeed(){return data.devSpeedUnlocked?(game.scene==='combat'?(game.devSpeed||1):(game.skillSpeed||1)):selectedTimeRate(game.scene==='combat'?'delve':'skilling');}
+function displayedSceneSpeed(){return game.scene==='combat'?delvingTimeMultiplier():skillingTimeMultiplier();}
 function advanceActiveWork(seconds){
  if(!game.holdSkill){game.activeClockMs+=seconds*1000;return;}
  const before=game.activeHits||0;let left=seconds;

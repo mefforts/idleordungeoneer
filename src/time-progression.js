@@ -38,11 +38,11 @@ function buyTimeUpgrade(kind){
  if(!['delve','skilling'].includes(kind)||masteryFor().points<1)return false;
  settleIdleTime();const m=masteryFor(),key=kind==='delve'?'delveSpeed':'skillingSpeed';m[key]++;m.points--;
  data.timeRates[kind]=earnedTimeRate(kind);masteryDraft=null;shopSignature='';
- toast((kind==='delve'?'Delving':'Skilling')+' '+earnedTimeRate(kind)+'×',kind==='skilling'?'Gathering, crafting and idle work, including offline.':'Combat, enemies and ammunition advance together.');
+ toast((kind==='delve'?'Delving':'Skilling')+' '+earnedTimeRate(kind)+'×',(kind==='skilling'?'Gathering, crafting and idle work, including offline.':'Combat, enemies and ammunition advance together.')+' Use the Speed button to choose your rate.');
  save();refreshUI();return true;
 }
 function setTimeRate(kind,value){
- if(!timeRateChoices(kind).includes(value))return false;settleIdleTime();data.timeRates[kind]=value;save();return true;
+ if(!['delve','skilling'].includes(kind)||!timeRateChoices(kind).includes(value))return false;settleIdleTime();data.timeRates[kind]=value;save();return true;
 }
 function gameTimeShopHtml(){
  const m=masteryFor(),journey=dungeoneeringJourney();
@@ -52,13 +52,22 @@ function gameTimeShopHtml(){
  }).join('')+'</div><small>Each rank costs one shared Dungeoneering point. Milestones: Zones 2, 5, 10, 20, 40…</small></section>';
 }
 function refreshSpeedChoices(){
- const host=$('speedOptions'),kind=game.scene==='combat'?'delve':'skilling',choices=data.devSpeedUnlocked?[1,2,5,10,25,50,100,500]:timeRateChoices(kind),signature=JSON.stringify([kind,choices,data.devSpeedUnlocked]);
+ const host=$('speedOptions'),kind=game.scene==='combat'?'delve':'skilling',signature=JSON.stringify([kind,timeRank('delve'),timeRank('skilling'),!!data.devSpeedUnlocked]);
+ if(host.dataset.context&&host.dataset.context!==kind)closeSpeedChoices();host.dataset.context=kind;
  if(host.dataset.choices!==signature){
-  host.dataset.choices=signature;host.innerHTML=choices.map(rate=>'<button type="button" data-speed="'+rate+'">'+rate+'×</button>').join('')+'<button type="button" class="speed-shop-link" id="speedShopLink">Game time '+uiIcon('arrow')+'</button>';
-  host.querySelectorAll('[data-speed]').forEach(button=>button.onclick=()=>setArenaSpeed(Number(button.dataset.speed)));
-  $('speedShopLink').onclick=()=>{host.classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');openZoneShop();};
+  host.dataset.choices=signature;host.setAttribute('aria-label','Game speed');
+  const testing=data.devSpeedUnlocked?'<section class="speed-option-group" aria-labelledby="testingSpeedTitle"><h3 id="testingSpeedTitle">Testing · '+(kind==='delve'?'Delving':'Skilling')+'</h3><p>Additional multiplier</p><div class="speed-rate-grid">'+[1,2,5,10,25,50,100,500].map(rate=>'<button type="button" data-speed="'+rate+'" aria-label="Testing '+(kind==='delve'?'Delving':'Skilling')+' multiplier '+rate+' times">'+rate+'×</button>').join('')+'</div></section>':'';
+  host.innerHTML=testing+[kind,kind==='delve'?'skilling':'delve'].map(path=>{
+   const name=path==='delve'?'Delving':'Skilling';
+   return '<section class="speed-option-group" aria-labelledby="'+path+'SpeedTitle"><h3 id="'+path+'SpeedTitle">'+name+'</h3><p>'+(path==='delve'?'Combat and encounters':'Includes active work and idling')+'</p><div class="speed-rate-grid">'+timeRateChoices(path).map(rate=>'<button type="button" data-time-kind="'+path+'" data-time-rate="'+rate+'" '+(!data.devSpeedUnlocked&&path===kind?'data-speed="'+rate+'" ':'')+'aria-label="'+name+' speed '+rate+' times">'+rate+'×</button>').join('')+'</div></section>';
+  }).join('')+'<button type="button" class="speed-shop-link" id="speedShopLink">Unlock more speeds '+uiIcon('arrow')+'</button>';
+  host.querySelectorAll('[data-time-rate]').forEach(button=>button.onclick=()=>{if(setTimeRate(button.dataset.timeKind,Number(button.dataset.timeRate))){closeSpeedChoices(true);refreshArenaUI();}});
+  host.querySelectorAll('[data-speed]:not([data-time-rate])').forEach(button=>button.onclick=()=>setArenaSpeed(Number(button.dataset.speed)));
+  $('speedShopLink').onclick=()=>{closeSpeedChoices();openZoneShop();};
   host.querySelectorAll('button').forEach(bindTouchNavigation);
  }
- host.querySelectorAll('[data-speed]').forEach(button=>button.classList.toggle('active',Number(button.dataset.speed)===selectedSceneSpeed()));
+ host.querySelectorAll('[data-time-rate]').forEach(button=>{const active=Number(button.dataset.timeRate)===selectedTimeRate(button.dataset.timeKind);button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+ host.querySelectorAll('[data-speed]:not([data-time-rate])').forEach(button=>{const active=Number(button.dataset.speed)===selectedSceneSpeed();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+ if(!host.classList.contains('hidden'))positionSpeedChoices();
 }
 function dungeonPerkUnlocked(p){return !!p&&(p.level<=1||Math.max(dungeonProgress().level,data.legacyDungeoneeringLevel||0)>=p.level);}
