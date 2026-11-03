@@ -10,7 +10,7 @@ const {createRuntime}=require('./runtime.cjs');
    await c.addInitScript(({seed,fixedRandom})=>{if(!sessionStorage.getItem('systems-seeded')){localStorage.setItem('deepwell-prototype-v1',JSON.stringify(seed));sessionStorage.setItem('systems-seeded','1');}if(fixedRandom)Math.random=()=>.01;},{seed,fixedRandom});
    const p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));await p.route(baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','window.__systemsCompleteFloor=()=>clearFloor();window.__systemsCommonBonus=()=>{const roll=rollSkillBonusRarity;rollSkillBonusRarity=()=>SKILL_BONUS_RARITIES[0];try{return spawnSkillBonus();}finally{rollSkillBonusRarity=roll;}};resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);')}));await p.goto(baseURL);await p.waitForFunction(()=>window.__deepwell&&!document.documentElement.classList.contains('game-loading'));return {c,p};
   }
-  const rich={gold:10000,ore:20000,silverOre:1000,opals:100,cutOpals:10,bars:2000,logs:2000,cloth:2000,scraps:2000,arrows:1000,runes:1000,essence:1000,blacksmithXp:3000};
+  const rich={biomeLoot:{0:100},gold:10000,ore:20000,silverOre:1000,opals:100,cutOpals:10,bars:2000,logs:2000,cloth:2000,scraps:2000,arrows:1000,runes:1000,essence:1000,blacksmithXp:3000};
   {
    const {c,p}=await profile({styles:null,stationLevels:null,progressionVersion:1,weapon:3,armor:2,enchant:1,skillBoosts:{blacksmithing:1},weaponType:'bow',unlockedWeapons:['sword','bow']});
    const st=await p.evaluate(()=>__deepwell.getState());for(const s of Object.values(st.data.styles)){assert.equal(s.weapon,3);assert.equal(s.armor,2);assert.equal(s.enchant,1);}assert.equal(st.data.stationLevels.blacksmithing,1);assert.equal(st.data.weapon,3);assert.equal(st.combatStyle,'ranged');
@@ -69,7 +69,7 @@ const {createRuntime}=require('./runtime.cjs');
   }
   {
    const {c,p}=await profile({styles:null,weapon:10,armor:5,weaponType:'greatsword',unlockedWeapons:['sword','greatsword'],masteryIntroSeen:true,mastery:{0:{points:0,earned:15,onslaught:5,intensity:5,fortune:0,adaptation:0}},zone:{index:0,upgrades:{might:6,haste:6,cleave:4,ward:4,vitality:5,regen:4},level:99,xp:0,required:1000000}});
-   await p.click('#introDelve');await p.evaluate(()=>__systemsCompleteFloor());await p.waitForSelector('#selectIdleTask',{timeout:20000});assert.match(await p.locator('.progression-tip').innerText(),/second.*Zone 2/);assert.equal((await p.evaluate(()=>__deepwell.getState())).data.cleared,1);await p.click('#selectIdleTask');assert.equal(await p.locator('#drawerTitle').innerText(),'Skills');await p.locator('[data-idle-skill="mine"]').first().click();assert.equal((await p.evaluate(()=>__deepwell.getState())).data.idleJobs[0],'mine');
+   await p.click('#introDelve');await p.evaluate(()=>__systemsCompleteFloor());await p.waitForSelector('#selectIdleTask',{timeout:20000});assert.match(await p.locator('.progression-tip').innerText(),/Zone 2.*second idle slot/);assert.equal((await p.evaluate(()=>__deepwell.getState())).data.cleared,1);await p.click('#selectIdleTask');assert.equal(await p.locator('#drawerTitle').innerText(),'Skills');await p.locator('[data-idle-skill="mine"]').first().click();assert.equal((await p.evaluate(()=>__deepwell.getState())).data.idleJobs[0],'mine');
    passed.push('Actually clearing Floor 1 shows Select an idle task, which opens Skills and starts an idle task directly');await c.close();
   }
   {

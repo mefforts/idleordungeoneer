@@ -983,6 +983,10 @@ body{background:#14120f;color:var(--text)}
 .notice-column .skills-nudge p{font:11px/1.5 system-ui;margin:3px 0 7px;color:#d3c4a9;text-shadow:inherit}
 .notice-column .skills-nudge>div{display:block}.notice-column .skills-nudge button{min-height:30px;font-size:10px!important;padding:5px 8px!important;border-radius:0!important}
 .notice-column .skills-nudge #skillsNudgeDismiss,.notice-column .skills-nudge #idleNudgeDismiss{padding:0!important;min-width:20px;min-height:24px;font-size:17px!important;color:#dac7a0}
+.notice-column .progression-guide{background:#191c17d9!important;padding:9px 10px;max-width:260px;align-items:start;pointer-events:auto}
+.notice-column .progression-guide p{display:block!important;line-height:1.5}
+.notice-column .progression-guide #progressionGuideOpen{min-height:44px;background:#584329;color:#f7e3bc;border:1px solid #b69c66}
+.notice-column .progression-guide #progressionGuideDismiss{min-height:44px;min-width:32px;padding:0!important;background:transparent;border:0;font-size:21px!important;color:#eed6a6}
 .notice-column .toast .idle-toast-action{padding:6px 8px;margin-top:5px;min-height:31px;border-radius:0;background:#524125ce;color:#f5e3ba;border-color:#bb9f65;font-size:10px}
 /* The station has separate controls and floating text, with no large panel. */
 .skill-action-bar{bottom:24px;left:50%;transform:translateX(-50%);width:min(930px,calc(100% - 160px));padding:0;gap:14px;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none;align-items:end}
@@ -1079,6 +1083,8 @@ body{background:#14120f;color:var(--text)}
  [data-hud-side="left"] .resource-picker{left:50%;right:auto}.resource-picker-options{grid-template-columns:repeat(4,1fr)}.resource-pick{padding:7px}.resource-pick strong{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){.icon-rail [data-tooltip]:after{transition:none}}
+
+@media(max-height:600px){.notice-column .progression-guide{position:fixed;top:90px;left:14px;width:215px;max-height:calc(100dvh - 110px);overflow-y:auto;margin:0;touch-action:pan-y}}
 
 /* Crafted sets and boss mechanic clarity. */
 .armor-set-list{display:grid;gap:12px}.armor-set-card{display:grid;grid-template-columns:104px minmax(0,1fr) 92px;gap:13px;align-items:center;padding:16px;background:linear-gradient(125deg,#3b3328,#29231b);border:1px solid #7f6948}.armor-set-card.is-equipped{border-color:#d9b778;box-shadow:inset 3px 0 #d9b77855}
@@ -1350,7 +1356,7 @@ body.codex-modal-open .stage-wrap,body.mastery-modal-open .stage-wrap{z-index:20
 
 .voucher-redeem{display:block;width:100%;min-height:38px;margin:10px 0 0;padding:8px;font:11px system-ui;color:#f4d794!important;border:1px solid #b49a66!important}.loot-history{font:12px/1.7 system-ui;margin:22px 0}.loot-history summary{cursor:pointer;min-height:44px;padding:10px 0}.loot-history ol{padding:0;list-style:none}.loot-history li{padding:7px 0;border-bottom:1px solid #b8a06b33}.loot-history li small{float:right;color:#bbaa8b;font-size:10px}
 
-.temporary-buffs{position:absolute;z-index:15;pointer-events:auto;color:#ebdfc4;max-width:calc(100% - 76px)}.temporary-buff-count{display:block;font:9px/1.3 system-ui;color:#d8c59f;text-shadow:0 1px 3px #000;margin-bottom:4px}.temporary-buff-strip{display:flex;gap:7px;overflow-x:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-bottom:3px;touch-action:pan-x}.temporary-buff{display:flex;gap:6px;align-items:center;position:relative;flex:0 0 auto;min-width:119px;min-height:44px;padding:5px 9px 5px 4px!important;border:1px solid #baa66e77!important;border-radius:5px!important;background:#152b2beb!important;color:#efe2bd!important;box-shadow:none!important;text-align:left}.temporary-buff>img{width:29px;height:29px;object-fit:contain}.temporary-buff>span{display:grid;gap:3px}.temporary-buff b{font:10px system-ui}.temporary-buff small{font:700 11px system-ui;font-variant-numeric:tabular-nums;color:#ffe1a0}.temporary-buff i{font:700 9px system-ui;color:#c8e8c3;margin-left:3px}.has-temporary-buffs .notice-column{top:var(--notice-after-buffs)!important}
+.temporary-buffs{position:absolute;z-index:15;pointer-events:auto;color:#ebdfc4;max-width:calc(100% - 76px)}.temporary-buff-count{display:block;font:9px/1.3 system-ui;color:#d8c59f;text-shadow:0 1px 3px #000;margin-bottom:4px}.temporary-buff-strip{display:flex;flex-direction:column;gap:5px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;padding-right:3px;touch-action:pan-y}.temporary-buff{display:flex;gap:6px;align-items:center;position:relative;flex:0 0 auto;width:100%;min-width:0;min-height:44px;padding:5px 9px 5px 4px!important;border:1px solid #baa66e77!important;border-radius:5px!important;background:#152b2beb!important;color:#efe2bd!important;box-shadow:none!important;text-align:left}.temporary-buff>img{width:29px;height:29px;object-fit:contain}.temporary-buff>span{display:grid;gap:3px}.temporary-buff b{font:10px system-ui}.temporary-buff small{font:700 11px system-ui;font-variant-numeric:tabular-nums;color:#ffe1a0}.temporary-buff i{font:700 9px system-ui;color:#c8e8c3;margin-left:3px}.has-temporary-buffs .notice-column{top:var(--notice-after-buffs)!important}
 .player-ui .icon-rail .speed-options{display:block;width:236px;padding:12px;max-height:min(65vh,calc(100vh - 20px));overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
 .speed-option-group{margin:0 0 10px;padding:0 0 10px;border-bottom:1px solid #b8a16a66}.speed-option-group h3{font:18px/1.2 Georgia;margin:0;color:#f1dfbc}.speed-option-group p{font:10px/1.4 system-ui;color:#c9bca2;margin:4px 0 9px}.speed-rate-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
 .player-ui .speed-options .speed-rate-grid button{min-height:44px;min-width:0;padding:5px 2px;font:11px system-ui}.player-ui .speed-options>.speed-shop-link{width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:5px;font:12px system-ui}
@@ -1570,7 +1576,10 @@ function poseRig(options={}){
    const pass=clipSample([[0,0,4],[.16,0,0],[.60,1,0],[.76,1,5],[1,0,4]],phase);workPiece={x:31,y:-48,angle:0};back={x:15,y:-47.2};
    const cutX=34+pass[0]*(9+variation*accent*.8);placeTip(cutX,-47-(cutX-12)*2/31-pass[1],2.48+pass[0]*.18);body.angle=.12+Math.sin(cycle)*.018+variation*accent*.01;headAngle=.12+pass[0]*.035;contact=working&&phase>=.16&&phase<=.60;
   }else if(pose==='ward'||pose==='cast'){
-   body.angle=.08+Math.sin(cycle)*.025;main={x:38+Math.sin(cycle)*(5+variation*accent*.6),y:-45+Math.sin(cycle*2)*3};back={x:15-Math.sin(cycle)*4,y:-57-Math.cos(cycle)*3};angle=-1.16+Math.cos(cycle)*.22;headAngle=.08+Math.sin(cycle)*.018;workPiece={x:29,y:-49+Math.sin(cycle)*1.2,angle:0};contact=working;
+   // Pin the left selvage with the far hand; the near hand carries the shuttle
+   // along the right edge. Neither wrist crosses the other arm's working lane.
+   const pass=(1-Math.cos(cycle))*.5,lift=Math.sin(cycle)*.8;
+   body.angle=.07+Math.sin(cycle)*.012;back={x:6+pass*.8,y:-42+lift};main={x:41-pass*4,y:-43+lift};angle=-1.35+pass*.20;headAngle=.10+Math.sin(cycle)*.012;workPiece={x:22,y:-43+lift,angle:0};contact=working;
   }else if(pose==='rune'){
    const trace=clipSample([[0,3.8,0],[.22,0,-2.6],[.46,-3.8,0],[.70,0,2.6],[1,3.8,0]],phase),mix=Math.abs(variation)*accent;
    workPiece={x:31,y:-47,angle:0};back={x:23,y:-46};placeTip(31+lerp(Math.cos(cycle)*3.8,trace[0],mix),-48+lerp(Math.sin(cycle)*2.6,trace[1],mix),2.10+Math.sin(cycle)*.16);body.angle=.15+Math.cos(cycle)*.018;headAngle=.14+Math.sin(cycle)*.02;contact=working;
@@ -1596,7 +1605,9 @@ function poseRig(options={}){
     const targetAngle=2.48+progress*.18,target={x:x-Math.sin(targetAngle)*tool.height*tool.grip[1],y:tipY+Math.cos(targetAngle)*tool.height*tool.grip[1]};
     main={x:lerp(main.x,target.x,weight),y:lerp(main.y,target.y,weight)};angle=lerp(angle,targetAngle,weight);contact=false;headAngle+=weight*.04;
    }else if(pose==='ward'||pose==='cast'){
-    main={x:lerp(main.x,alternate?46:42,weight),y:lerp(main.y,alternate?-51:-40,weight)};back={x:lerp(back.x,18,weight),y:lerp(back.y,alternate?-52:-64,weight)};angle+=weight*(alternate?.30:-.18);headAngle+=weight*.035;
+    // Lift the finished weave or stretch it taut, retaining opposite edge grips.
+    const lift=weight*(alternate?3:6),stretch=weight*(alternate?2:0);
+    back.x-=stretch;back.y-=lift;main.x+=stretch;main.y-=lift;workPiece.y-=lift;workPiece.width=30+stretch*2;angle-=weight*.10;headAngle+=weight*.025;
    }else if(pose==='rune'||pose==='polish'){
     workPiece.y-=weight*5;workPiece.angle+=weight*(alternate?.35:-.20);back.y-=weight*5;
     const targetAngle=2.0,target={x:35-Math.sin(targetAngle)*tool.height*tool.grip[1],y:-61+Math.cos(targetAngle)*tool.height*tool.grip[1]};
@@ -1613,7 +1624,7 @@ function poseRig(options={}){
   for(const key of ['x','y','angle'])body[key]=lerp(restRig.body[key],activeRig.body[key],amount);
   main={x:lerp(restRig.main.x,activeRig.main.x,amount),y:lerp(restRig.main.y,activeRig.main.y,amount)};back={x:lerp(restRig.back.x,activeRig.back.x,amount),y:lerp(restRig.back.y,activeRig.back.y,amount)};
   angle=lerp(restRig.angle,activeRig.angle,amount);headAngle=lerp(restRig.head.angle,activeRig.head.angle,amount);twoHand=0;
-  if(workPiece)for(const key of ['x','y','angle'])workPiece[key]=lerp(restRig.workPiece[key],activeRig.workPiece[key],amount);
+  if(workPiece)for(const key of ['x','y','angle','width'])if(activeRig.workPiece[key]!==undefined)workPiece[key]=lerp(restRig.workPiece[key]??30,activeRig.workPiece[key],amount);
  }
  if(!reduced&&!activity&&options.hit>0){const recoil=clamp(options.hit,0,1)**2;body.angle-=recoil*.09;body.x-=recoil*1.5;}
  const frontRoot=transform(body,{x:12,y:-69}),backRoot=transform(body,{x:-10,y:-68});let offset=null;
@@ -1954,6 +1965,7 @@ function render(c,options={}){
  const reaching=rig.activity||rig.back.x>rig.body.x-2;
  if(!reaching)paintArm(c,rig.backArm,-1,kit,look);
  paintBody(c,rig,kit,look);
+ if(rig.activity)options.paintWorkpiece?.(c,rig);
  if(reaching)paintArm(c,rig.backArm,-1,kit,look);
  const wrist=arm=>Math.atan2(arm.hand.y-arm.elbow.y,arm.hand.x-arm.elbow.x)-Math.PI/2;
  if(rig.activity){
@@ -2108,8 +2120,8 @@ const skillRoomArt={};
 for(const [key,name] of Object.entries({polish:'jeweler',scavenge:'scavenger',wood:'woodland',fletch:'fletchroom',ward:'wardroom',rune:'runeroom'})){
  const im=new Image();im.decoding='async';im.src=iconAsset('room-'+name);skillRoomArt[key]=im;
 }
-function makeTrinket(id){
-  const item=TRINKETS[id];if(!item||data.trinkets.includes(id)||!spendAtStation(trinketBase(id),'artisan'))return false;
+function makeTrinket(id,voucher){
+  const item=TRINKETS[id];if(!item||data.trinkets.includes(id)||!(voucher===undefined?spendAtStation(trinketBase(id),'artisan'):spendUpgradeVoucher('trinket:'+id,voucher)))return false;
   data.trinkets.push(id);if(item.type==='ring'){if(data.equippedRings.length<4)data.equippedRings.push(id);data.equippedRing=data.equippedRings[0]||'';}else data.equippedAmulet=id;
   data.artisanDisciplineXp=(data.artisanDisciplineXp||0)+50;data.artisanXp=(data.artisanXp||0)+50;codexDiscover('trinket_'+id);
   toast(item.name+' crafted!',(item.type==='ring'&&!data.equippedRings.includes(id)?'Saved to Equipment · ':'Equipped · ')+item.effect);syncTrinketHealth();save();refreshUI();renderDisciplineDrawer();return true;
@@ -2224,7 +2236,7 @@ const TIER_LIMITS={1:{name:'Iron',dps:100,weapon:10,armor:5,speed:5,reach:5,ench
 
 const TIER_RESOURCES=['coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth'];
 
-const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:100},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:100},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:100}};
+const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:100,zoneMaterials:1},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:100,zoneMaterials:1},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:100,zoneMaterials:1}};
 
 const WEAPON_RIGS={sword:{height:57,grip:[.49,.85]},shield:{height:33,grip:[.5,.5]},polearm:{height:104,grip:[.19,.79]},greatsword:{height:76,grip:[.5,.84]},bow:{height:54,grip:[.16,.5],flip:true},staff:{height:80,grip:[.5,.78]}};
 
@@ -2445,6 +2457,8 @@ const SKILL_BONUS_RARITIES=Object.freeze([
  {id:'very-rare',name:'Very rare',chance:.02,speed:1,seconds:15,color:'#dfb1ed',mark:'Ⅳ'}
 ]);
 
+const GROUND_LOOT_RESOURCES=new Set(['gold','essence','ore','bars','logs','arrows','cloth','runes','scraps','silverOre','silverBars','opals','cutOpals','coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth','sigils']);
+
 function zoneFloorCount(index=zoneNumber()){return ZONE_FLOORS[Math.max(0,Math.floor(index))]||20;}
 
 function zoneStart(index=zoneNumber()){
@@ -2486,7 +2500,7 @@ function normalizeZoneLayout(){
 }
 
 function normalizeProgression(){
-  normalizeZoneLayout();
+  normalizeZoneLayout();normalizeZoneMaterials();
   const legacy={weapon:finiteRank(data.weapon),armor:finiteRank(data.armor),enchant:finiteRank(data.enchant)};
   const old=data.styles&&typeof data.styles==='object'?data.styles:{};
   data.styles=Object.fromEntries(Object.keys(STYLE_DEFS).map(id=>{
@@ -2531,14 +2545,14 @@ function spendAtStation(base,group){
 
 function skillCost(key){return stationCost(SKILLS[key].cost||{},disciplineFor(key));}
 
-function stationUpgradeCost(group){const rank=stationRank(group);return Object.fromEntries(Object.entries(GROUP_COSTS[group]).map(([k,n])=>[k,Math.ceil(n*Math.pow(1.6,rank))]));}
+function stationUpgradeCost(group){const rank=stationRank(group);return {...Object.fromEntries(Object.entries(GROUP_COSTS[group]).map(([k,n])=>[k,Math.ceil(n*Math.pow(1.6,rank))])),...([2,4].includes(rank)?{zoneMaterials:1}:{})};}
 
 function upgradeGroup(id,kind){return kind==='enchant'?'warding':STYLE_DEFS[id].group;}
 
 function styleUpgradeCost(id,kind){return stationCost(styleUpgradeBase(id,kind),upgradeGroup(id,kind));}
 
-function makeTool(id){
-  const t=TOOL_DEFS[id];if(!t||data.tools[id]||!spendAtStation(t.cost,t.group))return false;
+function makeTool(id,voucher){
+  const t=TOOL_DEFS[id];if(!t||data.tools[id]||!(voucher===undefined?spendAtStation(t.cost,t.group):spendUpgradeVoucher('tool:'+id,voucher)))return false;
   data.tools[id]=true;codexDiscover('tool_'+id);toast(t.name+' crafted','Equipped automatically · 8% faster active gathering · larger gathering bonuses');
   save();refreshUI();renderDisciplineDrawer();return true;
 }
@@ -2577,19 +2591,21 @@ function spawnSkillBonus(){
 
 function claimSkillBonus(id){
   const s=bonusState(),node=s.nodes.find(n=>n.id===Number(id));if(!node||node.left<=0||node.key!==game.scene||!bonusEligible())return false;
-  const key=node.key,result=skillBonusReward(node),{rarity,instant,amount}=result;if(!canUseSkill(key)||!instant&&!hasIngredients(skillCost(key)))return false;
+  const key=node.key,result=skillBonusReward(node),{rarity,instant}=result;let amount=result.amount;if(!canUseSkill(key)||!instant&&!hasIngredients(skillCost(key)))return false;
   s.nodes=s.nodes.filter(n=>n!==node);node.el.remove();
-  if(!instant)grantSkillBuff(key,rarity);beginSkillBonusReaction(key,rarity,node);
+  if(instant&&node.craft)amount=instantlyRefineSkill(key,result.batches);
+  if(!instant)grantSkillBuff(key,rarity);if(!instant||amount>0)beginSkillBonusReaction(key,rarity,node);
   let reward=instant?'+'+amount+' '+SKILLS[key].item+' instantly':'+'+Math.round(rarity.speed*100)+'% work speed for '+rarity.seconds+'s';
-  if(instant||!node.craft){data[SKILLS[key].resource]+=amount;codexDiscover('resource_'+SKILLS[key].resource);if(instant)recordWorkshopReward(key,amount,0,'');}
+  if(!node.craft){data[SKILLS[key].resource]+=amount;codexDiscover('resource_'+SKILLS[key].resource);if(instant)recordWorkshopReward(key,amount,0,'');}
   if(!node.craft){
     data[SKILLS[key].xp]=(data[SKILLS[key].xp]||0)+1;
     const xp=DISCIPLINES[disciplineFor(key)].xp;data[xp]=(data[xp]||0)+1;codexDiscover('resource_'+SKILLS[key].resource);
     if(!instant)reward+=' · +'+amount+' '+SKILLS[key].item;
   }
   game.workAction=.48;game.lastActiveSkill=key;
-  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+(instant?'+'+amount+' '+SKILLS[key].item:'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s')+'</strong>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
-  $('skillBonusStatus').textContent=rarity.name+' '+BONUS_DEFS[key].name+' collected. '+reward;refreshUI();save();return true;
+  const feedback=instant?(amount?'+'+amount+' '+SKILLS[key].item:'Need ingredients'):'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s';
+  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+feedback+'</strong>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
+  $('skillBonusStatus').textContent=rarity.name+' '+BONUS_DEFS[key].name+' collected. '+(instant&&node.craft?(amount?reward+' · ingredients consumed':'No craft completed: ingredients needed.'):reward);refreshUI();save();return true;
 }
 
 function tickSkillBonuses(dt){
@@ -2639,7 +2655,7 @@ function refreshSystemsUI(){
   idleNudge?.classList.toggle('hidden',!noticeVisible);
   const idleBar=$('activeIdleButton');if(idleBar&&SKILLS[game.scene]){const assigned=data.idleJobs.includes(game.scene),html=uiIcon(assigned?'stop':'idle')+'<span>Idle</span>';if(idleBar.innerHTML!==html)idleBar.innerHTML=html;idleBar.disabled=!idleSlotsUnlocked()||!canUseSkill(game.scene);idleBar.setAttribute('aria-pressed',String(assigned));idleBar.setAttribute('aria-label',!idleSlotsUnlocked()?'Idle unlocks at Zone 1 · Floor 2':(assigned?'Stop idling: ':'Idle: ')+SKILLS[game.scene].name);}
   const nudge=$('skillsNudge'),show=!idleNotice&&!data.skillsNudgeSeen&&data.goldHighWater>=150&&!drawerKind&&game.scene==='combat'&&$('overlay').classList.contains('hidden')&&tourIndex<0&&!game.boss&&!game.manualPaused;
-  if(nudge)nudge.classList.toggle('hidden',!show);$('quickSkills').classList.toggle('skills-suggested',show);refreshArenaUI();
+  if(nudge)nudge.classList.toggle('hidden',!show);$('quickSkills').classList.toggle('skills-suggested',show);refreshArenaUI();refreshProgressionGuide();
 }
 
 function installSystemsUI(){inspectedStyle=combatStyle();styleBench=combatStyle();
@@ -2704,7 +2720,7 @@ function zoneEnemyHp(boss=false,bossIndex=0,variance=1){
 
 function bonusPosition(){
   const r=canvas.getBoundingClientRect(),bar=$('skillActionBar').getBoundingClientRect(),header=document.querySelector('.hud-center').getBoundingClientRect();
-  const blocked=['#trackedRecipe','#trackedNextStep','#noticeColumn','#skillWorkBuff','.hud-actions','.hud-resources'].map(selector=>document.querySelector(selector)).filter(e=>e&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
+  const blocked=['#trackedRecipe','#trackedNextStep','#noticeColumn','#temporaryBuffs','#skillWorkBuff','.hud-actions','.hud-resources'].map(selector=>document.querySelector(selector)).filter(e=>e&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
   const minY=Math.max(95,header.bottom-r.top+32),maxY=bar.top-r.top-34;
   if(maxY<minY)return null;
   for(let attempt=0;attempt<30;attempt++){
@@ -2828,11 +2844,11 @@ function equipArmor(id,crafted=false){
   save();refreshUI();return true;
 }
 
-function makeArmor(id){
+function makeArmor(id,voucher){
   const a=ARMOR_SETS[id];if(!a||data.ownedArmor.includes(id))return false;
   if(a.tier===2&&!tier2Unlocked()){toast('Steel-tier armor unlocks in Zone 2','Clear Zone 1 first.');return false;}
   if(levelRange(data[DISCIPLINES[a.group].xp]||0).lvl<a.level){toast('Training needed',DISCIPLINES[a.group].name+' level '+a.level+' unlocks '+a.name+'.');return false;}
-  if(!spendAtStation(a.cost,a.group)){toast('Materials needed','Track this armor recipe to gather its ingredients.');return false;}
+  if(!(voucher===undefined?spendAtStation(a.cost,a.group):spendUpgradeVoucher('armor:'+id,voucher))){toast('Materials needed','Track this armor recipe to gather its ingredients.');return false;}
   data.ownedArmor.push(id);data[DISCIPLINES[a.group].xp]+=40*a.tier;codexDiscover('armor_set_'+id);equipArmor(id,true);
   toast(a.name+' crafted & equipped',ARMOR_STYLES[a.style].label+' set · armor and weapons equip independently.');renderDisciplineDrawer();return true;
 }
@@ -2899,9 +2915,13 @@ function delveGoldReward(kind,floor=data.floor,index=0){
 }
 
 function grantDelveGold(amount){
+ const coins=delveGoldCoins(amount);data.gold+=coins;return coins;
+}
+
+function delveGoldCoins(amount){
  if(!Number.isFinite(amount)||amount<=0)return 0;
  const old=Number(data.delveGoldRemainder)||0,total=amount+Math.max(0,Math.min(.999999999,old)),coins=Math.floor(total+1e-9);
- data.delveGoldRemainder=Math.max(0,total-coins);data.gold+=coins;return coins;
+ data.delveGoldRemainder=Math.max(0,total-coins);return coins;
 }
 
 function zoneGoldBudget(index=zoneNumber()){
@@ -3084,16 +3104,21 @@ function paintEquipmentWeapon(c,d,type,pose={x:0,y:0,angle:0}){
  c.drawImage(a.image,x,y,w,h,-rig.grip[0]*width,-rig.grip[1]*height,width,height);c.restore();return true;
 }
 
-function promoteStyle(id){
+function promoteStyle(id,voucher){
  if(!STYLE_DEFS[id]||styleTier(id)===2)return false;
  if(!tier2Unlocked()){toast('Steel unlocks in Zone 2','Clear Zone 1 to unlock Steel resources and equipment.');return false;}
  if(data.styles[id].weapon<10||weaponCraftLevel(STYLE_DEFS[id].weapon)<10){toast('Finish your Iron training','Reach Iron refinement 10 and '+DISCIPLINES[STYLE_DEFS[id].group].name+' level 10.');return false;}
- if(!spendAtStation(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group))return false;
+ if(!(voucher===undefined?spendAtStation(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group):spendUpgradeVoucher('promotion:'+id,voucher)))return false;
  data.styles[id].tier=2;equipmentWorkXp(id,'promotion');projectCombatStyle();codexDiscover('unlock_steel');
  toast(STYLE_DEFS[id].name+' upgraded to Steel','Refinement 11–20 unlocked');save();refreshUI();renderDisciplineDrawer();return true;
 }
 
 function styleUpgradeBase(id,kind,rank=data.styles[id][kind]||0){
+ const tier=kind==='armor'&&data.ownedArmor.includes(id+'_2')?2:styleTier(id);
+ return {...styleUpgradeMaterials(id,kind,rank),...(upgradeZoneMaterialCost(tier,kind,rank)?{zoneMaterials:1}:{})};
+}
+
+function styleUpgradeMaterials(id,kind,rank=data.styles[id][kind]||0){
  const s=data.styles[id],r=rank,tier=kind==='armor'&&data.ownedArmor.includes(id+'_2')?2:styleTier(id),cap=TIER_LIMITS[tier][kind],local=tier===2?Math.max(0,r-TIER_LIMITS[1][kind]):r;
  if(tier===1){
   if(kind==='weapon')return {bars:8+local*5,...(id==='ranged'?{logs:4+local*2}:id==='magic'?{cloth:6+local*2}:{}),gold:preparationUpgradeGold(1,kind,r)};
@@ -3109,11 +3134,11 @@ function styleUpgradeBase(id,kind,rank=data.styles[id][kind]||0){
  return cost;
 }
 
-function craftStyleUpgrade(id,kind){
+function craftStyleUpgrade(id,kind,voucher){
  if(!STYLE_DEFS[id]||!['weapon','armor','enchant','speed','reach'].includes(kind))return false;
  const s=data.styles[id],cap=styleUpgradeCap(id,kind);if(s[kind]>=cap){toast(TIER_LIMITS[styleTier(id)].name+' limit reached',styleTier(id)===1?'Clear Zone 1 and upgrade this style to Steel for the next tier.':'This is the current Steel upgrade limit.');return false;}
  if(kind==='armor'&&!data.ownedArmor.some(key=>ARMOR_SETS[key]?.style===id)){toast('Craft an armor set first','Choose a '+ARMOR_STYLES[id].label+' set above.');return false;}
- if(!spendAtStation(styleUpgradeBase(id,kind),upgradeGroup(id,kind)))return false;
+ if(!(voucher===undefined?spendAtStation(styleUpgradeBase(id,kind),upgradeGroup(id,kind)):spendUpgradeVoucher('upgrade:'+id+':'+kind,voucher)))return false;
  const oldMax=game.player.maxHp;s[kind]++;equipmentWorkXp(id,kind);if(kind==='weapon'){data.firstWeaponCrafted=true;announceWeaponUpgradeTip();}projectCombatStyle();game.player.maxHp=maxHp()+waveVitality();
  if(kind==='armor'&&armorLoadout()?.style===id)game.player.hp=Math.min(game.player.maxHp,game.player.hp+Math.max(0,game.player.maxHp-oldMax));
  if(kind==='enchant')codexDiscover('permanent_enchant');
@@ -3254,14 +3279,14 @@ function idlePickerHtml(){
 
 function armorRecipeCard(a){
  const owned=data.ownedArmor.includes(a.id),selected=data.equippedArmor===a.id,level=levelRange(data[DISCIPLINES[a.group].xp]||0).lvl,zoneLocked=a.tier===2&&!tier2Unlocked(),locked=!owned&&(level<a.level||zoneLocked),cost=armorRecipeCost(a.id),ready=hasIngredients(cost);
- return '<article class="armor-set-card compact-armor '+(selected?'is-equipped':'')+'"><div class="armor-portrait">'+artHTML(a.art)+'</div><div class="armor-set-copy"><div class="recipe-title"><h4>'+a.name+'</h4>'+codexLink('armor_set_'+a.id,a.name+' details')+'</div><div class="recipe-effects"><span>'+uiIcon('heart')+' +'+a.health+'</span><span>'+uiIcon(a.style==='melee'?'shield':a.style==='ranged'?'move':'spark')+' '+(a.style==='melee'?'':'+')+a.perk+'%</span></div>'+(!owned?materialCosts(cost,'armor:'+a.id):'')+'</div><div class="armor-set-actions"><button type="button" data-focus-key="armor-action-'+a.id+'" '+(owned?'data-equip-armor="'+a.id+'"':'data-make-armor="'+a.id+'"')+' '+(selected||locked||!owned&&!ready?'disabled':'')+' aria-label="'+escapeHTML((selected?'Equipped: ':owned?'Equip ':'Craft ')+a.name)+'">'+(selected?uiIcon('check'):owned?'Equip':locked?(zoneLocked?'Zone 2':'Lv. '+a.level):'Craft')+'</button>'+(!owned?trackRecipeButton('armor:'+a.id,a.name):'')+'</div></article>';
+ return '<article class="armor-set-card compact-armor '+(selected?'is-equipped':'')+'"><div class="armor-portrait">'+artHTML(a.art)+'</div><div class="armor-set-copy"><div class="recipe-title"><h4>'+a.name+'</h4>'+codexLink('armor_set_'+a.id,a.name+' details')+'</div><div class="recipe-effects"><span>'+uiIcon('heart')+' +'+a.health+'</span><span>'+uiIcon(a.style==='melee'?'shield':a.style==='ranged'?'move':'spark')+' '+(a.style==='melee'?'':'+')+a.perk+'%</span></div>'+(!owned?materialCosts(cost,'armor:'+a.id)+workshopVoucherButtonHtml('armor:'+a.id):'')+'</div><div class="armor-set-actions"><button type="button" data-focus-key="armor-action-'+a.id+'" '+(owned?'data-equip-armor="'+a.id+'"':'data-make-armor="'+a.id+'"')+' '+(selected||locked||!owned&&!ready?'disabled':'')+' aria-label="'+escapeHTML((selected?'Equipped: ':owned?'Equip ':'Craft ')+a.name)+'">'+(selected?uiIcon('check'):owned?'Equip':locked?(zoneLocked?'Zone 2':'Lv. '+a.level):'Craft')+'</button>'+(!owned?trackRecipeButton('armor:'+a.id,a.name):'')+'</div></article>';
 }
 
 function tierPromotionHtml(style){
  if(styleTier(style)===2)return '';
  const open=tier2Unlocked(),rank=data.styles[style].weapon,level=weaponCraftLevel(STYLE_DEFS[style].weapon),cost=stationCost(TIER_PROMOTION_COSTS[style],STYLE_DEFS[style].group),ready=open&&rank>=10&&level>=10&&hasIngredients(cost);
  if(!open)return '<div class="compact-lock-note">'+uiIcon('lock')+'<span>Steel · Zone 2</span>'+codexLink('unlock_steel','Steel requirements')+trackRecipeButton('promotion:'+style,'Steel promotion')+'</div>';
- return '<section class="tier-promotion"><div class="recipe-title"><h4>Steel</h4>'+codexLink('unlock_steel','Steel requirements')+'</div>'+materialCosts(cost,'promotion:'+style)+'<div class="promotion-actions"><button type="button" class="gear-cta" data-promote-style="'+style+'" '+(!ready?'disabled':'')+'>'+(rank<10?'Refinement 10':level<10?'Crafting 10':'Forge Steel')+'</button>'+trackRecipeButton('promotion:'+style,'Steel promotion')+'</div></section>';
+ return '<section class="tier-promotion"><div class="recipe-title"><h4>Steel</h4>'+codexLink('unlock_steel','Steel requirements')+'</div>'+materialCosts(cost,'promotion:'+style)+'<div class="promotion-actions"><button type="button" class="gear-cta" data-promote-style="'+style+'" '+(!ready?'disabled':'')+'>'+(rank<10?'Refinement 10':level<10?'Crafting 10':'Forge Steel')+'</button>'+trackRecipeButton('promotion:'+style,'Steel promotion')+'</div>'+workshopVoucherButtonHtml('promotion:'+style)+'</section>';
 }
 
 function classEquipmentHtml(group){
@@ -3274,7 +3299,7 @@ function classEquipmentHtml(group){
 
 function stationToolsHtml(group){
  const rank=stationRank(group),cost=stationUpgradeCost(group),tools=Object.entries(TOOL_DEFS).filter(([,t])=>t.group===group);
- return '<section class="station-upgrade-card compact-station"><header>'+artHTML('station-'+group)+'<span><h3>Station</h3><small>'+rank+' / 5</small></span>'+codexLink('discipline_'+group,'Station upgrades')+'</header><div class="station-benefits"><span>'+uiIcon('bag')+'<b>'+rank*2+'%</b><small>Saved</small></span><span>'+uiIcon('speed')+'<b>+'+rank*3+'%</b><small>Speed</small></span></div>'+(rank<5?materialCosts(cost,'station:'+group)+'<button type="button" class="gear-cta" data-unified-upgrade="'+group+'" data-focus-key="upgrade-station-'+group+'" '+(hasIngredients(cost)?'':'disabled')+'>Upgrade '+(rank+1)+'</button>':'<span class="completion-mark">'+uiIcon('check')+'Max</span>')+'</section>'+(tools.length?uiSection('Tools','<div class="craft-tile-list">'+tools.map(([id,t])=>recipeCard('',t.name,'',stationCost(t.cost,group),'data-craft-tool="'+id+'"','MAKE',data.tools[id],data.tools[id],t.art)).join('')+'</div>'):'');
+ return '<section class="station-upgrade-card compact-station"><header>'+artHTML('station-'+group)+'<span><h3>Station</h3><small>'+rank+' / 5</small></span>'+codexLink('discipline_'+group,'Station upgrades')+'</header><div class="station-benefits"><span>'+uiIcon('bag')+'<b>'+rank*2+'%</b><small>Saved</small></span><span>'+uiIcon('speed')+'<b>+'+rank*3+'%</b><small>Speed</small></span></div>'+(rank<5?materialCosts(cost,'station:'+group)+workshopVoucherButtonHtml('station:'+group)+'<button type="button" class="gear-cta" data-unified-upgrade="'+group+'" data-focus-key="upgrade-station-'+group+'" '+(hasIngredients(cost)?'':'disabled')+'>Upgrade '+(rank+1)+'</button>':'<span class="completion-mark">'+uiIcon('check')+'Max</span>')+'</section>'+(tools.length?uiSection('Tools','<div class="craft-tile-list">'+tools.map(([id,t])=>recipeCard('',t.name,'',stationCost(t.cost,group),'data-craft-tool="'+id+'"','MAKE',data.tools[id],data.tools[id],t.art)).join('')+'</div>'):'');
 }
 
 function armorEquipmentHtml(){
@@ -3370,7 +3395,7 @@ function refreshPresentationUI(){
  $('idleWarning').textContent='Idle unlocks · Zone 1 · Floor 2';
  if(combat){const phase=game.phase,html=phase>=0&&phase<6?Array.from({length:6},(_,i)=>'<i class="'+(i<phase?'complete':i===phase?'current':'')+'">'+uiIcon(i%2?'shield':'sword')+'</i>').join('')+(phase%2===0?'<span>'+game.phaseKills+' / '+game.phaseTarget+'</span>':''):'';if($('phaseBadge').innerHTML!==html)$('phaseBadge').innerHTML=html;$('phaseBadge').setAttribute('aria-label',phase>=0&&phase<6?'Encounter '+(phase+1)+' of 6'+(phase%2===0?' · '+game.phaseKills+' of '+game.phaseTarget+' defeated':''):'Ready');}
  const idleBar=$('activeIdleButton');if(idleBar&&sk){const active=data.idleJobs.includes(game.scene),html=uiIcon(active?'stop':'idle')+'<span>Idle</span>';if(idleBar.innerHTML!==html)idleBar.innerHTML=html;idleBar.dataset.hint=active?'Stop idling':'Idle '+sk.name;}
- refreshProgressionHud();
+ refreshProgressionHud();refreshProgressionGuide();
 }
 
 function hideUiTooltip(){clearTimeout(uiTooltipTimer);$('uiTooltip')?.classList.add('hidden');}
@@ -3393,7 +3418,7 @@ function installPresentationUI(){
  document.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const target=e.target.closest('[data-hint]');if(target){clearTimeout(uiTooltipTimer);uiTooltipTimer=setTimeout(()=>showUiTooltip(target),350);}});
  document.addEventListener('pointerout',e=>{if(e.target.closest('[data-hint]'))hideUiTooltip();});document.addEventListener('focusin',e=>{const target=e.target.closest('[data-hint]');if(target)showUiTooltip(target);});document.addEventListener('focusout',hideUiTooltip);document.addEventListener('scroll',hideUiTooltip,true);window.addEventListener('resize',hideUiTooltip);
  const armorPlans=CODEX_ITEMS.find(e=>e.id==='permanent_armor');if(armorPlans){armorPlans.name='Armor';armorPlans.cat='Armor';armorPlans.desc='Craft, equip and reinforce armor sets.';}
- installMobileUI();installWorkshopUI();installRestorationUI();installDelveTravelUI();installRareEliteUI();refreshPresentationUI();
+ installMobileUI();installWorkshopUI();installRestorationUI();installDelveTravelUI();installRareEliteUI();installProgressionGuidance();refreshPresentationUI();
 }
 
 function presentationResourceImage(key){
@@ -3414,7 +3439,7 @@ function codexRecipe(cost,output,amount=1){return '<div class="codex-recipe">'+O
 
 function codexSkillDetails(key){
  const s=SKILLS[key],group=disciplineOf(key),tool=toolForSkill(key);
- return codexParagraph(s.tier===2?'Unlocked after clearing Zone 1.':'Available at camp.')+codexRecipe(s.cost||{},s.resource,skillYield(key))+codexRuleList([['Discipline',group.name],['Active cycle',skillInterval(key).toFixed(2)+'s'],['Idle cycle',skillInterval(key,false).toFixed(2)+'s'],['Yield',skillYield(key)+' '+s.item],...(tool?[['Tool',TOOL_DEFS[tool].name]]:[])])+codexParagraph('Hold the work button, the scene or Space to work. Active bonuses can be tapped or collected by dragging. Every discovery grants a timed speed boost: Common +35% for 6s, Uncommon +50% for 8s, Rare +75% for 10s, or Very rare +100% for 15s. Gathering discoveries also add materials. Equal pickups refresh your speed bonus and stronger pickups improve it. If a stronger bonus is already active on this activity, a weaker pickup instead grants 1–5 of its output instantly, including refined materials, as free bonus items. Timers count real seconds of active work, pause when you stop or open menus, and survive reload without boosting idle or offline work. Normal crafting always consumes its ingredients.')+codexParagraph('Idle unlocks at Zone 1, Floor 2. Assign a task with its Idle button. Assigned tasks run while you delve and for up to eight hours offline. Refining pauses when an ingredient runs out. Delve speed does not change skilling speed.')+'<button type="button" class="codex-action" data-codex-activity="'+key+'">'+s.name+uiIcon('arrow')+'</button>';
+ return codexParagraph(s.tier===2?'Unlocked after clearing Zone 1.':'Available at camp.')+codexRecipe(s.cost||{},s.resource,skillYield(key))+codexRuleList([['Discipline',group.name],['Active cycle',skillInterval(key).toFixed(2)+'s'],['Idle cycle',skillInterval(key,false).toFixed(2)+'s'],['Yield',skillYield(key)+' '+s.item],...(tool?[['Tool',TOOL_DEFS[tool].name]]:[])])+codexParagraph('Hold the work button, the scene or Space to work. Active bonuses can be tapped or collected by dragging. Every discovery grants a timed speed boost: Common +35% for 6s, Uncommon +50% for 8s, Rare +75% for 10s, or Very rare +100% for 15s. Gathering discoveries also add materials. Equal pickups refresh your speed bonus and stronger pickups improve it. If a stronger bonus is already active on this activity, a weaker gathering pickup grants 1–5 resources. A weaker refining pickup instantly completes up to five normal batches, consuming available ingredients and stopping when the next batch cannot be paid. Each completed batch has its normal yield and training XP. Timers count real seconds of active work, pause when you stop or open menus, and survive reload without boosting idle or offline work. Normal crafting always consumes its ingredients.')+codexParagraph('Idle unlocks at Zone 1, Floor 2. Assign a task with its Idle button. Assigned tasks run while you delve and for up to eight hours offline. Refining pauses when an ingredient runs out. Delve speed does not change skilling speed.')+'<button type="button" class="codex-action" data-codex-activity="'+key+'">'+s.name+uiIcon('arrow')+'</button>';
 }
 
 function codexDetailHtml(entry){
@@ -3443,12 +3468,13 @@ function codexDetailHtml(entry){
   body=codexParagraph('Earn gold from guardians, elites, floor caches and scavenging. Use it with materials to craft equipment and improve your stations.')+codexParagraph('Ordinary monsters very rarely drop Dungeon Sigils. Gold jewelry increases elite and guardian rewards. Unpaid fractions are saved between sessions.');
  }else if(id==='permanent_armor'){
   body=codexParagraph('Craft armor in Skills, then choose a set in Inventory. Your weapon selects the combat style; your armor is a separate choice.')+codexHeading('Sets',codexRuleList([['Melee','Iron / Steel · health and protection'],['Ranged','Plain / Cured leathers · movement'],['Mage','Linen / Blue Wool robes · Mage damage']]))+codexHeading('Upgrades',codexRuleList([['Iron','Refinement 10 · speed / reach 5 · reinforcement 5'],['Steel','Refinement 20 · speed / reach 10 · reinforcement 10']]))+codexParagraph('Iron and Steel have finite upgrade ranks. Proficiency and matching crafting levels can add a small further damage bonus. Armor reinforcement belongs to its class, and the worn set limits how many ranks apply.');
- }else if(id==='permanent_enchant')body=codexParagraph('Enchant a combat style at the Warding bench. The enchantment applies to weapons of that style.')+codexRuleList([['Trigger chance','14% per rank, up to 60%'],['Arc damage','50% of the triggering hit'],['Range','Another enemy within 200 units'],['Iron limit',2],['Steel limit',4]])+codexParagraph('An enchantment needs a second target. Its extra damage is not included in single-target DPS. Dungeon abilities such as Soul Chain are separate and work with any weapon.');
+ }else if(/^loot_[0-3]$/.test(id))body=codexParagraph('A rare Zone material. Verdant Seeds, Ember Cores, Grave Dust and Rift Shards each pay one unit of any Zone-material recipe cost. Any combination works; earlier Zone materials are spent first.')+codexRuleList([['Used for','Every second weapon refinement, the final reinforcement / attack speed / reach / enchantment rank in each tier, Steel promotion, and station ranks 3 and 5. Each costs one.'],['Finds','Rare drops from monsters in this Zone; 1.5% base chance before bonuses. Elites drop two when successful.'],['Preserved banks','Existing materials keep their full value. Vouchers cover the entire recipe, including Zone materials.']]);
+ else if(id==='permanent_enchant')body=codexParagraph('Enchant a combat style in Warding → Equipment. Essence comes from delving and pays for enchantment alongside bars and cut gems. The enchantment applies to weapons of that style.')+codexRuleList([['Trigger chance','14% per rank, up to 60%'],['Arc damage','50% of the triggering hit'],['Range','Another enemy within 200 units'],['Iron limit',2],['Steel limit',4]])+codexParagraph('An enchantment needs a second target. Its extra damage is not included in single-target DPS. Dungeon abilities such as Soul Chain are separate and work with any weapon.');
  else if(id==='permanent_mastery'||id.startsWith('permanent_talent_'))body=codexParagraph('Earn one shared Dungeoneering point when reaching Zones 2, 5, 10, 20, 40 and so on. Spend points on permanent game time ranks in the Dungeon Shop. Delving starts at 1.25× and adds 0.25× per rank. Skilling starts at 2×, reaches 10× in steps of one, then increases by two. Skilling includes active work, online idle and offline idle.')+codexParagraph('Optional Mastery allocations change spawn pressure, Sigil chance and rare finds. Refunding these allocations does not refund permanent time ranks. Existing saves retain earned balances and prior unlocks.');
  else if(id.startsWith('dungeon_perk_'))body=zoneAbilityCodexHtml(entry);
  else if(id==='combat_language')body=combatGuideHtml();
  else if(id==='temporary_buffs')body=temporaryBuffGuideHtml();
- else if(id==='upgrade_vouchers')body=codexParagraph(entry.desc)+codexRuleList([['Chance','6% on a guardian’s first defeat; 15% for the Zone-final overlord'],['Retries and replays','Only the first defeat rolls, across retries and reloads. Completed floors do not roll.'],['Redeem','Skills → Equipment → Refinement. Choose Use voucher.'],['Value','One weapon refinement with no gold or material payment'],['Limits','Matching Iron/Steel tier, owned weapon style, normal rank cap. Promotion is still required.']]);
+ else if(id==='upgrade_vouchers')body=codexParagraph(entry.desc)+codexRuleList([['Chance','6% on a guardian’s first defeat; 15% for the Zone-final overlord'],['Retries and replays','Only the first defeat rolls, across retries and reloads. Completed floors do not roll.'],['Redeem','Skills → Equipment or Tools. Choose Use Iron/Steel voucher on the recipe you want.'],['Value','One equipment rank, weapon, armor set, jewelry item, tool, Steel promotion or station rank; no gold or materials spent.'],['Limits','Matching tier, skill requirements, Zone access, ownership and rank caps still apply. Steel promotion still needs Iron refinement 10 and crafting level 10.'],['Stations','Either tier pays for one station rank. Tools and current jewelry use Iron vouchers. Dungeon Shop and game-time purchases are excluded.']]);
  else if(id==='zone_shop')body=dungeonShopCodexHtml();
  else if(id==='rare_elites')body=rareEliteCodexHtml();
  else if(id.startsWith('elite_boon_'))body=eliteBoonCodexHtml(id.slice(11));
@@ -4085,7 +4111,7 @@ function refreshMobileUI(){
 function normalizeFirstWeaponHint(){data.firstWeaponCrafted=!!data.firstWeaponCrafted||Object.values(data.styles||{}).some(style=>style.weapon>0)||(data.unlockedWeapons||[]).some(id=>id!=='sword');}
 
 function inventoryRows(){
- const known=Object.keys(RESOURCE_LABEL).filter(key=>!['gold','essence'].includes(key)&&((data[key]||0)>0||data.discovered?.['resource_'+key]));
+ const known=Object.keys(RESOURCE_LABEL).filter(key=>!['gold','essence','zoneMaterials'].includes(key)&&((data[key]||0)>0||data.discovered?.['resource_'+key]));
  return known.map(key=>({key,name:RESOURCE_LABEL[key],count:Math.floor(Math.max(0,Math.min(1e12,Number(data[key])||0))),art:RESOURCE_ART[key],source:key})).concat(Object.entries(data.biomeLoot||{}).filter(([kind,count])=>/^[0-3]$/.test(kind)&&Number(count)>0).map(([kind,count])=>({key:'loot_'+kind,name:['Verdant Seeds','Ember Cores','Grave Dust','Rift Shards'][Number(kind)],count:Math.floor(Math.min(1e12,Number(count))),art:'codex-loot_'+kind,codex:'loot_'+kind}))).concat(['iron','steel'].filter(tier=>data.upgradeVouchers?.[tier]>0).map(tier=>({key:'voucher_'+tier,name:(tier==='iron'?'Iron':'Steel')+' upgrade vouchers',count:data.upgradeVouchers[tier],art:'codex-upgrade_vouchers',codex:'upgrade_vouchers'})));
 }
 
@@ -4290,17 +4316,18 @@ function workshopGlyph(c,x,y,r,kind,color){
  c.stroke();c.restore();
 }
 
-function paintWorkshopWorkpiece(frame,rig){
+function paintWorkshopWorkpiece(frame,rig,c=ctx){
  const {pose,working,key,theme}=frame,piece=rig.workPiece;if(!piece)return;const {x,y}=piece;
  if(pose==='ward'){
-  ctx.fillStyle=SKILLS[key].tier===2?'#94aac6':'#c5b3ce';ctx.strokeStyle='#4e4351';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x-9,y-6);ctx.quadraticCurveTo(x,y-4,x+9,y-6);ctx.lineTo(x+8,y+7);ctx.quadraticCurveTo(x,y+5,x-8,y+7);ctx.closePath();ctx.fill();ctx.stroke();
-  for(let row=0;row<5;row++){ctx.strokeStyle=row%2?theme.light:'#e2d6d7';ctx.lineWidth=.45;ctx.beginPath();ctx.moveTo(x-7,y-4+row*2);ctx.quadraticCurveTo(x,y-2+row*2,x+7,y-4+row*2);ctx.stroke();}
+  const half=(piece.width||30)/2;
+  c.fillStyle=SKILLS[key].tier===2?'#94aac6':'#c5b3ce';c.strokeStyle='#4e4351';c.lineWidth=.8;c.beginPath();c.moveTo(x-half,y-2);c.quadraticCurveTo(x,y,x+half,y-2);c.lineTo(x+half-1,y+10);c.quadraticCurveTo(x,y+8,x-half+1,y+10);c.closePath();c.fill();c.stroke();
+  for(let row=0;row<5;row++){c.strokeStyle=row%2?theme.light:'#e2d6d7';c.lineWidth=.45;c.beginPath();c.moveTo(x-half+2,y+row*2);c.quadraticCurveTo(x,y+2+row*2,x+half-2,y+row*2);c.stroke();}
  }else if(pose==='rune'){
-  ctx.save();ctx.translate(x,y);ctx.rotate(piece.angle||0);ctx.fillStyle='#626d72';ctx.strokeStyle='#263438';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,8,5,-.2,0,Math.PI*2);ctx.fill();ctx.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);ctx.restore();
+  c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#626d72';c.strokeStyle='#263438';c.lineWidth=1;c.beginPath();c.ellipse(0,0,8,5,-.2,0,Math.PI*2);c.fill();c.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);c.restore();
  }else if(pose==='polish'){
-  ctx.save();ctx.translate(x,y);ctx.rotate(piece.angle);ctx.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';ctx.strokeStyle='#3a4b4c';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(5,-1);ctx.lineTo(2,4);ctx.lineTo(-4,2);ctx.lineTo(-5,-2);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#e4eee0';ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(-1,0);ctx.lineTo(5,-1);ctx.moveTo(-1,0);ctx.lineTo(2,4);ctx.stroke();ctx.restore();
+  c.save();c.translate(x,y);c.rotate(piece.angle);c.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';c.strokeStyle='#3a4b4c';c.lineWidth=.7;c.beginPath();c.moveTo(0,-5);c.lineTo(5,-1);c.lineTo(2,4);c.lineTo(-4,2);c.lineTo(-5,-2);c.closePath();c.fill();c.stroke();c.strokeStyle='#e4eee0';c.beginPath();c.moveTo(0,-5);c.lineTo(-1,0);c.lineTo(5,-1);c.moveTo(-1,0);c.lineTo(2,4);c.stroke();c.restore();
  }else if(pose==='fletch'){
-  ctx.strokeStyle=SKILLS[key].tier===2?'#b8a27b':'#c5a276';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(x-19,y+1);ctx.lineTo(x+12,y-1);ctx.stroke();ctx.fillStyle='#a6b6ba';ctx.beginPath();ctx.moveTo(x+12,y-3);ctx.lineTo(x+18,y-2);ctx.lineTo(x+12,y+1);ctx.fill();ctx.strokeStyle='#d6d3b8';ctx.lineWidth=1;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(x-18+i*2,y+1);ctx.lineTo(x-22+i*2,y-2);ctx.stroke();}
+  c.strokeStyle=SKILLS[key].tier===2?'#b8a27b':'#c5a276';c.lineWidth=1.8;c.beginPath();c.moveTo(x-19,y+1);c.lineTo(x+12,y-1);c.stroke();c.fillStyle='#a6b6ba';c.beginPath();c.moveTo(x+12,y-3);c.lineTo(x+18,y-2);c.lineTo(x+12,y+1);c.fill();c.strokeStyle='#d6d3b8';c.lineWidth=1;for(let i=0;i<3;i++){c.beginPath();c.moveTo(x-18+i*2,y+1);c.lineTo(x-22+i*2,y-2);c.stroke();}
  }
 }
 
@@ -4312,12 +4339,12 @@ function paintWorkshopSceneEffects(frame,anchor,layer){
   if(magical){const g=ctx.createRadialGradient(center.x,center.y,1,center.x,center.y,29);g.addColorStop(0,theme.light+'35');g.addColorStop(1,theme.light+'00');ctx.fillStyle=g;ctx.beginPath();ctx.arc(center.x,center.y,29,0,Math.PI*2);ctx.fill();
    ctx.strokeStyle=theme.deep+'b0';ctx.lineWidth=.65;ctx.beginPath();ctx.ellipse(center.x,center.y,23,17,-.2,0,Math.PI*2);ctx.stroke();for(let i=0;i<6;i++){const a=i*Math.PI/3+(working?time*.15:0);workshopGlyph(ctx,center.x+Math.cos(a)*23,center.y+Math.sin(a)*17,2.1,kind,theme.light+'c0');}}
   // The fingers and tools must sit in front of the solid workpiece.
-  paintWorkshopWorkpiece(frame,rig);ctx.restore();return;
+  if(pose!=='ward')paintWorkshopWorkpiece(frame,rig);ctx.restore();return;
  }
  if(pose==='ward'&&working){
-  const {x,y}=center;ctx.strokeStyle=theme.light;ctx.lineWidth=.8;
-  for(const [i,hand]of [rig.back,rig.toolTip||rig.main].entries()){ctx.beginPath();ctx.moveTo(hand.x,hand.y);ctx.bezierCurveTo(hand.x+7,hand.y-10,x-9,y+8,x+(i?6:-6),y+(i?-4:4));ctx.stroke();}
-  const weft=x-7+14*((phase*2)%1);ctx.strokeStyle='#fff6db';ctx.lineWidth=.85;ctx.beginPath();ctx.moveTo(weft,y-4);ctx.lineTo(weft+1,y+4);ctx.stroke();workshopGlyph(ctx,x,y,3,kind,'#f6eed9');
+  const {x,y}=center,half=(center.width||30)/2;ctx.strokeStyle=theme.light;ctx.lineWidth=.8;
+  for(const [i,hand]of [rig.back,rig.toolTip||rig.main].entries()){ctx.beginPath();ctx.moveTo(hand.x,hand.y);ctx.quadraticCurveTo(hand.x,y+4,x+(i?half-2:-half+2),y+2);ctx.stroke();}
+  const weft=x-(half-2)*Math.cos(phase*Math.PI*2);ctx.strokeStyle='#fff6db';ctx.lineWidth=.85;ctx.beginPath();ctx.moveTo(weft,y);ctx.lineTo(weft,y+8);ctx.stroke();workshopGlyph(ctx,x,y+4,3,kind,'#f6eed9');
  }else if(pose==='rune'&&working){
   ctx.strokeStyle=theme.light;ctx.lineWidth=.75;ctx.beginPath();ctx.ellipse(center.x,center.y,13,8,-.2,-Math.PI/2,-Math.PI/2+Math.PI*2*phase);ctx.stroke();
   if(rig.toolTip){ctx.fillStyle=theme.spark;ctx.beginPath();ctx.arc(rig.toolTip.x,rig.toolTip.y,1.15,0,Math.PI*2);ctx.fill();}
@@ -4506,7 +4533,7 @@ function paintEliteSpoils(){
 
 function installRareEliteUI(){
  if(rareEliteInstalled)return;rareEliteInstalled=true;installBestiaryExpansion();
- for(const entry of [{id:'temporary_buffs',cat:'Guide',name:'Active temporary buffs',desc:'Every temporary effect and its independent remaining combat time.'},{id:'upgrade_vouchers',cat:'Guide',name:'Upgrade vouchers',desc:'Rare guardian drops. Redeem an Iron or Steel voucher at Equipment for one weapon refinement of that tier. Tier gates and rank limits still apply.'},{id:'combat_language',cat:'Guide',name:'Combat warning colors',desc:'Red danger, violet friendly fire, gold reflects, teal safety, blue shields.'},{id:'rare_elites',cat:'Guide',name:'Rare creatures and blessings',desc:'Walk over spoils to choose a stackable timed blessing.'},...Object.entries(ELITE_BOONS).map(([id,b])=>({id:'elite_boon_'+id,cat:'Dungeon Abilities',name:b.name,desc:b.description}))])if(!CODEX_ITEMS.some(item=>item.id===entry.id))CODEX_ITEMS.push(entry);
+ for(const entry of [{id:'temporary_buffs',cat:'Guide',name:'Active temporary buffs',desc:'Every temporary effect and its independent remaining combat time.'},{id:'upgrade_vouchers',cat:'Guide',name:'Upgrade vouchers',desc:'Rare guardian drops. Pay for one matching equipment recipe or rank, tool, Steel promotion or station upgrade in Skills. Training, Zone gates and rank limits still apply.'},{id:'combat_language',cat:'Guide',name:'Combat warning colors',desc:'Red danger, violet friendly fire, gold reflects, teal safety, blue shields.'},{id:'rare_elites',cat:'Guide',name:'Rare creatures and blessings',desc:'Walk over spoils to choose a stackable timed blessing.'},...Object.entries(ELITE_BOONS).map(([id,b])=>({id:'elite_boon_'+id,cat:'Dungeon Abilities',name:b.name,desc:b.description}))])if(!CODEX_ITEMS.some(item=>item.id===entry.id))CODEX_ITEMS.push(entry);
  const claim=document.createElement('button');claim.id='eliteSpoilsButton';claim.className='hidden';claim.setAttribute('aria-hidden','true');claim.tabIndex=-1;$('stageWrap').append(claim);
  $('stageWrap').insertAdjacentHTML('beforeend','<aside id="temporaryBuffs" class="temporary-buffs hidden" aria-label="Active temporary buffs"><span class="temporary-buff-count"></span><div class="temporary-buff-strip"></div></aside>');
  const image=new Image();image.src=iconAsset('codex-rare_elites');rareEliteImages.set('spoils',image);primeRareElites(biomeIndex());
@@ -4828,7 +4855,7 @@ function secondaryDamage(enemy,damage,sourceStyle=combatStyle(),origin=null){
 }
 
 function dungeonKillEffects(enemy){
- const gold=grantDelveGold(eliteBoonSum('goldPerKill'));
+ const gold=delveGoldCoins(eliteBoonSum('goldPerKill'));
  if(waveRank('shatter')&&enemy.frozen>0){for(const other of game.enemies.filter(e=>e!==enemy&&Math.hypot(e.x-enemy.x,e.y-enemy.y)<100).slice(0,5))secondaryDamage(other,attackDamage()*.08*waveRank('shatter'),enemy.lastDamageStyle,enemy);burst(enemy.x,enemy.y,9,'#a9e9ef');}
  if(waveRank('vortex'))for(const other of game.enemies){if(other.boss||other.elite)continue;const dx=enemy.x-other.x,dy=enemy.y-other.y,d=Math.hypot(dx,dy);if(d>25&&d<130){const step=Math.min(d-24,12*waveRank('vortex'));const x=other.x+dx/d*step,y=other.y+dy/d*step;if(encounterClear(x,y,other.rad)){other.x=x;other.y=y;}}}
  return {gold};
@@ -4875,7 +4902,15 @@ function redirectPlayerShot(s,enemy){
 
 function paintExpandedShape(shape,theme,progress=1,active=false){
  if(shape.shape==='quarters'){
-  for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i),safe=rect.left===shape.safe.left&&rect.top===shape.safe.top;paintExpandedShape({shape:'rect',rect},safe?combatTheme('safe'):theme,progress,active);if(safe)encounterLabel('◇ SAFE',(rect.left+rect.right)/2,(rect.top+rect.bottom)/2,combatTheme('safe').hot,12);}
+  for(let i=0;i<4;i++){
+   const r=arenaQuarter(shape.rect,i),safe=r.left===shape.safe.left&&r.top===shape.safe.top,t=safe?combatTheme('safe'):theme;
+   quad(r.left,r.top,r.right-r.left,r.bottom-r.top,t.color+(safe?'0c':active?'12':'0a'),t.color,2);
+   if(safe){
+    // An open sanctuary sigil identifies the empty quarter without a text panel.
+    const x=(r.left+r.right)/2,y=(r.top+r.bottom)/2;
+    ctx.save();ctx.strokeStyle=t.color;ctx.lineWidth=2.5;for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(x,y,26,i*Math.PI/2+.2,(i+1)*Math.PI/2-.2);ctx.stroke();}poly([x,y-12,x+9,y,x,y+12,x-9,y],t.color+'30',t.hot,1.5);ctx.restore();
+   }
+  }
  }else if(shape.shape==='rect'){
   const r=shape.rect;quad(r.left,r.top,r.right-r.left,r.bottom-r.top,theme.color+(active?'1c':'22'),theme.color,2);const step=28;if(!active){ctx.save();ctx.beginPath();ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);ctx.clip();for(let x=r.left-(r.bottom-r.top);x<r.right;x+=step)line(x,r.top,x+r.bottom-r.top,r.bottom,1,theme.color+'55');ctx.restore();}
   if(shape.order)encounterLabel(String(shape.order),(r.left+r.right)/2,(r.top+r.bottom)/2,theme.hot,20);
@@ -5001,7 +5036,7 @@ function paintAbilityMine(x,y,kind,theme,progress){
 
 function paintAbilityField(shape,type,kind,theme,progress=1,active=false){
  if(shape.shape==='quarters'){
-  for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i);if(rect.left!==shape.safe.left||rect.top!==shape.safe.top)paintAbilityField({shape:'rect',rect},type,kind,theme,progress,active);}return;
+  for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i);if(rect.left!==shape.safe.left||rect.top!==shape.safe.top)paintRuinQuarter(rect,kind,theme,progress,active);}return;
  }
  ctx.save();ctx.beginPath();
  if(shape.shape==='rect'){const r=shape.rect;ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);}
@@ -5022,6 +5057,39 @@ function paintAbilityField(shape,type,kind,theme,progress=1,active=false){
  else{
   paintAbilityEruption(shape.x,shape.y+15,active?32:17,kind,rise,theme);
   for(const side of [-1,1])paintAbilityEruption(shape.x+side*shape.r*.55,shape.y+4,active?18:10,kind,rise,theme);
+ }
+ ctx.restore();
+}
+
+function paintRuinBramble(x,y,size,rise,seed){
+ const m=ABILITY_MATERIALS[0];ctx.save();ctx.translate(x,y);ctx.scale(size/20,size/20);
+ ellipse(0,2,18,5,'#292b20c0');for(const side of [-1,1])ellipse(side*12,side+2,5,3,'#5a4a2d');ctx.scale(1,rise);
+ for(let i=0;i<3;i++){
+  const base=(i-1)*10,tip=base+(i===1?5:-8)+seed*3,height=39+i*5+seed*4;
+  ctx.beginPath();ctx.moveTo(base-4,3);ctx.bezierCurveTo(base-12,-11,tip+7,-22,tip,-height);ctx.quadraticCurveTo(tip+7,-height+7,tip+6,-height+16);ctx.bezierCurveTo(tip+5,-20,base+2,-12,base+4,2);ctx.closePath();ctx.fillStyle=m.base;ctx.fill();ctx.strokeStyle=m.dark;ctx.lineWidth=1.4;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(base-1,-2);ctx.bezierCurveTo(base-7,-13,tip+5,-26,tip+2,-height+7);ctx.strokeStyle=m.light;ctx.lineWidth=1;ctx.stroke();
+  const side=i%2?1:-1,bx=tip+side*15,by=-height*.65;
+  ctx.beginPath();ctx.moveTo(base,-14);ctx.quadraticCurveTo(bx-side*3,by+13,bx,by);ctx.strokeStyle=m.dark;ctx.lineWidth=4.5;ctx.stroke();ctx.strokeStyle=m.base;ctx.lineWidth=2.7;ctx.stroke();
+  poly([bx-side*3,by+8,bx+side*6,by+1,bx,by+13],m.light,m.dark,.7);
+  ctx.beginPath();ctx.moveTo(bx,by+1);ctx.quadraticCurveTo(bx+side*12,by-10,bx+side*13,by-2);ctx.quadraticCurveTo(bx+side*10,by+5,bx,by+1);ctx.fillStyle=m.accent;ctx.fill();ctx.strokeStyle=m.dark;ctx.lineWidth=.7;ctx.stroke();
+ }
+ ctx.restore();
+}
+
+function paintRuinQuarter(rect,kind,theme,progress,active){
+ const m=abilityMaterial(kind),p=clamp(progress,0,1),time=abilityEffectTime(),rise=active?.65+.35*Math.sin(p*Math.PI):.45+.5*p;
+ ctx.save();ctx.beginPath();ctx.rect(rect.left+3,rect.top+3,rect.right-rect.left-6,rect.bottom-rect.top-6);ctx.clip();
+ // Ground fissures connect full-height roots, flames, hands or crystals. The
+ // lattice is fixed in world space, so camera movement cannot shuffle threats.
+ const gap=kind===0?104:88,left=Math.max(rect.left,game.camX-game.viewWidth/2-60),right=Math.min(rect.right,game.camX+game.viewWidth/2+60),top=Math.max(rect.top,game.camY-game.viewHeight/2-60),bottom=Math.min(rect.bottom,game.camY+game.viewHeight/2+70);
+ ctx.globalAlpha*=active?.96:.78;
+ for(let row=Math.floor(top/gap);row<=Math.ceil(bottom/gap);row++)for(let col=Math.floor(left/gap);col<=Math.ceil(right/gap);col++){
+  const x=col*gap+(row%2?gap/2:0),y=row*gap,seed=Math.sin(row*13+col*7),pulse=reducedMotion()?0:Math.sin(time*3+row+col)*.05;
+  glow(x,y-6,active?35:27,theme.color+'25');
+  ctx.beginPath();ctx.moveTo(x-40,y+20);ctx.lineTo(x-17,y+8);ctx.lineTo(x-5,y+14);ctx.lineTo(x+11,y-4);ctx.lineTo(x+40,y-15);ctx.strokeStyle=m.dark;ctx.lineWidth=kind===0?8:7;ctx.stroke();ctx.strokeStyle=kind===0?theme.color:kind===1?m.accent:m.light;ctx.lineWidth=kind===0?1.6:2.5;ctx.stroke();
+  if(kind===1){ctx.strokeStyle=m.edge;ctx.lineWidth=1;ctx.stroke();}
+  if(kind===0)paintRuinBramble(x+seed*9,y+12,active?32:28,rise+pulse,seed);else paintAbilityEruption(x+seed*9,y+12,active?38:32,kind,rise+pulse,theme);
+  if(kind===3)paintAbilityCrystal(x-23,y+24,18,m,-.32);
  }
  ctx.restore();
 }
@@ -5276,7 +5344,7 @@ function openPreparationStep(action=data.craftGoal){
 
 function preparationHtml(){
  const plan=preparationPlan();if(!plan)return '';const next=preparationNext(plan),[type,id]=String(data.craftGoal).split(':');
- return '<section class="preparation-plan" aria-label="Tracked preparation"><div class="preparation-title"><b>'+escapeHTML(plan.goal.name)+'</b>'+trackRecipeButton(data.craftGoal,plan.goal.name)+'</div>'+(plan.requirements.length?'<ul class="preparation-requirements">'+plan.requirements.map(r=>'<li class="'+(r.ready?'ready':'')+'">'+uiIcon(r.ready?'check':'lock')+escapeHTML(r.label)+'</li>').join('')+'</ul>':'')+(type==='promotion'?'<p>Route includes remaining Iron refinements and promotion. Steel armor is optional and crafted separately.</p>':'')+'<button type="button" class="preparation-next" data-preparation-next data-focus-key="preparation-next">'+uiIcon('arrow')+'Next: '+escapeHTML(next.label)+'</button>'+(plan.tooLarge?'<p>Open the source to prepare this large batch.</p>':plan.steps.length?'<details id="preparationRoute"><summary>'+plan.steps.length+' preparation steps</summary><ol>'+plan.steps.map(step=>'<li><span>'+escapeHTML(step.activity==='prospect'?'Prospect opals':step.activity?SKILLS[step.activity].name:'Defeat guardians')+'</span><small>'+(step.batches?step.batches+' '+(step.batches===1?'batch':'batches')+' · ':'')+'+'+uiCompact(step.amount)+' '+escapeHTML(RESOURCE_LABEL[step.resource])+(step.gold?' · +'+uiCompact(step.gold)+' Gold':'')+(step.blocked?' · '+escapeHTML(step.activity?skillLockReason(step.activity):'Delve to earn'):'')+'</small></li>').join('')+'</ol></details>':'<p>Materials ready.</p>')+'</section>';
+ return '<section class="preparation-plan" aria-label="Tracked preparation"><div class="preparation-title"><b>'+escapeHTML(plan.goal.name)+'</b>'+trackRecipeButton(data.craftGoal,plan.goal.name)+'</div>'+(plan.requirements.length?'<ul class="preparation-requirements">'+plan.requirements.map(r=>'<li class="'+(r.ready?'ready':'')+'">'+uiIcon(r.ready?'check':'lock')+escapeHTML(r.label)+'</li>').join('')+'</ul>':'')+(type==='promotion'?'<p>Route includes remaining Iron refinements and promotion. Steel armor is optional and crafted separately.</p>':'')+'<button type="button" class="preparation-next" data-preparation-next data-focus-key="preparation-next">'+uiIcon('arrow')+'Next: '+escapeHTML(next.label)+'</button>'+(plan.tooLarge?'<p>Open the source to prepare this large batch.</p>':plan.steps.length?'<details id="preparationRoute"><summary>'+plan.steps.length+' preparation steps</summary><ol>'+plan.steps.map(step=>'<li><span>'+escapeHTML(step.activity==='prospect'?'Prospect opals':step.activity?SKILLS[step.activity].name:step.resource==='zoneMaterials'?'Find Zone materials':'Defeat guardians')+'</span><small>'+(step.batches?step.batches+' '+(step.batches===1?'batch':'batches')+' · ':'')+'+'+uiCompact(step.amount)+' '+escapeHTML(RESOURCE_LABEL[step.resource])+(step.gold?' · +'+uiCompact(step.gold)+' Gold':'')+(step.blocked?' · '+escapeHTML(step.activity?skillLockReason(step.activity):'Delve to earn'):'')+'</small></li>').join('')+'</ol></details>':'<p>Materials ready.</p>')+'</section>';
 }
 
 function trackAmmunition(resource=ammunitionResource(),seconds=300){
@@ -5336,6 +5404,7 @@ function normalizeMonsterLoot(){
   data.dungeoneeringXp=(Number(data.dungeoneeringXp)||0)+Object.values(data.xpCaches||{}).flat().reduce((sum,g)=>sum+(Number(g.value)||0),0);data.xpCaches={};data.lootPresentationVersion=1;
  }
  data.lootHistory=(Array.isArray(data.lootHistory)?data.lootHistory:[]).filter(r=>r&&typeof r.name==='string'&&Number.isFinite(r.amount)&&r.amount>0).slice(-40);
+ normalizeGroundLoot();
 }
 
 function monsterMaterialChance(enemy){
@@ -5347,14 +5416,13 @@ function monsterMaterialDrops(enemy){
  if(enemy.summoned||enemy.totem)return [];const drops=[],rule=MONSTER_LOOT[enemy.boss?'boss':enemy.elite?'elite':'normal'];
  if(Math.random()<monsterMaterialChance(enemy)){
   const pool=zoneNumber()===0?['ore','logs','cloth','scraps']:['ore','coal','willowLogs','ancientSalvage','cloth'],key=pool[Math.floor(Math.random()*pool.length)],amount=rule.amount;
-  data[key]=(data[key]||0)+amount;codexDiscover('resource_'+key);drops.push({key,amount});
+  drops.push({key,amount});
  }
  const rollKey=data.floor+':'+enemy.bossIndex;
  if(enemy.boss&&data.floor>data.cleared&&!data.voucherRolls[rollKey]){
   data.voucherRolls[rollKey]=true;
   if(Math.random()<(enemy.bossIndex===2&&isZoneFinal()?MONSTER_LOOT.finalVoucher:MONSTER_LOOT.voucher)){
-   const tier=zoneNumber()===0?'iron':'steel';data.upgradeVouchers[tier]++;drops.push({key:'voucher_'+tier,amount:1});codexDiscover('upgrade_vouchers');
-   toast((tier==='iron'?'Iron':'Steel')+' upgrade voucher','Redeem in Skills → Equipment for one weapon refinement.');
+   const tier=zoneNumber()===0?'iron':'steel';drops.push({key:'voucher_'+tier,amount:1});
   }
  }
  return drops;
@@ -5389,16 +5457,43 @@ function paintLootReceipts(){
  }
 }
 
-function voucherTier(style){return styleTier(style)===2?'steel':'iron';}
+function voucherTier(style,kind='weapon'){return (kind==='armor'&&tier2Unlocked()&&data.ownedArmor.includes(style+'_2')?2:styleTier(style))===2?'steel':'iron';}
 
-function canRedeemVoucher(style){return !!STYLE_DEFS[style]&&data.unlockedWeapons.some(id=>styleForWeapon(id)===style)&&data.styles[style].weapon<styleUpgradeCap(style,'weapon')&&(data.upgradeVouchers[voucherTier(style)]||0)>0;}
-
-function redeemUpgradeVoucher(style){
- if(!canRedeemVoucher(style))return false;const tier=voucherTier(style);data.upgradeVouchers[tier]--;data.styles[style].weapon++;equipmentWorkXp(style,'weapon');data.firstWeaponCrafted=true;projectCombatStyle();announceWeaponUpgradeTip();
- toast('Voucher redeemed',STYLE_DEFS[style].name+' refinement '+data.styles[style].weapon+' · no materials or gold spent.');save();refreshUI();renderDisciplineDrawer();return true;
+function workshopVoucherOffer(action){
+ const [type,id,kind,...extra]=String(action).split(':');if(extra.length)return null;
+ const ownedStyle=style=>data.unlockedWeapons.some(w=>styleForWeapon(w)===style);
+ if(type==='upgrade'&&STYLE_DEFS[id]&&['weapon','armor','enchant','speed','reach'].includes(kind))return {name:STYLE_DEFS[id].name+' '+{weapon:'refinement',armor:'reinforcement',enchant:'enchantment',speed:'attack speed',reach:'reach'}[kind],tiers:[voucherTier(id,kind)],eligible:data.styles[id][kind]<styleUpgradeCap(id,kind)&&(kind==='armor'?data.ownedArmor.some(k=>ARMOR_SETS[k]?.style===id):ownedStyle(id))};
+ if(kind!==undefined)return null;
+ if(type==='weapon'&&Object.hasOwn(WEAPON_TYPES,id))return {name:weaponDisplayName(id),tiers:[voucherTier(styleForWeapon(id))],eligible:!data.unlockedWeapons.includes(id)&&weaponCraftLevel(id)>=WEAPON_LEVELS[id]};
+ if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];return {name:a.name,tiers:[a.tier===2?'steel':'iron'],eligible:!data.ownedArmor.includes(id)&&(a.tier===1||tier2Unlocked())&&levelRange(data[DISCIPLINES[a.group].xp]||0).lvl>=a.level};}
+ if(type==='tool'&&TOOL_DEFS[id])return {name:TOOL_DEFS[id].name,tiers:['iron'],eligible:!data.tools[id]};
+ if(type==='trinket'&&TRINKETS[id])return {name:TRINKETS[id].name,tiers:['iron'],eligible:!data.trinkets.includes(id)};
+ if(type==='station'&&DISCIPLINES[id])return {name:DISCIPLINES[id].name+' station upgrade',tiers:['iron','steel'],eligible:stationRank(id)<5};
+ if(type==='promotion'&&STYLE_DEFS[id])return {name:STYLE_DEFS[id].name+' Steel promotion',tiers:['steel'],eligible:ownedStyle(id)&&tier2Unlocked()&&styleTier(id)===1&&data.styles[id].weapon>=10&&weaponCraftLevel(STYLE_DEFS[id].weapon)>=10};
+ return null;
 }
 
-function voucherButtonHtml(style){const tier=voucherTier(style),count=data.upgradeVouchers?.[tier]||0;return count?'<button type="button" class="voucher-redeem" data-redeem-voucher="'+style+'" data-focus-key="voucher-'+style+'" '+(canRedeemVoucher(style)?'':'disabled')+'>Use '+(tier==='iron'?'Iron':'Steel')+' voucher · '+count+' owned</button>':'';}
+function canRedeemWorkshopVoucher(action,tier){const offer=workshopVoucherOffer(action);return !!offer?.eligible&&offer.tiers.includes(tier)&&(data.upgradeVouchers?.[tier]||0)>0;}
+
+function spendUpgradeVoucher(action,tier){if(!canRedeemWorkshopVoucher(action,tier))return false;data.upgradeVouchers[tier]--;return true;}
+
+function redeemWorkshopVoucher(action,tier){
+ if(!canRedeemWorkshopVoucher(action,tier))return false;const offer=workshopVoucherOffer(action),[type,id,kind]=action.split(':');
+ const result=type==='upgrade'?craftStyleUpgrade(id,kind,tier):type==='weapon'?chooseWeapon(id,tier):type==='armor'?makeArmor(id,tier):type==='tool'?makeTool(id,tier):type==='trinket'?makeTrinket(id,tier):type==='promotion'?promoteStyle(id,tier):upgradeSkill(id,tier);
+ if(!result)return false;if(goalDetails(data.craftGoal)?.done)data.craftGoal='';
+ toast('Voucher redeemed',offer.name+' · no materials or gold spent.');save();refreshUI();renderDisciplineDrawer();return true;
+}
+
+function canRedeemVoucher(style,kind='weapon'){return !!STYLE_DEFS[style]&&canRedeemWorkshopVoucher('upgrade:'+style+':'+kind,voucherTier(style,kind));}
+
+function redeemUpgradeVoucher(style,kind='weapon'){return !!STYLE_DEFS[style]&&redeemWorkshopVoucher('upgrade:'+style+':'+kind,voucherTier(style,kind));}
+
+function workshopVoucherButtonHtml(action){
+ const offer=workshopVoucherOffer(action);if(!offer)return '';
+ return offer.tiers.filter(tier=>(data.upgradeVouchers?.[tier]||0)>0).map(tier=>'<button type="button" class="voucher-redeem" data-redeem-voucher="'+action+'" data-voucher-tier="'+tier+'" data-focus-key="voucher-'+action+'-'+tier+'" aria-label="Use '+tier+' voucher for '+escapeHTML(offer.name)+'" '+(offer.eligible?'':'disabled')+'>Use '+(tier==='iron'?'Iron':'Steel')+' voucher · '+data.upgradeVouchers[tier]+' owned</button>').join('');
+}
+
+function voucherButtonHtml(style,kind='weapon'){return workshopVoucherButtonHtml('upgrade:'+style+':'+kind);}
 
 function lootHistoryHtml(){const entries=[...(data.lootHistory||[])].reverse();return entries.length?'<details class="loot-history"><summary>Recent monster loot</summary><ol>'+entries.map(r=>'<li><b>+'+uiCompact(r.amount)+'</b> '+escapeHTML(r.name)+'<small>Zone '+r.zone+'</small></li>').join('')+'</ol></details>':'';}
 
@@ -5417,11 +5512,11 @@ function refreshTemporaryBuffs(){
  const host=$('temporaryBuffs');if(!host)return;const groups=temporaryBuffGroups(),visible=game.scene==='combat'&&groups.length>0;
  host.classList.toggle('hidden',!visible);$('stageWrap').classList.toggle('has-temporary-buffs',visible);if(!visible)return;
  const strip=host.querySelector('.temporary-buff-strip'),structure=groups.map(group=>group.id).join(','),focused=document.activeElement?.closest('[data-temporary-buff]')?.dataset.temporaryBuff;
- if(strip.dataset.structure!==structure){const scroll=strip.scrollLeft;strip.innerHTML=groups.map(group=>'<button type="button" class="temporary-buff" data-temporary-buff="'+group.id+'" data-codex-entry="'+group.codex+'">'+artHTML(group.art)+'<span><b>'+group.name+'</b><small></small></span><i></i></button>').join('');strip.dataset.structure=structure;strip.scrollLeft=scroll;strip.querySelectorAll('button').forEach(bindTouchNavigation);if(focused)(strip.querySelector('[data-temporary-buff="'+focused+'"]')||$('dashButton')).focus({preventScroll:true});}
+ if(strip.dataset.structure!==structure){const scroll=strip.scrollTop;strip.innerHTML=groups.map(group=>'<button type="button" class="temporary-buff" data-temporary-buff="'+group.id+'" data-codex-entry="'+group.codex+'">'+artHTML(group.art)+'<span><b>'+group.name+'</b><small></small></span><i></i></button>').join('');strip.dataset.structure=structure;strip.scrollTop=scroll;strip.querySelectorAll('button').forEach(bindTouchNavigation);if(focused)(strip.querySelector('[data-temporary-buff="'+focused+'"]')||$('dashButton')).focus({preventScroll:true});}
  for(const group of groups){const button=strip.querySelector('[data-temporary-buff="'+group.id+'"]');button.querySelector('small').textContent=temporaryBuffTime(group);button.querySelector('i').textContent=group.timers.length>1?'×'+group.timers.length:'';button.setAttribute('aria-label',temporaryBuffLabel(group));button.dataset.hint=temporaryBuffLabel(group);}
  host.querySelector('.temporary-buff-count').textContent=groups.reduce((sum,group)=>sum+Math.max(1,group.timers.length),0)+' active · combat time';
  const stage=$('stageWrap').getBoundingClientRect(),meters=document.querySelector('.top-float .meters').getBoundingClientRect(),ammo=$('ammoNotice'),ammoRect=ammo&&!ammo.classList.contains('hidden')?ammo.getBoundingClientRect():null,top=Math.max(meters.bottom,ammoRect?.bottom||0)-stage.top+8,left=Math.max(14,meters.left-stage.left);
- host.style.top=top+'px';host.style.left=left+'px';host.style.width=Math.max(150,Math.min(330,stage.width-left-66))+'px';$('stageWrap').style.setProperty('--notice-after-buffs',(top+72)+'px');
+ host.style.top=top+'px';host.style.left=left+'px';host.style.width=Math.min(160,stage.width-left-66)+'px';strip.style.maxHeight=Math.max(44,Math.min(220,stage.height*.28,stage.height-top-152))+'px';$('stageWrap').style.setProperty('--notice-after-buffs',(top+host.getBoundingClientRect().height+9)+'px');
 }
 
 function temporaryBuffGuideHtml(){return codexParagraph('Temporary bonuses remain visible above the arena. Each repeated blessing has its own timer. The chip shows the next stack to expire; tap it to inspect every timer. Countdown uses combat time, so Delving speed accelerates it. Menus, pause and skilling freeze these timers.')+codexRuleList(temporaryBuffGroups().map(group=>[group.name,group.description+' · '+(group.timers.length?group.timers.map(time=>Math.ceil(time)+'s').join(', '):'While linked to the healing stream')]))+codexParagraph('Rally gives +10% hit damage for five combat seconds after a power interception. Mending is active only while a healing stream is linked and has healing reserve.');}
@@ -5442,14 +5537,18 @@ function skillBuffMultiplier(key){return 1+(skillBuffs(key)[0]?.definition.speed
 
 function skillBonusReward(node){
  const rarity=SKILL_BONUS_RARITIES.find(r=>r.id===node.rarity)||SKILL_BONUS_RARITIES[0],strongest=skillBuffs(node.key)[0]?.definition.speed||0,instant=strongest>rarity.speed;
- return {rarity,instant,amount:instant?node.windfall:node.amount};
+ return {rarity,instant,batches:node.windfall,amount:instant?node.windfall*(node.craft?skillYield(node.key):1):node.amount};
 }
 
 function refreshSkillBonusOffer(node){
- const reward=skillBonusReward(node),rarity=reward.rarity,skill=SKILLS[node.key],effect=reward.instant?'+'+reward.amount+' '+skill.item+' instantly':'+'+Math.round(rarity.speed*100)+'% '+(node.craft?'crafting':'gathering')+' speed for '+rarity.seconds+' seconds of active work',signature=(reward.instant?'resource:':'speed:')+effect;
+ const reward=skillBonusReward(node),rarity=reward.rarity,skill=SKILLS[node.key],effect=reward.instant?(node.craft?'Instantly craft up to ':'+')+reward.amount+' '+skill.item+(node.craft?' using available ingredients':' instantly'):'+'+Math.round(rarity.speed*100)+'% '+(node.craft?'crafting':'gathering')+' speed for '+rarity.seconds+' seconds of active work',signature=(reward.instant?'resource:':'speed:')+effect;
  if(node.el.dataset.effect===signature)return;
- node.el.dataset.effect=signature;node.el.dataset.reward=reward.instant?'resource':'speed';const badge=node.el.querySelector(':scope > span');if(reward.instant)badge.innerHTML=artHTML(RESOURCE_ART[skill.resource])+'+'+reward.amount;else badge.textContent='+'+Math.round(rarity.speed*100)+'% · '+rarity.seconds+'s';
+ node.el.dataset.effect=signature;node.el.dataset.reward=reward.instant?'resource':'speed';const badge=node.el.querySelector(':scope > span');if(reward.instant)badge.innerHTML=artHTML(RESOURCE_ART[skill.resource])+(node.craft?'≤':'+')+reward.amount;else badge.textContent='+'+Math.round(rarity.speed*100)+'% · '+rarity.seconds+'s';
  node.el.setAttribute('aria-label',rarity.name+' '+BONUS_DEFS[node.key].name+': '+effect+(reward.instant?' · stronger speed bonus already active':node.craft?'':', plus '+node.amount+' '+skill.item));node.el.title=effect+' · tap or drag across';
+}
+
+function instantlyRefineSkill(key,batches){
+ let amount=0;for(let i=0;i<Math.min(5,Math.max(0,Math.floor(batches)));i++){const made=produce(key,true);if(!made)break;amount+=made;}return amount;
 }
 
 function grantSkillBuff(key,rarity){
@@ -5497,8 +5596,112 @@ function refreshSkillBuffUI(){
 
 function showSkillBuffDetails(){
  const key=game.scene,buffs=skillBuffs(key);if(!buffs.length)return;
- showOverlay('<p class="overlay-kicker">ACTIVE SKILLING BONUS</p><h2>'+SKILLS[key].name+'</h2>'+codexRuleList(buffs.map(b=>['+'+Math.round(b.definition.speed*100)+'% speed',b.left.toFixed(1)+'s remaining']))+'<p>The strongest bonus applies. Timers count real seconds of active work in this activity. Equal pickups refresh it; stronger pickups improve it. Weaker pickups give 1–5 of this activity’s output instantly instead, as free bonus items. Normal crafting still consumes ingredients. Idling and offline work keep their normal rate.</p><button type="button" class="primary-button" id="skillBuffReturn">Return to work</button>','skill-buff');
+ showOverlay('<p class="overlay-kicker">ACTIVE SKILLING BONUS</p><h2>'+SKILLS[key].name+'</h2>'+codexRuleList(buffs.map(b=>['+'+Math.round(b.definition.speed*100)+'% speed',b.left.toFixed(1)+'s remaining']))+'<p>The strongest bonus applies. Timers count real seconds of active work in this activity. Equal pickups refresh it; stronger pickups improve it. Weaker gathering pickups give 1–5 resources. Weaker refining pickups instantly complete up to five normal recipe batches, consuming available ingredients and stopping when the next batch is unaffordable. The receipt shows the actual output, including each recipe’s normal batch yield. Idling and offline work keep their normal rate.</p><button type="button" class="primary-button" id="skillBuffReturn">Return to work</button>','skill-buff');
  $('skillBuffReturn').onclick=()=>{hideOverlay();$('skillHold').focus({preventScroll:true});};
+}
+
+function enchantmentGuideStyle(){
+ const owned=[combatStyle(),...Object.keys(STYLE_DEFS)].filter((id,i,all)=>all.indexOf(id)===i&&data.unlockedWeapons.some(w=>styleForWeapon(w)===id));
+ return owned.find(id=>data.styles[id].enchant===0&&(data.essence||0)>=(styleUpgradeCost(id,'enchant').essence||0));
+}
+
+function progressionGuide(){
+ if(data.cleared>=1&&dungeoneeringJourney().level===0&&!data.firstMasteryTipSeen)return {id:'mastery',title:'Your first Mastery point',body:'Clear all five Zone 1 floors to reach Zone 2. Choose faster Delving or faster Skilling, including idle.',action:'View delve route',art:'mastery-points'};
+ const style=enchantmentGuideStyle();
+ if(style&&!data.essenceEnchantTipSeen)return {id:'enchant',style,title:'Put your essence to work',body:'You have enough essence for your first '+STYLE_DEFS[style].name+' enchantment. Warding → Equipment shows the bars and cut gem needed too.',action:'View enchantment',art:'essence'};
+ return null;
+}
+
+function dismissProgressionGuide(guide){
+ if(!guide)return;if(guide.id==='mastery')data.firstMasteryTipSeen=true;else data.essenceEnchantTipSeen=true;save();refreshProgressionGuide();
+}
+
+function refreshProgressionGuide(){
+ const host=$('progressionGuide');if(!host)return;const guide=progressionGuide(),visible=!!guide&&!drawerKind&&$('overlay').classList.contains('hidden')&&tourIndex<0&&!game.boss&&!game.manualPaused&&!game.holdSkill&&$('idleUnlockNudge').classList.contains('hidden')&&$('temporaryBuffs').classList.contains('hidden');
+ host.classList.toggle('hidden',!visible);if(!visible)return;
+ if(host.dataset.guide!==guide.id+':'+(guide.style||'')){
+  host.dataset.guide=guide.id+':'+(guide.style||'');host.querySelector('strong').textContent=guide.title;host.querySelector('p').textContent=guide.body;$('progressionGuideOpen').textContent=guide.action+' ›';
+ }
+ $('skillsNudge').classList.add('hidden');$('quickSkills').classList.remove('skills-suggested');
+}
+
+function installProgressionGuidance(){
+ if($('progressionGuide'))return;
+ $('noticeColumn').insertAdjacentHTML('afterbegin','<aside id="progressionGuide" class="skills-nudge progression-guide hidden" aria-label="Progression tip"><div><strong></strong><p></p><button type="button" id="progressionGuideOpen"></button></div><button type="button" id="progressionGuideDismiss" aria-label="Dismiss progression tip">×</button></aside>');
+ $('progressionGuideDismiss').onclick=()=>dismissProgressionGuide(progressionGuide());
+ $('progressionGuideOpen').onclick=()=>{const guide=progressionGuide();if(!guide)return;dismissProgressionGuide(guide);if(guide.id==='mastery'){openDelveTravel();return;}styleBench=guide.style;openWorkshop('warding','equipment');const card=$('consolidatedSkills').querySelector('[data-style-upgrade="'+guide.style+':enchant"]')?.closest('article');card?.scrollIntoView({block:'center',behavior:'instant'});card?.querySelector('.codex-link')?.focus({preventScroll:true});};
+ $('progressionGuide').querySelectorAll('button').forEach(bindTouchNavigation);
+}
+
+function normalizeZoneMaterials(){
+ const old=data.biomeLoot||{};data.biomeLoot=Object.fromEntries([0,1,2,3].map(i=>[i,Math.max(0,Math.min(1e12,Math.floor(Number(old[i])||0)))]));
+ // A non-serialized facade lets ordinary recipes, planning and conservation use
+ // the existing banks. It never creates a second saved balance or conversion.
+ Object.defineProperty(data,'zoneMaterials',{configurable:true,get(){return Object.values(this.biomeLoot).reduce((a,b)=>a+b,0);},set(value){
+  let difference=this.zoneMaterials-Math.max(0,Number(value)||0);
+  if(difference<0){this.biomeLoot[0]-=difference;return;}
+  for(let i=0;i<4&&difference>0;i++){const used=Math.min(this.biomeLoot[i],difference);this.biomeLoot[i]-=used;difference-=used;}
+ }});
+}
+
+function upgradeZoneMaterialCost(tier,kind,rank){
+ const cap=TIER_LIMITS[tier][kind];return kind==='weapon'?(rank+1)%2===0:rank+1===cap;
+}
+
+function validGroundLootItem(item){return item&&typeof item.key==='string'&&Number.isSafeInteger(item.amount)&&item.amount>0&&(GROUND_LOOT_RESOURCES.has(item.key)||/^voucher_(iron|steel)$/.test(item.key)||/^loot_[0-3]$/.test(item.key));}
+
+function normalizeGroundLoot(){
+ data.groundLootCaches=Object.fromEntries(Object.entries(data.groundLootCaches||{}).filter(([floor,drops])=>/^\d+$/.test(floor)&&Number(floor)>0&&Number(floor)<=zoneEnd(999)&&Array.isArray(drops)).map(([floor,drops])=>[floor,drops.filter(d=>d&&Number.isFinite(d.x)&&Number.isFinite(d.y)&&Array.isArray(d.items)).map(d=>({x:Math.max(-10000,Math.min(10000,d.x)),y:Math.max(-10000,Math.min(10000,d.y)),age:.4,items:d.items.filter(validGroundLootItem).map(i=>({key:i.key,amount:Math.min(1e12,i.amount)}))})).filter(d=>d.items.length)]));
+}
+
+function checkpointGroundLoot(){
+ if(typeof game==='undefined'||game.lootOwner!==data||!game.lootFloor)return;
+ const drops=(game.groundLoot||[]).map(d=>({x:d.x,y:d.y,age:.4,items:d.items.map(i=>({key:i.key,amount:i.amount}))}));
+ if(drops.length)data.groundLootCaches[game.lootFloor]=drops;else delete data.groundLootCaches[game.lootFloor];
+}
+
+function loadFloorLoot(){
+ game.lootOwner=data;game.lootFloor=data.floor;game.groundLoot=(data.groundLootCaches?.[data.floor]||[]).map(d=>({...d,items:d.items.map(i=>({...i}))}));
+}
+
+function dropMonsterLoot(enemy,rewards){
+ const combined=new Map();for(const item of rewards)if(validGroundLootItem(item))combined.set(item.key,(combined.get(item.key)||0)+item.amount);
+ if(!combined.size)return null;
+ const drop={x:enemy.x,y:enemy.y+(enemy.rad||0)*.35,age:0,items:[...combined].map(([key,amount])=>({key,amount}))};
+ (game.groundLoot||(game.groundLoot=[])).push(drop);return drop;
+}
+
+function collectGroundLoot(drop){
+ const index=game.groundLoot?.indexOf(drop)??-1;if(index<0||game.lootOwner!==data||game.lootFloor!==data.floor)return false;
+ game.groundLoot.splice(index,1);for(const item of drop.items){
+  if(item.key==='sigils')grantZoneCurrency(item.amount);
+  else if(item.key.startsWith('voucher_')){const tier=item.key.slice(8);data.upgradeVouchers[tier]+=item.amount;codexDiscover('upgrade_vouchers');toast((tier==='iron'?'Iron':'Steel')+' upgrade voucher','Choose a matching equipment recipe, upgrade, tool or station in Skills.');}
+  else if(item.key.startsWith('loot_')){const kind=Number(item.key.slice(5));data.biomeLoot[kind]=(data.biomeLoot[kind]||0)+item.amount;codexDiscover(item.key);}
+  else{data[item.key]=(data[item.key]||0)+item.amount;codexDiscover(item.key==='essence'?'permanent_essence':'resource_'+item.key);}
+ }
+ recordMonsterLoot({x:drop.x,y:drop.y,rad:0},drop.items);return true;
+}
+
+function lootPickupRadius(){return 68+waveRank('vortex')*8+trinketBonus('pickup');}
+
+function tickGroundLoot(dt){
+ if(game.menuPaused||game.scene!=='combat'||game.status!=='running'||!$('overlay').classList.contains('hidden'))return;
+ const p=game.player,radius=lootPickupRadius();for(const drop of [...game.groundLoot||[]]){
+  drop.age+=dt;if(drop.age<.35)continue;const distance=Math.hypot(drop.x-p.x,drop.y-p.y);
+  if(distance>radius)continue;const step=Math.min(distance,360*dt);if(distance){drop.x+=(p.x-drop.x)/distance*step;drop.y+=(p.y-drop.y)/distance*step;}
+  if(Math.hypot(drop.x-p.x,drop.y-p.y)<=19)collectGroundLoot(drop);
+ }
+}
+
+function collectAllGroundLoot(){for(const drop of [...game.groundLoot||[]])collectGroundLoot(drop);checkpointGroundLoot();}
+
+function paintGroundLoot(){
+ for(const drop of game.groundLoot||[]){
+  const voucher=drop.items.some(i=>i.key.startsWith('voucher_')),size=voucher?24:20,lift=reducedMotion()?0:Math.sin(Math.min(1,drop.age/.35)*Math.PI)*16;
+  glow(drop.x,drop.y-3,voucher?31:20,voucher?'#f4d18635':'#dbc28d20');ellipse(drop.x,drop.y+5,13,4,'#151b1aa0');
+  const items=drop.items.slice(0,3);items.forEach((item,i)=>{const details=lootDetails(item.key);let image=lootImages.get(details.art);if(!image){image=new Image();image.src=iconAsset(details.art);lootImages.set(details.art,image);}const x=drop.x+(i-(items.length-1)/2)*13,y=drop.y-(i%2)*5-lift;if(image.complete&&image.naturalWidth)ctx.drawImage(image,x-size/2,y-size/2-3,size,size);});
+  if(voucher){line(drop.x,drop.y-16-lift,drop.x,drop.y-31-lift,1.5,'#ffe7a2b0');disc(drop.x,drop.y-33-lift,2,'#fff0bd');}
+ }
 }
 /* END LIVING SKILLS */
 const ACTIVE_INTERVAL={"mine":2.4,"forge":2.8,"wood":2.4,"fletch":2.8,"ward":2.4,"rune":2.8,"scavenge":3.5,"silverMine":3.1,"silverSmelt":3.4,"polish":3.8,"coal":3.2,"steelSmelt":3.6,"willow":3,"steelFletch":3.4,"ancientScavenge":4,"cleanAncient":3.6,"aetherWeave":3,"greaterRune":3.6,"garnetSearch":4.5,"garnetCut":4};
@@ -5570,7 +5773,7 @@ const biomeLootCount=(index=biomeIndex())=>(data.biomeLoot&&data.biomeLoot[index
 const zoneStage=()=>floorStage(data.floor);
 const emptyZone=()=>zoneSnapshot();
 function normalizeZone(){normalizeZoneShopProgression();data.zone=zoneSnapshot();}
-function defaults(){return {preparationEconomyVersion:1,preparationEconomyCredit:0,lootPresentationVersion:1,upgradeVouchers:{iron:0,steel:0},voucherRolls:{},lootHistory:[],timeProgressionVersion:1,timeMilestones:0,timeRates:null,legacyDungeoneeringLevel:0,zoneLayoutVersion:1,tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,firstWeaponCrafted:false,eliteSpoils:[],eliteSpoilsSequence:0,eliteBoon:null,eliteBoons:null,eliteBoonSequence:0,weaponUpgradeTipSeen:false,combatLanguageTipSeen:false,zone2TravelTipSeen:false,masteryRewardVersion:0,earlyMasteryClaimed:false,zoneAbilityVersion:0,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeonShopVersion:0,dungeonShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,ammoCharges:{arrows:0,runes:0},cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
+function defaults(){return {preparationEconomyVersion:1,preparationEconomyCredit:0,lootPresentationVersion:1,upgradeVouchers:{iron:0,steel:0},voucherRolls:{},lootHistory:[],timeProgressionVersion:1,timeMilestones:0,timeRates:null,legacyDungeoneeringLevel:0,zoneLayoutVersion:1,tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,firstWeaponCrafted:false,eliteSpoils:[],eliteSpoilsSequence:0,eliteBoon:null,eliteBoons:null,eliteBoonSequence:0,weaponUpgradeTipSeen:false,firstMasteryTipSeen:false,essenceEnchantTipSeen:false,combatLanguageTipSeen:false,zone2TravelTipSeen:false,masteryRewardVersion:0,earlyMasteryClaimed:false,zoneAbilityVersion:0,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeonShopVersion:0,dungeonShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,ammoCharges:{arrows:0,runes:0},cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
 let data=defaults(), offlineEarned=null;
 try { const raw=localStorage.getItem(KEY);if(raw){const saved=JSON.parse(raw);data={...defaults(),...saved,zoneLayoutVersion:Number(saved.zoneLayoutVersion)||0,timeProgressionVersion:Number(saved.timeProgressionVersion)||0,lootPresentationVersion:Number(saved.lootPresentationVersion)||0,preparationEconomyVersion:Number(saved.preparationEconomyVersion)||0};data.custom=DeepwellAvatar.normalizeCustom(saved.custom);for(const k of ['floor','cleared','gold','essence','ore','bars','weapon','armor','enchant','miningXp','smithingXp','logs','arrows','cloth','runes','scraps','scavengeXp','woodXp','fletchXp','wardXp','runeXp','silverOre','silverBars','opals','cutOpals','artisanXp'])data[k]=Math.max(0,Number(data[k])||0);data.floor=Math.max(1,Math.floor(data.floor));data.mastery=(data.mastery&&typeof data.mastery==='object')?data.mastery:{};data.biomeLoot=(data.biomeLoot&&typeof data.biomeLoot==='object')?data.biomeLoot:{};for(const [group,info] of Object.entries(DISCIPLINES)){if(saved[info.xp]===undefined)data[info.xp]=info.actions.reduce((n,k)=>n+Math.max(0,Number(saved[SKILLS[k].xp])||0),0);else data[info.xp]=Math.max(0,Number(data[info.xp])||0)}
  data.onboardingDone=saved.onboardingDone===undefined?!!saved.tutorialSeen:!!saved.onboardingDone;data.masteryIntroSeen=saved.masteryIntroSeen===undefined?Object.values(saved.mastery||{}).some(m=>(m?.earned||0)>0):!!saved.masteryIntroSeen;data.lastSkill=SKILLS[data.lastSkill]?data.lastSkill:'mine';data.skillAutoReturn=!!data.skillAutoReturn;data.trinkets=Array.isArray(saved.trinkets)?[...new Set(saved.trinkets.filter(v=>TRINKETS[v]))]:[];data.equippedRing=data.trinkets.includes(saved.equippedRing)&&TRINKETS[saved.equippedRing]?.type==='ring'?saved.equippedRing:'';data.equippedRings=(Array.isArray(saved.equippedRings)?saved.equippedRings:[saved.equippedRing]).filter((id,i,arr)=>TRINKETS[id]?.type==='ring'&&data.trinkets.includes(id)&&arr.indexOf(id)===i).slice(0,4);data.equippedRing=data.equippedRings[0]||'';data.devSpeedUnlocked=!!saved.devSpeedUnlocked;data.equippedAmulet=data.trinkets.includes(saved.equippedAmulet)&&TRINKETS[saved.equippedAmulet]?.type==='amulet'?saved.equippedAmulet:'';
@@ -5598,7 +5801,7 @@ const maxHp=()=>120+armorStats().health+trinketBonus('hp');
 const weaponCost=()=>styleUpgradeCost(combatStyle(),'weapon');
 const armorCost=()=>styleUpgradeCost(combatStyle(),'armor');
 const enchantCost=()=>styleUpgradeCost(combatStyle(),'enchant');
-function save(){if(game.restoringSave)return;checkpointGroundXp();try{data.goldHighWater=Math.max(data.goldHighWater||0,data.gold);data.savedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}catch(err){if(!saveWarningShown&&$('toastStack')){saveWarningShown=true;toast('Progress could not be saved','Allow browser storage, or back up your save in Settings.')}}}
+function save(){if(game.restoringSave)return;checkpointGroundXp();checkpointGroundLoot();try{data.goldHighWater=Math.max(data.goldHighWater||0,data.gold);data.savedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}catch(err){if(!saveWarningShown&&$('toastStack')){saveWarningShown=true;toast('Progress could not be saved','Allow browser storage, or back up your save in Settings.')}}}
 function advanceProduction(seconds,multiplier=selectedTimeRate('skilling')){
   ensureJobs();const jobs=data.idleJobs.filter(Boolean);if(!jobs.length)return {mined:0,smelted:0};
   const beforeOre=data.ore,beforeBars=data.bars;let left=Math.min(28800,Math.max(0,seconds))*Math.max(1,multiplier);
@@ -5664,6 +5867,7 @@ function renderTour(){if(tourIndex<0)return;const t=TOUR[tourIndex];$('tourShiel
 function finishTour(){tourIndex=-1;for(const id of ['tourShield','tourSpotlight','tourPanel'])$(id).classList.add('hidden');game.menuPaused=!!game.manualPaused;updatePauseHud();data.onboardingDone=true;save();}
 function showMasteryIntroduction(){if(data.masteryIntroSeen||!masteryUnlocked())return;data.masteryIntroSeen=true;save();toast('Dungeoneering point earned','Choose Delving or Skilling game time in the Dungeon Shop.');}
 function resetRun(){
+ checkpointGroundLoot();
  game.healthDrops=[];game.lootDrops=[];game.rareEliteSpawned=false;game.workBonusReaction=null;
  resetArenaTouch();
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
@@ -5675,7 +5879,7 @@ function resetRun(){
  game.enemies=[];game.shots=[];game.swings=[];game.hostileShots=[];game.xpOwner=data;game.xpZoneIndex=zoneNumber();game.gems=(data.xpCaches?.[game.xpZoneIndex]||[]).map(g=>({...g}));
  game.hazards=[];clearEncounterState();game.eliteCount=0;game.eliteSchedule=[];game.eliteKinds=[];game.movementTap=null;game.waveEliteSpawned=false;game.arcs=[];game.particles=[];game.floaters=[];game.runKills=0;game.spawnTimer=0;
  game.attackTimer=0;game.phaseTime=0;game.runSeconds=0;game.transition=0;
- game.camX=game.camY=0;game.boss=null;
+ game.camX=game.camY=0;game.boss=null;loadFloorLoot();
 }
 function syncZone(){data.zone=zoneSnapshot();game.upgrades={...zoneShopFor().ranks};const p=dungeonProgress();game.runLevel=p.level;game.runXp=p.xp;game.requiredXp=p.required;game.pendingLevels=0;checkpointGroundXp();}
 function startFloor(){if(eliteRewardOpen())return false;game.scene='combat';game.manualPaused=game.menuPaused=false;resetRun();game.status='running';hideOverlay();setScene('combat',false);nextPhase();updatePauseHud();refreshUI();announceZone2TravelTip();}
@@ -5690,12 +5894,13 @@ function nextPhase(){
 }
 function finishPhase(){clearEncounterState();game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
 function clearFloor(){
+ collectAllGroundLoot();
  game.status='clear';game.phase=6;const floor=data.floor,clearedZone=zoneNumber(),clearedStage=zoneStage(),clearedName=biome().name,award=grantDelveGold(delveGoldReward('floor',floor)),essence=2+Math.floor(floor/2);
  game.lastClearedZone=clearedZone;game.lastClearedFloor=floor;data.essence+=essence;codexDiscover('permanent_essence');data.cleared=Math.max(data.cleared,floor);const beforeLevel=data.timeMilestones;normalizeTimeProgression();syncZone();if(data.timeMilestones>beforeLevel)toast('Dungeoneering '+dungeonProgress().level,'1 point earned · choose Delving or Skilling in the Dungeon Shop.');
  const frontier=Math.max(1,data.cleared+1),replay=floor<frontier-1,ending=isZoneFinal();
  data.floor=replay&&ending?zoneStart(clearedZone):floor+1;data.zone=zoneSnapshot();game.upgrades={...zoneShopFor().ranks};ensureJobs();if(ending)codexDiscover('biome_'+biomeIndex());save();
  const idle=floor===1&&data.cleared===1||ending&&clearedZone===0&&data.cleared===zoneEnd(0);
- showOverlay('<div class="floor-result"><h2>'+(ending?'Zone cleared':'Floor cleared')+'</h2><p>'+clearedName+' · Floor '+clearedStage+'</p>'+(floor===1&&data.cleared===1?'<p class="progression-tip">Your first idle slot is ready. The second unlocks when you reach Zone 2.</p>':'')+'<div class="floor-rewards"><span>'+artHTML('coins')+'+'+award+'</span><span>'+artHTML('essence')+'+'+essence+'</span>'+(data.timeMilestones>beforeLevel?'<span>'+artHTML('mastery-points')+'+1 point</span>':'')+'</div>'+(idle?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+(masteryFor().points?'Choose game time · '+masteryFor().points+' point'+(masteryFor().points===1?'':'s'):'Dungeon Shop')+'</button><button type="button" class="primary-cta" id="nextFloor">Continue'+uiIcon('arrow')+'</button></div>','floor-clear-overlay');
+ showOverlay('<div class="floor-result"><h2>'+(ending?'Zone cleared':'Floor cleared')+'</h2><p>'+clearedName+' · Floor '+clearedStage+'</p>'+(floor===1&&data.cleared===1?'<p class="progression-tip">Your first idle slot is ready. Clear all five Zone 1 floors to reach Zone 2 and earn your first Mastery point: choose faster Delving or faster Skilling, including idle. Your second idle slot unlocks there too.</p>':'')+'<div class="floor-rewards"><span>'+artHTML('coins')+'+'+award+'</span><span>'+artHTML('essence')+'+'+essence+'</span>'+(data.timeMilestones>beforeLevel?'<span>'+artHTML('mastery-points')+'+1 point</span>':'')+'</div>'+(idle?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+(masteryFor().points?'Choose game time · '+masteryFor().points+' point'+(masteryFor().points===1?'':'s'):'Dungeon Shop')+'</button><button type="button" class="primary-cta" id="nextFloor">Continue'+uiIcon('arrow')+'</button></div>','floor-clear-overlay');
  $('nextFloor').onclick=startFloor;$('clearZoneShop').onclick=()=>openZoneShop(clearedZone);if($('selectIdleTask'))$('selectIdleTask').onclick=openIdleHub;refreshUI();
  if(idle)toast('Idle unlocked',clearedZone===0&&floor===1?'Your second idle slot unlocks when you reach Zone 2.':'Two tasks can now run together.');
 }
@@ -5726,18 +5931,18 @@ function onKill(e){
  const drops=[],effects=dungeonKillEffects(e);if(effects.gold)drops.push({key:'gold',amount:effects.gold});drops.push(...monsterMaterialDrops(e));
  earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;
  const b=biome();burst(e.x,e.y,e.boss?18:game.enemies.length>65?2:8,b.accent);game.shake=e.boss?7:1.5;
- const seals=grantZoneCurrency(dungeonCurrencyReward(e));if(seals)drops.push({key:'sigils',amount:seals});
+ const seals=dungeonCurrencyReward(e);if(seals)drops.push({key:'sigils',amount:seals});
  if(e.boss){
-  const index=e.bossIndex,coins=grantDelveGold(delveGoldReward('guardian',data.floor,index)*(1+trinketBonus('gold'))*(1+.04*waveRank('forage'))),essence=index===2?2:1;
-  if(coins)drops.push({key:'gold',amount:coins});data.essence+=essence;drops.push({key:'essence',amount:essence});
-  gainXp(98*3/zoneFloorCount()*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));recordMonsterLoot(e,drops);
-  toast(e.name+' defeated','+'+seals+' '+zoneCurrency().name);save();game.boss=null;
+  const index=e.bossIndex,coins=delveGoldCoins(delveGoldReward('guardian',data.floor,index)*(1+trinketBonus('gold'))*(1+.04*waveRank('forage'))),essence=index===2?2:1;
+  if(coins)drops.push({key:'gold',amount:coins});drops.push({key:'essence',amount:essence});
+  gainXp(98*3/zoneFloorCount()*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));dropMonsterLoot(e,drops);
+  toast(e.name+' defeated','Walk near the fallen loot to collect it.');save();game.boss=null;
   if(game.status==='running')finishPhase();else game.transition=.85;
  }else{
   dropHealth(e);dropEliteSpoils(e);
-  if(Math.random()<rareDropChance()){const index=biomeIndex(),amount=e.elite?2:1;data.biomeLoot[index]=(data.biomeLoot[index]||0)+amount;codexDiscover('loot_'+index);drops.push({key:'loot_'+index,amount});}
-  if(e.elite){const coins=grantDelveGold(delveGoldReward('elite')*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));if(coins)drops.push({key:'gold',amount:coins});}
-  gainXp((e.elite?2:1)*(8+Math.floor(combatDepth()/3))*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));recordMonsterLoot(e,drops);
+  if(Math.random()<rareDropChance()){const index=biomeIndex(),amount=e.elite?2:1;drops.push({key:'loot_'+index,amount});}
+  if(e.elite){const coins=delveGoldCoins(delveGoldReward('elite')*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));if(coins)drops.push({key:'gold',amount:coins});}
+  gainXp((e.elite?2:1)*(8+Math.floor(combatDepth()/3))*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));dropMonsterLoot(e,drops);
   if(game.phaseKills>=game.phaseTarget)finishPhase();
  }
 }
@@ -5818,7 +6023,7 @@ function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFr
    const walk=e.cast||e.charge||e.stagger>0?0:(game.totems||[]).some(t=>t.owner===e)?.20:1;e.x+=vx/dist*e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);e.y+=vy/dist*e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);
    if(!(e.stagger>0)&&dist<e.rad+17&&e.contact<=0){hurt((e.boss?24+combatDepth()*2:e.elite?17+combatDepth()*1.5:10+combatDepth()*1.5)*(e.furyLinked?1.12:1));e.contact=e.boss?.7:.60}
  }
- tickDungeonHazards(dt);tickHealthDrops(dt);
+ tickDungeonHazards(dt);tickHealthDrops(dt);tickGroundLoot(dt);
  for(let i=game.shots.length-1;i>=0;i--){
   const s=game.shots[i],oldX=s.x,oldY=s.y;steerPlayerShot(s,dt);s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;let remove=s.life<=0;
   if(!remove)for(const e of combatTargets()){
@@ -6009,7 +6214,7 @@ function drawCombat(w,h){const b=biome();drawTiles(b,w,h);ctx.save();const jitte
   ctx.beginPath();ctx.arc(0,0,sw.reach,-sw.cone*.78,sw.cone*.78);ctx.stroke();
   ctx.strokeStyle='#fff6df';ctx.lineWidth=1.8;ctx.stroke();ctx.restore();
  }
- paintLootReceipts();
+ paintGroundLoot();paintLootReceipts();
  paintHealthDrops();paintEliteSpoils();
  for(const s of game.shots){
   const a=Math.atan2(s.vy,s.vx);ctx.save();ctx.translate(s.x,s.y);ctx.rotate(a);
@@ -6164,9 +6369,10 @@ function installCampUI(){
  document.querySelectorAll('[data-boost]').forEach(el=>el.onclick=()=>upgradeSkill(el.dataset.boost));
  renderIdleJobs();
 }
-function upgradeSkill(key){
-  const group=DISCIPLINES[key]?key:disciplineFor(key);if(stationRank(group)>=5||!hasIngredients(stationUpgradeCost(group)))return false;
-  spendIngredients(stationUpgradeCost(group));data.stationLevels[group]++;
+function upgradeSkill(key,voucher){
+  const group=DISCIPLINES[key]?key:disciplineFor(key);if(!DISCIPLINES[group]||stationRank(group)>=5)return false;
+  if(voucher===undefined){if(!hasIngredients(stationUpgradeCost(group)))return false;spendIngredients(stationUpgradeCost(group));}else if(!spendUpgradeVoucher('station:'+group,voucher))return false;
+  data.stationLevels[group]++;
   toast(DISCIPLINES[group].name+' station '+stationRank(group),stationRank(group)*2+'% ingredient conservation · '+stationRank(group)*3+'% faster active and idle work');
   save();refreshUI();renderDisciplineDrawer();return true;
 }
@@ -6302,11 +6508,11 @@ function renderArmory(){
  const focusKey=document.activeElement?.closest('[data-focus-key]')?.dataset.focusKey;renderTrinketEquipment();renderMaterialInventory();const el=$('combatWeaponSelector'),signature=equipmentUIState();
  if(el&&el.dataset.state!==signature){el.innerHTML=Object.entries(WEAPON_TYPES).filter(([id])=>data.unlockedWeapons.includes(id)).map(([id,w])=>'<div class="weapon-option '+(data.weaponType===id?'selected':'')+'"><button type="button" class="weapon-equip" data-weapon="'+id+'" data-focus-key="equip-weapon-'+id+'" aria-pressed="'+(data.weaponType===id)+'" aria-label="'+escapeHTML((data.weaponType===id?'Equipped: ':'Equip ')+weaponDisplayName(id))+'"><span class="weapon-option-icon">'+artHTML(weaponArt(id))+'</span><span class="weapon-option-copy"><strong>'+weaponDisplayName(id)+'</strong><small>'+STYLE_DEFS[styleForWeapon(id)].name+' <span>·</span> '+data.styles[styleForWeapon(id)].weapon+' / '+styleUpgradeCap(styleForWeapon(id),'weapon')+'</small></span><span class="weapon-option-dps">'+weaponDps(id,{run:true}).toFixed(1)+'<small>DPS</small></span><span class="weapon-equip-marker">'+uiIcon(data.weaponType===id?'check':'arrow')+'</span></button>'+codexLink('weapon_'+id,w.name+' details')+'</div>').join('');el.dataset.state=signature;el.querySelectorAll('button').forEach(bindTouchNavigation);if(focusKey)el.querySelector('[data-focus-key="'+focusKey+'"]')?.focus({preventScroll:true});}
 }
-function chooseWeapon(id){
+function chooseWeapon(id,voucher){
   if(!Object.hasOwn(WEAPON_TYPES,id))return false;const w=WEAPON_TYPES[id];
   if(!data.unlockedWeapons.includes(id)){
     if(weaponCraftLevel(id)<WEAPON_LEVELS[id]){toast('Training needed',DISCIPLINES[STYLE_DEFS[styleForWeapon(id)].group].name+' level '+WEAPON_LEVELS[id]+' unlocks this weapon.');return false;}
-    if(!spendAtStation({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},STYLE_DEFS[styleForWeapon(id)].group))return false;
+    if(!(voucher===undefined?spendAtStation({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},STYLE_DEFS[styleForWeapon(id)].group):spendUpgradeVoucher('weapon:'+id,voucher)))return false;
     data.unlockedWeapons.push(id);equipmentWorkXp(styleForWeapon(id),'craft');data.firstWeaponCrafted=true;announceWeaponUpgradeTip();codexDiscover('weapon_'+id);toast(weaponDisplayName(id)+' crafted!','One weapon equipped. Your worn armor stays equipped.');
   }
   data.weaponType=id;projectCombatStyle();inspectedStyle=combatStyle();styleBench=combatStyle();
@@ -6362,7 +6568,7 @@ function prospectOpal(){if(!spendAtStation({scraps:12},'scavenging'))return fals
 const RECIPE_WEAPONS={blacksmithing:['shield','polearm','greatsword'],woodworking:['bow'],warding:['staff']};
 const RECIPE_UPGRADES={blacksmithing:['weapon','armor'],woodworking:[],warding:['enchant']};
 function materialChip(k,v,context=''){
- const held=Math.floor(data[k]||0),enough=held>=v,label=RESOURCE_LABEL[k]||k,help=label+' · '+format(held)+' / '+format(v)+(enough?'':' · '+format(v-held)+' needed');
+ const held=Math.floor(data[k]||0),enough=held>=v,label=RESOURCE_LABEL[k]||k,help=label+' · '+format(held)+' / '+format(v)+(enough?'':' · '+format(v-held)+' needed')+(k==='zoneMaterials'?' · Any combination of Verdant Seeds, Ember Cores, Grave Dust or Rift Shards. Earlier Zone materials are spent first.':'');
  return '<button type="button" class="cost-chip '+(enough?'enough':'short')+'" data-source="'+k+'" data-focus-key="cost-'+context+'-'+k+'" aria-label="'+escapeHTML(help)+'" data-hint="'+escapeHTML(help)+'">'+artHTML(RESOURCE_ART[k]||'relic')+'<span class="cost-name sr-only">'+label+'</span><span class="cost-amount">'+uiCompact(held)+'<i>/</i>'+uiCompact(v)+'</span>'+(enough?'':'<span class="cost-shortfall" aria-hidden="true">−</span>')+'</button>';
 }
 function recipeCard(icon,name,desc,cost,action,label,owned=false,selected=false,idIcon='',locked=false){
@@ -6374,7 +6580,7 @@ function recipeCard(icon,name,desc,cost,action,label,owned=false,selected=false,
  const text=selected?uiIcon('check'):owned?'Equip':locked?(maxed?'Max':weapon?'Lv. '+level:needsArmor?'Craft armor':'Locked'):upgrade?'Upgrade':label==='PROSPECT'?'Prospect':'Craft';
  let effect='';if(upgrade){const [style,kind]=upgrade[1].split(':'),s=data.styles[style],cap=styleUpgradeCap(style,kind);name={weapon:'Refinement',armor:'Reinforcement',speed:'Attack speed',reach:'Reach',enchant:'Enchantment'}[kind];effect='<span class="recipe-rank">'+s[kind]+' / '+cap+'</span>'+(maxed?'':kind==='armor'?'<span>'+uiIcon('heart')+' +8</span>':kind==='speed'?'<span>'+uiIcon('speed')+' +2%</span>':kind==='reach'?'<span>'+uiIcon('reach')+' +3%</span>':'');}
  else if(jewel)effect='<span>'+TRINKETS[jewel[1]].effect+'</span>';else if(tool)effect='<span>'+uiIcon('speed')+' +8%</span>';else if(weapon)effect='<span>'+weaponDps(weapon[1]).toFixed(1)+' DPS</span>';
- return '<article class="craft-tile compact-recipe '+(ready||owned?'can-make':'needs-material')+' '+(selected?'is-equipped':'')+'"><div class="craft-tile-icon">'+artHTML(idIcon||'anvil')+'</div><div class="craft-tile-body"><div class="recipe-title"><strong>'+escapeHTML(name)+'</strong>'+codexLink(codex,name+' details')+'</div><div class="recipe-effects">'+effect+'</div>'+(weapon?'<small class="weapon-role">'+weaponRole(weapon[1])+(!owned&&['bow','staff'].includes(weapon[1])?' · Starts below the sword in single-target damage.':'')+'</small>':'')+(!owned&&!maxed?materialCosts(cost,goal):'')+(upgrade&&upgrade[1].endsWith(':weapon')?voucherButtonHtml(upgrade[1].split(':')[0]):'')+'</div><div class="recipe-actions"><button type="button" class="craft-tile-action" data-focus-key="craft-'+goal+'" '+action+' '+(locked||selected||!owned&&!ready?'disabled':'')+' aria-label="'+escapeHTML((selected?'Equipped: ':owned?'Equip ':upgrade?'Upgrade ':'Craft ')+name)+'">'+text+'</button>'+(!owned&&!maxed&&goal?trackRecipeButton(goal,name):'')+'</div></article>';
+ return '<article class="craft-tile compact-recipe '+(ready||owned?'can-make':'needs-material')+' '+(selected?'is-equipped':'')+'"><div class="craft-tile-icon">'+artHTML(idIcon||'anvil')+'</div><div class="craft-tile-body"><div class="recipe-title"><strong>'+escapeHTML(name)+'</strong>'+codexLink(codex,name+' details')+'</div><div class="recipe-effects">'+effect+'</div>'+(weapon?'<small class="weapon-role">'+weaponRole(weapon[1])+(!owned&&['bow','staff'].includes(weapon[1])?' · Starts below the sword in single-target damage.':'')+'</small>':'')+(!owned&&!maxed?materialCosts(cost,goal):'')+(!owned&&!selected?workshopVoucherButtonHtml(goal):'')+'</div><div class="recipe-actions"><button type="button" class="craft-tile-action" data-focus-key="craft-'+goal+'" '+action+' '+(locked||selected||!owned&&!ready?'disabled':'')+' aria-label="'+escapeHTML((selected?'Equipped: ':owned?'Equip ':upgrade?'Upgrade ':'Craft ')+name)+'">'+text+'</button>'+(!owned&&!maxed&&goal?trackRecipeButton(goal,name):'')+'</div></article>';
 }
 function recipeHtml(group){return ['blacksmithing','woodworking','warding'].includes(group)?classEquipmentHtml(group):legacyRecipeHtml(group);}
 let recipeCategory='all';
@@ -6536,9 +6742,9 @@ function drawFallbackBoss(e,b){
 
 let workshopGroup='blacksmithing', workshopView='gather', drawerFocus=null, modalFocus=null, saveWarningShown=false;
 
-const RESOURCE_LABEL={"gold":"Gold","essence":"Essence","ore":"Iron Ore","bars":"Iron Bars","logs":"Oak Logs","arrows":"Arrows","cloth":"Warded Cloth","runes":"Arcane Runes","scraps":"Relic Fragments","silverOre":"Silver Ore","silverBars":"Silver Bars","opals":"Rough Opal","cutOpals":"Cut Opal","coal":"Coal","steelBars":"Steel Bars","willowLogs":"Willow Logs","ancientSalvage":"Ancient Salvage","ancientFragments":"Ancient Fragments","garnets":"Rough Garnets","cutGarnets":"Cut Garnets","runicCloth":"Runic Cloth"};
+const RESOURCE_LABEL={"gold":"Gold","essence":"Essence","ore":"Iron Ore","bars":"Iron Bars","logs":"Oak Logs","arrows":"Arrows","cloth":"Warded Cloth","runes":"Arcane Runes","scraps":"Relic Fragments","silverOre":"Silver Ore","silverBars":"Silver Bars","opals":"Rough Opal","cutOpals":"Cut Opal","coal":"Coal","steelBars":"Steel Bars","willowLogs":"Willow Logs","ancientSalvage":"Ancient Salvage","ancientFragments":"Ancient Fragments","garnets":"Rough Garnets","cutGarnets":"Cut Garnets","runicCloth":"Runic Cloth","zoneMaterials":"Zone materials"};
 
-const RESOURCE_ART={"gold":"coins","essence":"essence","ore":"ore","bars":"bar","logs":"wood-logs","arrows":"arrows-art","cloth":"cloth-art","runes":"runes-art","scraps":"relic","silverOre":"silver-ore","silverBars":"silver-bar","opals":"rough-opal","cutOpals":"opal","coal":"resource-coal","steelBars":"resource-steelBars","willowLogs":"resource-willowLogs","ancientSalvage":"resource-ancientSalvage","ancientFragments":"resource-ancientFragments","garnets":"resource-garnets","cutGarnets":"resource-cutGarnets","runicCloth":"resource-runicCloth"};
+const RESOURCE_ART={"gold":"coins","essence":"essence","ore":"ore","bars":"bar","logs":"wood-logs","arrows":"arrows-art","cloth":"cloth-art","runes":"runes-art","scraps":"relic","silverOre":"silver-ore","silverBars":"silver-bar","opals":"rough-opal","cutOpals":"opal","coal":"resource-coal","steelBars":"resource-steelBars","willowLogs":"resource-willowLogs","ancientSalvage":"resource-ancientSalvage","ancientFragments":"resource-ancientFragments","garnets":"resource-garnets","cutGarnets":"resource-cutGarnets","runicCloth":"resource-runicCloth","zoneMaterials":"codex-loot_0"};
 
 const RESOURCE_SOURCE={"ore":"mine","bars":"forge","logs":"wood","arrows":"fletch","cloth":"ward","runes":"rune","scraps":"scavenge","silverOre":"silverMine","silverBars":"silverSmelt","opals":"scavenge","cutOpals":"polish","coal":"coal","steelBars":"steelSmelt","willowLogs":"willow","ancientSalvage":"ancientScavenge","ancientFragments":"cleanAncient","garnets":"garnetSearch","cutGarnets":"garnetCut","runicCloth":"aetherWeave"};
 
@@ -6567,6 +6773,7 @@ function trackGoal(id){data.craftGoal=data.craftGoal===id?'':id;save();renderDis
 
 function goToSource(resource){
  if(resource==='gold'){enterActivity('scavenge');return;}
+ if(resource==='zoneMaterials'){closeDrawer(false);setScene('combat',false);openDelveTravel();toast('Zone materials','Verdant Seeds, Ember Cores, Grave Dust and Rift Shards each pay for one. Any combination works; earlier Zone materials are used first.');return;}
  if(resource==='essence'){closeDrawer();setScene('combat',true);toast('Defeat a guardian for essence');return;}
  const key=RESOURCE_SOURCE[resource];if(!key)return;workshopTier=SKILLS[key].tier||1;
  if(!canUseSkill(key)){openWorkshop(disciplineFor(key),SKILLS[key].cost?'refine':'gather');toast('Resource locked',skillLockReason(key));return;}
@@ -6582,7 +6789,7 @@ function workCard(key){
 }
 
 function bindWorkshop(host){
-  host.querySelectorAll('[data-redeem-voucher]').forEach(b=>b.onclick=()=>redeemUpgradeVoucher(b.dataset.redeemVoucher));
+  host.querySelectorAll('[data-redeem-voucher]').forEach(b=>b.onclick=()=>redeemWorkshopVoucher(b.dataset.redeemVoucher,b.dataset.voucherTier));
   host.querySelectorAll('[data-preparation-next]').forEach(b=>b.onclick=()=>openPreparationStep());
   host.querySelectorAll('[data-prepare-ammo]').forEach(b=>b.onclick=()=>trackAmmunition(b.dataset.prepareAmmo));
   host.querySelectorAll('[data-prepare-refinement]').forEach(b=>b.onclick=()=>trackNextRefinement(b.dataset.prepareRefinement));
@@ -6813,7 +7020,7 @@ function drawProceduralWorkstation(w,h,key){
   glow(279,351,130,'#e0a15f20');for(let i=0;i<7;i++){const x=241+i*13,y=401,fl=23+Math.sin(t*3+i)*8;ctx.beginPath();ctx.moveTo(x-10,y);ctx.bezierCurveTo(x-18,y-fl,x+7,y-fl-22,x+4,y-fl-38);ctx.bezierCurveTo(x+18,y-fl+4,x+20,y-4,x+9,y);ctx.closePath();ctx.fillStyle=i%2?'#ecb478':'#d98f56';ctx.fill();}
  }
  const frame=workshopAnimation(key,active,working),anchor={x:521,y:534,scale:1.8,height:180};
- paintWorkshopSceneEffects(frame,anchor,'back');DeepwellAvatar.render(ctx,{...frame,x:anchor.x,y:anchor.y,scale:anchor.scale});paintWorkshopSceneEffects(frame,anchor,'front');
+ paintWorkshopSceneEffects(frame,anchor,'back');DeepwellAvatar.render(ctx,{...frame,x:anchor.x,y:anchor.y,scale:anchor.scale,paintWorkpiece:frame.pose==='ward'?(c,rig)=>paintWorkshopWorkpiece(frame,rig,c):undefined});paintWorkshopSceneEffects(frame,anchor,'front');
  ctx.restore();
  paintWorkshopReward({x:x+21*scale,y:y+254*scale,height:180*scale});
  // Local ambient motes are few, slow, and never cover the action bar.

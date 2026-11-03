@@ -143,7 +143,7 @@ function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFr
    const walk=e.cast||e.charge||e.stagger>0?0:(game.totems||[]).some(t=>t.owner===e)?.20:1;e.x+=vx/dist*e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);e.y+=vy/dist*e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);
    if(!(e.stagger>0)&&dist<e.rad+17&&e.contact<=0){hurt((e.boss?24+combatDepth()*2:e.elite?17+combatDepth()*1.5:10+combatDepth()*1.5)*(e.furyLinked?1.12:1));e.contact=e.boss?.7:.60}
  }
- tickDungeonHazards(dt);tickHealthDrops(dt);
+ tickDungeonHazards(dt);tickHealthDrops(dt);tickGroundLoot(dt);
  for(let i=game.shots.length-1;i>=0;i--){
   const s=game.shots[i],oldX=s.x,oldY=s.y;steerPlayerShot(s,dt);s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;let remove=s.life<=0;
   if(!remove)for(const e of combatTargets()){
@@ -184,7 +184,7 @@ function drawCombat(w,h){const b=biome();drawTiles(b,w,h);ctx.save();const jitte
   ctx.beginPath();ctx.arc(0,0,sw.reach,-sw.cone*.78,sw.cone*.78);ctx.stroke();
   ctx.strokeStyle='#fff6df';ctx.lineWidth=1.8;ctx.stroke();ctx.restore();
  }
- paintLootReceipts();
+ paintGroundLoot();paintLootReceipts();
  paintHealthDrops();paintEliteSpoils();
  for(const s of game.shots){
   const a=Math.atan2(s.vy,s.vx);ctx.save();ctx.translate(s.x,s.y);ctx.rotate(a);

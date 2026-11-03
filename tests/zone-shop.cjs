@@ -10,9 +10,9 @@ function instrumentation(){
  function travel(zone){checkpointGroundXp();data.floor=zoneStart(zone);data.cleared=Math.max(data.cleared,data.floor-1);normalizeZone();resetRun();game.status='running';game.phase=0;game.phaseTarget=1e9;game.menuPaused=game.manualPaused=true;hideOverlay();refreshUI();}
  window.__shopTest={fresh,state,travel,
   equip(id){data.weaponType=id;data.unlockedWeapons=Object.keys(WEAPON_TYPES);projectCombatStyle();refreshUI();},
-  zoneFinal(){fresh();data.floor=zoneEnd(0);return this.kill(.9,{boss:true,bossIndex:2,name:"Final Guardian"});},
+  zoneFinal(){fresh();data.floor=zoneEnd(0);loadFloorLoot();return this.kill(.9,{boss:true,bossIndex:2,name:"Final Guardian"});},
   fund(zone=0,amount=100000){grantZoneCurrency(amount,zone);refreshUI();},
-  kill(random=.1,extra={}){const old=Math.random;Math.random=()=>random;try{onKill(enemy(extra));}finally{Math.random=old;}return state();},
+  kill(random=.1,extra={}){const old=Math.random;Math.random=()=>random;try{onKill(enemy(extra));collectAllGroundLoot();}finally{Math.random=old;}return state();},
   hundred(){fresh();for(let i=0;i<1000;i++)this.kill((i+.5)/1000);return state();},
   xp(amount){gainXp(amount);refreshUI();return state();},
   migration(){

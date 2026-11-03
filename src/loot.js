@@ -9,6 +9,7 @@ function normalizeMonsterLoot(){
   data.dungeoneeringXp=(Number(data.dungeoneeringXp)||0)+Object.values(data.xpCaches||{}).flat().reduce((sum,g)=>sum+(Number(g.value)||0),0);data.xpCaches={};data.lootPresentationVersion=1;
  }
  data.lootHistory=(Array.isArray(data.lootHistory)?data.lootHistory:[]).filter(r=>r&&typeof r.name==='string'&&Number.isFinite(r.amount)&&r.amount>0).slice(-40);
+ normalizeGroundLoot();
 }
 function monsterMaterialChance(enemy){
  const rule=MONSTER_LOOT[enemy.boss?'boss':enemy.elite?'elite':'normal'];
@@ -18,14 +19,13 @@ function monsterMaterialDrops(enemy){
  if(enemy.summoned||enemy.totem)return [];const drops=[],rule=MONSTER_LOOT[enemy.boss?'boss':enemy.elite?'elite':'normal'];
  if(Math.random()<monsterMaterialChance(enemy)){
   const pool=zoneNumber()===0?['ore','logs','cloth','scraps']:['ore','coal','willowLogs','ancientSalvage','cloth'],key=pool[Math.floor(Math.random()*pool.length)],amount=rule.amount;
-  data[key]=(data[key]||0)+amount;codexDiscover('resource_'+key);drops.push({key,amount});
+  drops.push({key,amount});
  }
  const rollKey=data.floor+':'+enemy.bossIndex;
  if(enemy.boss&&data.floor>data.cleared&&!data.voucherRolls[rollKey]){
   data.voucherRolls[rollKey]=true;
   if(Math.random()<(enemy.bossIndex===2&&isZoneFinal()?MONSTER_LOOT.finalVoucher:MONSTER_LOOT.voucher)){
-   const tier=zoneNumber()===0?'iron':'steel';data.upgradeVouchers[tier]++;drops.push({key:'voucher_'+tier,amount:1});codexDiscover('upgrade_vouchers');
-   toast((tier==='iron'?'Iron':'Steel')+' upgrade voucher','Redeem in Skills → Equipment for one weapon refinement.');
+   const tier=zoneNumber()===0?'iron':'steel';drops.push({key:'voucher_'+tier,amount:1});
   }
  }
  return drops;
@@ -55,11 +55,33 @@ function paintLootReceipts(){
   });ctx.restore();
  }
 }
-function voucherTier(style){return styleTier(style)===2?'steel':'iron';}
-function canRedeemVoucher(style){return !!STYLE_DEFS[style]&&data.unlockedWeapons.some(id=>styleForWeapon(id)===style)&&data.styles[style].weapon<styleUpgradeCap(style,'weapon')&&(data.upgradeVouchers[voucherTier(style)]||0)>0;}
-function redeemUpgradeVoucher(style){
- if(!canRedeemVoucher(style))return false;const tier=voucherTier(style);data.upgradeVouchers[tier]--;data.styles[style].weapon++;equipmentWorkXp(style,'weapon');data.firstWeaponCrafted=true;projectCombatStyle();announceWeaponUpgradeTip();
- toast('Voucher redeemed',STYLE_DEFS[style].name+' refinement '+data.styles[style].weapon+' · no materials or gold spent.');save();refreshUI();renderDisciplineDrawer();return true;
+function voucherTier(style,kind='weapon'){return (kind==='armor'&&tier2Unlocked()&&data.ownedArmor.includes(style+'_2')?2:styleTier(style))===2?'steel':'iron';}
+function workshopVoucherOffer(action){
+ const [type,id,kind,...extra]=String(action).split(':');if(extra.length)return null;
+ const ownedStyle=style=>data.unlockedWeapons.some(w=>styleForWeapon(w)===style);
+ if(type==='upgrade'&&STYLE_DEFS[id]&&['weapon','armor','enchant','speed','reach'].includes(kind))return {name:STYLE_DEFS[id].name+' '+{weapon:'refinement',armor:'reinforcement',enchant:'enchantment',speed:'attack speed',reach:'reach'}[kind],tiers:[voucherTier(id,kind)],eligible:data.styles[id][kind]<styleUpgradeCap(id,kind)&&(kind==='armor'?data.ownedArmor.some(k=>ARMOR_SETS[k]?.style===id):ownedStyle(id))};
+ if(kind!==undefined)return null;
+ if(type==='weapon'&&Object.hasOwn(WEAPON_TYPES,id))return {name:weaponDisplayName(id),tiers:[voucherTier(styleForWeapon(id))],eligible:!data.unlockedWeapons.includes(id)&&weaponCraftLevel(id)>=WEAPON_LEVELS[id]};
+ if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];return {name:a.name,tiers:[a.tier===2?'steel':'iron'],eligible:!data.ownedArmor.includes(id)&&(a.tier===1||tier2Unlocked())&&levelRange(data[DISCIPLINES[a.group].xp]||0).lvl>=a.level};}
+ if(type==='tool'&&TOOL_DEFS[id])return {name:TOOL_DEFS[id].name,tiers:['iron'],eligible:!data.tools[id]};
+ if(type==='trinket'&&TRINKETS[id])return {name:TRINKETS[id].name,tiers:['iron'],eligible:!data.trinkets.includes(id)};
+ if(type==='station'&&DISCIPLINES[id])return {name:DISCIPLINES[id].name+' station upgrade',tiers:['iron','steel'],eligible:stationRank(id)<5};
+ if(type==='promotion'&&STYLE_DEFS[id])return {name:STYLE_DEFS[id].name+' Steel promotion',tiers:['steel'],eligible:ownedStyle(id)&&tier2Unlocked()&&styleTier(id)===1&&data.styles[id].weapon>=10&&weaponCraftLevel(STYLE_DEFS[id].weapon)>=10};
+ return null;
 }
-function voucherButtonHtml(style){const tier=voucherTier(style),count=data.upgradeVouchers?.[tier]||0;return count?'<button type="button" class="voucher-redeem" data-redeem-voucher="'+style+'" data-focus-key="voucher-'+style+'" '+(canRedeemVoucher(style)?'':'disabled')+'>Use '+(tier==='iron'?'Iron':'Steel')+' voucher · '+count+' owned</button>':'';}
+function canRedeemWorkshopVoucher(action,tier){const offer=workshopVoucherOffer(action);return !!offer?.eligible&&offer.tiers.includes(tier)&&(data.upgradeVouchers?.[tier]||0)>0;}
+function spendUpgradeVoucher(action,tier){if(!canRedeemWorkshopVoucher(action,tier))return false;data.upgradeVouchers[tier]--;return true;}
+function redeemWorkshopVoucher(action,tier){
+ if(!canRedeemWorkshopVoucher(action,tier))return false;const offer=workshopVoucherOffer(action),[type,id,kind]=action.split(':');
+ const result=type==='upgrade'?craftStyleUpgrade(id,kind,tier):type==='weapon'?chooseWeapon(id,tier):type==='armor'?makeArmor(id,tier):type==='tool'?makeTool(id,tier):type==='trinket'?makeTrinket(id,tier):type==='promotion'?promoteStyle(id,tier):upgradeSkill(id,tier);
+ if(!result)return false;if(goalDetails(data.craftGoal)?.done)data.craftGoal='';
+ toast('Voucher redeemed',offer.name+' · no materials or gold spent.');save();refreshUI();renderDisciplineDrawer();return true;
+}
+function canRedeemVoucher(style,kind='weapon'){return !!STYLE_DEFS[style]&&canRedeemWorkshopVoucher('upgrade:'+style+':'+kind,voucherTier(style,kind));}
+function redeemUpgradeVoucher(style,kind='weapon'){return !!STYLE_DEFS[style]&&redeemWorkshopVoucher('upgrade:'+style+':'+kind,voucherTier(style,kind));}
+function workshopVoucherButtonHtml(action){
+ const offer=workshopVoucherOffer(action);if(!offer)return '';
+ return offer.tiers.filter(tier=>(data.upgradeVouchers?.[tier]||0)>0).map(tier=>'<button type="button" class="voucher-redeem" data-redeem-voucher="'+action+'" data-voucher-tier="'+tier+'" data-focus-key="voucher-'+action+'-'+tier+'" aria-label="Use '+tier+' voucher for '+escapeHTML(offer.name)+'" '+(offer.eligible?'':'disabled')+'>Use '+(tier==='iron'?'Iron':'Steel')+' voucher · '+data.upgradeVouchers[tier]+' owned</button>').join('');
+}
+function voucherButtonHtml(style,kind='weapon'){return workshopVoucherButtonHtml('upgrade:'+style+':'+kind);}
 function lootHistoryHtml(){const entries=[...(data.lootHistory||[])].reverse();return entries.length?'<details class="loot-history"><summary>Recent monster loot</summary><ol>'+entries.map(r=>'<li><b>+'+uiCompact(r.amount)+'</b> '+escapeHTML(r.name)+'<small>Zone '+r.zone+'</small></li>').join('')+'</ol></details>':'';}

@@ -19,13 +19,13 @@ function instrumentation(){
   rewardRun(zone){
    fresh(zoneStart(zone));game.upgrades={};const start=data.gold,model=zoneBalance(zone);
    for(let stage=0;stage<zoneFloorCount(zone);stage++){
-    data.floor=floorAtZone(zone,stage+1);normalizeZone();game.status='test';game.phaseTarget=1e9;
+    data.floor=floorAtZone(zone,stage+1);normalizeZone();resetRun();game.status='test';game.phaseTarget=1e9;
     for(let phase=0;phase<6;phase++){
      game.phase=phase;game.phaseKills=0;
      const count=phase%2?1:model.targets[phase];
      for(let n=0;n<count;n++){
       const e={x:0,y:0,rad:12,hp:0,boss:phase%2===1,bossIndex:Math.floor(phase/2),name:'Reward fixture'};
-      game.enemies=[e];onKill(e);
+      game.enemies=[e];onKill(e);collectAllGroundLoot();
      }
     }
     clearFloor();

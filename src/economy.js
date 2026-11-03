@@ -8,9 +8,12 @@ function delveGoldReward(kind,floor=data.floor,index=0){
 }
 
 function grantDelveGold(amount){
+ const coins=delveGoldCoins(amount);data.gold+=coins;return coins;
+}
+function delveGoldCoins(amount){
  if(!Number.isFinite(amount)||amount<=0)return 0;
  const old=Number(data.delveGoldRemainder)||0,total=amount+Math.max(0,Math.min(.999999999,old)),coins=Math.floor(total+1e-9);
- data.delveGoldRemainder=Math.max(0,total-coins);data.gold+=coins;return coins;
+ data.delveGoldRemainder=Math.max(0,total-coins);return coins;
 }
 function zoneGoldBudget(index=zoneNumber()){
  const model=zoneBalance(index),count=zoneFloorCount(index),floor=zoneStart(index),monsters=model.swarmCount*delveGoldReward('mob',floor),guardians=count*[0,1,2].reduce((sum,n)=>sum+delveGoldReward('guardian',floor,n),0),clears=Array.from({length:count},(_,n)=>delveGoldReward('floor',floor+n)).reduce((sum,n)=>sum+n,0);

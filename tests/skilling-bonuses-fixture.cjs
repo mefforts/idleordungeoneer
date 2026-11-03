@@ -19,6 +19,12 @@ function skillingBonusesFixture(){
    ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);paintWorkshopSpeedEffects(frame,{x:120,y:300,scale:2},rig);ctx.restore();const p=ctx.getImageData(0,0,canvas.width,canvas.height).data;let count=0;for(let i=0;i<p.length;i+=4)if(p[i]||p[i+1]||p[i+2])count++;return {count,unchanged:before===JSON.stringify(data)};
   },
   collect(rarity,amount){const id=spawn(rarity,amount);return {id,result:claimSkillBonus(id)};},
+  limitedRefining(key,available=2,conserved=false){
+   fresh(key);this.collect('very-rare');const id=spawn('common',5),skill=SKILLS[key],group=disciplineFor(key);if(conserved){data.stationLevels[group]=5;data.stationCredits[group]={ore:.8};}
+   for(const [resource,n]of Object.entries(skill.cost||{}))data[resource]=available*n;
+   const before=snapshot(),stock=Object.fromEntries(Object.keys(skill.cost||{}).map(k=>[k,data[k]])),result=claimSkillBonus(id),after=snapshot();
+   return {key,result,yield:skillYield(key),cost:skill.cost,before,after,stock,remaining:Object.fromEntries(Object.keys(skill.cost||{}).map(k=>[k,data[k]])),feedback:$('skillBonusLayer').querySelector('.skill-bonus-pop:last-child')?.textContent};
+  },
   takeAll(){for(const node of [...bonusState().nodes])claimSkillBonus(node.id);},
   tick(seconds,hold=true){game.holdSkill=hold?game.scene:null;game.lastJobsAt=Date.now();realUpdate(seconds);refreshUI();render();return snapshot();},
   ingredients(values){Object.assign(data,values);},

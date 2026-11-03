@@ -13,7 +13,7 @@ function instrumentation() {
       data.ownedArmor=['melee_1','magic_1'];data.equippedArmor='melee_1';
       data.equipmentVersion=data.tierProgressionVersion=1;
       data.unlockedWeapons=['sword','bow','staff'];data.weaponType='sword';
-      for(const key of Object.keys(RESOURCE_LABEL))data[key]=1000;
+      data.biomeLoot={0:1000};for(const key of Object.keys(RESOURCE_LABEL))data[key]=1000;
       for(const d of Object.values(DISCIPLINES))data[d.xp]=3000;
       data.timeProgressionVersion=0;data.mastery={0:{points:8,earned:8,onslaught:0,fortune:0,adaptation:0,intensity:0},1:{points:8,earned:8,onslaught:0,fortune:0,adaptation:0,intensity:0}};
       normalizeProgression();normalizeZone();ensureJobs();seedCodex();resetRun();masteryDraft=null;

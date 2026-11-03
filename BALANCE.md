@@ -35,7 +35,7 @@ Optional Mastery allocations share the bank after the first speed choice. Refund
 
 ## Active skilling discoveries
 
-Build 11.1 replaces 35% instant crafting progress with timed work speed. Every discovery has one rarity roll. Gathering speed discoveries also grant their existing material bundle. Since 11.1.1, a strictly weaker pickup instead grants 1–5 output items instantly, including refined materials. These windfalls are free bonus items; normal crafting still consumes its recipe.
+Build 11.1 replaces 35% instant crafting progress with timed work speed. Every discovery has one rarity roll. Gathering speed discoveries also grant their existing material bundle. Build 11.3 keeps 1–5 direct gathering items for a strictly weaker pickup. Refining pickups instead complete up to five normal recipe batches immediately, consuming ingredients, honoring conservation and stopping at affordable stock. Normal batch yields and training XP apply; the stronger buff and normal work progress are unchanged.
 
 | Rarity | Chance | Active work speed | Duration |
 | --- | ---: | ---: | ---: |
@@ -44,13 +44,13 @@ Build 11.1 replaces 35% instant crafting progress with timed work speed. Every d
 | Rare | 9% | +75% | 10s |
 | Very rare | 2% | +100% | 15s |
 
-Discoveries appear after 1.2 seconds of engagement, then every 4.2 real seconds, with six seconds to collect. The strongest current boost applies; equal pickups refresh its bounded duration and stronger pickups improve it. Weaker pickups leave the timers untouched and grant their displayed resource quantity instead. Earlier timers count down concurrently. There is no multiplying or unlimited time bank. Collecting a pickup alone does not sustain further discoveries without working.
+Discoveries appear after 1.2 seconds of engagement, then every 4.2 real seconds, with six seconds to collect. The strongest current boost applies; equal pickups refresh its bounded duration and stronger pickups improve it. Weaker pickups leave the timers untouched. Gathering grants the displayed resources; refining crafts up to the displayed maximum from available ingredients. Earlier timers count down concurrently. There is no multiplying or unlimited time bank. Collecting a pickup alone does not sustain further discoveries without working.
 
 Build 11.2.1 removes visible rarity names from skilling pickups, collection feedback and active buff displays; colors, effects, timers and accessible descriptions remain. Work hand motion is slower at 1× and 2× and stops accelerating beyond 4× game speed. Above 4×, bounded sparks indicate extra speed; 10× adds short bursts and 24× adds occasional fans above the character. Production keeps its full selected rate. Reduced motion suppresses decorative bursts.
 
 Timers count real seconds while actively working on that activity, including while earned Skilling speed accelerates production. Release, missing ingredients, menus, other activities and backgrounding pause them. Remaining time survives saves. These bonuses do not accelerate idle or offline work. Permanent Skilling game time and station/tool benefits retain their normal effects. Every accelerated craft still consumes its complete station-adjusted recipe.
 
-A seeded five-minute active refining check at 1× made **107 bars without pickups / 249 bars collecting all 72 discoveries**. This includes 80 free windfall bars. The remaining 169 crafted bars consumed 338 ore: exactly two per crafted bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
+A seeded five-minute active refining check at 1× made **107 bars without pickups / 249 bars collecting all 72 discoveries**. This includes 80 instantly crafted bars. All 249 bars consumed 498 ore: exactly two per crafted bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
 
 ## Equipment ceilings
 
@@ -63,7 +63,7 @@ A seeded five-minute active refining check at 1× made **107 bars without pickup
 | Hunting Bow | Ranged | 80.0 | 86.4 | 160.0 | 172.8 |
 | Focus Staff | Mage | 80.0 | 86.2 | 160.0 | 171.9 |
 
-These figures use maximum refinement and speed, 5% base critical chance and matching robes for Mage. Proficiency adds up to 3% damage and matching crafting levels up to 5%. Iron refinement ends at 10, speed/reach at 5, reinforcement at 5 and enchantment at 2. Steel ends at 20 / 10 / 10 / 4. Material recipes, jewelry, armor prices and equipment limits remain unchanged.
+These figures use maximum refinement and speed, 5% base critical chance and matching robes for Mage. Proficiency adds up to 3% damage and matching crafting levels up to 5%. Iron refinement ends at 10, speed/reach at 5, reinforcement at 5 and enchantment at 2. Steel ends at 20 / 10 / 10 / 4. Primary material curves, jewelry and armor prices and equipment limits are retained. Occasional one-item Zone-material costs below are additional.
 
 ## Preparation costs and equipment work
 
@@ -126,7 +126,7 @@ Ordinary kills grant no gold unless Golden Hunt is active. Existing gold jewelry
 
 ## Monster loot and vouchers
 
-XP diamonds are replaced by receipts for actual awarded gold, Sigils, essence, rare materials and vouchers. Rewards are credited once on defeat, persist through death and are readable in Inventory’s recent loot. Health motes and blessing spoils keep their existing pickup behavior.
+Monster gold, Sigils, essence, rare materials and vouchers first land on the ground. After a brief landing, loot within 68 units draws toward the player; pickup jewelry and Gravitation extend this radius. Credit and the existing receipt appear only on collection. Unclaimed loot has no expiry, remains saved on its floor through death/retry/reload/travel, and is gathered automatically at floor completion. Recent loot records collected rewards. Health motes and blessing spoils keep their existing behavior.
 
 | Enemy | Material chance | Bundle | Maximum with bonuses |
 | --- | ---: | ---: | ---: |
@@ -136,7 +136,9 @@ XP diamonds are replaced by receipts for actual awarded gold, Sigils, essence, r
 
 Only raw materials drop. Zone 1 uses ore, oak, cloth and fragments; later Zones use ore, coal, willow, ancient salvage and cloth. As a baseline reference, 360 ordinary kills would average 5.4 raw materials; 15 guardians average 16.2. Actual waves substitute some elites for ordinary monsters. Elites add occasional three-item bundles. This remains a supplement to gathering, not a replacement for skilling/refining. Discovery and the Scholar Ring increase material luck; Plentiful Hunt adds 50% chance while active, within the per-enemy caps. Elites and bosses never guarantee material drops.
 
-Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the first defeat of each guardian rolls, including across retries and reloads; completed-floor replays do not roll. The expected Zone 1 supply is about 0.99 vouchers. A voucher pays for one eligible weapon refinement of its Iron/Steel tier; it cannot bypass promotion, ownership or rank limits. Redemption is explicit at the Equipment bench. Summons and totems grant neither resources nor vouchers.
+Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the first defeat of each guardian rolls, including across retries and reloads; completed-floor replays do not roll. The expected Zone 1 supply is about 0.99 vouchers. A voucher pays for one matching equipment rank or recipe: refinement, speed, reach, reinforcement, enchantment, weapon/armor/jewelry/tool crafting, Steel promotion or station upgrade. Either tier can pay for a station rank; current tools and jewelry use Iron. Normal Zone access, skill levels, ownership and caps apply, including refinement 10 and crafting 10 for promotion. Redemption is explicit at the recipe. Dungeon Shop and game-time purchases are excluded. Summons and totems grant neither resources nor vouchers.
+
+Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of any Zone-material cost, in any combination. Earlier Zone banks are spent first; existing balances stay intact. Each even refinement, each final speed / reach / reinforcement / enchantment rank per tier, Steel promotion and station ranks 3 and 5 costs one. Starter weapon, armor and tool recipes gain no such cost. A full refinement + speed tier uses six; all five equipment paths use nine. Drop chances remain unchanged. Cost chips show the combined balance and explain the accepted materials; tracked preparation leads back to delving. Vouchers waive these ingredients too.
 
 ## Pacing and counterplay
 
@@ -147,12 +149,12 @@ Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the
 | 3 | ~30 min | 160.0 |
 | 4 | ~35 min | 160.0 |
 
-- Live Zone 1: **9.4 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **20.2 min**, 570 rewarded defeats, 160.0 reference DPS.
+- Live Zone 1: **9.5 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **20.3 min**, 570 rewarded defeats, 160.0 reference DPS.
 - Live Zone 3: **31.1 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **35.7 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **41.1 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 15: **40.8 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **35.8 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **41.2 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 15: **41.2 min**, 960 rewarded defeats, 160.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It moves to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 
@@ -170,7 +172,7 @@ Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon
 | Teal | Safe area or an intercepted benefit |
 | Blue | Shield; remove its source / Royal Guards |
 
-Build 11.2 adds illustrated, animated roots, molten eruptions, bone hands, crystal ruptures, physical projectiles, chains, shield emblems and summoning portals. Threat rims retain their existing geometry and colors. Artwork stays outside safe quarters and ring centers. Decorative motion uses the paused combat clock, with steady reduced-motion appearances. Totem streams use green crosses for healing and red swords for damage; the attack-speed palette uses blue chevrons. Stream colors persist through interception; disabled links are muted. This presentation pass does not change damage, collision, durations or rewards.
+Build 11.2 adds illustrated, animated roots, molten eruptions, bone hands, crystal ruptures, physical projectiles, chains, shield emblems and summoning portals. Threefold Ruin now grows full-height roots, lava, bone hands or crystals through the three dangerous quarters, with connected ground fissures. The empty teal quarter has a sanctuary symbol instead of a SAFE text label. Threat rims retain their existing geometry and colors. Artwork stays outside safe quarters and ring centers. Decorative motion uses the paused combat clock, with steady reduced-motion appearances. Totem streams use green crosses for healing and red swords for damage; the attack-speed palette uses blue chevrons. Stream colors persist through interception; disabled links are muted. This presentation pass does not change damage, collision, durations or rewards.
 
 Instruction labels fade in, fade out and recur on a real-time clock; changing instructions restart the reminder. Hazard geometry and health bars remain visible. Reduced motion uses steady visibility windows. Colors are reinforced by outlines, shapes and labels. Violet attacks deal 35% ordinary, 12% elite or 2.5% boss maximum HP before shields, once per cast; the caster is immune. These hits cannot trigger player lifesteal, enchantment or weapon procs.
 
@@ -214,7 +216,7 @@ Rare creatures always leave a blessing choice. Other non-summoned elites leave o
 | Momentum | 45s | +10% hit damage · +8% attack speed |
 | Long Reach | 50s | +25% attack reach for Melee, Mage and Ranged |
 
-A visible combat strip shows temporary buffs, stack counts and the next expiry. Details list every independent remaining time, including Rally. Different blessings and repeated copies stack with independent combat timers. Damage, attack speed, reach and movement multipliers multiply; extra gold adds; material luck increases the capped drop chance. Menus, pause and skilling freeze timers. Blessings carry across Zones in the same Dungeon. Secondary proc attacks do not recursively trigger more procs. No new blessing heals.
+A vertical, scrollable combat column shows temporary buffs, stack counts and the next expiry. Details list every independent remaining time, including Rally. Different blessings and repeated copies stack with independent combat timers. Damage, attack speed, reach and movement multipliers multiply; extra gold adds; material luck increases the capped drop chance. Menus, pause and skilling freeze timers. Blessings carry across Zones in the same Dungeon. Secondary proc attacks do not recursively trigger more procs. No new blessing heals.
 
 Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 55% chance of 12%; rares have a 70% chance of 15%. Intercepted healing restores 0.35% player maximum HP per second, with a finite 15% lifetime reserve per healing totem. Once depleted it still blocks the caster’s healing. An uninterrupted stream restores 0.4% caster maximum HP per second. Healing streams do not stack. The lifesteal ring remains at 0.5% of actual health removed.
 
@@ -222,7 +224,7 @@ Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 
 
 Dungeoneering levels now follow Zone milestones. Combat XP is retained as a historical ledger; old saved ground XP is banked once and no new XP diamonds spawn. Existing equipment, materials, point balances, allocations and prior combat-perk unlocks survive migration. The first new point is earned at Zone 2, and the next at Zone 5. Ammunition still supplies ten seconds of firing per arrow or rune.
 
-The first idle-slot tip explains that the next slot unlocks at Zone 2. Crafting the first upgraded weapon gives a refinement / Warding enchantment tip. Floor travel, equipment, 55 authored floors and 42 ordinary / 42 rare creature forms are preserved.
+After Zone 1 Floor 1, the result and a saved, dismissible reminder explain that all five floors lead to the first Mastery point at Zone 2, with a Delving / Skilling-including-idle choice. Once enough essence is held for an owned style’s first enchantment, a separate reminder opens that Warding recipe and explains the remaining bars and gem. Reminders defer during bosses, menus, pauses and active holds. Floor travel, equipment, 55 authored floors and 42 ordinary / 42 rare creature forms are preserved.
 
 Old Zone wallets and the full historical price of every purchased rank are refunded at 25 seals per Sigil. Fractional credit is retained and a versioned receipt prevents a second refund. Original Zone ledgers are archived in the save. Earlier progression first passes through the existing XP / Mastery migration. Gold, materials, equipment, cached XP and Mastery are preserved. A legacy active blessing becomes one entry in the stacking collection.
 

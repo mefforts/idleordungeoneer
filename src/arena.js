@@ -44,7 +44,7 @@ function zoneEnemyHp(boss=false,bossIndex=0,variance=1){
 
 function bonusPosition(){
   const r=canvas.getBoundingClientRect(),bar=$('skillActionBar').getBoundingClientRect(),header=document.querySelector('.hud-center').getBoundingClientRect();
-  const blocked=['#trackedRecipe','#trackedNextStep','#noticeColumn','#skillWorkBuff','.hud-actions','.hud-resources'].map(selector=>document.querySelector(selector)).filter(e=>e&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
+  const blocked=['#trackedRecipe','#trackedNextStep','#noticeColumn','#temporaryBuffs','#skillWorkBuff','.hud-actions','.hud-resources'].map(selector=>document.querySelector(selector)).filter(e=>e&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
   const minY=Math.max(95,header.bottom-r.top+32),maxY=bar.top-r.top-34;
   if(maxY<minY)return null;
   for(let attempt=0;attempt<30;attempt++){
@@ -102,6 +102,7 @@ function installArenaUI(){installZoneShopPin();
   window.addEventListener('resize',positionSpeedChoices);
 }
 function resetRun(){
+ checkpointGroundLoot();
  game.healthDrops=[];game.lootDrops=[];game.rareEliteSpawned=false;game.workBonusReaction=null;
  resetArenaTouch();
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
@@ -113,10 +114,10 @@ function resetRun(){
  game.enemies=[];game.shots=[];game.swings=[];game.hostileShots=[];game.xpOwner=data;game.xpZoneIndex=zoneNumber();game.gems=(data.xpCaches?.[game.xpZoneIndex]||[]).map(g=>({...g}));
  game.hazards=[];clearEncounterState();game.eliteCount=0;game.eliteSchedule=[];game.eliteKinds=[];game.movementTap=null;game.waveEliteSpawned=false;game.arcs=[];game.particles=[];game.floaters=[];game.runKills=0;game.spawnTimer=0;
  game.attackTimer=0;game.phaseTime=0;game.runSeconds=0;game.transition=0;
- game.camX=game.camY=0;game.boss=null;
+ game.camX=game.camY=0;game.boss=null;loadFloorLoot();
 }
 
-function save(){if(game.restoringSave)return;checkpointGroundXp();try{data.goldHighWater=Math.max(data.goldHighWater||0,data.gold);data.savedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}catch(err){if(!saveWarningShown&&$('toastStack')){saveWarningShown=true;toast('Progress could not be saved','Allow browser storage, or back up your save in Settings.')}}}
+function save(){if(game.restoringSave)return;checkpointGroundXp();checkpointGroundLoot();try{data.goldHighWater=Math.max(data.goldHighWater||0,data.gold);data.savedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}catch(err){if(!saveWarningShown&&$('toastStack')){saveWarningShown=true;toast('Progress could not be saved','Allow browser storage, or back up your save in Settings.')}}}
 
 function finishPhase(){clearEncounterState();game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
 

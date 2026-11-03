@@ -139,7 +139,7 @@ function secondaryDamage(enemy,damage,sourceStyle=combatStyle(),origin=null){
  if(enemy.hp<=0)onKill(enemy);
 }
 function dungeonKillEffects(enemy){
- const gold=grantDelveGold(eliteBoonSum('goldPerKill'));
+ const gold=delveGoldCoins(eliteBoonSum('goldPerKill'));
  if(waveRank('shatter')&&enemy.frozen>0){for(const other of game.enemies.filter(e=>e!==enemy&&Math.hypot(e.x-enemy.x,e.y-enemy.y)<100).slice(0,5))secondaryDamage(other,attackDamage()*.08*waveRank('shatter'),enemy.lastDamageStyle,enemy);burst(enemy.x,enemy.y,9,'#a9e9ef');}
  if(waveRank('vortex'))for(const other of game.enemies){if(other.boss||other.elite)continue;const dx=enemy.x-other.x,dy=enemy.y-other.y,d=Math.hypot(dx,dy);if(d>25&&d<130){const step=Math.min(d-24,12*waveRank('vortex'));const x=other.x+dx/d*step,y=other.y+dy/d*step;if(encounterClear(x,y,other.rad)){other.x=x;other.y=y;}}}
  return {gold};
@@ -181,7 +181,15 @@ function redirectPlayerShot(s,enemy){
 }
 function paintExpandedShape(shape,theme,progress=1,active=false){
  if(shape.shape==='quarters'){
-  for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i),safe=rect.left===shape.safe.left&&rect.top===shape.safe.top;paintExpandedShape({shape:'rect',rect},safe?combatTheme('safe'):theme,progress,active);if(safe)encounterLabel('◇ SAFE',(rect.left+rect.right)/2,(rect.top+rect.bottom)/2,combatTheme('safe').hot,12);}
+  for(let i=0;i<4;i++){
+   const r=arenaQuarter(shape.rect,i),safe=r.left===shape.safe.left&&r.top===shape.safe.top,t=safe?combatTheme('safe'):theme;
+   quad(r.left,r.top,r.right-r.left,r.bottom-r.top,t.color+(safe?'0c':active?'12':'0a'),t.color,2);
+   if(safe){
+    // An open sanctuary sigil identifies the empty quarter without a text panel.
+    const x=(r.left+r.right)/2,y=(r.top+r.bottom)/2;
+    ctx.save();ctx.strokeStyle=t.color;ctx.lineWidth=2.5;for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(x,y,26,i*Math.PI/2+.2,(i+1)*Math.PI/2-.2);ctx.stroke();}poly([x,y-12,x+9,y,x,y+12,x-9,y],t.color+'30',t.hot,1.5);ctx.restore();
+   }
+  }
  }else if(shape.shape==='rect'){
   const r=shape.rect;quad(r.left,r.top,r.right-r.left,r.bottom-r.top,theme.color+(active?'1c':'22'),theme.color,2);const step=28;if(!active){ctx.save();ctx.beginPath();ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);ctx.clip();for(let x=r.left-(r.bottom-r.top);x<r.right;x+=step)line(x,r.top,x+r.bottom-r.top,r.bottom,1,theme.color+'55');ctx.restore();}
   if(shape.order)encounterLabel(String(shape.order),(r.left+r.right)/2,(r.top+r.bottom)/2,theme.hot,20);

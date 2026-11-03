@@ -73,7 +73,10 @@ function poseRig(options={}){
    const pass=clipSample([[0,0,4],[.16,0,0],[.60,1,0],[.76,1,5],[1,0,4]],phase);workPiece={x:31,y:-48,angle:0};back={x:15,y:-47.2};
    const cutX=34+pass[0]*(9+variation*accent*.8);placeTip(cutX,-47-(cutX-12)*2/31-pass[1],2.48+pass[0]*.18);body.angle=.12+Math.sin(cycle)*.018+variation*accent*.01;headAngle=.12+pass[0]*.035;contact=working&&phase>=.16&&phase<=.60;
   }else if(pose==='ward'||pose==='cast'){
-   body.angle=.08+Math.sin(cycle)*.025;main={x:38+Math.sin(cycle)*(5+variation*accent*.6),y:-45+Math.sin(cycle*2)*3};back={x:15-Math.sin(cycle)*4,y:-57-Math.cos(cycle)*3};angle=-1.16+Math.cos(cycle)*.22;headAngle=.08+Math.sin(cycle)*.018;workPiece={x:29,y:-49+Math.sin(cycle)*1.2,angle:0};contact=working;
+   // Pin the left selvage with the far hand; the near hand carries the shuttle
+   // along the right edge. Neither wrist crosses the other arm's working lane.
+   const pass=(1-Math.cos(cycle))*.5,lift=Math.sin(cycle)*.8;
+   body.angle=.07+Math.sin(cycle)*.012;back={x:6+pass*.8,y:-42+lift};main={x:41-pass*4,y:-43+lift};angle=-1.35+pass*.20;headAngle=.10+Math.sin(cycle)*.012;workPiece={x:22,y:-43+lift,angle:0};contact=working;
   }else if(pose==='rune'){
    const trace=clipSample([[0,3.8,0],[.22,0,-2.6],[.46,-3.8,0],[.70,0,2.6],[1,3.8,0]],phase),mix=Math.abs(variation)*accent;
    workPiece={x:31,y:-47,angle:0};back={x:23,y:-46};placeTip(31+lerp(Math.cos(cycle)*3.8,trace[0],mix),-48+lerp(Math.sin(cycle)*2.6,trace[1],mix),2.10+Math.sin(cycle)*.16);body.angle=.15+Math.cos(cycle)*.018;headAngle=.14+Math.sin(cycle)*.02;contact=working;
@@ -99,7 +102,9 @@ function poseRig(options={}){
     const targetAngle=2.48+progress*.18,target={x:x-Math.sin(targetAngle)*tool.height*tool.grip[1],y:tipY+Math.cos(targetAngle)*tool.height*tool.grip[1]};
     main={x:lerp(main.x,target.x,weight),y:lerp(main.y,target.y,weight)};angle=lerp(angle,targetAngle,weight);contact=false;headAngle+=weight*.04;
    }else if(pose==='ward'||pose==='cast'){
-    main={x:lerp(main.x,alternate?46:42,weight),y:lerp(main.y,alternate?-51:-40,weight)};back={x:lerp(back.x,18,weight),y:lerp(back.y,alternate?-52:-64,weight)};angle+=weight*(alternate?.30:-.18);headAngle+=weight*.035;
+    // Lift the finished weave or stretch it taut, retaining opposite edge grips.
+    const lift=weight*(alternate?3:6),stretch=weight*(alternate?2:0);
+    back.x-=stretch;back.y-=lift;main.x+=stretch;main.y-=lift;workPiece.y-=lift;workPiece.width=30+stretch*2;angle-=weight*.10;headAngle+=weight*.025;
    }else if(pose==='rune'||pose==='polish'){
     workPiece.y-=weight*5;workPiece.angle+=weight*(alternate?.35:-.20);back.y-=weight*5;
     const targetAngle=2.0,target={x:35-Math.sin(targetAngle)*tool.height*tool.grip[1],y:-61+Math.cos(targetAngle)*tool.height*tool.grip[1]};
@@ -116,7 +121,7 @@ function poseRig(options={}){
   for(const key of ['x','y','angle'])body[key]=lerp(restRig.body[key],activeRig.body[key],amount);
   main={x:lerp(restRig.main.x,activeRig.main.x,amount),y:lerp(restRig.main.y,activeRig.main.y,amount)};back={x:lerp(restRig.back.x,activeRig.back.x,amount),y:lerp(restRig.back.y,activeRig.back.y,amount)};
   angle=lerp(restRig.angle,activeRig.angle,amount);headAngle=lerp(restRig.head.angle,activeRig.head.angle,amount);twoHand=0;
-  if(workPiece)for(const key of ['x','y','angle'])workPiece[key]=lerp(restRig.workPiece[key],activeRig.workPiece[key],amount);
+  if(workPiece)for(const key of ['x','y','angle','width'])if(activeRig.workPiece[key]!==undefined)workPiece[key]=lerp(restRig.workPiece[key]??30,activeRig.workPiece[key],amount);
  }
  if(!reduced&&!activity&&options.hit>0){const recoil=clamp(options.hit,0,1)**2;body.angle-=recoil*.09;body.x-=recoil*1.5;}
  const frontRoot=transform(body,{x:12,y:-69}),backRoot=transform(body,{x:-10,y:-68});let offset=null;
@@ -457,6 +462,7 @@ function render(c,options={}){
  const reaching=rig.activity||rig.back.x>rig.body.x-2;
  if(!reaching)paintArm(c,rig.backArm,-1,kit,look);
  paintBody(c,rig,kit,look);
+ if(rig.activity)options.paintWorkpiece?.(c,rig);
  if(reaching)paintArm(c,rig.backArm,-1,kit,look);
  const wrist=arm=>Math.atan2(arm.hand.y-arm.elbow.y,arm.hand.x-arm.elbow.x)-Math.PI/2;
  if(rig.activity){

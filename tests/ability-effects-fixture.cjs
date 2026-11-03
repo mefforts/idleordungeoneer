@@ -2,7 +2,7 @@
 function abilityEffectsFixture(){
  const types=['volley','ground','beam','reflect','mend','fury','cleave','charge','ricochet','shield',...Object.keys(EXPANDED_ABILITIES)];
  function show(type,kind=0,stage='warning',elite=false){
-  __encounterTest.fresh(kind,3);data.idleNoticeSlots=2;data.idleFirstAssigned=true;data.combatLanguageTipSeen=true;game.manualPaused=false;game.menuPaused=true;game.frame=4;
+  __encounterTest.fresh(kind,3);data.idleNoticeSlots=2;data.idleFirstAssigned=true;data.combatLanguageTipSeen=true;data.firstWeaponCrafted=true;game.manualPaused=false;game.menuPaused=true;game.frame=4;
   const e=__encounterTest.owner(2,elite);e.hp=780;e.castCooldown=1e6;game.player.invuln=1e9;game.player.hp=game.player.maxHp=1000;game.player.x=30;game.player.y=25;
   if(type==='shield'){const other=spawnEnemy();Object.assign(other,{x:105,y:-90,hp:1000,maxHp:1000,speed:0,contact:1e6,elite:true,boss:false,bossIndex:0});}
   const c=__encounterTest.cast(e,type);if(c.type!==type)throw Error(type+' fell back to '+c.type);c.windup=c.total*.35;
@@ -39,6 +39,7 @@ function abilityEffectsFixture(){
    const p=ctx.getImageData(0,0,canvas.width,canvas.height).data;let errors=0,painted=0;
    for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++){const i=(y*canvas.width+x)*4;if(!p[i]&&!p[i+1]&&!p[i+2])continue;painted++;if(shape.shape==='quarters'?x>=181&&x<=329&&y>=31&&y<=179:Math.hypot(x-180,y-180)<73)errors++;}return {errors,painted};
   },
+  quarterLabels(shape){const labels=[],label=encounterLabel;encounterLabel=text=>labels.push(text);try{paintExpandedShape(shape,combatTheme('danger'),.65,false);}finally{encounterLabel=label;}return labels;},
   recipient(blocked){const t=game.totems.find(t=>!t.destructible);if(!t)return;t.x=-110;t.y=120;t.owner.x=25;t.owner.y=-70;game.player.x=blocked?-40:140;game.player.y=blocked?20:145;tickEncounterObjects(.001);refreshUI();render();},
   dualStreams(){
    show('mend',0,'impact');const owner=game.totems[0].owner,c=__encounterTest.cast(owner,'fury');owner.cast=null;resolveBossCast(owner,c);owner.x=0;owner.y=-75;

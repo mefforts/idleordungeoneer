@@ -35,7 +35,7 @@ function instrumentation(){
       const elite=spawnEnemy(),second=spawnEnemy(),before={points:masteryFor().points,essence:data.essence};onKill(elite);
       return {unseen,seen,index:elite.bossIndex,elite:!!elite.elite,boss:!!elite.boss,second:!!second.elite,before,after:{points:masteryFor().points,essence:data.essence},kills:game.phaseKills};
     },
-    rewards(){fresh();zoneShopFor().ranks={wisdom:1,forage:1};syncZone();const boss=spawnEnemy(true,0);boss.name='Reward check';game.boss=boss;onKill(boss);return {gold:data.gold,xp:data.dungeoneeringXp,level:game.runLevel};},
+    rewards(){fresh();zoneShopFor().ranks={wisdom:1,forage:1};syncZone();const boss=spawnEnemy(true,0);boss.name='Reward check';game.boss=boss;onKill(boss);collectAllGroundLoot();return {gold:data.gold,xp:data.dungeoneeringXp,level:game.runLevel};},
     capped(){fresh();game.upgrades={...UPGRADE_CAPS};game.pendingLevels=200;game.status='upgrade';showUpgrade();return {gold:data.gold,pending:game.pendingLevels,status:game.status};},
     burn(){
       fresh();zoneShopFor().ranks.fire=1;syncZone();const enemy=spawnEnemy();enemy.x=0;enemy.y=40;enemy.hp=enemy.maxHp=500;

@@ -110,6 +110,10 @@ body{background:#14120f;color:var(--text)}
 .notice-column .skills-nudge p{font:11px/1.5 system-ui;margin:3px 0 7px;color:#d3c4a9;text-shadow:inherit}
 .notice-column .skills-nudge>div{display:block}.notice-column .skills-nudge button{min-height:30px;font-size:10px!important;padding:5px 8px!important;border-radius:0!important}
 .notice-column .skills-nudge #skillsNudgeDismiss,.notice-column .skills-nudge #idleNudgeDismiss{padding:0!important;min-width:20px;min-height:24px;font-size:17px!important;color:#dac7a0}
+.notice-column .progression-guide{background:#191c17d9!important;padding:9px 10px;max-width:260px;align-items:start;pointer-events:auto}
+.notice-column .progression-guide p{display:block!important;line-height:1.5}
+.notice-column .progression-guide #progressionGuideOpen{min-height:44px;background:#584329;color:#f7e3bc;border:1px solid #b69c66}
+.notice-column .progression-guide #progressionGuideDismiss{min-height:44px;min-width:32px;padding:0!important;background:transparent;border:0;font-size:21px!important;color:#eed6a6}
 .notice-column .toast .idle-toast-action{padding:6px 8px;margin-top:5px;min-height:31px;border-radius:0;background:#524125ce;color:#f5e3ba;border-color:#bb9f65;font-size:10px}
 /* The station has separate controls and floating text, with no large panel. */
 .skill-action-bar{bottom:24px;left:50%;transform:translateX(-50%);width:min(930px,calc(100% - 160px));padding:0;gap:14px;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none;align-items:end}
@@ -206,3 +210,5 @@ body{background:#14120f;color:var(--text)}
  [data-hud-side="left"] .resource-picker{left:50%;right:auto}.resource-picker-options{grid-template-columns:repeat(4,1fr)}.resource-pick{padding:7px}.resource-pick strong{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){.icon-rail [data-tooltip]:after{transition:none}}
+
+@media(max-height:600px){.notice-column .progression-guide{position:fixed;top:90px;left:14px;width:215px;max-height:calc(100dvh - 110px);overflow-y:auto;margin:0;touch-action:pan-y}}

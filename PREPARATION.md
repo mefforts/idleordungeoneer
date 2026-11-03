@@ -2,6 +2,8 @@
 
 Lower gold costs reduce repeated work while preserving material recipes. They do **not** establish a 25-minute opening for every weapon. In these controller samples, staff and bow still spend over 25 active minutes preparing for Zone 1, with retries contributing to the extra upgrades. The Steel handoff improves, and choosing 2× Skilling reduces it further.
 
+These are historical Build 11 simulations. Build 11.3 adds occasional one-item Zone-material upgrade costs and collects monster rewards from the ground; these timing samples have not been rerun under those changes.
+
 ## Method
 
 Compared published v10.1 (`6f760ec`) with Build 11 in isolated Chromium phone sessions at 390 × 844. Each trial starts with the normal 45 gold, starter sword and empty resource inventory, crafts the chosen weapon, clears all five Zone 1 floors, then prepares Steel. There are **48 completed trials**, using seeds 1012026 and 1012027 across staff, bow and halberd. The 12 Skilling-speed variants repeat their corresponding Zone 1 paths; there are 36 distinct Zone 1 scenarios. Every recipe, enemy, damage event, ammunition use and reward uses the game rules. No invulnerability, free materials, forced kills or testing speed is used.

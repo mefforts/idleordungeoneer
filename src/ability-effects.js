@@ -75,7 +75,7 @@ function paintAbilityMine(x,y,kind,theme,progress){
 }
 function paintAbilityField(shape,type,kind,theme,progress=1,active=false){
  if(shape.shape==='quarters'){
-  for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i);if(rect.left!==shape.safe.left||rect.top!==shape.safe.top)paintAbilityField({shape:'rect',rect},type,kind,theme,progress,active);}return;
+  for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i);if(rect.left!==shape.safe.left||rect.top!==shape.safe.top)paintRuinQuarter(rect,kind,theme,progress,active);}return;
  }
  ctx.save();ctx.beginPath();
  if(shape.shape==='rect'){const r=shape.rect;ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);}
@@ -96,6 +96,37 @@ function paintAbilityField(shape,type,kind,theme,progress=1,active=false){
  else{
   paintAbilityEruption(shape.x,shape.y+15,active?32:17,kind,rise,theme);
   for(const side of [-1,1])paintAbilityEruption(shape.x+side*shape.r*.55,shape.y+4,active?18:10,kind,rise,theme);
+ }
+ ctx.restore();
+}
+function paintRuinBramble(x,y,size,rise,seed){
+ const m=ABILITY_MATERIALS[0];ctx.save();ctx.translate(x,y);ctx.scale(size/20,size/20);
+ ellipse(0,2,18,5,'#292b20c0');for(const side of [-1,1])ellipse(side*12,side+2,5,3,'#5a4a2d');ctx.scale(1,rise);
+ for(let i=0;i<3;i++){
+  const base=(i-1)*10,tip=base+(i===1?5:-8)+seed*3,height=39+i*5+seed*4;
+  ctx.beginPath();ctx.moveTo(base-4,3);ctx.bezierCurveTo(base-12,-11,tip+7,-22,tip,-height);ctx.quadraticCurveTo(tip+7,-height+7,tip+6,-height+16);ctx.bezierCurveTo(tip+5,-20,base+2,-12,base+4,2);ctx.closePath();ctx.fillStyle=m.base;ctx.fill();ctx.strokeStyle=m.dark;ctx.lineWidth=1.4;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(base-1,-2);ctx.bezierCurveTo(base-7,-13,tip+5,-26,tip+2,-height+7);ctx.strokeStyle=m.light;ctx.lineWidth=1;ctx.stroke();
+  const side=i%2?1:-1,bx=tip+side*15,by=-height*.65;
+  ctx.beginPath();ctx.moveTo(base,-14);ctx.quadraticCurveTo(bx-side*3,by+13,bx,by);ctx.strokeStyle=m.dark;ctx.lineWidth=4.5;ctx.stroke();ctx.strokeStyle=m.base;ctx.lineWidth=2.7;ctx.stroke();
+  poly([bx-side*3,by+8,bx+side*6,by+1,bx,by+13],m.light,m.dark,.7);
+  ctx.beginPath();ctx.moveTo(bx,by+1);ctx.quadraticCurveTo(bx+side*12,by-10,bx+side*13,by-2);ctx.quadraticCurveTo(bx+side*10,by+5,bx,by+1);ctx.fillStyle=m.accent;ctx.fill();ctx.strokeStyle=m.dark;ctx.lineWidth=.7;ctx.stroke();
+ }
+ ctx.restore();
+}
+function paintRuinQuarter(rect,kind,theme,progress,active){
+ const m=abilityMaterial(kind),p=clamp(progress,0,1),time=abilityEffectTime(),rise=active?.65+.35*Math.sin(p*Math.PI):.45+.5*p;
+ ctx.save();ctx.beginPath();ctx.rect(rect.left+3,rect.top+3,rect.right-rect.left-6,rect.bottom-rect.top-6);ctx.clip();
+ // Ground fissures connect full-height roots, flames, hands or crystals. The
+ // lattice is fixed in world space, so camera movement cannot shuffle threats.
+ const gap=kind===0?104:88,left=Math.max(rect.left,game.camX-game.viewWidth/2-60),right=Math.min(rect.right,game.camX+game.viewWidth/2+60),top=Math.max(rect.top,game.camY-game.viewHeight/2-60),bottom=Math.min(rect.bottom,game.camY+game.viewHeight/2+70);
+ ctx.globalAlpha*=active?.96:.78;
+ for(let row=Math.floor(top/gap);row<=Math.ceil(bottom/gap);row++)for(let col=Math.floor(left/gap);col<=Math.ceil(right/gap);col++){
+  const x=col*gap+(row%2?gap/2:0),y=row*gap,seed=Math.sin(row*13+col*7),pulse=reducedMotion()?0:Math.sin(time*3+row+col)*.05;
+  glow(x,y-6,active?35:27,theme.color+'25');
+  ctx.beginPath();ctx.moveTo(x-40,y+20);ctx.lineTo(x-17,y+8);ctx.lineTo(x-5,y+14);ctx.lineTo(x+11,y-4);ctx.lineTo(x+40,y-15);ctx.strokeStyle=m.dark;ctx.lineWidth=kind===0?8:7;ctx.stroke();ctx.strokeStyle=kind===0?theme.color:kind===1?m.accent:m.light;ctx.lineWidth=kind===0?1.6:2.5;ctx.stroke();
+  if(kind===1){ctx.strokeStyle=m.edge;ctx.lineWidth=1;ctx.stroke();}
+  if(kind===0)paintRuinBramble(x+seed*9,y+12,active?32:28,rise+pulse,seed);else paintAbilityEruption(x+seed*9,y+12,active?38:32,kind,rise+pulse,theme);
+  if(kind===3)paintAbilityCrystal(x-23,y+24,18,m,-.32);
  }
  ctx.restore();
 }

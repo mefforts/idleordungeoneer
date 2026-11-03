@@ -128,29 +128,30 @@ function onKill(e){
  const drops=[],effects=dungeonKillEffects(e);if(effects.gold)drops.push({key:'gold',amount:effects.gold});drops.push(...monsterMaterialDrops(e));
  earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;
  const b=biome();burst(e.x,e.y,e.boss?18:game.enemies.length>65?2:8,b.accent);game.shake=e.boss?7:1.5;
- const seals=grantZoneCurrency(dungeonCurrencyReward(e));if(seals)drops.push({key:'sigils',amount:seals});
+ const seals=dungeonCurrencyReward(e);if(seals)drops.push({key:'sigils',amount:seals});
  if(e.boss){
-  const index=e.bossIndex,coins=grantDelveGold(delveGoldReward('guardian',data.floor,index)*(1+trinketBonus('gold'))*(1+.04*waveRank('forage'))),essence=index===2?2:1;
-  if(coins)drops.push({key:'gold',amount:coins});data.essence+=essence;drops.push({key:'essence',amount:essence});
-  gainXp(98*3/zoneFloorCount()*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));recordMonsterLoot(e,drops);
-  toast(e.name+' defeated','+'+seals+' '+zoneCurrency().name);save();game.boss=null;
+  const index=e.bossIndex,coins=delveGoldCoins(delveGoldReward('guardian',data.floor,index)*(1+trinketBonus('gold'))*(1+.04*waveRank('forage'))),essence=index===2?2:1;
+  if(coins)drops.push({key:'gold',amount:coins});drops.push({key:'essence',amount:essence});
+  gainXp(98*3/zoneFloorCount()*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));dropMonsterLoot(e,drops);
+  toast(e.name+' defeated','Walk near the fallen loot to collect it.');save();game.boss=null;
   if(game.status==='running')finishPhase();else game.transition=.85;
  }else{
   dropHealth(e);dropEliteSpoils(e);
-  if(Math.random()<rareDropChance()){const index=biomeIndex(),amount=e.elite?2:1;data.biomeLoot[index]=(data.biomeLoot[index]||0)+amount;codexDiscover('loot_'+index);drops.push({key:'loot_'+index,amount});}
-  if(e.elite){const coins=grantDelveGold(delveGoldReward('elite')*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));if(coins)drops.push({key:'gold',amount:coins});}
-  gainXp((e.elite?2:1)*(8+Math.floor(combatDepth()/3))*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));recordMonsterLoot(e,drops);
+  if(Math.random()<rareDropChance()){const index=biomeIndex(),amount=e.elite?2:1;drops.push({key:'loot_'+index,amount});}
+  if(e.elite){const coins=delveGoldCoins(delveGoldReward('elite')*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));if(coins)drops.push({key:'gold',amount:coins});}
+  gainXp((e.elite?2:1)*(8+Math.floor(combatDepth()/3))*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));dropMonsterLoot(e,drops);
   if(game.phaseKills>=game.phaseTarget)finishPhase();
  }
 }
 
 function clearFloor(){
+ collectAllGroundLoot();
  game.status='clear';game.phase=6;const floor=data.floor,clearedZone=zoneNumber(),clearedStage=zoneStage(),clearedName=biome().name,award=grantDelveGold(delveGoldReward('floor',floor)),essence=2+Math.floor(floor/2);
  game.lastClearedZone=clearedZone;game.lastClearedFloor=floor;data.essence+=essence;codexDiscover('permanent_essence');data.cleared=Math.max(data.cleared,floor);const beforeLevel=data.timeMilestones;normalizeTimeProgression();syncZone();if(data.timeMilestones>beforeLevel)toast('Dungeoneering '+dungeonProgress().level,'1 point earned · choose Delving or Skilling in the Dungeon Shop.');
  const frontier=Math.max(1,data.cleared+1),replay=floor<frontier-1,ending=isZoneFinal();
  data.floor=replay&&ending?zoneStart(clearedZone):floor+1;data.zone=zoneSnapshot();game.upgrades={...zoneShopFor().ranks};ensureJobs();if(ending)codexDiscover('biome_'+biomeIndex());save();
  const idle=floor===1&&data.cleared===1||ending&&clearedZone===0&&data.cleared===zoneEnd(0);
- showOverlay('<div class="floor-result"><h2>'+(ending?'Zone cleared':'Floor cleared')+'</h2><p>'+clearedName+' · Floor '+clearedStage+'</p>'+(floor===1&&data.cleared===1?'<p class="progression-tip">Your first idle slot is ready. The second unlocks when you reach Zone 2.</p>':'')+'<div class="floor-rewards"><span>'+artHTML('coins')+'+'+award+'</span><span>'+artHTML('essence')+'+'+essence+'</span>'+(data.timeMilestones>beforeLevel?'<span>'+artHTML('mastery-points')+'+1 point</span>':'')+'</div>'+(idle?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+(masteryFor().points?'Choose game time · '+masteryFor().points+' point'+(masteryFor().points===1?'':'s'):'Dungeon Shop')+'</button><button type="button" class="primary-cta" id="nextFloor">Continue'+uiIcon('arrow')+'</button></div>','floor-clear-overlay');
+ showOverlay('<div class="floor-result"><h2>'+(ending?'Zone cleared':'Floor cleared')+'</h2><p>'+clearedName+' · Floor '+clearedStage+'</p>'+(floor===1&&data.cleared===1?'<p class="progression-tip">Your first idle slot is ready. Clear all five Zone 1 floors to reach Zone 2 and earn your first Mastery point: choose faster Delving or faster Skilling, including idle. Your second idle slot unlocks there too.</p>':'')+'<div class="floor-rewards"><span>'+artHTML('coins')+'+'+award+'</span><span>'+artHTML('essence')+'+'+essence+'</span>'+(data.timeMilestones>beforeLevel?'<span>'+artHTML('mastery-points')+'+1 point</span>':'')+'</div>'+(idle?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+(masteryFor().points?'Choose game time · '+masteryFor().points+' point'+(masteryFor().points===1?'':'s'):'Dungeon Shop')+'</button><button type="button" class="primary-cta" id="nextFloor">Continue'+uiIcon('arrow')+'</button></div>','floor-clear-overlay');
  $('nextFloor').onclick=startFloor;$('clearZoneShop').onclick=()=>openZoneShop(clearedZone);if($('selectIdleTask'))$('selectIdleTask').onclick=openIdleHub;refreshUI();
  if(idle)toast('Idle unlocked',clearedZone===0&&floor===1?'Your second idle slot unlocks when you reach Zone 2.':'Two tasks can now run together.');
 }

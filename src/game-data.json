@@ -456,7 +456,8 @@
     "ancientFragments": "Ancient Fragments",
     "garnets": "Rough Garnets",
     "cutGarnets": "Cut Garnets",
-    "runicCloth": "Runic Cloth"
+    "runicCloth": "Runic Cloth",
+    "zoneMaterials": "Zone materials"
   },
   "RESOURCE_ART": {
     "gold": "coins",
@@ -479,7 +480,8 @@
     "ancientFragments": "resource-ancientFragments",
     "garnets": "resource-garnets",
     "cutGarnets": "resource-cutGarnets",
-    "runicCloth": "resource-runicCloth"
+    "runicCloth": "resource-runicCloth",
+    "zoneMaterials": "codex-loot_0"
   },
   "RESOURCE_SOURCE": {
     "ore": "mine",

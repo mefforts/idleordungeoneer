@@ -43,19 +43,19 @@ function equipArmor(id,crafted=false){
   game.player.maxHp=maxHp()+waveVitality();game.player.hp=Math.min(game.player.maxHp,game.player.hp+(crafted?Math.max(0,game.player.maxHp-old):0));
   save();refreshUI();return true;
 }
-function makeArmor(id){
+function makeArmor(id,voucher){
   const a=ARMOR_SETS[id];if(!a||data.ownedArmor.includes(id))return false;
   if(a.tier===2&&!tier2Unlocked()){toast('Steel-tier armor unlocks in Zone 2','Clear Zone 1 first.');return false;}
   if(levelRange(data[DISCIPLINES[a.group].xp]||0).lvl<a.level){toast('Training needed',DISCIPLINES[a.group].name+' level '+a.level+' unlocks '+a.name+'.');return false;}
-  if(!spendAtStation(a.cost,a.group)){toast('Materials needed','Track this armor recipe to gather its ingredients.');return false;}
+  if(!(voucher===undefined?spendAtStation(a.cost,a.group):spendUpgradeVoucher('armor:'+id,voucher))){toast('Materials needed','Track this armor recipe to gather its ingredients.');return false;}
   data.ownedArmor.push(id);data[DISCIPLINES[a.group].xp]+=40*a.tier;codexDiscover('armor_set_'+id);equipArmor(id,true);
   toast(a.name+' crafted & equipped',ARMOR_STYLES[a.style].label+' set · armor and weapons equip independently.');renderDisciplineDrawer();return true;
 }
-function chooseWeapon(id){
+function chooseWeapon(id,voucher){
   if(!Object.hasOwn(WEAPON_TYPES,id))return false;const w=WEAPON_TYPES[id];
   if(!data.unlockedWeapons.includes(id)){
     if(weaponCraftLevel(id)<WEAPON_LEVELS[id]){toast('Training needed',DISCIPLINES[STYLE_DEFS[styleForWeapon(id)].group].name+' level '+WEAPON_LEVELS[id]+' unlocks this weapon.');return false;}
-    if(!spendAtStation({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},STYLE_DEFS[styleForWeapon(id)].group))return false;
+    if(!(voucher===undefined?spendAtStation({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},STYLE_DEFS[styleForWeapon(id)].group):spendUpgradeVoucher('weapon:'+id,voucher)))return false;
     data.unlockedWeapons.push(id);equipmentWorkXp(styleForWeapon(id),'craft');data.firstWeaponCrafted=true;announceWeaponUpgradeTip();codexDiscover('weapon_'+id);toast(weaponDisplayName(id)+' crafted!','One weapon equipped. Your worn armor stays equipped.');
   }
   data.weaponType=id;projectCombatStyle();inspectedStyle=combatStyle();styleBench=combatStyle();

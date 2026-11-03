@@ -17,13 +17,16 @@ function skillBuffs(key){return (data.skillingBuffs||[]).filter(b=>b.key===key&&
 function skillBuffMultiplier(key){return 1+(skillBuffs(key)[0]?.definition.speed||0);}
 function skillBonusReward(node){
  const rarity=SKILL_BONUS_RARITIES.find(r=>r.id===node.rarity)||SKILL_BONUS_RARITIES[0],strongest=skillBuffs(node.key)[0]?.definition.speed||0,instant=strongest>rarity.speed;
- return {rarity,instant,amount:instant?node.windfall:node.amount};
+ return {rarity,instant,batches:node.windfall,amount:instant?node.windfall*(node.craft?skillYield(node.key):1):node.amount};
 }
 function refreshSkillBonusOffer(node){
- const reward=skillBonusReward(node),rarity=reward.rarity,skill=SKILLS[node.key],effect=reward.instant?'+'+reward.amount+' '+skill.item+' instantly':'+'+Math.round(rarity.speed*100)+'% '+(node.craft?'crafting':'gathering')+' speed for '+rarity.seconds+' seconds of active work',signature=(reward.instant?'resource:':'speed:')+effect;
+ const reward=skillBonusReward(node),rarity=reward.rarity,skill=SKILLS[node.key],effect=reward.instant?(node.craft?'Instantly craft up to ':'+')+reward.amount+' '+skill.item+(node.craft?' using available ingredients':' instantly'):'+'+Math.round(rarity.speed*100)+'% '+(node.craft?'crafting':'gathering')+' speed for '+rarity.seconds+' seconds of active work',signature=(reward.instant?'resource:':'speed:')+effect;
  if(node.el.dataset.effect===signature)return;
- node.el.dataset.effect=signature;node.el.dataset.reward=reward.instant?'resource':'speed';const badge=node.el.querySelector(':scope > span');if(reward.instant)badge.innerHTML=artHTML(RESOURCE_ART[skill.resource])+'+'+reward.amount;else badge.textContent='+'+Math.round(rarity.speed*100)+'% · '+rarity.seconds+'s';
+ node.el.dataset.effect=signature;node.el.dataset.reward=reward.instant?'resource':'speed';const badge=node.el.querySelector(':scope > span');if(reward.instant)badge.innerHTML=artHTML(RESOURCE_ART[skill.resource])+(node.craft?'≤':'+')+reward.amount;else badge.textContent='+'+Math.round(rarity.speed*100)+'% · '+rarity.seconds+'s';
  node.el.setAttribute('aria-label',rarity.name+' '+BONUS_DEFS[node.key].name+': '+effect+(reward.instant?' · stronger speed bonus already active':node.craft?'':', plus '+node.amount+' '+skill.item));node.el.title=effect+' · tap or drag across';
+}
+function instantlyRefineSkill(key,batches){
+ let amount=0;for(let i=0;i<Math.min(5,Math.max(0,Math.floor(batches)));i++){const made=produce(key,true);if(!made)break;amount+=made;}return amount;
 }
 function grantSkillBuff(key,rarity){
  if(!data.skillingBuffs)data.skillingBuffs=[];
@@ -63,6 +66,6 @@ function refreshSkillBuffUI(){
 }
 function showSkillBuffDetails(){
  const key=game.scene,buffs=skillBuffs(key);if(!buffs.length)return;
- showOverlay('<p class="overlay-kicker">ACTIVE SKILLING BONUS</p><h2>'+SKILLS[key].name+'</h2>'+codexRuleList(buffs.map(b=>['+'+Math.round(b.definition.speed*100)+'% speed',b.left.toFixed(1)+'s remaining']))+'<p>The strongest bonus applies. Timers count real seconds of active work in this activity. Equal pickups refresh it; stronger pickups improve it. Weaker pickups give 1–5 of this activity’s output instantly instead, as free bonus items. Normal crafting still consumes ingredients. Idling and offline work keep their normal rate.</p><button type="button" class="primary-button" id="skillBuffReturn">Return to work</button>','skill-buff');
+ showOverlay('<p class="overlay-kicker">ACTIVE SKILLING BONUS</p><h2>'+SKILLS[key].name+'</h2>'+codexRuleList(buffs.map(b=>['+'+Math.round(b.definition.speed*100)+'% speed',b.left.toFixed(1)+'s remaining']))+'<p>The strongest bonus applies. Timers count real seconds of active work in this activity. Equal pickups refresh it; stronger pickups improve it. Weaker gathering pickups give 1–5 resources. Weaker refining pickups instantly complete up to five normal recipe batches, consuming available ingredients and stopping when the next batch is unaffordable. The receipt shows the actual output, including each recipe’s normal batch yield. Idling and offline work keep their normal rate.</p><button type="button" class="primary-button" id="skillBuffReturn">Return to work</button>','skill-buff');
  $('skillBuffReturn').onclick=()=>{hideOverlay();$('skillHold').focus({preventScroll:true});};
 }

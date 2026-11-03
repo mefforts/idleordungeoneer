@@ -101,7 +101,7 @@ function refreshMobileUI(){
 }
 function normalizeFirstWeaponHint(){data.firstWeaponCrafted=!!data.firstWeaponCrafted||Object.values(data.styles||{}).some(style=>style.weapon>0)||(data.unlockedWeapons||[]).some(id=>id!=='sword');}
 function inventoryRows(){
- const known=Object.keys(RESOURCE_LABEL).filter(key=>!['gold','essence'].includes(key)&&((data[key]||0)>0||data.discovered?.['resource_'+key]));
+ const known=Object.keys(RESOURCE_LABEL).filter(key=>!['gold','essence','zoneMaterials'].includes(key)&&((data[key]||0)>0||data.discovered?.['resource_'+key]));
  return known.map(key=>({key,name:RESOURCE_LABEL[key],count:Math.floor(Math.max(0,Math.min(1e12,Number(data[key])||0))),art:RESOURCE_ART[key],source:key})).concat(Object.entries(data.biomeLoot||{}).filter(([kind,count])=>/^[0-3]$/.test(kind)&&Number(count)>0).map(([kind,count])=>({key:'loot_'+kind,name:['Verdant Seeds','Ember Cores','Grave Dust','Rift Shards'][Number(kind)],count:Math.floor(Math.min(1e12,Number(count))),art:'codex-loot_'+kind,codex:'loot_'+kind}))).concat(['iron','steel'].filter(tier=>data.upgradeVouchers?.[tier]>0).map(tier=>({key:'voucher_'+tier,name:(tier==='iron'?'Iron':'Steel')+' upgrade vouchers',count:data.upgradeVouchers[tier],art:'codex-upgrade_vouchers',codex:'upgrade_vouchers'})));
 }
 function renderMaterialInventory(){

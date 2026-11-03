@@ -25,7 +25,7 @@ const {instrumentAvatar}=require('./arm-layer-fixture.cjs');
  const contacts=await p.evaluate(()=>__playerTest.workContacts());assert.equal(contacts.length,4);assert.ok(contacts.every(r=>r.contacts>=12&&r.maxMiss<.1&&r.supportGap<6),JSON.stringify(contacts));
  const bounds=await p.evaluate(()=>__playerTest.toolBounds());assert.ok(bounds.every(r=>r.left>=r.bound.left&&r.right<=r.bound.right),JSON.stringify(bounds));
  const lifted=await p.evaluate(()=>['mine','smith','wood'].map(pose=>{const r=DeepwellAvatar.poseRig({pose,working:true,workPhase:.24,data:__deepwell.getState().data});return {pose,elbow:r.frontArm.elbow.y,wrist:r.main.y};}));assert.ok(lifted.every(r=>r.elbow>r.wrist+8),JSON.stringify(lifted));
- assert.ok(clips.filter(r=>['fletch','ward','rune','polish'].includes(r.pose)).every(r=>r.travel>=9));
+ assert.ok(clips.filter(r=>['fletch','rune','polish'].includes(r.pose)).every(r=>r.travel>=9));assert.ok(clips.find(r=>r.pose==='ward').travel<9,'Weaving keeps a short shuttle pass within separate wrist lanes');
  passed.push('Raised tools keep the working elbow below the hand; carving/engraving/gem tools meet their workpiece, scavenging reaches the ground, and whole tool sprites remain within phone scene bounds');
  const layers=await p.evaluate(()=>__playerTest.layers());assert.equal(layers.length,378);assert.deepEqual(layers.filter(r=>!r.neckConnected||r.detached.length||r.visiblePixels<=1000),[]);
  const mix=await p.evaluate(()=>__playerTest.mix());assert.deepEqual(mix.pieces,{head:'magic_2',shoulders:'melee_2',chest:'ranged_1',legs:'ranged_2',boots:'base',gloves:'melee_1'});

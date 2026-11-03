@@ -22,7 +22,7 @@ const styleForWeapon = id => id==='bow'?'ranged':id==='staff'?'magic':'melee';
 const combatStyle = () => styleForWeapon(data.weaponType);
 const finiteRank = n => Math.max(0, Math.min(100000, Math.floor(Number(n)||0)));
 function normalizeProgression(){
-  normalizeZoneLayout();
+  normalizeZoneLayout();normalizeZoneMaterials();
   const legacy={weapon:finiteRank(data.weapon),armor:finiteRank(data.armor),enchant:finiteRank(data.enchant)};
   const old=data.styles&&typeof data.styles==='object'?data.styles:{};
   data.styles=Object.fromEntries(Object.keys(STYLE_DEFS).map(id=>{
@@ -63,21 +63,22 @@ function spendAtStation(base,group){
   return true;
 }
 function skillCost(key){return stationCost(SKILLS[key].cost||{},disciplineFor(key));}
-function stationUpgradeCost(group){const rank=stationRank(group);return Object.fromEntries(Object.entries(GROUP_COSTS[group]).map(([k,n])=>[k,Math.ceil(n*Math.pow(1.6,rank))]));}
+function stationUpgradeCost(group){const rank=stationRank(group);return {...Object.fromEntries(Object.entries(GROUP_COSTS[group]).map(([k,n])=>[k,Math.ceil(n*Math.pow(1.6,rank))])),...([2,4].includes(rank)?{zoneMaterials:1}:{})};}
 
 function upgradeGroup(id,kind){return kind==='enchant'?'warding':STYLE_DEFS[id].group;}
 function styleUpgradeCost(id,kind){return stationCost(styleUpgradeBase(id,kind),upgradeGroup(id,kind));}
 
 function craft(kind){return craftStyleUpgrade(combatStyle(),kind);}
 
-function makeTool(id){
-  const t=TOOL_DEFS[id];if(!t||data.tools[id]||!spendAtStation(t.cost,t.group))return false;
+function makeTool(id,voucher){
+  const t=TOOL_DEFS[id];if(!t||data.tools[id]||!(voucher===undefined?spendAtStation(t.cost,t.group):spendUpgradeVoucher('tool:'+id,voucher)))return false;
   data.tools[id]=true;codexDiscover('tool_'+id);toast(t.name+' crafted','Equipped automatically · 8% faster active gathering · larger gathering bonuses');
   save();refreshUI();renderDisciplineDrawer();return true;
 }
-function upgradeSkill(key){
-  const group=DISCIPLINES[key]?key:disciplineFor(key);if(stationRank(group)>=5||!hasIngredients(stationUpgradeCost(group)))return false;
-  spendIngredients(stationUpgradeCost(group));data.stationLevels[group]++;
+function upgradeSkill(key,voucher){
+  const group=DISCIPLINES[key]?key:disciplineFor(key);if(!DISCIPLINES[group]||stationRank(group)>=5)return false;
+  if(voucher===undefined){if(!hasIngredients(stationUpgradeCost(group)))return false;spendIngredients(stationUpgradeCost(group));}else if(!spendUpgradeVoucher('station:'+group,voucher))return false;
+  data.stationLevels[group]++;
   toast(DISCIPLINES[group].name+' station '+stationRank(group),stationRank(group)*2+'% ingredient conservation · '+stationRank(group)*3+'% faster active and idle work');
   save();refreshUI();renderDisciplineDrawer();return true;
 }
@@ -129,19 +130,21 @@ function spawnSkillBonus(){
 }
 function claimSkillBonus(id){
   const s=bonusState(),node=s.nodes.find(n=>n.id===Number(id));if(!node||node.left<=0||node.key!==game.scene||!bonusEligible())return false;
-  const key=node.key,result=skillBonusReward(node),{rarity,instant,amount}=result;if(!canUseSkill(key)||!instant&&!hasIngredients(skillCost(key)))return false;
+  const key=node.key,result=skillBonusReward(node),{rarity,instant}=result;let amount=result.amount;if(!canUseSkill(key)||!instant&&!hasIngredients(skillCost(key)))return false;
   s.nodes=s.nodes.filter(n=>n!==node);node.el.remove();
-  if(!instant)grantSkillBuff(key,rarity);beginSkillBonusReaction(key,rarity,node);
+  if(instant&&node.craft)amount=instantlyRefineSkill(key,result.batches);
+  if(!instant)grantSkillBuff(key,rarity);if(!instant||amount>0)beginSkillBonusReaction(key,rarity,node);
   let reward=instant?'+'+amount+' '+SKILLS[key].item+' instantly':'+'+Math.round(rarity.speed*100)+'% work speed for '+rarity.seconds+'s';
-  if(instant||!node.craft){data[SKILLS[key].resource]+=amount;codexDiscover('resource_'+SKILLS[key].resource);if(instant)recordWorkshopReward(key,amount,0,'');}
+  if(!node.craft){data[SKILLS[key].resource]+=amount;codexDiscover('resource_'+SKILLS[key].resource);if(instant)recordWorkshopReward(key,amount,0,'');}
   if(!node.craft){
     data[SKILLS[key].xp]=(data[SKILLS[key].xp]||0)+1;
     const xp=DISCIPLINES[disciplineFor(key)].xp;data[xp]=(data[xp]||0)+1;codexDiscover('resource_'+SKILLS[key].resource);
     if(!instant)reward+=' · +'+amount+' '+SKILLS[key].item;
   }
   game.workAction=.48;game.lastActiveSkill=key;
-  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+(instant?'+'+amount+' '+SKILLS[key].item:'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s')+'</strong>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
-  $('skillBonusStatus').textContent=rarity.name+' '+BONUS_DEFS[key].name+' collected. '+reward;refreshUI();save();return true;
+  const feedback=instant?(amount?'+'+amount+' '+SKILLS[key].item:'Need ingredients'):'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s';
+  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+feedback+'</strong>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
+  $('skillBonusStatus').textContent=rarity.name+' '+BONUS_DEFS[key].name+' collected. '+(instant&&node.craft?(amount?reward+' · ingredients consumed':'No craft completed: ingredients needed.'):reward);refreshUI();save();return true;
 }
 function tickSkillBonuses(dt){
   const s=bonusState();s.clock+=dt;
@@ -163,7 +166,7 @@ function trinketBase(id){return {silverBars:TRINKETS[id].type==='ring'?6:9,cutOp
 
 function openWorkshop(group=workshopGroup,view=workshopView){workshopGroup=DISCIPLINES[group]?group:'blacksmithing';workshopView=['gather','refine','equipment','tools'].includes(view)?view:'gather';openDrawer('skills');}
 function bindWorkshop(host){
-  host.querySelectorAll('[data-redeem-voucher]').forEach(b=>b.onclick=()=>redeemUpgradeVoucher(b.dataset.redeemVoucher));
+  host.querySelectorAll('[data-redeem-voucher]').forEach(b=>b.onclick=()=>redeemWorkshopVoucher(b.dataset.redeemVoucher,b.dataset.voucherTier));
   host.querySelectorAll('[data-preparation-next]').forEach(b=>b.onclick=()=>openPreparationStep());
   host.querySelectorAll('[data-prepare-ammo]').forEach(b=>b.onclick=()=>trackAmmunition(b.dataset.prepareAmmo));
   host.querySelectorAll('[data-prepare-refinement]').forEach(b=>b.onclick=()=>trackNextRefinement(b.dataset.prepareRefinement));
@@ -186,8 +189,8 @@ function bindWorkshop(host){
   host.querySelectorAll('button').forEach(bindTouchNavigation);
 }
 function prospectOpal(){if(!spendAtStation({scraps:12},'scavenging'))return false;data.opals++;data.scavengingXp=(data.scavengingXp||0)+12;codexDiscover('resource_opals');toast('Opal recovered!','Relic fragments → one rough opal');save();renderDisciplineDrawer();refreshUI();return true;}
-function makeTrinket(id){
-  const item=TRINKETS[id];if(!item||data.trinkets.includes(id)||!spendAtStation(trinketBase(id),'artisan'))return false;
+function makeTrinket(id,voucher){
+  const item=TRINKETS[id];if(!item||data.trinkets.includes(id)||!(voucher===undefined?spendAtStation(trinketBase(id),'artisan'):spendUpgradeVoucher('trinket:'+id,voucher)))return false;
   data.trinkets.push(id);if(item.type==='ring'){if(data.equippedRings.length<4)data.equippedRings.push(id);data.equippedRing=data.equippedRings[0]||'';}else data.equippedAmulet=id;
   data.artisanDisciplineXp=(data.artisanDisciplineXp||0)+50;data.artisanXp=(data.artisanXp||0)+50;codexDiscover('trinket_'+id);
   toast(item.name+' crafted!',(item.type==='ring'&&!data.equippedRings.includes(id)?'Saved to Equipment · ':'Equipped · ')+item.effect);syncTrinketHealth();save();refreshUI();renderDisciplineDrawer();return true;
@@ -220,7 +223,7 @@ function refreshSystemsUI(){
   idleNudge?.classList.toggle('hidden',!noticeVisible);
   const idleBar=$('activeIdleButton');if(idleBar&&SKILLS[game.scene]){const assigned=data.idleJobs.includes(game.scene),html=uiIcon(assigned?'stop':'idle')+'<span>Idle</span>';if(idleBar.innerHTML!==html)idleBar.innerHTML=html;idleBar.disabled=!idleSlotsUnlocked()||!canUseSkill(game.scene);idleBar.setAttribute('aria-pressed',String(assigned));idleBar.setAttribute('aria-label',!idleSlotsUnlocked()?'Idle unlocks at Zone 1 · Floor 2':(assigned?'Stop idling: ':'Idle: ')+SKILLS[game.scene].name);}
   const nudge=$('skillsNudge'),show=!idleNotice&&!data.skillsNudgeSeen&&data.goldHighWater>=150&&!drawerKind&&game.scene==='combat'&&$('overlay').classList.contains('hidden')&&tourIndex<0&&!game.boss&&!game.manualPaused;
-  if(nudge)nudge.classList.toggle('hidden',!show);$('quickSkills').classList.toggle('skills-suggested',show);refreshArenaUI();
+  if(nudge)nudge.classList.toggle('hidden',!show);$('quickSkills').classList.toggle('skills-suggested',show);refreshArenaUI();refreshProgressionGuide();
 }
 function installSystemsUI(){inspectedStyle=combatStyle();styleBench=combatStyle();
   $('quickSkills').querySelector('.nav-label').textContent='Skills';$('quickSkills').setAttribute('aria-label','Skills: gather, refine, craft tools and equipment');$('quickSkills').title='Skills (G)';
