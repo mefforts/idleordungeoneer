@@ -32,6 +32,7 @@ function projectHand(point,root){const distance=Math.hypot(point.x-root.x,point.
 function poseRig(options={}){
  const {pose='idle',data={}}=options,reduced=!!options.reducedMotion||!!data.reducedMotion||!!motionPreference?.matches,time=reduced?0:(options.time||0),weapon=data.weaponType||'sword',activity=Object.hasOwn(TOOLS,pose)||pose==='cast',working=options.working!==false,walking=!reduced&&(pose==='walk'||pose==='combat'&&Math.hypot(options.vx||0,options.vy||0)>.1),backpedal=walking&&(options.vx||0)*(options.facing||1)<-.1;
  const a=reduced?(pose==='attack'?.45:0):clamp(options.attack||0,0,1),attack=pose==='attack'&&options.attack===undefined?.65:a,elapsed=1-attack,walk=walking?Math.sin(time*8)*(backpedal?-1:1):0,phase=reduced?.65:((options.workPhase??time*workRate(pose))%1+1)%1,cycle=phase*Math.PI*2,breath=Math.sin(time*2.25)*.32;
+ const workCycle=options.workCycle??Math.floor(time*workRate(pose)),variation=reduced?0:Math.sin(workCycle*2.399),accent=Math.sin(phase*Math.PI)**2;
  const body={x:walking?walk*.5:0,y:-42+(walking?Math.abs(walk)*1.4:breath),angle:(options.dash&&!reduced?.18:0)+(walking?walk*.025:0)};
  let main={x:21,y:-35},back={x:-17,y:-31},angle=.35,headAngle=walking?walk*.02:0,kneeling=false,twoHand=0,contact=false,workPiece=null;
  const tool=TOOLS[pose],placeTip=(x,y,toolAngle)=>{angle=toolAngle;const length=tool.height*tool.grip[1];main={x:x-Math.sin(angle)*length,y:y+Math.cos(angle)*length};};
@@ -62,25 +63,51 @@ function poseRig(options={}){
  if(activity){
   body.x=3;body.angle=.16;main={x:24,y:-50};back={x:12,y:-45};angle=2.3;twoHand=0;headAngle=.08;
   if(['mine','smith','wood'].includes(pose)){
-   const impact=clipSample([[0,.72],[.24,0],[.40,.05],[.65,1],[.76,.98],[1,.72]],phase)[0],lift=working?impact:1;
-   body.angle=working?.07+impact*.20:.04;body.x=working?3+impact*3:0;main={x:working?30-lift:27,y:working?-68+lift*27:-36};angle=working?lerp(.40,pose==='smith'?1.72:pose==='wood'?1.64:1.53,lift):.65;
-   back=working?{x:pose==='smith'?24:14,y:pose==='smith'?-45:-43}:{x:-17,y:-31};twoHand=working&&pose!=='smith'?13:0;headAngle=working?.10+lift*.07:0;contact=working&&phase>.60&&phase<.80;
+   const keys=pose==='smith'?[[0,.72],[.18,.12],[.34,0],[.56,1],[.68,.99],[.86,.48],[1,.72]]:pose==='wood'?[[0,.72],[.24,0],[.40,.02],[.64,1],[.78,.99],[1,.72]]:[[0,.72],[.28,0],[.43,.02],[.66,1],[.80,.99],[1,.72]];
+   const impact=clipSample(keys,phase)[0],lift=working?impact:1;
+   body.angle=working?.05+impact*.21+variation*accent*.009:.04;body.x=working?3+impact*3+variation*accent*.6:0;if(working)body.y+=impact*.65;
+   main={x:working?30-lift+variation*accent*(1-lift)*1.4:27,y:working?-69+lift*28:-36};angle=working?lerp(.38+variation*accent*.035,pose==='smith'?1.72:pose==='wood'?1.64:1.53,lift):.65;
+   back=working?{x:pose==='smith'?24:14,y:pose==='smith'?-45:-43}:{x:-17,y:-31};twoHand=working&&pose!=='smith'?13:0;headAngle=working?.07+lift*.10:0;contact=working&&phase>.45&&lift>.95;
   }else if(pose==='fletch'){
    const pass=clipSample([[0,0,4],[.16,0,0],[.60,1,0],[.76,1,5],[1,0,4]],phase);workPiece={x:31,y:-48,angle:0};back={x:15,y:-47.2};
-   placeTip(34+pass[0]*9,-48.4-pass[0]*.6-pass[1],2.48+pass[0]*.18);body.angle=.12+Math.sin(cycle)*.018;headAngle=.14;contact=working&&phase>=.16&&phase<=.60;
+   const cutX=34+pass[0]*(9+variation*accent*.8);placeTip(cutX,-47-(cutX-12)*2/31-pass[1],2.48+pass[0]*.18);body.angle=.12+Math.sin(cycle)*.018+variation*accent*.01;headAngle=.12+pass[0]*.035;contact=working&&phase>=.16&&phase<=.60;
   }else if(pose==='ward'||pose==='cast'){
-   body.angle=.08+Math.sin(cycle)*.025;main={x:38+Math.sin(cycle)*5,y:-45+Math.sin(cycle*2)*3};back={x:15-Math.sin(cycle)*4,y:-57-Math.cos(cycle)*3};angle=-1.16+Math.cos(cycle)*.22;headAngle=.08;workPiece={x:29,y:-49+Math.sin(cycle)*1.2,angle:0};contact=working;
+   body.angle=.08+Math.sin(cycle)*.025;main={x:38+Math.sin(cycle)*(5+variation*accent*.6),y:-45+Math.sin(cycle*2)*3};back={x:15-Math.sin(cycle)*4,y:-57-Math.cos(cycle)*3};angle=-1.16+Math.cos(cycle)*.22;headAngle=.08+Math.sin(cycle)*.018;workPiece={x:29,y:-49+Math.sin(cycle)*1.2,angle:0};contact=working;
   }else if(pose==='rune'){
-   workPiece={x:31,y:-47,angle:0};back={x:23,y:-46};placeTip(31+Math.cos(cycle)*3.8,-48+Math.sin(cycle)*2.6,2.10+Math.sin(cycle)*.16);body.angle=.15+Math.cos(cycle)*.018;headAngle=.14;contact=working;
+   const trace=clipSample([[0,3.8,0],[.22,0,-2.6],[.46,-3.8,0],[.70,0,2.6],[1,3.8,0]],phase),mix=Math.abs(variation)*accent;
+   workPiece={x:31,y:-47,angle:0};back={x:23,y:-46};placeTip(31+lerp(Math.cos(cycle)*3.8,trace[0],mix),-48+lerp(Math.sin(cycle)*2.6,trace[1],mix),2.10+Math.sin(cycle)*.16);body.angle=.15+Math.cos(cycle)*.018;headAngle=.14+Math.sin(cycle)*.02;contact=working;
   }else if(pose==='polish'){
-   const lift=clipSample([[0,0],[.20,1],[.36,1],[.60,0],[.74,0],[1,0]],phase)[0];workPiece={x:31,y:-47,angle:Math.sin(cycle)*.14};back={x:23,y:-45};placeTip(32+Math.sin(cycle)*1.8,-49-lift*5.5,2.12+Math.cos(cycle)*.18);body.angle=.15+lift*.035;headAngle=.12+lift*.035;contact=working&&phase>=.58&&phase<=.76;
+   const lift=clipSample([[0,0],[.20,1],[.36,1],[.60,0],[.74,0],[1,0]],phase)[0];workPiece={x:31,y:-47,angle:Math.sin(cycle)*.14};back={x:23,y:-45};placeTip(32+Math.sin(cycle)*1.8+variation*accent*.6,-49-lift*5.5,2.12+Math.cos(cycle)*.18);body.angle=.15+lift*.035;headAngle=.12+lift*.035;contact=working&&phase>=.58&&phase<=.76;
   }else if(pose==='scavenge'){
    kneeling=true;body.x=-11;body.y=-17;body.angle=1.00+(working?Math.sin(cycle)*.025:0);back={x:22,y:-4};headAngle=.35;
-   if(working)placeTip(61+Math.sin(cycle)*8,-2-Math.max(0,-Math.cos(cycle))*8,1.62+Math.sin(cycle)*.16);
+   if(working)placeTip(61+Math.sin(cycle)*8+variation*accent*.8,-2-Math.max(0,-Math.cos(cycle))*8,1.62+Math.sin(cycle)*.16);
    else{main={x:37,y:-5};angle=1.62;}
    contact=working&&Math.cos(cycle)>.10;
   }
   if(!working&&!['mine','smith','wood','scavenge'].includes(pose)){main={x:27,y:-36};back={x:-17,y:-31};angle=.4;body.angle=.04;headAngle=0;if(workPiece)workPiece={...workPiece,angle:0,...(pose==='ward'||pose==='cast'?{y:-49}:{})};}
+  const flourish=options.bonusReaction;
+  if(flourish&&!reduced){
+   const progress=clamp(flourish.progress,0,1),weight=Math.sin(progress*Math.PI)**2,alternate=flourish.variant===1;
+   if(['mine','smith','wood'].includes(pose)){
+    const strike=clipSample(alternate?[[0,.72],[.22,0],[.48,1],[.61,.62],[.76,1],[1,.72]]:[[0,.72],[.30,0],[.62,1],[.77,1],[1,.72]],progress)[0];
+    main={x:lerp(main.x,29,weight),y:lerp(main.y,-72+strike*31,weight)};angle=lerp(angle,lerp(.26,pose==='smith'?1.72:pose==='wood'?1.64:1.53,strike),weight);
+    body.angle=lerp(body.angle,.04+strike*.25,weight);headAngle+=weight*.035;twoHand=pose==='smith'?0:13;contact=weight>.85&&strike>.95;
+   }else if(pose==='fletch'){
+    const lift=weight*(alternate?4:2);workPiece.y-=lift;back.y-=lift;
+    const x=lerp(34,44,smooth(progress));const tipY=workPiece.y+1-(x-(workPiece.x-19))*2/31;
+    const targetAngle=2.48+progress*.18,target={x:x-Math.sin(targetAngle)*tool.height*tool.grip[1],y:tipY+Math.cos(targetAngle)*tool.height*tool.grip[1]};
+    main={x:lerp(main.x,target.x,weight),y:lerp(main.y,target.y,weight)};angle=lerp(angle,targetAngle,weight);contact=false;headAngle+=weight*.04;
+   }else if(pose==='ward'||pose==='cast'){
+    main={x:lerp(main.x,alternate?46:42,weight),y:lerp(main.y,alternate?-51:-40,weight)};back={x:lerp(back.x,18,weight),y:lerp(back.y,alternate?-52:-64,weight)};angle+=weight*(alternate?.30:-.18);headAngle+=weight*.035;
+   }else if(pose==='rune'||pose==='polish'){
+    workPiece.y-=weight*5;workPiece.angle+=weight*(alternate?.35:-.20);back.y-=weight*5;
+    const targetAngle=2.0,target={x:35-Math.sin(targetAngle)*tool.height*tool.grip[1],y:-61+Math.cos(targetAngle)*tool.height*tool.grip[1]};
+    main={x:lerp(main.x,target.x,weight),y:lerp(main.y,target.y,weight)};angle=lerp(angle,targetAngle,weight);headAngle-=weight*.04;contact=false;
+   }else if(pose==='scavenge'){
+    const targetAngle=1.15,target={x:49-Math.sin(targetAngle)*tool.height*tool.grip[1],y:(alternate?-20:-14)+Math.cos(targetAngle)*tool.height*tool.grip[1]};
+    main={x:lerp(main.x,target.x,weight),y:lerp(main.y,target.y,weight)};angle=lerp(angle,targetAngle,weight);headAngle-=weight*.08;contact=false;
+   }
+  }
  }
  const blend=clamp(options.workBlend??(working?1:0),0,1);
  if(activity&&options.workBlend!==undefined&&!options._unblended&&(working?blend<1:blend>0)){
@@ -186,9 +213,55 @@ function paintHand(c,point,angle,side,kit,look,handPose='rest'){
  }else{c.beginPath();c.moveTo(-3.3,-4.7);c.lineTo(2.9,-4.7);c.quadraticCurveTo(4.7,-.9,4.0,2.6);c.quadraticCurveTo(2.0,5.1,-1.7,4.2);c.quadraticCurveTo(-4.5,3.0,-4.2,-.2);c.closePath();c.fillStyle=color;c.fill();c.strokeStyle=INK;c.lineWidth=.9;c.stroke();path(c,[-2.6,-3.2,.8,-3.6,2.3,-.3,.6,1.2,-2.6,.8],light,'',0);if(handPose==='grip'){path(c,[2.4,-2.0,4.2,-1.3,3.2,1.4,1.1,1.9,.2,.8],color,INK,.7);line(c,-2.7,1.8,.0,2.2,dark,.7);}else line(c,-1.1,1.1,-1.3,3.3,dark,.7);}
  c.restore();
 }
+function paintCohesiveChest(c,p,hem){
+ // A single outer garment owns the whole chest. Shading follows its contour.
+ path(c,[-13,-29,-6,-31,0,-28,6,-31,13,-29,14,-20,11,-11,15,hem,6,hem+1,0,hem-1,-6,hem+1,-15,hem,-11,-11,-14,-20],p.mid,INK,1.35);
+ if(p.style==='melee'){
+  // Broad joined facets and a central ridge replace the outlined inset slab.
+  path(c,[-12,-27,-6,-29,0,-26,0,-10,-10,-12,-12.5,-20],shade(p.mid,1.13),'',0);
+  path(c,[0,-26,6,-29,12,-27,12.5,-20,10,-12,0,-10],shade(p.mid,.87),'',0);
+  line(c,-11.7,-25.7,-12.4,-20,p.light,.85);
+  line(c,-12.4,-20,-10.1,-12.5,p.light,.85);
+  line(c,0,-24.5,0,-11,shade(p.mid,1.28),.85);
+  // Neck rim and full-width waist articulation belong to the same shell.
+  path(c,[-12,-28,-6,-30,0,-27,6,-30,12,-28,11,-25.5,6,-27.8,0,-24.5,-6,-27.8,-11,-25.5],p.dark,'',0);
+  line(c,-10.8,-26.4,-6,-28.5,p.light,.7);line(c,6,-28.5,10.8,-26.4,p.mid,.7);
+  path(c,[-10.5,-11,0,-9.4,10.5,-11,11.8,-5.9,0,-4,-11.8,-5.9],shade(p.mid,.94),'',0);
+  line(c,-10.5,-10.6,0,-9,p.dark,.7);line(c,0,-9,10.5,-10.6,p.dark,.7);
+  line(c,-11.1,-6.3,0,-4.8,p.light,.65);line(c,0,-4.8,11.1,-6.3,p.mid,.65);
+  for(const side of [-1,1]){
+   path(c,[side*2,2,side*11,1,side*14,8,side*4,7],p.mid,INK,.8);
+   line(c,side*4,3.2,side*10.5,2.6,p.light,.7);
+  }
+ }else if(p.style==='ranged'){
+  // Soft edge shading leaves one continuous leather front under the strap.
+  path(c,[-12,-27,-8,-28,-7,-14,-9,hem-1,-13,hem-1,-10,-11],shade(p.mid,1.12),'',0);
+  path(c,[8,-28,12,-26,11,-14,14,hem-1,9,hem-1,7,-11],shade(p.mid,.84),'',0);
+  for(const side of [-1,1]){
+   line(c,side*8.6,-22,side*8,-11,p.dark,.7);
+   line(c,side*8,-11,side*10,hem-1,p.dark,.7);
+  }
+  path(c,[-6,-29,0,-24,6,-29,4,-23,0,-20,-4,-23],p.dark,'',0);
+  line(c,-10,-26,9,-6,p.dark,3.8);line(c,-10,-26,9,-6,p.leather,2.5);line(c,-9.5,-26,9.5,-6,p.trim,.55);
+ }else{
+  // Both robe facings meet at the same centered V; folds run to the hem.
+  path(c,[-12,-27,-8,-28,-6,-13,-9,hem-1,-13,hem-1,-10,-11],shade(p.mid,1.1),'',0);
+  path(c,[8,-28,12,-26,11,-14,14,hem-1,9,hem-1,6,-11],shade(p.mid,.86),'',0);
+  path(c,[-9,-29,-11,-26,0,-14,11,-26,9,-29,0,-20],p.dark,'',0);
+  path(c,[-8.5,-28,-9.4,-26.2,0,-16.8,9.4,-26.2,8.5,-28,0,-20.8],p.light,'',0);
+  line(c,-8.2,-26.6,0,-18.3,p.trim,.65);line(c,0,-18.3,8.2,-26.6,p.trim,.65);
+  line(c,-5,-12,-6.2,hem-1,shade(p.mid,.82),.85);line(c,5,-12,6.2,hem-1,shade(p.mid,1.18),.85);
+ }
+ // The same waist and buckle anchor every material and both armor tiers.
+ line(c,-12,-1,12,-1,p.leather,3.4);
+ path(c,[-2.4,-3.3,3.1,-3.3,3.1,1.7,-2.4,1.7],p.trim,INK,.8);
+ line(c,-.5,-1,1.5,-1,p.leather,.8);
+}
+
 function paintBody(c,rig,kit,look){
  const p=paletteFor(kit,'chest',look),plain=p.style==='travel',mage=p.style==='magic';c.save();c.translate(rig.body.x,rig.body.y);c.rotate(rig.body.angle);
  const hem=plain?[5,11,6,7][look.chest]:mage?9:5;
+ if(!plain){paintCohesiveChest(c,p,hem);c.restore();return;}
  path(c,[-13,-29,-6,-31,0,-28,6,-31,13,-29,14,-20,11,-11,15,hem,6,hem+1,0,hem-1,-6,hem+1,-15,hem,-11,-11,-14,-20],p.mid,INK,1.35);
  path(c,[-12,-27,-5,-28,-3,-12,-6,hem-1,-12,hem-1,-9,-12],p.light,'',0);
  path(c,[6,-28,12,-26,11,-14,14,hem-1,7,hem-1,4,-10],p.dark,'',0);
@@ -232,7 +305,7 @@ function paintWizardHat(c,p,look){
  // One stitched arcane star, shared by the cream and blue robe tiers.
  path(c,[-3,-29,-1.8,-25.4,1,-24,-1.8,-22.7,-3,-19,-4.3,-22.7,-7,-24,-4.3,-25.4],p.trim,p.dark,.65);
 }
-function paintFullHelm(c,p){
+function paintFullHelm(c,p,look,time){
  const plume=p===ARMOR_PALETTES.melee_1?{mid:'#a94c43',light:'#e08b70',dark:'#65313b'}:{mid:'#b04b59',light:'#ec9190',dark:'#682f43'};
  // Short horsehair plume grows from the crown mount and sweeps to one side.
  path(c,[-3,-29,-3,-36,2,-42,10,-43,18,-38,23,-33,28,-31,20,-31,26,-25,18,-27,9,-34,3,-34,1,-29],plume.mid,INK,1.1);
@@ -249,6 +322,7 @@ function paintFullHelm(c,p){
  line(c,-1,-26,-1,-7,p.light,1.5);line(c,-14,-5,-3,-2,p.light,.85);
  // The narrow T-shaped visor stays dark and legible at the combat scale.
  path(c,[-13,-3,-3,0,2,1,13,-3,12,1,3,5,3,14,-.5,15,-.5,5,-12,1],INK,'',0);
+ c.save();c.beginPath();c.moveTo(-13,-3);for(const [x,y]of [[-3,0],[2,1],[13,-3],[12,1],[3,5],[3,14],[-0.5,15],[-0.5,5],[-12,1]])c.lineTo(x,y);c.closePath();c.clip();illustratedFace(c,look,time,true);c.restore();
  line(c,-11,-2,-4,0,p.dark,.65);line(c,5,1,11,-1,p.dark,.65);
  for(const [x,y]of [[-9,6],[-5.5,7.5],[-9,9.5],[7,6.5],[10.5,5.5],[7,10],[10.5,9]])path(c,[x-.7,y-.9,x+.6,y-.5,x+.6,y+.9,x-.7,y+.5],p.dark,'',0);
  line(c,-14,6,-9,11,p.light,.8);line(c,4,16,11,12,p.mid,.8);
@@ -271,7 +345,7 @@ function paintRangerCap(c,p,look){
 }
 function paintHead(c,rig,kit,look,time){
  const p=paletteFor(kit,'head',look),armored=p.style!=='travel';c.save();c.translate(rig.head.x,rig.head.y);c.rotate(rig.head.angle);c.scale(1.20,1.20);
- if(p.style==='melee')paintFullHelm(c,p);
+ if(p.style==='melee')paintFullHelm(c,p,look,time);
  else{illustratedFace(c,look,time,armored);if(p.style==='magic')paintWizardHat(c,p,look);else if(p.style==='ranged')paintRangerCap(c,p,look);}
  c.restore();
 }

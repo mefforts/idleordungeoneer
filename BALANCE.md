@@ -31,6 +31,23 @@ Each permanent rank costs one point. The first choice is 1.25× Delving or 2× S
 
 Optional Mastery allocations share the bank after the first speed choice. Refunding these allocations does not refund permanent time ranks. Existing point balances and allocated ranks are retained; earlier XP-based combat-perk unlocks remain available.
 
+## Active skilling discoveries
+
+Build 11.1 replaces 35% instant crafting progress with timed work speed. Every discovery has one rarity roll. Gathering discoveries also grant their existing material bundle; refining discoveries never bypass ingredients.
+
+| Rarity | Chance | Active work speed | Duration |
+| --- | ---: | ---: | ---: |
+| Common | 65% | +35% | 6s |
+| Uncommon | 24% | +50% | 8s |
+| Rare | 9% | +75% | 10s |
+| Very rare | 2% | +100% | 15s |
+
+Discoveries appear after 1.2 seconds of engagement, then every 4.2 real seconds, with six seconds to collect. The strongest current boost applies; collecting the same rarity refreshes its bounded duration. Other rarities count down concurrently. There is no multiplying or unlimited time bank.
+
+Timers count real seconds while actively working on that activity, including while earned Skilling speed accelerates production. Release, missing ingredients, menus, other activities and backgrounding pause them. Remaining time survives saves. These bonuses do not accelerate idle or offline work. Permanent Skilling game time and station/tool benefits retain their normal effects. Every accelerated craft still consumes its complete station-adjusted recipe.
+
+A seeded five-minute active refining check at 1× made **107 bars without pickups / 170 bars collecting all 72 discoveries**. The collected run consumed 340 ore: exactly two per bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
+
 ## Equipment ceilings
 
 | Weapon | Style | Iron | Dedicated Iron | Steel | Dedicated Steel |
@@ -126,12 +143,12 @@ Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the
 | 3 | ~30 min | 160.0 |
 | 4 | ~35 min | 160.0 |
 
-- Live Zone 1: **9.3 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **20.3 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **30.8 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **35.9 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 1: **9.2 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **20.1 min**, 570 rewarded defeats, 160.0 reference DPS.
+- Live Zone 3: **30.9 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **35.7 min**, 960 rewarded defeats, 160.0 reference DPS.
 - Live Zone 9: **40.9 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 15: **41.1 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 15: **41.0 min**, 960 rewarded defeats, 160.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It moves to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 

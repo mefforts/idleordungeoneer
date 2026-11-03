@@ -6,7 +6,7 @@ There are **42 independent SVG parts**: six physical slots for travel clothing a
 
 | Physical slot | Attachment | Parts |
 | --- | --- | --- |
-| Head | Neck and independent head joint | Face, hair, helmet or hood |
+| Head | Neck and independent head joint | Face, hair, plumed helm, ranger cap or wizard hat |
 | Shoulders | Each upper-arm root | Mirrored cloth sleeves or shoulder caps |
 | Chest | Torso and arm bones | Tunic, breastplate or robe, with sleeves and bracers |
 | Legs | Pelvis and knee joints | Continuous trousers or robe panels |
@@ -24,6 +24,8 @@ Two-handed placement solves both shoulder reach limits while preserving a shared
 Combat reads the existing attack timer as a countdown. Each clip starts and ends at its ready pose, with eased windup, follow-through and recovery. A charged bow carries its draw into release instead of resetting the string hand in one frame. The staff uses a forward casting-ready hand; real spell bolts continue to start at that hand socket. Movement adds a small counter-sway and foot roll. Damage, cooldowns, ammunition and production rates keep their existing rules.
 
 Working and two-handed arms use an elbow bend that stays below raised hands. Tool arcs clear the head. Carving, rune engraving and gem cutting aim the tool tip at the real workpiece; their support hands brace its edge. Warding moves a horizontal shuttle through the weave, while scavenging plants an open palm and lifts the rake between ground strokes. The full tool footprint determines the mobile scene bounds. Solid workpieces draw behind the fingers; threads, etching glints and contact particles draw in front.
+
+Mining, smithing and chopping now use distinct anticipation/impact/recovery timing with small variations between cycles. Variations ease to zero at the loop seam; hands still resolve through the same fixed-length joints and calibrated tool grips. Sparks and chips burst on contact instead of streaming throughout a strike. Two bonus-collection clips per family add finishing strokes, a shuttle flourish, inspection of an engraved rune or cut gem, or a lifted scavenging find. A brief rarity-coloured capture trail follows the pickup into the work, while reduced motion suppresses flourishes and moving particles.
 
 Work clips retain anticipation, strike and recovery, plus continuous carving, weaving, engraving, gem working and searching motions. Starting and stopping blend over 180 / 240 ms. The rig and work scenes share one visual-rate table. Animation is separate from production. The visual rate caps at 2.5× for readability; resource production retains the full Skilling time multiplier. Dungeoneering speed does not enter this clock. Reduced motion uses stable working poses.
 
@@ -45,3 +47,5 @@ npm run review:player
 `tests/player-rig.cjs` checks more than 5,000 poses, fixed segment lengths, exact grips, resting positions, cyclic motion, action blending, visible body connections and decoding of every exported SVG. It also checks 72 attack transitions across facings, movement and dashes, 378 rendered body connections, raised elbow direction, tool contact and complete tool bounds. Another 4,608 pixel probes check visible upper-arm coverage below the sleeves across all eight work loops, 48 phases, both facings and phone/close-up scales. These catch the old detached-arm appearance that bone lengths and whole-character alpha connectivity missed. Existing suites cover real attacks, ammunition, resource costs, input, saves and mobile layouts. [Outfits](preview-player-sets.png), [motion phases](preview-player-actions.png), [mining](preview-player-mining-mobile.png), [phone weaving](preview-player-warding-mobile.png) and a [live recording](preview-player-motion.webm) show the actual renderer.
 
 For a motion review, run `npm run review:motion` with FFmpeg available. It exports a 24-second MP4 of movement, six weapon families and eight work families, an MP4 of the eight actual work scenes including start/release transitions, and an eight-second looping GIF. The rig reel uses the production pose functions at 1× animation speed, with combat previews triggered once per second and facing changes every four seconds. Work loops show travel clothes first and armor in the second facing. The scene reel includes mining and warding in travel clothes to keep exposed arm connections visible. Work scenes use their real clocks and effects. Recording leaves the shipped HTML unchanged.
+
+`npm run review:skilling` captures the current work loops and bonus collection in actual scenes, plus a comparative sheet of both collection clips. `tests/skilling-bonuses.cjs` checks 27,104 collection poses for smooth hand motion, fixed bones and two-handed grips, alongside production, timing, touch and persistence regressions.

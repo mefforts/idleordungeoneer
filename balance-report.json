@@ -1,5 +1,5 @@
 {
-  "version": "11.0.0",
+  "version": "11.1.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -576,6 +576,66 @@
     },
     "voucher": 0.06,
     "finalVoucher": 0.15
+  },
+  "skillingBonuses": {
+    "rarities": [
+      {
+        "id": "common",
+        "name": "Common",
+        "chance": 0.65,
+        "speed": 0.35,
+        "seconds": 6,
+        "color": "#d5d8b0",
+        "mark": "Ⅰ"
+      },
+      {
+        "id": "uncommon",
+        "name": "Uncommon",
+        "chance": 0.24,
+        "speed": 0.5,
+        "seconds": 8,
+        "color": "#91d9ae",
+        "mark": "Ⅱ"
+      },
+      {
+        "id": "rare",
+        "name": "Rare",
+        "chance": 0.09,
+        "speed": 0.75,
+        "seconds": 10,
+        "color": "#9bc9f0",
+        "mark": "Ⅲ"
+      },
+      {
+        "id": "very-rare",
+        "name": "Very rare",
+        "chance": 0.02,
+        "speed": 1,
+        "seconds": 15,
+        "color": "#dfb1ed",
+        "mark": "Ⅳ"
+      }
+    ],
+    "clock": "Real seconds of active work in the matching activity",
+    "stacking": "Strongest only; refresh the same rarity",
+    "idle": false,
+    "offline": false,
+    "pickupInterval": 4.2,
+    "gatheringMaterials": true,
+    "benchmark": {
+      "base": {
+        "seconds": 300,
+        "bars": 107,
+        "oreSpent": 214,
+        "pickups": 0
+      },
+      "collected": {
+        "seconds": 300,
+        "bars": 170,
+        "oreSpent": 340,
+        "pickups": 72
+      }
+    }
   },
   "limits": {
     "1": {
@@ -1631,7 +1691,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 557.0800000000286,
+      "seconds": 553.8000000000278,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
@@ -1639,7 +1699,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1216.6000000000693,
+      "seconds": 1207.7200000000682,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
@@ -1647,7 +1707,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1847.4000000000651,
+      "seconds": 1852.440000000065,
       "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 1800
@@ -1655,7 +1715,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2153.720000000109,
+      "seconds": 2142.2400000001085,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2100
@@ -1663,7 +1723,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2453.800000000142,
+      "seconds": 2451.680000000141,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
@@ -1671,7 +1731,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2465.400000000141,
+      "seconds": 2461.080000000138,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400

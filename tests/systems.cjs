@@ -52,9 +52,9 @@ const {createRuntime}=require('./runtime.cjs');
   }
   {
    const {c,p}=await profile({...rich,ore:8});await p.click('#introSkills');await p.evaluate(()=>{__deepwell.enterActivity('forge');__deepwell.activeSkill('forge')});const before=await p.evaluate(()=>__deepwell.getState().data);
-   await p.evaluate(()=>{for(let i=0;i<3;i++){const id=__deepwell.spawnSkillBonus();if(id)__deepwell.claimSkillBonus(id)}});const after=await p.evaluate(()=>__deepwell.getState().data);assert.equal(after.bars,before.bars+1);assert.equal(after.ore,before.ore-2);
+   await p.evaluate(()=>{for(let i=0;i<3;i++){const id=__deepwell.spawnSkillBonus();if(id)__deepwell.claimSkillBonus(id)}});const after=await p.evaluate(()=>__deepwell.getState().data);assert.equal(after.bars,before.bars);assert.equal(after.ore,before.ore);assert.ok(after.skillingBuffs.some(b=>b.key==='forge'&&b.left>0));
    await p.evaluate(()=>{while(__deepwell.getState().data.ore>=2)__deepwell.produce('forge',true)});assert.equal(await p.evaluate(()=>__deepwell.spawnSkillBonus()),false);
-   passed.push('Crafting sparks accelerate progress and still consume exact ingredients; missing resources prevent free crafts');await c.close();
+   passed.push('Crafting sparks grant timed speed instead of instant crafts; missing resources prevent free crafts');await c.close();
   }
   {
    const {c,p}=await profile({...rich,cleared:27,floor:28});await p.click('#introSkills');await p.click('#quickSkills');await p.locator('[data-idle-skill="mine"]').first().click();assert.deepEqual((await p.evaluate(()=>__deepwell.getState())).data.idleJobs,['mine','']);

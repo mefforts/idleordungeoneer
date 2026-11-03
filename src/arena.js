@@ -44,7 +44,7 @@ function zoneEnemyHp(boss=false,bossIndex=0,variance=1){
 
 function bonusPosition(){
   const r=canvas.getBoundingClientRect(),bar=$('skillActionBar').getBoundingClientRect(),header=document.querySelector('.hud-center').getBoundingClientRect();
-  const blocked=['#trackedRecipe','#trackedNextStep','#noticeColumn','.hud-actions','.hud-resources'].map(selector=>document.querySelector(selector)).filter(e=>e&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
+  const blocked=['#trackedRecipe','#trackedNextStep','#noticeColumn','#skillWorkBuff','.hud-actions','.hud-resources'].map(selector=>document.querySelector(selector)).filter(e=>e&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
   const minY=Math.max(95,header.bottom-r.top+32),maxY=bar.top-r.top-34;
   if(maxY<minY)return null;
   for(let attempt=0;attempt<30;attempt++){
@@ -91,7 +91,7 @@ function installArenaUI(){installZoneShopPin();
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('speedOptions').classList.contains('hidden')){e.preventDefault();e.stopImmediatePropagation();$('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');$('speedToggle').focus();}},true);
 }
 function resetRun(){
- game.healthDrops=[];game.lootDrops=[];game.rareEliteSpawned=false;
+ game.healthDrops=[];game.lootDrops=[];game.rareEliteSpawned=false;game.workBonusReaction=null;
  resetArenaTouch();
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
  normalizeZone();checkpointGroundXp();const p=game.player;

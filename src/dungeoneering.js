@@ -243,9 +243,11 @@ function dealDamage(enemy,base,fromX,fromY,sourceStyle=combatStyle()){
 function update(dt){
  const simDt=dt*delvingTimeMultiplier(),skillSpeed=skillingTimeMultiplier();
  game.tipClock=(game.tipClock||0)+dt;tickLootReceipts(dt);
- game.workVisualClock=(game.workVisualClock||0)+dt*Math.min(2.5,skillSpeed);
+ const visualBoost=game.holdSkill===game.scene&&SKILLS[game.scene]?skillBuffMultiplier(game.scene):1;
+ game.workVisualClock=(game.workVisualClock||0)+dt*Math.min(2.5,skillSpeed*visualBoost);
+ tickSkillBonusReaction(dt);
  game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);
- advanceActiveWork(dt*skillSpeed);
+ advanceSkillWork(dt,skillSpeed);
  game.frame+=game.status==='running'?0:dt;
  const realNow=Date.now(),jobsDelta=Math.min(8*3600,Math.max(0,(realNow-game.lastJobsAt)/1000));game.lastJobsAt=realNow;
  if(jobsDelta>0)advanceProduction(jobsDelta,skillSpeed);

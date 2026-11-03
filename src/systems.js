@@ -41,7 +41,7 @@ function normalizeProgression(){
   data.skillsNudgeSeen=!!data.skillsNudgeSeen||data.unlockedWeapons?.length>1;
   data.idleNoticeSlots=Math.min(2,finiteRank(data.idleNoticeSlots));data.idleFirstAssigned=!!data.idleFirstAssigned||data.idleJobs?.some(Boolean)||false;
   if(data.idleJobs?.filter(Boolean).length>=idleSlotsUnlocked()&&idleSlotsUnlocked()>0)data.idleNoticeSlots=idleSlotsUnlocked();
-  data.progressionVersion=5;normalizeArenaData();normalizeMonsterLoot();normalizeEquipment();normalizeTierProgression();normalizePreparationEconomy();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
+  data.progressionVersion=5;normalizeSkillingBuffs();normalizeArenaData();normalizeMonsterLoot();normalizeEquipment();normalizeTierProgression();normalizePreparationEconomy();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
 }
 
 function stationRank(group){return data.stationLevels?.[group]||0;}
@@ -118,32 +118,32 @@ function bonusEligible(){return !!SKILLS[game.scene]&&!drawerKind&&$('overlay').
 function spawnSkillBonus(){
   if(!bonusEligible()||!canUseSkill(game.scene)||!hasIngredients(skillCost(game.scene)))return false;
   const s=bonusState();if(s.nodes.length>=3)return false;
-  const key=game.scene,def=BONUS_DEFS[key],craft=!!SKILLS[key].cost||key==='ward',tool=toolForSkill(key),amount=1+(data.tools[tool]?1:0);
+  const key=game.scene,def=BONUS_DEFS[key],craft=!!SKILLS[key].cost||key==='ward',tool=toolForSkill(key),amount=1+(data.tools[tool]?1:0),rarity=rollSkillBonusRarity();
   let p=null;for(let attempt=0;attempt<16;attempt++){const candidate=bonusPosition();if(candidate&&s.nodes.every(n=>Math.hypot(n.x-candidate.x,n.y-candidate.y)>=62)){p=candidate;break;}}
   if(!p)return false;
   const id=++s.serial,el=document.createElement('button');el.type='button';el.className='skill-bonus '+(craft?'craft-bonus':'gather-bonus');el.dataset.skillBonus=id;
-  el.style.left=p.x+'px';el.style.top=p.y+'px';el.innerHTML=artHTML(def.art)+`<span>${craft?'+35%':'+'+amount}</span>`;
-  el.setAttribute('aria-label',def.name+': '+(craft?'35% crafting progress':amount+' extra '+SKILLS[key].item));el.title=def.name+' · tap or drag across';
+  el.dataset.rarity=rarity.id;el.style.setProperty('--skill-rarity',rarity.color);
+  el.style.left=p.x+'px';el.style.top=p.y+'px';el.innerHTML=artHTML(def.art)+`<em aria-hidden="true">${rarity.name}</em><span>+${Math.round(rarity.speed*100)}% · ${rarity.seconds}s</span>`;
+  const effect='+'+Math.round(rarity.speed*100)+'% '+(craft?'crafting':'gathering')+' speed for '+rarity.seconds+' seconds of active work';
+  el.setAttribute('aria-label',rarity.name+' '+def.name+': '+effect+(craft?'':', plus '+amount+' '+SKILLS[key].item));el.title=rarity.name+' · '+effect+' · tap or drag across';
   el.onclick=e=>{if(claimSkillBonus(id)&&e.detail===0)$('skillHold').focus({preventScroll:true});};
-  s.nodes.push({id,key,craft,amount,...p,left:6,el});$('skillBonusLayer').append(el);return id;
+  s.nodes.push({id,key,craft,amount,rarity:rarity.id,...p,left:6,el});$('skillBonusLayer').append(el);return id;
 }
 function claimSkillBonus(id){
   const s=bonusState(),node=s.nodes.find(n=>n.id===Number(id));if(!node||node.left<=0||node.key!==game.scene||!bonusEligible())return false;
   const key=node.key;if(!canUseSkill(key)||!hasIngredients(skillCost(key)))return false;
   s.nodes=s.nodes.filter(n=>n!==node);node.el.remove();noteSkillEngagement(key);
-  let reward;
-  if(node.craft){
-    if(!game.lastActiveAt)game.lastActiveAt={};
-    const interval=skillInterval(key)*1000;game.lastActiveAt[key]=(game.lastActiveAt[key]??game.activeClockMs)-interval*.35;
-    activeSkill(key);reward='+35% crafting progress';
-  }else{
+  const rarity=SKILL_BONUS_RARITIES.find(r=>r.id===node.rarity)||SKILL_BONUS_RARITIES[0];
+  grantSkillBuff(key,rarity);beginSkillBonusReaction(key,rarity,node);
+  let reward='+'+Math.round(rarity.speed*100)+'% work speed for '+rarity.seconds+'s';
+  if(!node.craft){
     data[SKILLS[key].resource]+=node.amount;data[SKILLS[key].xp]=(data[SKILLS[key].xp]||0)+1;
     const xp=DISCIPLINES[disciplineFor(key)].xp;data[xp]=(data[xp]||0)+1;codexDiscover('resource_'+SKILLS[key].resource);
-    reward='+'+node.amount+' '+SKILLS[key].item;
+    reward+=' · +'+node.amount+' '+SKILLS[key].item;
   }
   game.workAction=.48;game.lastActiveSkill=key;
-  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.setAttribute('aria-hidden','true');pop.innerHTML=(node.craft?uiIcon('speed'):artHTML(RESOURCE_ART[SKILLS[key].resource]))+(node.craft?'+35%':'+'+node.amount);$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),850);
-  $('skillBonusStatus').textContent=BONUS_DEFS[key].name+' collected. '+reward;refreshUI();save();return true;
+  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=uiIcon('speed')+'<strong>'+rarity.name+'</strong><span>+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s</span>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
+  $('skillBonusStatus').textContent=rarity.name+' '+BONUS_DEFS[key].name+' collected. '+reward;refreshUI();save();return true;
 }
 function tickSkillBonuses(dt){
   const s=bonusState();s.clock+=dt;
@@ -211,7 +211,7 @@ function refreshSystemsUI(){
     $('activeProgress').style.width=Math.min(100,Math.max(0,pct))+'%';$('skillHold').classList.toggle('has-idle-job',idling);
 
   }
-  refreshTierProgressionUI();const toolEl=$('activeTool');if(toolEl&&SKILLS[game.scene]){
+  refreshSkillBuffUI();refreshTierProgressionUI();const toolEl=$('activeTool');if(toolEl&&SKILLS[game.scene]){
     const tool=toolForSkill(game.scene),t=TOOL_DEFS[tool],label=t?(data.tools[tool]?t.name:'Improvised '+tool):({forge:'Smithing hammer',silverSmelt:'Smithing hammer',fletch:'Fletching knife',ward:'Weaving shuttle',rune:'Engraving burin',polish:'Jeweler’s chisel'})[SKILLS[game.scene].scene||game.scene];
     toolEl.textContent=label+(t&&data.tools[tool]?' · equipped':'');
   }
@@ -227,6 +227,8 @@ function refreshSystemsUI(){
 function installSystemsUI(){inspectedStyle=combatStyle();styleBench=combatStyle();
   $('quickSkills').querySelector('.nav-label').textContent='Skills';$('quickSkills').setAttribute('aria-label','Skills: gather, refine, craft tools and equipment');$('quickSkills').title='Skills (G)';
   $('stageWrap').insertAdjacentHTML('beforeend','<div class="skill-bonus-layer" id="skillBonusLayer" aria-label="Active skill bonuses"></div><div class="sr-only" id="skillBonusStatus" aria-live="polite"></div><aside id="skillsNudge" class="skills-nudge hidden" aria-label="Skilling suggestion"><span class="nudge-icon">'+artHTML('skills-menu')+'</span><div><strong>Your first 150 gold</strong><p>Build lasting strength in Skills. Try gathering materials and forging your first weapon.</p><button type="button" id="skillsNudgeOpen">Explore Skills ›</button></div><button type="button" id="skillsNudgeDismiss" aria-label="Dismiss skilling suggestion">×</button></aside>');
+  $('skillActionBar').insertAdjacentHTML('beforeend','<button type="button" class="skill-work-buff hidden" id="skillWorkBuff">'+uiIcon('speed')+'<span><b></b><small></small><span class="skill-buff-meter"><i></i></span></span></button>');
+  $('skillWorkBuff').onclick=showSkillBuffDetails;
   $('stageWrap').insertAdjacentHTML('beforeend','<aside class="skills-nudge hidden" id="idleUnlockNudge" aria-label="Idle task unlocked"><span class="nudge-icon">'+artHTML('idle-task')+'</span><div><strong>Idle tasks unlocked</strong><p>Your adventurer can now work while you delve. Choose an activity in Skills and press Idle. Your second idle slot unlocks when you reach Zone 2.</p><button type="button" id="idleNudgeOpen">Select an idle task ›</button></div><button type="button" id="idleNudgeDismiss" aria-label="Dismiss idle notice">×</button></aside>');
   $('idleNudgeOpen').onclick=openIdleHub;$('idleNudgeDismiss').onclick=()=>{data.idleNoticeSlots=idleSlotsUnlocked();save();refreshSystemsUI();};
   const idleBar=document.createElement('button');idleBar.id='activeIdleButton';idleBar.className='skill-mode active-idle-button';idleBar.type='button';idleBar.onclick=()=>assignIdleSkill(game.scene);document.querySelector('.skill-mode-choices').append(idleBar);

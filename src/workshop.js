@@ -49,7 +49,11 @@ function workshopAnimation(key,active,working){
  if(!game.workPresentation||game.workPresentation.key!==key)game.workPresentation={key,at:now,blend:0};
  const presentation=game.workPresentation,elapsedVisual=Math.min(.08,Math.max(0,(now-presentation.at)/1000));presentation.at=now;presentation.blend=clamp(presentation.blend+(working?elapsedVisual/.18:-elapsedVisual/.24),0,1);
  const visualPhase=working&&!reducedMotion()?((time*DeepwellAvatar.workRate(pose))%1):.65;
- return {key,base,pose,working,phase:visualPhase,productionPhase:phase,time,workBlend:reducedMotion()?(working?1:0):presentation.blend,workPhase:visualPhase,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
+ const reaction=game.workBonusReaction?.key===key?game.workBonusReaction:null;
+ const frame={key,base,pose,working,phase:visualPhase,productionPhase:phase,time,workCycle:Math.floor(time*DeepwellAvatar.workRate(pose)),workBlend:reducedMotion()?(working?1:0):presentation.blend,workPhase:visualPhase,bonusReaction:reaction&&!reducedMotion()?{progress:reaction.age/reaction.duration,variant:reaction.variant}:null,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
+ const rig=DeepwellAvatar.poseRig(frame);
+ if(working&&!reducedMotion()&&rig.contact&&!presentation.lastContact&&['mine','smith','wood','polish'].includes(pose))presentation.impact={point:rig.toolTip,at:now,seed:frame.workCycle};
+ presentation.lastContact=rig.contact;return frame;
 }
 function workshopGlyph(c,x,y,r,kind,color){
  c.save();c.translate(x,y);c.strokeStyle=color;c.lineWidth=.7;c.beginPath();
@@ -65,7 +69,7 @@ function paintWorkshopWorkpiece(frame,rig){
   ctx.fillStyle=SKILLS[key].tier===2?'#94aac6':'#c5b3ce';ctx.strokeStyle='#4e4351';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x-9,y-6);ctx.quadraticCurveTo(x,y-4,x+9,y-6);ctx.lineTo(x+8,y+7);ctx.quadraticCurveTo(x,y+5,x-8,y+7);ctx.closePath();ctx.fill();ctx.stroke();
   for(let row=0;row<5;row++){ctx.strokeStyle=row%2?theme.light:'#e2d6d7';ctx.lineWidth=.45;ctx.beginPath();ctx.moveTo(x-7,y-4+row*2);ctx.quadraticCurveTo(x,y-2+row*2,x+7,y-4+row*2);ctx.stroke();}
  }else if(pose==='rune'){
-  ctx.save();ctx.translate(x,y);ctx.fillStyle='#626d72';ctx.strokeStyle='#263438';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,8,5,-.2,0,Math.PI*2);ctx.fill();ctx.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);ctx.restore();
+  ctx.save();ctx.translate(x,y);ctx.rotate(piece.angle||0);ctx.fillStyle='#626d72';ctx.strokeStyle='#263438';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,8,5,-.2,0,Math.PI*2);ctx.fill();ctx.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);ctx.restore();
  }else if(pose==='polish'){
   ctx.save();ctx.translate(x,y);ctx.rotate(piece.angle);ctx.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';ctx.strokeStyle='#3a4b4c';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(5,-1);ctx.lineTo(2,4);ctx.lineTo(-4,2);ctx.lineTo(-5,-2);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#e4eee0';ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(-1,0);ctx.lineTo(5,-1);ctx.moveTo(-1,0);ctx.lineTo(2,4);ctx.stroke();ctx.restore();
  }else if(pose==='fletch'){
@@ -93,10 +97,24 @@ function paintWorkshopSceneEffects(frame,anchor,layer){
   for(let i=0;i<5;i++){const x=35+i*6,y=-1+(i%2);ctx.fillStyle=i%2?'#716650':'#8c8067';ctx.beginPath();ctx.moveTo(x-2,y);ctx.lineTo(x-1,y-3-i%2);ctx.lineTo(x+2,y-2);ctx.lineTo(x+3,y+1);ctx.fill();}
   const reward=game.workReward;if(reward?.key===key&&reward.gold&&performance.now()-reward.time<900){ctx.fillStyle='#dfb766';ctx.beginPath();ctx.ellipse(34,-5,3,1.8,-.2,0,Math.PI*2);ctx.fill();workshopGlyph(ctx,34,-9,2,3,'#fff0bb');}
  }
- if(working&&rig.contact&&!reducedMotion()){
-  const striking=['mine','smith','wood','polish'].includes(pose),origin=rig.toolTip||center;
-  const count=pose==='smith'?9:pose==='ward'?7:4;for(let i=0;i<count;i++){const age=((striking?phase*5:time*.5)+i/count)%1,a=i*2.399,dist=age*(magical?16:pose==='smith'?18:10);ctx.globalAlpha=(1-age)*.7;ctx.strokeStyle=pose==='smith'?'#f5bf75':magical?theme.light:pose==='wood'||pose==='fletch'?'#c8a16a':pose==='scavenge'?'#b4a080':'#a7b6b7';ctx.lineWidth=pose==='smith'?.7:.9;ctx.beginPath();ctx.moveTo(origin.x+Math.cos(a)*dist,origin.y+Math.sin(a)*dist*.6-age*6);ctx.lineTo(origin.x+Math.cos(a)*(dist+2),origin.y+Math.sin(a)*(dist+2)*.6-age*6);ctx.stroke();}
+ const striking=['mine','smith','wood','polish'].includes(pose),impact=game.workPresentation?.key===key?game.workPresentation.impact:null,impactAge=impact?(performance.now()-impact.at)/1000:10;
+ if(!reducedMotion()&&(striking?impactAge<.36:working&&rig.contact)){
+  const origin=striking?impact.point:rig.toolTip||center,count=pose==='smith'?10:pose==='ward'?7:5;
+  for(let i=0;i<count;i++){const age=striking?clamp(impactAge/.36,0,1):((time*.5+i/count)%1),a=i*2.399+(impact?.seed||0)*.3,dist=age*(magical?16:pose==='smith'?19:11);ctx.globalAlpha=(1-age)*.8;ctx.strokeStyle=pose==='smith'?'#f5bf75':magical?theme.light:pose==='wood'||pose==='fletch'?'#c8a16a':pose==='scavenge'?'#b4a080':'#a7b6b7';ctx.lineWidth=pose==='smith'?.8:1;ctx.beginPath();ctx.moveTo(origin.x+Math.cos(a)*dist,origin.y+Math.sin(a)*dist*.6-age*6);ctx.lineTo(origin.x+Math.cos(a)*(dist+2.4),origin.y+Math.sin(a)*(dist+2.4)*.6-age*6);ctx.stroke();}
  }
+ ctx.restore();paintWorkshopBonusCapture(frame,anchor,rig);
+}
+
+function paintWorkshopBonusCapture(frame,anchor,rig){
+ const reaction=game.workBonusReaction;if(!reaction||reaction.key!==frame.key||reducedMotion())return;
+ const progress=clamp(reaction.age/reaction.duration,0,1),point=rig.workPiece||rig.toolTip||rig.main,target={x:anchor.x+point.x*anchor.scale,y:anchor.y+point.y*anchor.scale},rect=canvas.getBoundingClientRect(),origin=reaction.origin?{x:reaction.origin.x*game.viewWidth/rect.width,y:reaction.origin.y*game.viewHeight/rect.height}:target;
+ const rare=['rare','very-rare'].includes(reaction.rarity),count=rare?7:4;
+ ctx.save();ctx.strokeStyle=reaction.color;ctx.fillStyle=reaction.color;ctx.lineWidth=1.4;
+ for(let i=0;i<count;i++){
+  const t=clamp((progress-i*.035)/.58,0,1);if(t>=1)continue;const ease=1-(1-t)**3,spread=Math.sin(t*Math.PI),x=origin.x+(target.x-origin.x)*ease+spread*Math.sin(i*2.4)*18,y=origin.y+(target.y-origin.y)*ease-spread*(24+i*3);
+  ctx.globalAlpha=Math.sin(t*Math.PI)*.8;ctx.beginPath();ctx.arc(x,y,rare?2.2:1.6,0,Math.PI*2);ctx.fill();
+ }
+ if(progress>.30){const burst=clamp((progress-.30)/.70,0,1);ctx.globalAlpha=(1-burst)*.6;ctx.beginPath();ctx.ellipse(target.x,target.y,(7+burst*20)*anchor.scale,(4+burst*10)*anchor.scale,0,0,Math.PI*2);ctx.stroke();if(rare){ctx.globalAlpha=(1-burst)*.8;workshopGlyph(ctx,target.x,target.y,5*anchor.scale,reaction.variant,reaction.color);}}
  ctx.restore();
 }
 

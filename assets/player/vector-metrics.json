@@ -87,8 +87,8 @@
       70,
       83
     ],
-    "paths": 30,
-    "bytes": 4516
+    "paths": 57,
+    "bytes": 9976
   },
   {
     "key": "armor-melee_1-shoulders",
@@ -113,8 +113,8 @@
       38,
       51
     ],
-    "paths": 16,
-    "bytes": 2535
+    "paths": 25,
+    "bytes": 4099
   },
   {
     "key": "armor-melee_1-legs",
@@ -165,8 +165,8 @@
       70,
       83
     ],
-    "paths": 30,
-    "bytes": 4516
+    "paths": 57,
+    "bytes": 9976
   },
   {
     "key": "armor-melee_2-shoulders",
@@ -191,8 +191,8 @@
       38,
       51
     ],
-    "paths": 16,
-    "bytes": 2535
+    "paths": 25,
+    "bytes": 4099
   },
   {
     "key": "armor-melee_2-legs",
@@ -269,8 +269,8 @@
       38,
       51
     ],
-    "paths": 12,
-    "bytes": 2039
+    "paths": 16,
+    "bytes": 2657
   },
   {
     "key": "armor-ranged_1-legs",
@@ -347,8 +347,8 @@
       38,
       51
     ],
-    "paths": 12,
-    "bytes": 2039
+    "paths": 16,
+    "bytes": 2657
   },
   {
     "key": "armor-ranged_2-legs",
@@ -425,8 +425,8 @@
       38,
       51
     ],
-    "paths": 12,
-    "bytes": 2027
+    "paths": 14,
+    "bytes": 2309
   },
   {
     "key": "armor-magic_1-legs",
@@ -503,8 +503,8 @@
       38,
       51
     ],
-    "paths": 12,
-    "bytes": 2027
+    "paths": 14,
+    "bytes": 2309
   },
   {
     "key": "armor-magic_2-legs",
