@@ -16,8 +16,8 @@ function tickAmmunition(dt){
 }
 function renderAmmunitionHud(){
  const host=$('ammoNotice'),key=ammunitionResource(),visible=game.scene==='combat'&&!!key;if(!host)return;host.classList.toggle('hidden',!visible);if(!visible)return;
- const charge=ammunitionCharge(key),reserve=Math.floor(data[key]||0),seconds=charge>0?Math.ceil(charge*10)/10:0,label=RESOURCE_LABEL[key]+' · '+format(reserve)+' in reserve · '+seconds.toFixed(1)+'s loaded';
- const html=artHTML(RESOURCE_ART[key])+'<span>'+uiCompact(reserve)+'</span><small>'+seconds.toFixed(1)+'s</small>';
+ const charge=ammunitionCharge(key),reserve=Math.floor(data[key]||0),seconds=charge>0?Math.ceil(charge*10)/10:0,total=Math.ceil(reserve*AMMUNITION_SECONDS+charge),label=RESOURCE_LABEL[key]+' · '+format(reserve)+' in reserve · '+seconds.toFixed(1)+'s loaded · '+total+'s total firing time';
+ const html=artHTML(RESOURCE_ART[key])+'<span>'+uiCompact(reserve)+'</span><small>'+uiCompact(total)+'s</small>';
  if(host.dataset.html!==html){host.innerHTML=html;host.dataset.html=html;}
- host.classList.toggle('is-empty',reserve<1&&charge<=0);host.setAttribute('aria-label',label);host.dataset.hint=label+' · Each supplies 10s of firing time';host.onclick=()=>goToSource(key);
+ host.classList.toggle('is-empty',reserve<1&&charge<=0);host.classList.toggle('is-low',total>0&&total<60);host.setAttribute('aria-label',label);host.dataset.hint=label+' · Each supplies 10s of firing time';host.onclick=()=>trackAmmunition(key);
 }

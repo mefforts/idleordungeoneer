@@ -18,7 +18,7 @@ function noteMovementTap(x,y,source,time=performance.now()){
   const length=Math.hypot(x,y);if(length<.18)return false;x/=length;y/=length;
   const previous=game.movementTap,same=previous&&previous.source===source&&time-previous.time>=25&&time-previous.time<=285&&x*previous.x+y*previous.y>.7;
   const count=same?(previous.count||1)+1:1;game.movementTap={x:same?previous.x:x,y:same?previous.y:y,source,time,count};
-  if(count>=3){
+  if(count>=(source==='arena-touch'?2:3)){
     game.movementTap=null;if(game.player.dashCooldown>0)return false;
     game.player.vx=x;game.player.vy=y;dash();return true;
   }
@@ -27,7 +27,7 @@ function noteMovementTap(x,y,source,time=performance.now()){
 function installDungeoneeringUI(){
   dungeoneeringInstalled=true;
   $('bossHud').insertAdjacentHTML('beforeend','<small id="bossMechanicHint"></small>');
-  $('dashButton').setAttribute('aria-label','Dash: Space, this button, or triple tap a movement direction');$('dashButton').title='Triple tap a movement direction or press Space to dash';
+  $('dashButton').setAttribute('aria-label','Dash: double tap while moving on touch, Space, or this button');$('dashButton').title='Double tap while moving on touch · Space to dash';
   document.addEventListener('keydown',e=>{
     if(e.repeat||e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,textarea,select,[contenteditable="true"]'))return;
     const directions={KeyW:[0,-1],ArrowUp:[0,-1],KeyS:[0,1],ArrowDown:[0,1],KeyA:[-1,0],ArrowLeft:[-1,0],KeyD:[1,0],ArrowRight:[1,0]};
@@ -190,7 +190,7 @@ function drawCombat(w,h){const b=biome();drawTiles(b,w,h);ctx.save();const jitte
   ctx.beginPath();ctx.arc(0,0,sw.reach,-sw.cone*.78,sw.cone*.78);ctx.stroke();
   ctx.strokeStyle='#fff6df';ctx.lineWidth=1.8;ctx.stroke();ctx.restore();
  }
- for(const gem of game.gems){glow(gem.x,gem.y,14,'#8bbce14a');poly([gem.x,gem.y-9,gem.x+6,gem.y-1,gem.x+4,gem.y+9,gem.x-5,gem.y+7,gem.x-7,gem.y-1],'#80d2dd','#33586a',1);poly([gem.x,gem.y-9,gem.x+6,gem.y-1,gem.x,gem.y+1],'#defff2')}
+ paintLootReceipts();
  paintHealthDrops();paintEliteSpoils();
  for(const s of game.shots){
   const a=Math.atan2(s.vy,s.vx);ctx.save();ctx.translate(s.x,s.y);ctx.rotate(a);
@@ -241,13 +241,14 @@ function dealDamage(enemy,base,fromX,fromY,sourceStyle=combatStyle()){
 }
 
 function update(dt){
- const simDt=dt*(game.devSpeed||1),skillSpeed=skillingTimeMultiplier();
+ const simDt=dt*delvingTimeMultiplier(),skillSpeed=skillingTimeMultiplier();
+ game.tipClock=(game.tipClock||0)+dt;tickLootReceipts(dt);
  game.workVisualClock=(game.workVisualClock||0)+dt*Math.min(2.5,skillSpeed);
  game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);
  advanceActiveWork(dt*skillSpeed);
  game.frame+=game.status==='running'?0:dt;
  const realNow=Date.now(),jobsDelta=Math.min(8*3600,Math.max(0,(realNow-game.lastJobsAt)/1000));game.lastJobsAt=realNow;
- if(jobsDelta>0)advanceProduction(jobsDelta*skillSpeed);
+ if(jobsDelta>0)advanceProduction(jobsDelta,skillSpeed);
  if(!game.customizing&&!game.menuPaused&&$('overlay').classList.contains('hidden')&&game.scene==='combat'&&game.status==='running'){
   let left=simDt,steps=0;
   while(left>0&&steps<175&&game.status==='running'&&!game.menuPaused&&$('overlay').classList.contains('hidden')){

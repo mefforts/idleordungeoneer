@@ -13,7 +13,7 @@ const ELITE_BOONS={
  silence:{name:'Totem Silence',seconds:45,disableTotems:1,description:'Disable every enemy totem while this blessing lasts',color:'#c3abf4'},
  quagmire:{name:'Stillworld',seconds:40,enemyMovement:.5,description:'All enemy movement is halved, including charges',color:'#a8dcf2'},
  bounty:{name:'Golden Hunt',seconds:50,goldPerKill:1,description:'Each non-summoned kill grants 1 extra gold',color:'#f2d282'},
- harvest:{name:'Plentiful Hunt',seconds:50,resourcePerKill:1,description:'Each non-summoned kill grants 1 material from this Zone',color:'#aeda93'},
+ harvest:{name:'Plentiful Hunt',seconds:50,resourceLuck:1,description:'+50% material drop chance; drops remain rare',color:'#aeda93'},
  cascade:{name:'Chain Reaction',seconds:45,chainChance:.22,description:'Hits have a 22% chance to arc to another enemy',color:'#a9c3f3'},
  momentum:{name:'Momentum',seconds:45,damage:1.10,attackSpeed:1.08,description:'+10% hit damage · +8% attack speed',color:'#e9a985'},
  longarm:{name:'Long Reach',seconds:50,range:1.25,description:'+25% attack reach for Melee, Mage and Ranged',color:'#d1dca9'}
@@ -59,13 +59,14 @@ function dropEliteSpoils(enemy){
 function paintEliteSpoils(){
  const image=rareEliteImages.get('spoils');for(const drop of data.eliteSpoils||[]){if(drop.zone!==zoneNumber())continue;const bob=reducedMotion()?0:Math.sin(game.frame*2+drop.id)*2;
   glow(drop.x,drop.y,22,'#e7c67b2a');ellipse(drop.x,drop.y+8,13,4,'#100f0a70');if(image?.complete&&image.naturalWidth)ctx.drawImage(image,drop.x-16,drop.y-17+bob,32,32);
-  if(Math.hypot(drop.x-game.player.x,drop.y-game.player.y)<120)encounterLabel('WALK OVER · BLESSING',drop.x,drop.y-24,'#f2dca3',9);
+  if(Math.hypot(drop.x-game.player.x,drop.y-game.player.y)<120)encounterTip('WALK OVER · BLESSING',drop.x,drop.y-24,'#f2dca3',9,drop);
  }
 }
 function installRareEliteUI(){
  if(rareEliteInstalled)return;rareEliteInstalled=true;installBestiaryExpansion();
- for(const entry of [{id:'combat_language',cat:'Guide',name:'Combat warning colors',desc:'Red danger, violet friendly fire, gold reflects, teal safety, blue shields.'},{id:'rare_elites',cat:'Guide',name:'Rare creatures and blessings',desc:'Walk over spoils to choose a stackable timed blessing.'},...Object.entries(ELITE_BOONS).map(([id,b])=>({id:'elite_boon_'+id,cat:'Dungeon Abilities',name:b.name,desc:b.description}))])if(!CODEX_ITEMS.some(item=>item.id===entry.id))CODEX_ITEMS.push(entry);
+ for(const entry of [{id:'temporary_buffs',cat:'Guide',name:'Active temporary buffs',desc:'Every temporary effect and its independent remaining combat time.'},{id:'upgrade_vouchers',cat:'Guide',name:'Upgrade vouchers',desc:'Rare guardian drops. Redeem an Iron or Steel voucher at Equipment for one weapon refinement of that tier. Tier gates and rank limits still apply.'},{id:'combat_language',cat:'Guide',name:'Combat warning colors',desc:'Red danger, violet friendly fire, gold reflects, teal safety, blue shields.'},{id:'rare_elites',cat:'Guide',name:'Rare creatures and blessings',desc:'Walk over spoils to choose a stackable timed blessing.'},...Object.entries(ELITE_BOONS).map(([id,b])=>({id:'elite_boon_'+id,cat:'Dungeon Abilities',name:b.name,desc:b.description}))])if(!CODEX_ITEMS.some(item=>item.id===entry.id))CODEX_ITEMS.push(entry);
  const claim=document.createElement('button');claim.id='eliteSpoilsButton';claim.className='hidden';claim.setAttribute('aria-hidden','true');claim.tabIndex=-1;$('stageWrap').append(claim);
+ $('stageWrap').insertAdjacentHTML('beforeend','<aside id="temporaryBuffs" class="temporary-buffs hidden" aria-label="Active temporary buffs"><span class="temporary-buff-count"></span><div class="temporary-buff-strip"></div></aside>');
  const image=new Image();image.src=iconAsset('codex-rare_elites');rareEliteImages.set('spoils',image);primeRareElites(biomeIndex());
  document.addEventListener('keydown',event=>{
   if(!eliteRewardOpen()||codexSession||event.ctrlKey||event.metaKey||event.altKey)return;
@@ -75,7 +76,7 @@ function installRareEliteUI(){
   event.preventDefault();event.stopImmediatePropagation();
  },true);
 }
-function refreshRareEliteUI(){if(rareEliteInstalled)$('eliteSpoilsButton').classList.add('hidden');}
+function refreshRareEliteUI(){if(rareEliteInstalled){$('eliteSpoilsButton').classList.add('hidden');refreshTemporaryBuffs();}}
 function openEliteReward(id){
  const drop=data.eliteSpoils.find(item=>item.zone===zoneNumber()&&(!id||item.id===id));if(!drop||game.status!=='running'||game.scene!=='combat'||drawerKind||!$('overlay').classList.contains('hidden'))return false;
  if(!drop.choices)drop.choices=blessingChoices(drop);eliteRewardId=drop.id;eliteRewardPause=game.menuPaused;eliteRewardOpenedAt=performance.now();game.menuPaused=true;game.keys={};game.mouseMove.active=false;resetArenaTouch(true);
@@ -91,13 +92,13 @@ function chooseEliteBoon(id){
 }
 function eliteBoonHud(){
  const groups=new Map();for(const b of activeEliteBoons()){if(!groups.has(b.id))groups.set(b.id,[]);groups.get(b.id).push(b);}
- return [...groups].map(([id,boons])=>{const b=ELITE_BOONS[id],time=Math.ceil(Math.max(...boons.map(b=>b.remaining)));return '<button type="button" class="buff-icon elite-boon-icon" data-codex-entry="elite_boon_'+id+'" aria-label="'+b.name+' · '+boons.length+' stack'+(boons.length>1?'s':'')+' · '+time+' seconds" data-hint="'+b.name+' · '+b.description+' · '+time+'s">'+artHTML('codex-elite_boon_'+id)+'<b>'+(boons.length>1?boons.length+'× · ':'')+time+'s</b></button>';}).join('');
+ return [...groups].map(([id,boons])=>{const b=ELITE_BOONS[id],time=Math.ceil(Math.min(...boons.map(b=>b.remaining)));return '<button type="button" class="buff-icon elite-boon-icon" data-codex-entry="elite_boon_'+id+'" aria-label="'+b.name+' · '+boons.length+' stack'+(boons.length>1?'s':'')+' · next expiry '+time+' seconds" data-hint="'+b.name+' · '+b.description+' · next expiry '+time+'s">'+artHTML('codex-elite_boon_'+id)+'<b>'+(boons.length>1?boons.length+'× · ':'')+time+'s</b></button>';}).join('');
 }
 function paintEliteBoonAura(player){
  const boons=activeEliteBoons();if(!boons.length)return;ctx.save();ctx.strokeStyle=ELITE_BOONS[boons[0].id].color+'80';ctx.lineWidth=1.3;ctx.beginPath();ctx.ellipse(player.x,player.y+14,21,7,0,0,Math.PI*2);ctx.stroke();ctx.restore();
 }
 function rareEliteCodexHtml(){return codexParagraph('Rare creatures always leave spoils. Ordinary elites leave them 35% of the time. Walk over a drop to pause the delve and choose A, B or C. Select with a touch/click or keys 1/2/3; movement keys cannot choose or dismiss it. Skip blessing discards that drop.')+codexRuleList([['Blessings','40–60 seconds of combat time. Multiple different or repeated blessings can stack.'],['Pause','Menus, skilling and the choice screen preserve all remaining time.'],['Travel','Blessings remain within this Dungeon; unclaimed spoils remain in their Zone.'],['Summons','Summoned creatures grant no loot or wave progress. Destroy their summoning totem to stop replacements.'],['Violet attacks','Hurt you and other monsters. Bait enemies into a cleave, charge or marked eruption.'],['Red attacks','Hurt you only.']]);}
-function eliteBoonCodexHtml(id){const b=ELITE_BOONS[id];return codexParagraph(b.description+'.')+codexRuleList([['Duration',b.seconds+' seconds of combat time'],['Source','Guaranteed rare spoils; 35% of other elites'],['Stacking','All blessings stack, including repeated copies.'],['Timing','Pause, menus and skilling preserve time. Delve speed advances combat time.'],['Scope','This Dungeon']]);}
+function eliteBoonCodexHtml(id){const b=ELITE_BOONS[id];return codexParagraph(b.description+'.')+codexRuleList([['Duration',b.seconds+' seconds of combat time'],['Source','Guaranteed rare spoils; 35% of other elites'],['Stacking','All blessings stack, including repeated copies.'],['Timing','Pause, menus and skilling preserve time. Delve speed advances combat time.'],['Scope','This Dungeon']])+codexHeading('Active stacks',codexRuleList(activeEliteBoons().filter(b=>b.id===id).sort((a,b)=>a.remaining-b.remaining).map((b,i)=>['Stack '+(i+1),Math.ceil(b.remaining)+' seconds of combat time remaining'])))+codexParagraph('The HUD shows the next stack to expire. Pause, menus and skilling freeze the countdown; Delving speed advances it.');}
 
 /* Enemy area attacks hit each ordinary monster once, without player hit procs. */
 function cleaveContains(actor,cast){

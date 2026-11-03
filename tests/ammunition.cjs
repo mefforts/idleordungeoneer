@@ -7,7 +7,7 @@ function ammunitionFixture(){
   },
   fire(){const result=attack();game.attackTimer=attackCooldown();return result;},
   ticks(seconds){for(let left=seconds;left>1e-9;left-=.02)tickCombat(Math.min(.02,left));refreshUI();},
-  update(seconds,reason='combat',speed=1){game.manualPaused=reason==='pause';game.menuPaused=reason==='menu'||reason==='pause';game.devSpeed=speed;if(reason==='skill')setScene('mine',false);if(reason==='waiting')for(const enemy of game.enemies){enemy.x=2000;enemy.speed=0;}for(let left=seconds;left>1e-9;left-=.02)update(Math.min(.02,left));game.manualPaused=game.menuPaused=true;refreshUI();},
+  update(seconds,reason='combat',speed=1){game.manualPaused=reason==='pause';game.menuPaused=reason==='menu'||reason==='pause';game.devSpeed=1;masteryFor().delveSpeed=(speed-1)*4;masteryFor().earned=masterySpent(masteryFor());data.timeRates.delve=speed;if(reason==='skill')setScene('mine',false);if(reason==='waiting')for(const enemy of game.enemies){enemy.x=2000;enemy.speed=0;}for(let left=seconds;left>1e-9;left-=.02)update(Math.min(.02,left));game.manualPaused=game.menuPaused=true;refreshUI();},
   switch(weapon){data.weaponType=weapon;projectCombatStyle();refreshUI();},
   state(){return {charges:{...data.ammoCharges},arrows:data.arrows,runes:data.runes,shots:game.shots.length,damage:attackDamage(),cooldown:attackCooldown()};},
   save(){save();}

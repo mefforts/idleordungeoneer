@@ -1,4 +1,4 @@
-/* Independent testing speed for online skilling; Mastery remains combat-only. */
+/* Earned game time applies to active/idle work; testing speeds stay separate. */
 // Fingerprints avoid publishing redemption phrases in the client source.
 const REDEEM_CODE_ACTIONS=Object.freeze({"b57595b70c1554f2114cbce213c6d7896a574012b270f9cc848743f630a65efc":"speed","9baf3a40312f39849f46dad1040f2f039f1cffa1238c41e9db675315cfad39b6":"sandbox"});
 async function redeemCodeAction(value){
@@ -7,10 +7,10 @@ async function redeemCodeAction(value){
  const fingerprint=Array.from(new Uint8Array(bytes),byte=>byte.toString(16).padStart(2,'0')).join('');
  return REDEEM_CODE_ACTIONS[fingerprint]||'';
 }
-function skillingTimeMultiplier(){return data.devSpeedUnlocked?(game.skillSpeed||1):1;}
-function speedControlVisible(){return !!data.devSpeedUnlocked||game.scene==='combat'&&masteryUnlocked();}
+function skillingTimeMultiplier(){return selectedTimeRate('skilling')*(data.devSpeedUnlocked?(game.skillSpeed||1):1);}
+function speedControlVisible(){return !!data.devSpeedUnlocked||masteryFor().points>0||timeRank(game.scene==='combat'?'delve':'skilling')>0;}
 function speedControlName(){return game.scene==='combat'?'Delve speed':'Skilling speed';}
-function selectedSceneSpeed(){return game.scene==='combat'?(game.devSpeed||1):(game.skillSpeed||1);}
+function selectedSceneSpeed(){return data.devSpeedUnlocked?(game.scene==='combat'?(game.devSpeed||1):(game.skillSpeed||1)):selectedTimeRate(game.scene==='combat'?'delve':'skilling');}
 function advanceActiveWork(seconds){
  if(!game.holdSkill){game.activeClockMs+=seconds*1000;return;}
  const before=game.activeHits||0;let left=seconds;

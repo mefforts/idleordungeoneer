@@ -694,8 +694,8 @@
     "scholar": {
       "name": "Opal Scholar Ring",
       "type": "ring",
-      "effect": "+10% delve XP",
-      "tag": "XP",
+      "effect": "+10% material drop chance",
+      "tag": "Finds",
       "bonus": "xp",
       "value": 0.1,
       "icon": "ring-scholar"
@@ -744,6 +744,89 @@
       "bonus": "find",
       "value": 0.02,
       "icon": "amulet-fortune"
+    }
+  },
+  "WEAPON_TYPES": {
+    "sword": {
+      "name": "Arming Sword",
+      "icon": "⚔",
+      "reach": 62,
+      "cooldown": 0.88,
+      "power": 1,
+      "desc": "Close-range single-target slashes. Your starting weapon.",
+      "cost": [
+        0,
+        0
+      ]
+    },
+    "shield": {
+      "name": "Sword & Shield",
+      "icon": "🛡",
+      "reach": 66,
+      "cooldown": 1,
+      "power": 0.91,
+      "desc": "28% damage reduction. Reliable defensive fighting.",
+      "cost": [
+        5,
+        24
+      ]
+    },
+    "polearm": {
+      "name": "Halberd",
+      "icon": "⚒",
+      "reach": 112,
+      "cooldown": 1.15,
+      "power": 1.05,
+      "desc": "Extended melee reach; pierces tightly packed enemies.",
+      "cost": [
+        12,
+        70
+      ]
+    },
+    "greatsword": {
+      "name": "Greatsword",
+      "icon": "⚔",
+      "reach": 88,
+      "cooldown": 1.28,
+      "power": 1.48,
+      "desc": "Wide cleaves; berserk damage when below half HP.",
+      "cost": [
+        16,
+        95
+      ]
+    },
+    "bow": {
+      "name": "Hunting Bow",
+      "icon": "➶",
+      "reach": 295,
+      "cooldown": 1.1,
+      "power": 0.95,
+      "desc": "Oak-and-iron ranged weapon. Each arrow supplies 10 seconds of firing time.",
+      "cost": [
+        0,
+        95
+      ],
+      "extras": {
+        "logs": 12,
+        "bars": 4
+      }
+    },
+    "staff": {
+      "name": "Focus Staff",
+      "icon": "✦",
+      "reach": 260,
+      "cooldown": 1.36,
+      "power": 1.05,
+      "desc": "A warded focus. Each rune supplies 10 seconds of casting time; bolts splash nearby foes.",
+      "cost": [
+        0,
+        115
+      ],
+      "extras": {
+        "cloth": 12,
+        "bars": 2,
+        "scraps": 4
+      }
     }
   }
 }

@@ -15,7 +15,7 @@ function instrumentation() {
       data.unlockedWeapons=['sword','bow','staff'];data.weaponType='sword';
       for(const key of Object.keys(RESOURCE_LABEL))data[key]=1000;
       for(const d of Object.values(DISCIPLINES))data[d.xp]=3000;
-      data.mastery={0:{points:8,earned:8,onslaught:0,fortune:0,adaptation:0,intensity:0},1:{points:8,earned:8,onslaught:0,fortune:0,adaptation:0,intensity:0}};
+      data.timeProgressionVersion=0;data.mastery={0:{points:8,earned:8,onslaught:0,fortune:0,adaptation:0,intensity:0},1:{points:8,earned:8,onslaught:0,fortune:0,adaptation:0,intensity:0}};
       normalizeProgression();normalizeZone();ensureJobs();seedCodex();resetRun();masteryDraft=null;
       equipmentTab='weapons';game.status='ready';game.manualPaused=game.menuPaused=false;
       enterActivity('mine');refreshUI();
@@ -84,8 +84,8 @@ function instrumentation() {
     await p.evaluate(()=>__presentationTest.fresh());await p.evaluate(()=>__presentationTest.mastery());await p.click('[data-invest="onslaught"]');
     const draft=await p.evaluate(()=>__presentationTest.snapshot());await p.click('[data-codex-entry="permanent_mastery"]');
     await p.click('#codexClose');assert.deepEqual(await p.evaluate(()=>__presentationTest.snapshot()),draft);
-    assert.equal((await p.evaluate(()=>__deepwell.getState().data.dungeonMastery.points)),16,'Reading does not apply Mastery');
-    await p.click('#applyMastery');await p.click('#masteryDecisionConfirm');assert.equal((await p.evaluate(()=>__deepwell.getState().data.dungeonMastery.points)),15);
+    assert.equal((await p.evaluate(()=>__deepwell.getState().data.dungeonMastery.points)),17,'Reading does not apply Mastery');
+    await p.click('#applyMastery');await p.click('#masteryDecisionConfirm');assert.equal((await p.evaluate(()=>__deepwell.getState().data.dungeonMastery.points)),16);
     passed.push('Mastery edits survive reading a guide and spend points only after Apply');
 
     await p.evaluate(()=>__presentationTest.fresh());await p.evaluate(()=>__presentationTest.read());await p.fill('#codexSearch','Halberd');

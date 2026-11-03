@@ -1,5 +1,5 @@
 /* Touch movement, full-sized navigation art and material inventory. */
-let arenaTouch=null,mobileInstalled=false,touchNavigationClick=null;
+let arenaTouch=null,mobileInstalled=false,touchNavigationClick=null,arenaDashTaps=new Map(),lastArenaDashTap=null;
 function installGameplaySelectionGuard(){
  const stage=$('stageWrap');
  // Menus and native editing/copy controls keep their browser behavior. New
@@ -23,11 +23,13 @@ function bindTouchNavigation(button){
 }
 function resetArenaTouch(clearTaps=false){
  if(clearTaps)game.movementTap=null;
+ arenaDashTaps.clear();lastArenaDashTap=null;
  const previous=arenaTouch;arenaTouch=null;
  if(previous){game.joystick.pointer=null;game.joystick.x=game.joystick.y=0;try{if(canvas.hasPointerCapture(previous.pointer))canvas.releasePointerCapture(previous.pointer);}catch(_){}}
  $('arenaTouchGuide')?.classList.add('hidden');
 }
 function moveArenaTouch(e){
+ const extra=arenaDashTaps.get(e.pointerId);if(extra){if(Math.hypot(e.clientX-extra.x,e.clientY-extra.y)>12)extra.moved=true;e.preventDefault();e.stopImmediatePropagation();return;}
  if(!arenaTouch||arenaTouch.pointer!==e.pointerId)return;
  if(!movementDashAllowed()){resetArenaTouch(true);return;}
  e.preventDefault();e.stopImmediatePropagation();
@@ -39,6 +41,20 @@ function moveArenaTouch(e){
  guide.classList.toggle('hidden',!moving);guide.style.left=(arenaTouch.x-bounds.left)+'px';guide.style.top=(arenaTouch.y-bounds.top)+'px';
  guide.firstElementChild.style.transform='translate('+dx*.55+'px,'+dy*.55+'px)';
 }
+function endArenaTouch(e){
+ const tap=arenaDashTaps.get(e.pointerId);
+ if(tap){
+  arenaDashTaps.delete(e.pointerId);e.preventDefault();e.stopImmediatePropagation();
+  const now=performance.now(),moving=arenaTouch&&Math.hypot(game.joystick.x,game.joystick.y)>.18;
+  if(e.type!=='pointerup'||tap.moved||now-tap.time>230||!moving||!movementDashAllowed()){lastArenaDashTap=null;return;}
+  const previous=lastArenaDashTap;
+  if(previous&&now-previous.time>=25&&now-previous.time<=320&&Math.hypot(e.clientX-previous.x,e.clientY-previous.y)<80){
+   lastArenaDashTap=null;if(game.player.dashCooldown<=0){game.player.vx=game.joystick.x;game.player.vy=game.joystick.y;dash();}
+  }else lastArenaDashTap={time:now,x:e.clientX,y:e.clientY};
+  return;
+ }
+ if(arenaTouch?.pointer===e.pointerId)resetArenaTouch(e.type!=='pointerup');
+}
 function navigationIcon(id,art,label){
  const button=$(id);if(!button)return;
  let image=button.querySelector('img');if(!image){image=document.createElement('img');image.alt='';button.prepend(image);}
@@ -49,18 +65,20 @@ function installMobileUI(){
  if(mobileInstalled)return;mobileInstalled=true;
  installGameplaySelectionGuard();
  $('stageWrap').insertAdjacentHTML('beforeend','<div id="arenaTouchGuide" class="arena-touch-guide hidden" aria-hidden="true"><i></i></div>');
- $('idleWarning').insertAdjacentHTML('afterend','<button type="button" id="firstWeaponHint" class="first-weapon-hint hidden">Craft a stronger weapon in <span>Skills ›</span></button>');
+ $('idleWarning').insertAdjacentHTML('afterend','<button type="button" id="firstWeaponHint" class="first-weapon-hint hidden">Craft and refine in <span>Skills ›</span></button>');
+ $('stageWrap').insertAdjacentHTML('beforeend','<button type="button" id="trackedNextStep" class="tracked-next-step hidden"></button>');
+ $('hudEssence').onclick=()=>openZoneShop();
  $('firstWeaponHint').onclick=()=>{const style=combatStyle();openWorkshop(STYLE_DEFS[style].group,'equipment');document.querySelector('[data-style-upgrade="'+style+':weapon"]')?.closest('article')?.scrollIntoView({block:'center'});};
  canvas.setAttribute('aria-label','Game arena. Drag anywhere to move; release to stop. Use WASD or arrow keys with a keyboard.');
  canvas.addEventListener('pointerdown',e=>{
   if(game.scene!=='combat'||e.pointerType==='mouse')return;
   if(!movementDashAllowed())return;
-  e.preventDefault();e.stopImmediatePropagation();if(arenaTouch)return;
+  e.preventDefault();e.stopImmediatePropagation();if(arenaTouch){if(Math.hypot(game.joystick.x,game.joystick.y)>.18)arenaDashTaps.set(e.pointerId,{x:e.clientX,y:e.clientY,time:performance.now(),moved:false});return;}
   arenaTouch={pointer:e.pointerId,x:e.clientX,y:e.clientY,noted:false};game.joystick.pointer=e.pointerId;game.joystick.x=game.joystick.y=0;game.mouseMove.active=false;
   try{canvas.setPointerCapture(e.pointerId);}catch(_){}
  },true);
  canvas.addEventListener('pointermove',moveArenaTouch,true);
- for(const type of ['pointerup','pointercancel','lostpointercapture'])window.addEventListener(type,e=>{if(arenaTouch?.pointer===e.pointerId)resetArenaTouch();},true);
+ for(const type of ['pointerup','pointercancel','lostpointercapture'])window.addEventListener(type,endArenaTouch,true);
  window.addEventListener('blur',()=>resetArenaTouch(true));window.addEventListener('resize',()=>resetArenaTouch(true));
  document.addEventListener('visibilitychange',()=>{if(document.hidden)resetArenaTouch(true);});
  document.addEventListener('pointerdown',e=>{touchNavigationClick=null;if(arenaTouch&&e.target!==canvas&&!e.target.closest('#dashButton'))resetArenaTouch();},true);
@@ -84,12 +102,12 @@ function refreshMobileUI(){
 function normalizeFirstWeaponHint(){data.firstWeaponCrafted=!!data.firstWeaponCrafted||Object.values(data.styles||{}).some(style=>style.weapon>0)||(data.unlockedWeapons||[]).some(id=>id!=='sword');}
 function inventoryRows(){
  const known=Object.keys(RESOURCE_LABEL).filter(key=>!['gold','essence'].includes(key)&&((data[key]||0)>0||data.discovered?.['resource_'+key]));
- return known.map(key=>({key,name:RESOURCE_LABEL[key],count:Math.floor(Math.max(0,Math.min(1e12,Number(data[key])||0))),art:RESOURCE_ART[key],source:key})).concat(Object.entries(data.biomeLoot||{}).filter(([kind,count])=>/^[0-3]$/.test(kind)&&Number(count)>0).map(([kind,count])=>({key:'loot_'+kind,name:['Verdant Seeds','Ember Cores','Grave Dust','Rift Shards'][Number(kind)],count:Math.floor(Math.min(1e12,Number(count))),art:'codex-loot_'+kind,codex:'loot_'+kind})));
+ return known.map(key=>({key,name:RESOURCE_LABEL[key],count:Math.floor(Math.max(0,Math.min(1e12,Number(data[key])||0))),art:RESOURCE_ART[key],source:key})).concat(Object.entries(data.biomeLoot||{}).filter(([kind,count])=>/^[0-3]$/.test(kind)&&Number(count)>0).map(([kind,count])=>({key:'loot_'+kind,name:['Verdant Seeds','Ember Cores','Grave Dust','Rift Shards'][Number(kind)],count:Math.floor(Math.min(1e12,Number(count))),art:'codex-loot_'+kind,codex:'loot_'+kind}))).concat(['iron','steel'].filter(tier=>data.upgradeVouchers?.[tier]>0).map(tier=>({key:'voucher_'+tier,name:(tier==='iron'?'Iron':'Steel')+' upgrade vouchers',count:data.upgradeVouchers[tier],art:'codex-upgrade_vouchers',codex:'upgrade_vouchers'})));
 }
 function renderMaterialInventory(){
  const host=$('loadoutMaterials');if(!host)return;
- const rows=inventoryRows(),signature=JSON.stringify([rows,data.gold,data.essence]);if(host.dataset.state===signature)return;host.dataset.state=signature;
- const structure=JSON.stringify(rows.map(({count,...row})=>row));
+ const rows=inventoryRows(),signature=JSON.stringify([rows,data.gold,data.essence,data.lootHistory]);if(host.dataset.state===signature)return;host.dataset.state=signature;
+ const structure=JSON.stringify([rows.map(({count,...row})=>row),data.lootHistory]);
  if(host.dataset.structure===structure){
   for(const row of rows){const button=host.querySelector('[data-inventory-key="'+row.key+'"]');button.querySelector('small').textContent=format(row.count);button.setAttribute('aria-label',row.name+' · '+format(row.count)+(row.source?' · View source':' · Read in Codex'));}
   for(const key of ['gold','essence']){const el=host.querySelector('[data-inventory-currency="'+key+'"]');el.querySelector('b').textContent=uiCompact(data[key]);el.setAttribute('aria-label',format(data[key])+' '+RESOURCE_LABEL[key]);}
@@ -97,6 +115,7 @@ function renderMaterialInventory(){
  }
  host.dataset.structure=structure;
  host.innerHTML='<div class="inventory-currencies">'+[['gold','coins'],['essence','essence']].map(([key,art])=>'<span data-inventory-currency="'+key+'" aria-label="'+format(data[key])+' '+RESOURCE_LABEL[key]+'">'+artHTML(art)+'<b>'+uiCompact(data[key])+'</b></span>').join('')+'</div>'+(rows.length?'<div class="inventory-materials">'+rows.map(row=>'<button type="button" class="inventory-material" data-inventory-key="'+row.key+'" '+(row.source?'data-source="'+row.source+'"':'data-codex-entry="'+row.codex+'"')+' aria-label="'+escapeHTML(row.name+' · '+format(row.count)+(row.source?' · View source':' · Read in Codex'))+'">'+artHTML(row.art)+'<span><b>'+row.name+'</b><small>'+format(row.count)+'</small></span>'+uiIcon(row.source?'chevron':'book')+'</button>').join('')+'</div>':'<div class="empty-loadout">'+uiIcon('bag')+'<p>No materials</p><button type="button" class="inventory-skills">Skills '+uiIcon('arrow')+'</button></div>');
+ host.insertAdjacentHTML('beforeend',lootHistoryHtml());
  host.querySelectorAll('[data-source]').forEach(button=>button.onclick=()=>goToSource(button.dataset.source));
  host.querySelector('.inventory-skills')?.addEventListener('click',()=>openDrawer('skills'));
  host.querySelectorAll('button').forEach(bindTouchNavigation);

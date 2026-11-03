@@ -2,7 +2,7 @@
    a small, explicit bonus rather than another unbounded damage multiplier. */
 const TIER_LIMITS={1:{name:'Iron',dps:100,weapon:10,armor:5,speed:5,reach:5,enchant:2},2:{name:'Steel',dps:200,weapon:20,armor:10,speed:10,reach:10,enchant:4}};
 const TIER_RESOURCES=['coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth'];
-const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:150},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:150},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:150}};
+const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:100},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:100},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:100}};
 const WEAPON_RIGS={sword:{height:57,grip:[.49,.85]},shield:{height:33,grip:[.5,.5]},polearm:{height:104,grip:[.19,.79]},greatsword:{height:76,grip:[.5,.84]},bow:{height:54,grip:[.16,.5],flip:true},staff:{height:80,grip:[.5,.78]}};
 let workshopTier=1,tierProgressionInstalled=false,zone2CampImage=null;
 function tier2Unlocked(){return data.cleared>=zoneEnd(0)||data.floor>=zoneStart(1);}
@@ -73,18 +73,18 @@ function promoteStyle(id){
  if(!tier2Unlocked()){toast('Steel unlocks in Zone 2','Clear Zone 1 to unlock Steel resources and equipment.');return false;}
  if(data.styles[id].weapon<10||weaponCraftLevel(STYLE_DEFS[id].weapon)<10){toast('Finish your Iron training','Reach Iron refinement 10 and '+DISCIPLINES[STYLE_DEFS[id].group].name+' level 10.');return false;}
  if(!spendAtStation(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group))return false;
- data.styles[id].tier=2;projectCombatStyle();codexDiscover('unlock_steel');
+ data.styles[id].tier=2;equipmentWorkXp(id,'promotion');projectCombatStyle();codexDiscover('unlock_steel');
  toast(STYLE_DEFS[id].name+' upgraded to Steel','Refinement 11–20 unlocked');save();refreshUI();renderDisciplineDrawer();return true;
 }
-function styleUpgradeBase(id,kind){
- const s=data.styles[id],r=s[kind]||0,tier=kind==='armor'&&data.ownedArmor.includes(id+'_2')?2:styleTier(id),cap=TIER_LIMITS[tier][kind],local=tier===2?Math.max(0,r-TIER_LIMITS[1][kind]):r;
+function styleUpgradeBase(id,kind,rank=data.styles[id][kind]||0){
+ const s=data.styles[id],r=rank,tier=kind==='armor'&&data.ownedArmor.includes(id+'_2')?2:styleTier(id),cap=TIER_LIMITS[tier][kind],local=tier===2?Math.max(0,r-TIER_LIMITS[1][kind]):r;
  if(tier===1){
-  if(kind==='weapon')return {bars:8+local*5,...(id==='ranged'?{logs:4+local*2}:id==='magic'?{cloth:6+local*2}:{}),gold:30+local*18};
+  if(kind==='weapon')return {bars:8+local*5,...(id==='ranged'?{logs:4+local*2}:id==='magic'?{cloth:6+local*2}:{}),gold:preparationUpgradeGold(1,kind,r)};
   if(kind==='armor')return id==='melee'?{bars:6+local*5,gold:25+local*20}:id==='ranged'?{bars:3+local*2,cloth:6+local*4,gold:25+local*20}:{bars:2+local,cloth:12+local*6,gold:25+local*20};
   if(kind==='enchant')return {bars:4+local*3,essence:2+local*2,cutOpals:1};
-  return {bars:5+local*3,...(id==='ranged'?{logs:8+local*4}:id==='magic'?{cloth:8+local*4}:{}),gold:35+local*20};
+  return {bars:5+local*3,...(id==='ranged'?{logs:8+local*4}:id==='magic'?{cloth:8+local*4}:{}),gold:kind==='speed'?preparationUpgradeGold(1,kind,r):35+local*20};
  }
- const cost={steelBars:(kind==='armor'&&id!=='melee'?4:8)+local*3,gold:75+local*35};
+ const cost={steelBars:(kind==='armor'&&id!=='melee'?4:8)+local*3,gold:['weapon','speed'].includes(kind)?preparationUpgradeGold(2,kind,r):75+local*35};
  if(id==='ranged')cost.willowLogs=8+local*3;
  if(id==='magic'||kind==='armor'&&id==='ranged')cost.runicCloth=(id==='magic'?12:6)+local*3;
  if(kind==='weapon')cost.ancientFragments=3+local;
@@ -96,7 +96,7 @@ function craftStyleUpgrade(id,kind){
  const s=data.styles[id],cap=styleUpgradeCap(id,kind);if(s[kind]>=cap){toast(TIER_LIMITS[styleTier(id)].name+' limit reached',styleTier(id)===1?'Clear Zone 1 and upgrade this style to Steel for the next tier.':'This is the current Steel upgrade limit.');return false;}
  if(kind==='armor'&&!data.ownedArmor.some(key=>ARMOR_SETS[key]?.style===id)){toast('Craft an armor set first','Choose a '+ARMOR_STYLES[id].label+' set above.');return false;}
  if(!spendAtStation(styleUpgradeBase(id,kind),upgradeGroup(id,kind)))return false;
- const oldMax=game.player.maxHp;s[kind]++;if(kind==='weapon'){data.firstWeaponCrafted=true;announceWeaponUpgradeTip();}projectCombatStyle();game.player.maxHp=maxHp()+waveVitality();
+ const oldMax=game.player.maxHp;s[kind]++;equipmentWorkXp(id,kind);if(kind==='weapon'){data.firstWeaponCrafted=true;announceWeaponUpgradeTip();}projectCombatStyle();game.player.maxHp=maxHp()+waveVitality();
  if(kind==='armor'&&armorLoadout()?.style===id)game.player.hp=Math.min(game.player.maxHp,game.player.hp+Math.max(0,game.player.maxHp-oldMax));
  if(kind==='enchant')codexDiscover('permanent_enchant');
  toast(STYLE_DEFS[id].name+' '+{weapon:'refinement',armor:'reinforcement',enchant:'enchantment',speed:'attack speed',reach:'reach'}[kind]+' '+s[kind]+' / '+cap,'Permanent '+STYLE_DEFS[id].name+' progression · '+TIER_LIMITS[styleTier(id)].name+' tier');
@@ -133,9 +133,13 @@ function enterActivity(key){
  workshopTier=SKILLS[key].tier||1;closeDrawer();hideOverlay();setScene(key,false);game.menuPaused=!!game.manualPaused;updatePauseHud();save();return true;
 }
 function goalDetails(action){
- const [type,id]=String(action||'').split(':');
- if(type==='promotion'&&STYLE_DEFS[id])return {name:STYLE_DEFS[id].name+' Steel promotion',art:'codex-unlock_steel',cost:stationCost(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group),group:STYLE_DEFS[id].group,view:'equipment',done:styleTier(id)===2};
- if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];return {name:a.name,art:a.art,cost:armorRecipeCost(id),group:a.group,view:'equipment',done:data.ownedArmor.includes(id)};}
+ const [type,id,quantity]=String(action||'').split(':');
+ if(type==='ammo'&&['arrows','runes'].includes(id)){
+  const target=Math.max(1,Math.min(100000,Math.floor(Number(quantity)||30)));
+  return {name:(id==='arrows'?'Arrows':'Runes')+' · '+(target*AMMUNITION_SECONDS)+'s supply',art:RESOURCE_ART[id],cost:{[id]:target},target,group:id==='arrows'?'woodworking':'warding',view:'refine',done:(data[id]||0)>=target};
+ }
+ if(type==='promotion'&&STYLE_DEFS[id])return {name:STYLE_DEFS[id].name+' Steel promotion',art:'codex-unlock_steel',cost:stationCost(TIER_PROMOTION_COSTS[id],STYLE_DEFS[id].group),baseCost:TIER_PROMOTION_COSTS[id],group:STYLE_DEFS[id].group,view:'equipment',done:styleTier(id)===2};
+ if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];return {name:a.name,art:a.art,cost:armorRecipeCost(id),baseCost:a.cost,group:a.group,view:'equipment',done:data.ownedArmor.includes(id)};}
  return legacyGoalDetails(action);
 }
 function installTierProgressionUI(){
@@ -159,7 +163,7 @@ function refreshTierProgressionUI(){
  }
 }
 
-function defaults(){return {zoneLayoutVersion:1,tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,firstWeaponCrafted:false,eliteSpoils:[],eliteSpoilsSequence:0,eliteBoon:null,eliteBoons:null,eliteBoonSequence:0,weaponUpgradeTipSeen:false,combatLanguageTipSeen:false,zone2TravelTipSeen:false,masteryRewardVersion:0,earlyMasteryClaimed:false,zoneAbilityVersion:0,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeonShopVersion:0,dungeonShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,ammoCharges:{arrows:0,runes:0},cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
+function defaults(){return {preparationEconomyVersion:1,preparationEconomyCredit:0,lootPresentationVersion:1,upgradeVouchers:{iron:0,steel:0},voucherRolls:{},lootHistory:[],timeProgressionVersion:1,timeMilestones:0,timeRates:null,legacyDungeoneeringLevel:0,zoneLayoutVersion:1,tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,firstWeaponCrafted:false,eliteSpoils:[],eliteSpoilsSequence:0,eliteBoon:null,eliteBoons:null,eliteBoonSequence:0,weaponUpgradeTipSeen:false,combatLanguageTipSeen:false,zone2TravelTipSeen:false,masteryRewardVersion:0,earlyMasteryClaimed:false,zoneAbilityVersion:0,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeonShopVersion:0,dungeonShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,ammoCharges:{arrows:0,runes:0},cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
 
 function drawWorkstationScene(w,h,key){
  const base=SKILLS[key].scene||key,advanced={coal:[0,0],willow:[1,0],ancientScavenge:[0,1],cleanAncient:[0,1],garnetSearch:[1,1],garnetCut:[1,1]}[key];

@@ -16,7 +16,7 @@ function instrumentation(){
     death(){die();},
     roundTripXp(){game.status='ready';data.cleared=Math.max(6,data.cleared);travelToBiome(1);travelToBiome(0);},
     firstGuardian(){data.masteryIntroSeen=false;game.status='running';game.phase=1;game.runXp=0;game.runLevel=1;game.requiredXp=23;game.pendingLevels=0;game.enemies=[];game.gems=[];const boss=spawnEnemy(true,0);boss.name=biome().boss[0];game.boss=boss;onKill(boss);},
-    bank(){return {xp:game.runXp,level:game.runLevel,pending:game.pendingLevels,gems:game.gems.map(g=>({...g}))};},
+    bank(){return {xp:data.dungeoneeringXp,level:game.runLevel,pending:game.pendingLevels,gems:game.gems.map(g=>({...g}))};},
     simulate(index,weapon='sword'){
       const original={gainXp,earnStyleXp,burst,floater};
       gainXp=()=>{};earnStyleXp=()=>{};burst=()=>{};floater=()=>{};
@@ -124,13 +124,13 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     await p.close();
     const speed=await page({viewport:{width:390,height:844}});
     await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);
-    const seed=await speed.evaluate(()=>{const d=__deepwell.getState().data;d.dungeonMastery={points:1,earned:1,onslaught:0,fortune:0,adaptation:0,intensity:0};return d;});
+    const seed=await speed.evaluate(()=>{const d=__deepwell.getState().data;d.dungeonMastery={points:0,earned:4,delveSpeed:4,skillingSpeed:0,onslaught:0,fortune:0,adaptation:0,intensity:0};d.timeRates={delve:2,skilling:1};return d;});
     await speed.addInitScript(d=>localStorage.setItem('deepwell-prototype-v1',JSON.stringify({...d,savedAt:Date.now()})),seed);
     await speed.reload();await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);await speed.evaluate(()=>__deepwell.start());assert.ok(await speed.locator('#speedControl').isVisible());
     await speed.click('#speedToggle');assert.ok(await speed.locator('#speedOptions [data-speed="2"]').isVisible());assert.equal(await speed.locator('#speedOptions [data-speed="5"]').isVisible(),false);
-    await speed.click('#speedOptions [data-speed="2"]');assert.equal(await speed.evaluate(()=>__deepwell.getState().devSpeed),2);
+    await speed.click('#speedOptions [data-speed="2"]');assert.equal(await speed.evaluate(()=>__deepwell.getState().data.timeRates.delve),2);
     await speed.click('#quickSettings');await speed.click('#settingsCodes');await speed.fill('#codeInput',testingCodes.speed);await speed.click('#codeRedeem');await speed.click('#drawerClose');await speed.click('#speedToggle');await speed.click('#speedOptions [data-speed="25"]');assert.equal(await speed.evaluate(()=>__deepwell.getState().devSpeed),25);
-    results.push('Mastery unlocks 1×/2× speed; the existing code retains its testing speeds');
+    results.push('Earned time ranks expose selectable rates; Skilling stays independent and existing testing speeds remain separate');
     assert.deepEqual(errors,[]);console.log(JSON.stringify({passed:results,simulated,errors},null,2));
   }finally{await runtime.close();}
 })().catch(error=>{console.error(error);process.exit(1);});

@@ -16,15 +16,13 @@ function shopBudget(index=zoneNumber()){return index===0?100:200;}
 function zoneCurrency(){return {name:'Dungeon Sigils',art:'currency-rift'};}
 function zoneShopUnlocked(index=zoneNumber()){return Number.isInteger(index)&&index>=0&&index<=9999;}
 function zoneShopFor(index=zoneNumber()){return dungeonShopFor(index);}
-function dungeonProgress(total=data.dungeoneeringXp||0){
- total=Math.max(0,Number(total)||0);const level=1+Math.floor(Math.sqrt(total/DUNGEONEERING_XP_STEP));
- const previous=DUNGEONEERING_XP_STEP*(level-1)**2,next=DUNGEONEERING_XP_STEP*level**2;
- return {level,total,xp:total-previous,required:next-previous};
-}
-function masterySpent(m){return Object.entries(TALENTS).reduce((sum,[key,t])=>sum+t.cost.slice(0,Math.max(0,Math.min(t.max,Math.floor(Number(m?.[key])||0)))).reduce((a,b)=>a+b,0),0);}
+function dungeonProgress(total=data.dungeoneeringXp||0){return {...dungeoneeringJourney(),total:Math.max(0,Number(total)||0)};}
+
+function masterySpent(m){return Object.entries(TALENTS).reduce((sum,[key,t])=>sum+t.cost.slice(0,Math.max(0,Math.min(t.max,Math.floor(Number(m?.[key])||0)))).reduce((a,b)=>a+b,0),0)+(Number(m?.delveSpeed)||0)+(Number(m?.skillingSpeed)||0);}
 function normalizeGlobalMastery(){
  const source=data.dungeonMastery&&typeof data.dungeonMastery==='object'?data.dungeonMastery:{};
  const m={points:Math.max(0,Math.min(1e12,Math.floor(Number(source.points)||0))),earned:Math.max(0,Math.min(1e12,Math.floor(Number(source.earned)||0))),intensity:0};
+ for(const key of ['delveSpeed','skillingSpeed'])m[key]=Math.max(0,Math.min(1000,Math.floor(Number(source[key])||0)));
  for(const [key,t]of Object.entries(TALENTS))m[key]=Math.max(0,Math.min(t.max,Math.floor(Number(source[key])||0)));
  m.intensity=Math.max(0,Math.min(m.onslaught,Math.floor(Number(source.intensity)||0)));m.earned=Math.max(m.earned,m.points+masterySpent(m));data.dungeonMastery=m;return m;
 }
@@ -47,7 +45,7 @@ function normalizeZoneShopProgression(){
    xp+=Math.max(0,Number(legacy.xp)||0);
    const credit=Math.max(0,Math.floor(Number(legacy.pending)||0))*3;bucket.currency=(Number(bucket.currency)||0)+credit;bucket.earned=Math.max(Number(bucket.earned)||0,bucket.currency);
   }
-  data.dungeoneeringXp=xp;const levels=dungeonProgress(xp).level-1;m.points+=levels;m.earned+=levels;data.zoneShopVersion=1;
+  data.dungeoneeringXp=xp;const levels=Math.max(0,Math.floor(Math.sqrt(xp/DUNGEONEERING_XP_STEP)));m.points+=levels;m.earned+=levels;data.zoneShopVersion=1;
  }
  data.dungeoneeringXp=Math.max(0,Math.min(1e12,Number(data.dungeoneeringXp)||0));
  const source=data.zoneShops&&typeof data.zoneShops==='object'&&!Array.isArray(data.zoneShops)?data.zoneShops:{};data.zoneShops={};
@@ -57,7 +55,7 @@ function normalizeZoneShopProgression(){
   for(const [id,rank]of Object.entries(value.ranks||{}))if(Object.hasOwn(UPGRADE_CAPS,id))ranks[id]=Math.max(0,Math.min(UPGRADE_CAPS[id],Math.floor(Number(rank)||0)));
   data.zoneShops[key]={currency,earned:Math.max(currency,Math.min(1e12,Math.floor(Number(value.earned)||0))),ranks};
  }
- normalizeGlobalMastery();normalizeDungeonShopProgression();
+ normalizeGlobalMastery();normalizeDungeonShopProgression();normalizeTimeProgression();
 }
 function masteryFor(){return data.dungeonMastery||normalizeGlobalMastery();}
 function masteryUnlocked(){return masteryFor().earned>0;}
@@ -93,24 +91,21 @@ function grantZoneCurrency(amount,index=zoneNumber()){
  const node=$('zoneCurrencyHud');if(node){node.classList.remove('currency-gain');requestAnimationFrame(()=>node.classList.add('currency-gain'));}return amount;
 }
 function buyZoneUpgrade(id,index=shopZone){
- const p=dungeonPerk(id),b=dungeonShopFor(index),cost=dungeonPerkCost(id,b.ranks[id]||0);if(!p||dungeonProgress().level<p.level||cost===null||b.currency<cost)return false;
+ const p=dungeonPerk(id),b=dungeonShopFor(index),cost=dungeonPerkCost(id,b.ranks[id]||0);if(!p||!dungeonPerkUnlocked(p)||cost===null||b.currency<cost)return false;
  const previous=b.ranks[id]||0;b.currency-=cost;b.ranks[id]=previous+1;if(id==='fire'&&previous&&dungeonForZone(index).id===dungeonForZone().id)for(const enemy of game.enemies)if(enemy.burn>0){enemy.burnDps*=b.ranks[id]/previous;enemy.burn+=.1;}codexDiscover('dungeon_perk_'+id);game.upgrades={...dungeonShopFor().ranks};shopSignature='';save();refreshUI();return true;
 }
 function zoneSnapshot(){const p=dungeonProgress();return {index:zoneNumber(),upgrades:{...zoneShopFor().ranks},level:p.level,xp:p.xp,required:p.required,pending:0};}
 function normalizeZone(){normalizeZoneShopProgression();data.zone=zoneSnapshot();}
 function syncZone(){data.zone=zoneSnapshot();game.upgrades={...zoneShopFor().ranks};const p=dungeonProgress();game.runLevel=p.level;game.runXp=p.xp;game.requiredXp=p.required;game.pendingLevels=0;checkpointGroundXp();}
-function gainXp(amount){
- if(!Number.isFinite(amount)||amount<=0)return;const before=dungeonProgress().level;data.dungeoneeringXp+=amount;const after=dungeonProgress().level;
- if(after>before){const unlocks=DUNGEON_PERKS.filter(p=>p.level>before&&p.level<=after);toast('Dungeoneering '+after,unlocks.length?unlocks.length+' new '+(unlocks.length===1?'ability':'abilities')+' available in the Dungeon Shop.':'');}
- syncZone();
-}
+function gainXp(amount){if(!Number.isFinite(amount)||amount<=0)return;data.dungeoneeringXp+=amount;syncZone();}
+
 function showUpgrade(){game.pendingLevels=0;if(game.status==='upgrade')game.status='running';return false;}
 function selectUpgrade(){return false;}
-function showMasteryIntroduction(){if(data.masteryIntroSeen||!masteryUnlocked())return;data.masteryIntroSeen=true;save();toast('Mastery unlocked','2× Delve speed');}
+function showMasteryIntroduction(){if(data.masteryIntroSeen||!masteryUnlocked())return;data.masteryIntroSeen=true;save();toast('Dungeoneering point earned','Choose Delving or Skilling game time in the Dungeon Shop.');}
 function startFloor(){if(eliteRewardOpen())return false;game.scene='combat';game.manualPaused=game.menuPaused=false;resetRun();game.status='running';hideOverlay();setScene('combat',false);nextPhase();updatePauseHud();refreshUI();announceZone2TravelTip();}
 function applyMastery(){
  if(!masteryDraft||!masteryChanged()){masteryClose(true);return;}
- const m=masteryFor(),v=masteryDraft,total=m.points+masterySpent(m),cost=masterySpent(v);if(cost>total)return;
+ const m=masteryFor(),v={...masteryDraft,delveSpeed:m.delveSpeed,skillingSpeed:m.skillingSpeed},total=m.points+masterySpent(m),cost=masterySpent(v);if(cost>total)return;
  for(const key of Object.keys(TALENTS)){m[key]=Math.max(0,Math.min(TALENTS[key].max,v[key]));if(m[key])codexDiscover('permanent_talent_'+key);}
  m.points=total-cost;m.intensity=Math.min(v.intensity,m.onslaught);masteryDraft=null;
  const live=game.status==='running';if(live){syncZone();resetRun();game.status='running';game.manualPaused=game.menuPaused=true;nextPhase();}
@@ -129,31 +124,33 @@ function powerIncrement(id,rank=0){return powerSummary(id,Math.min(zoneAbilityCa
 function powerGain(id){return powerIncrement(id,zoneUpgradeRank(id));}
 
 function onKill(e){
- if(!game.enemies.includes(e))return;clearOwnerMechanics(e);flushBurnDamage(e);game.enemies.splice(game.enemies.indexOf(e),1);if(e.summoned){burst(e.x,e.y,6,combatTheme('shield').color);return;}dungeonKillEffects(e);earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;
+ if(!game.enemies.includes(e))return;clearOwnerMechanics(e);flushBurnDamage(e);game.enemies.splice(game.enemies.indexOf(e),1);if(e.summoned){burst(e.x,e.y,6,combatTheme('shield').color);return;}
+ const drops=[],effects=dungeonKillEffects(e);if(effects.gold)drops.push({key:'gold',amount:effects.gold});drops.push(...monsterMaterialDrops(e));
+ earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;
  const b=biome();burst(e.x,e.y,e.boss?18:game.enemies.length>65?2:8,b.accent);game.shake=e.boss?7:1.5;
- const seals=dungeonCurrencyReward(e);grantZoneCurrency(seals);
+ const seals=grantZoneCurrency(dungeonCurrencyReward(e));if(seals)drops.push({key:'sigils',amount:seals});
  if(e.boss){
-  const index=e.bossIndex,m=masteryFor(),reward=guardianMasteryReward(e);m.points+=reward;m.earned+=reward;
-  grantDelveGold(delveGoldReward('guardian',data.floor,index)*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));data.essence+=index===2?2:1;
-  for(let n=0;n<7;n++)game.gems.push({x:e.x+rand(-35,35),y:e.y+rand(-35,35),value:14*3/zoneFloorCount()*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp'))});
-  toast(e.name+' defeated','+'+seals+' '+zoneCurrency().name+(reward?' · +'+reward+' Mastery':''));save();game.boss=null;
-  if(game.status==='running'){finishPhase();if(reward)showMasteryIntroduction();}else game.transition=.85;
+  const index=e.bossIndex,coins=grantDelveGold(delveGoldReward('guardian',data.floor,index)*(1+trinketBonus('gold'))*(1+.04*waveRank('forage'))),essence=index===2?2:1;
+  if(coins)drops.push({key:'gold',amount:coins});data.essence+=essence;drops.push({key:'essence',amount:essence});
+  gainXp(98*3/zoneFloorCount()*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));recordMonsterLoot(e,drops);
+  toast(e.name+' defeated','+'+seals+' '+zoneCurrency().name);save();game.boss=null;
+  if(game.status==='running')finishPhase();else game.transition=.85;
  }else{
   dropHealth(e);dropEliteSpoils(e);
-  if(Math.random()<rareDropChance()){const index=biomeIndex();data.biomeLoot[index]=(data.biomeLoot[index]||0)+1;codexDiscover('loot_'+index);if(game.enemies.length<40)floater(e.x,e.y-26,'◆ '+biomeLootName(),'#d5f4ab');}
-  if(e.elite)grantDelveGold(delveGoldReward('elite')*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));
-  const xp=(e.elite?2:1)*(8+Math.floor(combatDepth()/3))*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp'));
-  if(game.gems.length>240)gainXp(xp);else game.gems.push({x:e.x+rand(-7,7),y:e.y+rand(-7,7),value:xp});
+  if(Math.random()<rareDropChance()){const index=biomeIndex(),amount=e.elite?2:1;data.biomeLoot[index]=(data.biomeLoot[index]||0)+amount;codexDiscover('loot_'+index);drops.push({key:'loot_'+index,amount});}
+  if(e.elite){const coins=grantDelveGold(delveGoldReward('elite')*(1+trinketBonus('gold'))*(1+.04*waveRank('forage')));if(coins)drops.push({key:'gold',amount:coins});}
+  gainXp((e.elite?2:1)*(8+Math.floor(combatDepth()/3))*(1+.03*waveRank('wisdom'))*(1+trinketBonus('xp')));recordMonsterLoot(e,drops);
   if(game.phaseKills>=game.phaseTarget)finishPhase();
  }
 }
+
 function clearFloor(){
  game.status='clear';game.phase=6;const floor=data.floor,clearedZone=zoneNumber(),clearedStage=zoneStage(),clearedName=biome().name,award=grantDelveGold(delveGoldReward('floor',floor)),essence=2+Math.floor(floor/2);
- game.lastClearedZone=clearedZone;game.lastClearedFloor=floor;data.essence+=essence;codexDiscover('permanent_essence');data.cleared=Math.max(data.cleared,floor);syncZone();
+ game.lastClearedZone=clearedZone;game.lastClearedFloor=floor;data.essence+=essence;codexDiscover('permanent_essence');data.cleared=Math.max(data.cleared,floor);const beforeLevel=data.timeMilestones;normalizeTimeProgression();syncZone();if(data.timeMilestones>beforeLevel)toast('Dungeoneering '+dungeonProgress().level,'1 point earned · choose Delving or Skilling in the Dungeon Shop.');
  const frontier=Math.max(1,data.cleared+1),replay=floor<frontier-1,ending=isZoneFinal();
  data.floor=replay&&ending?zoneStart(clearedZone):floor+1;data.zone=zoneSnapshot();game.upgrades={...zoneShopFor().ranks};ensureJobs();if(ending)codexDiscover('biome_'+biomeIndex());save();
  const idle=floor===1&&data.cleared===1||ending&&clearedZone===0&&data.cleared===zoneEnd(0);
- showOverlay('<div class="floor-result"><h2>'+(ending?'Zone cleared':'Floor cleared')+'</h2><p>'+clearedName+' · Floor '+clearedStage+'</p>'+(floor===1&&data.cleared===1?'<p class="progression-tip">Your first idle slot is ready. The second unlocks when you reach Zone 2.</p>':'')+'<div class="floor-rewards"><span>'+artHTML('coins')+'+'+award+'</span><span>'+artHTML('essence')+'+'+essence+'</span></div>'+(idle?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+'Dungeon Shop</button><button type="button" class="primary-cta" id="nextFloor">Continue'+uiIcon('arrow')+'</button></div>','floor-clear-overlay');
+ showOverlay('<div class="floor-result"><h2>'+(ending?'Zone cleared':'Floor cleared')+'</h2><p>'+clearedName+' · Floor '+clearedStage+'</p>'+(floor===1&&data.cleared===1?'<p class="progression-tip">Your first idle slot is ready. The second unlocks when you reach Zone 2.</p>':'')+'<div class="floor-rewards"><span>'+artHTML('coins')+'+'+award+'</span><span>'+artHTML('essence')+'+'+essence+'</span>'+(data.timeMilestones>beforeLevel?'<span>'+artHTML('mastery-points')+'+1 point</span>':'')+'</div>'+(idle?'<button type="button" class="secondary-cta idle-unlock-cta" id="selectIdleTask">'+uiIcon('idle')+'Select idle task</button>':'')+'<button type="button" class="secondary-cta" id="clearZoneShop">'+artHTML('zone-shop')+(masteryFor().points?'Choose game time · '+masteryFor().points+' point'+(masteryFor().points===1?'':'s'):'Dungeon Shop')+'</button><button type="button" class="primary-cta" id="nextFloor">Continue'+uiIcon('arrow')+'</button></div>','floor-clear-overlay');
  $('nextFloor').onclick=startFloor;$('clearZoneShop').onclick=()=>openZoneShop(clearedZone);if($('selectIdleTask'))$('selectIdleTask').onclick=openIdleHub;refreshUI();
  if(idle)toast('Idle unlocked',clearedZone===0&&floor===1?'Your second idle slot unlocks when you reach Zone 2.':'Two tasks can now run together.');
 }

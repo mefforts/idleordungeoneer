@@ -44,7 +44,7 @@ function zoneEnemyHp(boss=false,bossIndex=0,variance=1){
 
 function bonusPosition(){
   const r=canvas.getBoundingClientRect(),bar=$('skillActionBar').getBoundingClientRect(),header=document.querySelector('.hud-center').getBoundingClientRect();
-  const blocked=['#trackedRecipe','#noticeColumn','.hud-actions','.hud-resources'].map(selector=>document.querySelector(selector)).filter(e=>e&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
+  const blocked=['#trackedRecipe','#trackedNextStep','#noticeColumn','.hud-actions','.hud-resources'].map(selector=>document.querySelector(selector)).filter(e=>e&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
   const minY=Math.max(95,header.bottom-r.top+32),maxY=bar.top-r.top-34;
   if(maxY<minY)return null;
   for(let attempt=0;attempt<30;attempt++){
@@ -69,9 +69,9 @@ function moveHudPin(id,direction){
 }
 
 function setArenaSpeed(value){
-  const allowed=data.devSpeedUnlocked?[1,2,5,10,25,50,100,500]:masteryUnlocked()?[1,2]:[1];
-  if(!allowed.includes(value))return;if(game.scene==='combat')game.devSpeed=value;else if(data.devSpeedUnlocked)game.skillSpeed=value;else return;
-  $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');refreshArenaUI();
+ if(data.devSpeedUnlocked){if(![1,2,5,10,25,50,100,500].includes(value))return;settleIdleTime();if(game.scene==='combat')game.devSpeed=value;else game.skillSpeed=value;}
+ else if(!setTimeRate(game.scene==='combat'?'delve':'skilling',value))return;
+ $('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');refreshArenaUI();
 }
 
 function installArenaUI(){installZoneShopPin();
@@ -91,7 +91,7 @@ function installArenaUI(){installZoneShopPin();
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('speedOptions').classList.contains('hidden')){e.preventDefault();e.stopImmediatePropagation();$('speedOptions').classList.add('hidden');$('speedToggle').setAttribute('aria-expanded','false');$('speedToggle').focus();}},true);
 }
 function resetRun(){
- game.healthDrops=[];game.rareEliteSpawned=false;
+ game.healthDrops=[];game.lootDrops=[];game.rareEliteSpawned=false;
  resetArenaTouch();
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
  normalizeZone();checkpointGroundXp();const p=game.player;
@@ -122,7 +122,7 @@ function nextPhase(){
 function message(msg){rememberNotice(msg);}
 
 function renderLegacySettingsDrawer(){
- $('settingsView').innerHTML=`<div class="settings-item"><div><strong>Quick-resume last skill</strong><small>Return to your last skill after closing menus.</small></div><button type="button" id="settingLastSkill" class="setting-toggle ${data.skillAutoReturn?'is-on':''}">${data.skillAutoReturn?'ON':'OFF'}</button></div><div class="settings-item"><div><strong>Character</strong><small>Appearance and cosmetics</small></div><button id="settingsCustomize" type="button" class="setting-action">✦ EDIT</button></div><button class="drawer-wide" id="settingsMastery" type="button" ${masteryUnlocked()?'':'disabled'}>◆ DUNGEONEERING MASTERY ${masteryUnlocked()?'· TRAIN':'· CLEAR ZONE 1 · FLOOR 1'}</button><button class="drawer-wide codes-entry" id="settingsCodes" type="button">⌘ CODES ${data.devSpeedUnlocked?'· TEST MODE UNLOCKED':''}</button><div id="codeEntry" class="code-entry hidden"><label for="codeInput">REDEEM CODE</label><div><input type="text" id="codeInput" autocapitalize="off" spellcheck="false" placeholder="Enter code" maxlength="32"><button id="codeRedeem" type="button">REDEEM</button></div><small id="codeFeedback" role="status"></small></div><button class="drawer-wide" id="settingsTour" type="button">✧ REPLAY SHORTCUT TOUR</button><button class="drawer-wide" id="settingsHelp" type="button">? HOW TO PLAY</button><button class="drawer-wide" id="settingsExport" type="button">↓ BACK UP SAVE</button><button class="drawer-wide" id="settingsImport" type="button">↑ RESTORE SAVE</button><input type="file" accept=".json,application/json" id="settingsImportFile" class="hidden"><button class="drawer-wide" id="settingsReset" type="button">↺ RESET PROGRESS</button><div class="settings-tips">⚔ DELVE · ✋ ACTIVE · ◷ IDLE<br>Idle slots: Floor 2 / Zone 2.<br>Triple tap a movement direction to dash.<br>Mastery speed affects combat. Testing skilling speed has its own control.</div>`;
+ $('settingsView').innerHTML=`<div class="settings-item"><div><strong>Quick-resume last skill</strong><small>Return to your last skill after closing menus.</small></div><button type="button" id="settingLastSkill" class="setting-toggle ${data.skillAutoReturn?'is-on':''}">${data.skillAutoReturn?'ON':'OFF'}</button></div><div class="settings-item"><div><strong>Character</strong><small>Appearance and cosmetics</small></div><button id="settingsCustomize" type="button" class="setting-action">✦ EDIT</button></div><button class="drawer-wide" id="settingsMastery" type="button" ${masteryUnlocked()?'':'disabled'}>◆ DUNGEONEERING MASTERY ${masteryUnlocked()?'· TRAIN':'· REACH ZONE 2'}</button><button class="drawer-wide codes-entry" id="settingsCodes" type="button">⌘ CODES ${data.devSpeedUnlocked?'· TEST MODE UNLOCKED':''}</button><div id="codeEntry" class="code-entry hidden"><label for="codeInput">REDEEM CODE</label><div><input type="text" id="codeInput" autocapitalize="off" spellcheck="false" placeholder="Enter code" maxlength="32"><button id="codeRedeem" type="button">REDEEM</button></div><small id="codeFeedback" role="status"></small></div><button class="drawer-wide" id="settingsTour" type="button">✧ REPLAY SHORTCUT TOUR</button><button class="drawer-wide" id="settingsHelp" type="button">? HOW TO PLAY</button><button class="drawer-wide" id="settingsExport" type="button">↓ BACK UP SAVE</button><button class="drawer-wide" id="settingsImport" type="button">↑ RESTORE SAVE</button><input type="file" accept=".json,application/json" id="settingsImportFile" class="hidden"><button class="drawer-wide" id="settingsReset" type="button">↺ RESET PROGRESS</button><div class="settings-tips">⚔ DELVE · ✋ ACTIVE · ◷ IDLE<br>Idle slots: Floor 2 / Zone 2.<br>Double tap while moving on touch; triple tap a movement key to dash.<br>Dungeon Shop game time: Delving or Skilling, including idle.</div>`;
  $('settingsView').insertAdjacentHTML('afterbegin',`<div class="settings-item"><div><strong>Reduced motion</strong><small>Reduce camera shake and decorative animation. Your device preference also applies.</small></div><button type="button" id="settingReducedMotion" class="setting-toggle ${data.reducedMotion?'is-on':''}" aria-pressed="${!!data.reducedMotion}">${data.reducedMotion?'ON':'OFF'}</button></div>`);$('settingReducedMotion').onclick=()=>{data.reducedMotion=!data.reducedMotion;save();renderSettingsDrawer()};
  $('settingsCodes').onclick=()=>{$('codeEntry').classList.toggle('hidden');if(!$('codeEntry').classList.contains('hidden'))$('codeInput').focus()};
  $('codeRedeem').onclick=async()=>{

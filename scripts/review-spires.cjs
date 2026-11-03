@@ -21,7 +21,7 @@ function spireReviewFixture(){
     if(mode==='dash'){if(frame===12){game.player.vx=1;game.player.vy=0;dash();}}
     else{if(mode==='royal'&&state.source.hp<state.source.maxHp&&game.player.x>foot.x+SUMMON_BUMPS.releaseRadius+5)returning=true;game.keys[returning?'ArrowLeft':'ArrowRight']=true;}
    }
-   tickCombat(.04);animateEffects(.04);render();
+   game.tipClock=(game.tipClock||0)+.04;tickCombat(.04);animateEffects(.04);render();
   },
   stop(){return new Promise(resolve=>{recorder.onstop=async()=>{cancelAnimationFrame(raf);recorder.stream.getTracks().forEach(track=>track.stop());const bytes=new Uint8Array(await new Blob(chunks).arrayBuffer());let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));resolve(btoa(binary));};recorder.stop();});}
  };

@@ -1,5 +1,5 @@
 {
-  "version": "10.1.0",
+  "version": "11.0.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -453,56 +453,130 @@
     "refund": "Unspent seals plus the full historical price of all purchased ranks",
     "fractionalCredit": true
   },
+  "preparationEconomy": {
+    "iron": {
+      "previousGold": 1485,
+      "gold": 785
+    },
+    "steel": {
+      "previousGold": 3050,
+      "gold": 1885
+    },
+    "promotionGold": 100,
+    "credit": "One-time price difference for owned refinement/speed ranks and Steel promotions",
+    "equipmentXp": {
+      "craft": 60,
+      "ironRefinement": 60,
+      "steelRefinement": 120,
+      "ironSpeed": 20,
+      "steelSpeed": 40,
+      "promotion": 100
+    }
+  },
   "dungeoneeringLevels": [
     {
       "level": 1,
-      "totalXp": 0
+      "zone": 2,
+      "totalPoints": 1
     },
     {
       "level": 2,
-      "totalXp": 1600
+      "zone": 5,
+      "totalPoints": 2
     },
     {
       "level": 3,
-      "totalXp": 6400
+      "zone": 10,
+      "totalPoints": 3
     },
     {
       "level": 4,
-      "totalXp": 14400
+      "zone": 20,
+      "totalPoints": 4
     },
     {
       "level": 5,
-      "totalXp": 25600
+      "zone": 40,
+      "totalPoints": 5
     },
     {
       "level": 6,
-      "totalXp": 40000
+      "zone": 80,
+      "totalPoints": 6
     },
     {
       "level": 7,
-      "totalXp": 57600
+      "zone": 160,
+      "totalPoints": 7
     },
     {
       "level": 8,
-      "totalXp": 78400
-    },
-    {
-      "level": 9,
-      "totalXp": 102400
-    },
-    {
-      "level": 10,
-      "totalXp": 129600
-    },
-    {
-      "level": 11,
-      "totalXp": 160000
-    },
-    {
-      "level": 12,
-      "totalXp": 193600
+      "zone": 320,
+      "totalPoints": 8
     }
   ],
+  "gameTime": {
+    "costPerRank": 1,
+    "delve": [
+      1,
+      1.25,
+      1.5,
+      1.75,
+      2,
+      2.25,
+      2.5,
+      2.75,
+      3,
+      3.25,
+      3.5,
+      3.75,
+      4,
+      4.25,
+      4.5,
+      4.75,
+      5
+    ],
+    "skilling": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20,
+      22,
+      24
+    ],
+    "idle": true,
+    "offline": true
+  },
+  "monsterLoot": {
+    "normal": {
+      "chance": 0.015,
+      "amount": 1,
+      "cap": 0.06
+    },
+    "elite": {
+      "chance": 0.08,
+      "amount": 3,
+      "cap": 0.16
+    },
+    "boss": {
+      "chance": 0.18,
+      "amount": 6,
+      "cap": 0.28
+    },
+    "voucher": 0.06,
+    "finalVoucher": 0.15
+  },
   "limits": {
     "1": {
       "name": "Iron",
@@ -529,21 +603,21 @@
       "willowLogs": 6,
       "ancientFragments": 4,
       "cutGarnets": 1,
-      "gold": 150
+      "gold": 100
     },
     "ranged": {
       "steelBars": 6,
       "willowLogs": 18,
       "runicCloth": 6,
       "cutGarnets": 1,
-      "gold": 150
+      "gold": 100
     },
     "magic": {
       "steelBars": 4,
       "runicCloth": 18,
       "ancientFragments": 6,
       "cutGarnets": 2,
-      "gold": 150
+      "gold": 100
     }
   },
   "zones": [
@@ -808,8 +882,8 @@
       "harvest": {
         "name": "Plentiful Hunt",
         "seconds": 50,
-        "resourcePerKill": 1,
-        "description": "Each non-summoned kill grants 1 material from this Zone",
+        "resourceLuck": 1,
+        "description": "+50% material drop chance; drops remain rare",
         "color": "#aeda93"
       },
       "cascade": {
@@ -1557,7 +1631,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 561.8400000000298,
+      "seconds": 557.0800000000286,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
@@ -1565,7 +1639,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1213.2400000000691,
+      "seconds": 1216.6000000000693,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
@@ -1573,7 +1647,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1859.5200000000666,
+      "seconds": 1847.4000000000651,
       "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 1800
@@ -1581,7 +1655,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2133.7200000001067,
+      "seconds": 2153.720000000109,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2100
@@ -1589,7 +1663,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2468.600000000136,
+      "seconds": 2453.800000000142,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
@@ -1597,7 +1671,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2471.6400000001404,
+      "seconds": 2465.400000000141,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400

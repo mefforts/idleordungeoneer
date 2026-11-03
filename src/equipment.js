@@ -56,7 +56,7 @@ function chooseWeapon(id){
   if(!data.unlockedWeapons.includes(id)){
     if(weaponCraftLevel(id)<WEAPON_LEVELS[id]){toast('Training needed',DISCIPLINES[STYLE_DEFS[styleForWeapon(id)].group].name+' level '+WEAPON_LEVELS[id]+' unlocks this weapon.');return false;}
     if(!spendAtStation({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},STYLE_DEFS[styleForWeapon(id)].group))return false;
-    data.unlockedWeapons.push(id);data.firstWeaponCrafted=true;announceWeaponUpgradeTip();codexDiscover('weapon_'+id);toast(weaponDisplayName(id)+' crafted!','One weapon equipped. Your worn armor stays equipped.');
+    data.unlockedWeapons.push(id);equipmentWorkXp(styleForWeapon(id),'craft');data.firstWeaponCrafted=true;announceWeaponUpgradeTip();codexDiscover('weapon_'+id);toast(weaponDisplayName(id)+' crafted!','One weapon equipped. Your worn armor stays equipped.');
   }
   data.weaponType=id;projectCombatStyle();inspectedStyle=combatStyle();styleBench=combatStyle();
   game.player.maxHp=maxHp()+waveVitality();game.player.hp=Math.min(game.player.hp,game.player.maxHp);game.attackTimer=Math.max(game.attackTimer,.45);save();refreshUI();return true;
@@ -100,14 +100,14 @@ function recipeHtml(group){return ['blacksmithing','woodworking','warding'].incl
 
 function legacyGoalDetails(action){
   const [type,id,kind]=String(action||'').split(':');
-  if(type==='weapon'&&WEAPON_TYPES[id]){const w=WEAPON_TYPES[id],group=STYLE_DEFS[styleForWeapon(id)].group;return {name:w.name,art:WEAPON_ART[id],cost:stationCost({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},group),group,done:data.unlockedWeapons.includes(id)};}
+  if(type==='weapon'&&WEAPON_TYPES[id]){const w=WEAPON_TYPES[id],group=STYLE_DEFS[styleForWeapon(id)].group;return {name:w.name,art:WEAPON_ART[id],cost:stationCost({bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},group),baseCost:{bars:w.cost[0],gold:w.cost[1],...(w.extras||{})},group,done:data.unlockedWeapons.includes(id)};}
   if(type==='upgrade'){
     const style=STYLE_DEFS[id]?id:combatStyle(),k=kind||id;if(!['weapon','armor','enchant','speed','reach'].includes(k))return null;
-    return {name:styleRecipeName(style,k)+' +'+(data.styles[style][k]+1),art:'style-'+style+'-'+k,cost:styleUpgradeCost(style,k),group:upgradeGroup(style,k)};
+    return {name:styleRecipeName(style,k)+' +'+(data.styles[style][k]+1),art:'style-'+style+'-'+k,cost:styleUpgradeCost(style,k),baseCost:styleUpgradeBase(style,k),group:upgradeGroup(style,k)};
   }
-  if(type==='tool'&&TOOL_DEFS[id]){const t=TOOL_DEFS[id];return {name:t.name,art:t.art,cost:stationCost(t.cost,t.group),group:t.group,view:'tools',done:data.tools[id]};}
-  if(type==='trinket'&&TRINKETS[id])return {name:TRINKETS[id].name,art:TRINKETS[id].icon,cost:stationCost(trinketBase(id),'artisan'),group:'artisan',done:data.trinkets.includes(id)};
-  if(type==='prospect')return {name:'Prospect Opal',art:'rough-opal',cost:stationCost({scraps:12},'scavenging'),group:'scavenging'};
+  if(type==='tool'&&TOOL_DEFS[id]){const t=TOOL_DEFS[id];return {name:t.name,art:t.art,cost:stationCost(t.cost,t.group),baseCost:t.cost,group:t.group,view:'tools',done:data.tools[id]};}
+  if(type==='trinket'&&TRINKETS[id])return {name:TRINKETS[id].name,art:TRINKETS[id].icon,cost:stationCost(trinketBase(id),'artisan'),baseCost:trinketBase(id),group:'artisan',done:data.trinkets.includes(id)};
+  if(type==='prospect')return {name:'Prospect Opal',art:'rough-opal',cost:stationCost({scraps:12},'scavenging'),baseCost:{scraps:12},group:'scavenging'};
   return null;
 }
 

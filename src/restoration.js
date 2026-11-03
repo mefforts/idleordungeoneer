@@ -5,12 +5,8 @@ function normalizeMasteryMilestones(){
  if(data.masteryRewardVersion!==1){data.earlyMasteryClaimed=!!data.earlyMasteryClaimed||data.cleared>=1;data.masteryRewardVersion=1;}
  data.earlyMasteryClaimed=!!data.earlyMasteryClaimed;
 }
-function guardianMasteryReward(enemy){
- if(!enemy.boss||enemy.elite||enemy.bossIndex!==2)return 0;
- if(isZoneFinal())return 2;
- if(data.floor===1&&!data.earlyMasteryClaimed){data.earlyMasteryClaimed=true;return 2;}
- return 0;
-}
+function guardianMasteryReward(enemy){return 0;}
+
 function installRestorationUI(){
  if(restorationInstalled)return;restorationInstalled=true;healthDropImage=new Image();healthDropImage.decoding='async';healthDropImage.src=iconAsset('health-drop');
  if(!CODEX_ITEMS.some(entry=>entry.id==='health_pickup'))CODEX_ITEMS.push({id:'health_pickup',cat:'Guide',name:'Healing motes',desc:'Walk over a heart mote to recover health.'});

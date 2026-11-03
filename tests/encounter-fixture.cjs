@@ -82,7 +82,7 @@ function encounterFixture(){
    return {nodes:game.totems.length,rally:game.player.rallyTime,request:!!game.counterRequest,casts:game.enemies.filter(e=>e.cast).length};
   },
   timing(speed,context='combat'){
-   const t=node('mend');game.player.x=500;game.player.y=500;game.player.invuln=1e8;t.owner.castCooldown=1e6;game.devSpeed=speed;game.skillSpeed=1;game.menuPaused=context==='pause';game.scene=context==='skill'?'mine':'combat';
+   const t=node('mend');game.player.x=500;game.player.y=500;game.player.invuln=1e8;t.owner.castCooldown=1e6;game.devSpeed=1;masteryFor().delveSpeed=(speed-1)*4;masteryFor().earned=masterySpent(masteryFor());data.timeRates.delve=speed;game.skillSpeed=1;game.menuPaused=context==='pause';game.scene=context==='skill'?'mine':'combat';
    for(let i=0;i<10;i++)update(.02);game.menuPaused=true;return {age:t.age,exists:game.totems.includes(t),combat:game.runSeconds,skill:game.activeClockMs};
   },
   placement(kind,stage,offset=0,side='right',type='reflect',gap=150){fresh(kind,stage);data.hudLayout.side=side;applyHudLayout();game.player.x=game.camX=offset;game.player.y=game.camY=offset;const e=owner(type==='reflect'?0:2);e.x=offset;e.y=offset-gap;const c=cast(e,type),foot=encounterFoot(e),p=encounterFoot(game.player);return {point:c.point,distance:Math.hypot(c.point.x-foot.x,c.point.y-foot.y),travel:Math.hypot(c.point.x-p.x,c.point.y-p.y),clear:encounterClear(c.point.x,c.point.y,type==='reflect'?36:25),camX:game.camX,camY:game.camY,w:game.viewWidth,h:game.viewHeight};},

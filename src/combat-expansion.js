@@ -139,11 +139,10 @@ function secondaryDamage(enemy,damage,sourceStyle=combatStyle(),origin=null){
  if(enemy.hp<=0)onKill(enemy);
 }
 function dungeonKillEffects(enemy){
- const gold=eliteBoonSum('goldPerKill'),resource=eliteBoonSum('resourcePerKill');
- if(gold)grantDelveGold(gold);
- if(resource){const actual=['logs','ore','scraps','runes'][enemy.biome??biomeIndex()];data[actual]=(data[actual]||0)+resource;floater(enemy.x,enemy.y-34,'+'+resource+' '+(RESOURCE_LABEL[actual]||actual),'#c8dcb0');}
+ const gold=grantDelveGold(eliteBoonSum('goldPerKill'));
  if(waveRank('shatter')&&enemy.frozen>0){for(const other of game.enemies.filter(e=>e!==enemy&&Math.hypot(e.x-enemy.x,e.y-enemy.y)<100).slice(0,5))secondaryDamage(other,attackDamage()*.08*waveRank('shatter'),enemy.lastDamageStyle,enemy);burst(enemy.x,enemy.y,9,'#a9e9ef');}
  if(waveRank('vortex'))for(const other of game.enemies){if(other.boss||other.elite)continue;const dx=enemy.x-other.x,dy=enemy.y-other.y,d=Math.hypot(dx,dy);if(d>25&&d<130){const step=Math.min(d-24,12*waveRank('vortex'));const x=other.x+dx/d*step,y=other.y+dy/d*step;if(encounterClear(x,y,other.rad)){other.x=x;other.y=y;}}}
+ return {gold};
 }
 function tickBossBursts(dt){
  game.bossBursts=(game.bossBursts||[]).filter(event=>{
@@ -211,10 +210,10 @@ function paintSummonTotem(t){
  for(let i=0;i<3;i++){const a=i*Math.PI*2/3+(reducedMotion()?0:game.frame*.9),x=t.x+Math.cos(a)*20,y=foot.y-42+Math.sin(a)*9;glow(x,y,10,theme.color+'55');disc(x,y,2.5,theme.hot);}
  if(t.eliteSummon)encounterLabel('♛',t.x,foot.y-83,theme.hot,18);
  quad(t.x-24,foot.y-99,48,5,'#171822');quad(t.x-24,foot.y-99,48*clamp(t.hp/t.maxHp,0,1),5,theme.color);
- encounterLabel(bumps+' BUMP'+(bumps===1?'':'S')+' TO BREAK',t.x,foot.y-112,theme.hot,game.viewWidth<600?12:11);
+ encounterTip(bumps+' BUMP'+(bumps===1?'':'S')+' TO BREAK',t.x,foot.y-112,theme.hot,game.viewWidth<600?12:11,t,String(bumps),'count');
  const total=t.eliteSummon?SUMMON_BUMPS.royal:SUMMON_BUMPS.normal;
  for(let i=1;i<total;i++)quad(t.x-24+48*i/total-.75,foot.y-99,1.5,5,'#171822');
- encounterLabel(t.bumpContact?'STEP CLEAR · BUMP AGAIN':disabled?'DISABLED':surging?'SURGING · DASH OR WAIT':'BUMP TO BREAK',t.x,foot.y+26,theme.hot,game.viewWidth<600?10:9);
+ encounterTip(t.bumpContact?'STEP CLEAR · BUMP AGAIN':disabled?'DISABLED':surging?'SURGING · DASH OR WAIT':'BUMP TO BREAK',t.x,foot.y+26,theme.hot,game.viewWidth<600?10:9,t,undefined,'instruction');
  if((t.bumpFlashUntil||0)>game.frame)paintWarningCircle(foot.x,foot.y,31,1,combatTheme('safe'));
  if(t.spawnPoint){paintWarningCircle(t.spawnPoint.x,t.spawnPoint.y,22,1-t.spawnWarn/1.3,theme);encounterLabel('SUMMON',t.spawnPoint.x,t.spawnPoint.y-27,theme.hot,8);}
 }

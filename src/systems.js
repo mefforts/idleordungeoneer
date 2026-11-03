@@ -41,7 +41,7 @@ function normalizeProgression(){
   data.skillsNudgeSeen=!!data.skillsNudgeSeen||data.unlockedWeapons?.length>1;
   data.idleNoticeSlots=Math.min(2,finiteRank(data.idleNoticeSlots));data.idleFirstAssigned=!!data.idleFirstAssigned||data.idleJobs?.some(Boolean)||false;
   if(data.idleJobs?.filter(Boolean).length>=idleSlotsUnlocked()&&idleSlotsUnlocked()>0)data.idleNoticeSlots=idleSlotsUnlocked();
-  data.progressionVersion=5;normalizeArenaData();normalizeEquipment();normalizeTierProgression();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
+  data.progressionVersion=5;normalizeArenaData();normalizeMonsterLoot();normalizeEquipment();normalizeTierProgression();normalizePreparationEconomy();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
 }
 
 function stationRank(group){return data.stationLevels?.[group]||0;}
@@ -90,10 +90,10 @@ function activeSkill(key,batch=false){
   game.lastActiveAt[key]=now;game.workAction=.48;game.workPulse=(game.workPulse||0)+1;game.activeHits=(game.activeHits||0)+1;game.lastActiveSkill=key;
   if(!batch){refreshUI();if(game.activeHits%9===1)save();}return result;
 }
-function advanceProduction(seconds){
+function advanceProduction(seconds,multiplier=selectedTimeRate('skilling')){
   ensureJobs();const jobs=data.idleJobs.filter(Boolean);if(!jobs.length)return {mined:0,smelted:0};
-  const beforeOre=data.ore,beforeBars=data.bars;let left=Math.min(28800,Math.max(0,seconds)),ticks=0;
-  while(left>.00001&&ticks++<16000){
+  const beforeOre=data.ore,beforeBars=data.bars;let left=Math.min(28800,Math.max(0,seconds))*Math.max(1,multiplier);
+  while(left>.00001){
     const step=Math.min(left,...jobs.map(k=>Math.max(.00001,skillInterval(k,false)-(data.jobTimers[k]||0))));
     jobs.forEach(k=>data.jobTimers[k]=(data.jobTimers[k]||0)+step);left-=step;
     for(const key of [...jobs.filter(k=>!SKILLS[k].cost),...jobs.filter(k=>SKILLS[k].cost)])if(data.jobTimers[key]>=skillInterval(key,false)-.00001){data.jobTimers[key]=0;produce(key);}
@@ -165,6 +165,10 @@ function trinketBase(id){return {silverBars:TRINKETS[id].type==='ring'?6:9,cutOp
 
 function openWorkshop(group=workshopGroup,view=workshopView){workshopGroup=DISCIPLINES[group]?group:'blacksmithing';workshopView=['gather','refine','equipment','tools'].includes(view)?view:'gather';openDrawer('skills');}
 function bindWorkshop(host){
+  host.querySelectorAll('[data-redeem-voucher]').forEach(b=>b.onclick=()=>redeemUpgradeVoucher(b.dataset.redeemVoucher));
+  host.querySelectorAll('[data-preparation-next]').forEach(b=>b.onclick=()=>openPreparationStep());
+  host.querySelectorAll('[data-prepare-ammo]').forEach(b=>b.onclick=()=>trackAmmunition(b.dataset.prepareAmmo));
+  host.querySelectorAll('[data-prepare-refinement]').forEach(b=>b.onclick=()=>trackNextRefinement(b.dataset.prepareRefinement));
   host.querySelectorAll('[data-idle-skill]').forEach(b=>b.onclick=()=>assignIdleSkill(b.dataset.idleSkill));
   host.querySelectorAll('[data-replace-idle]').forEach(b=>b.onclick=()=>{setIdleJob(Number(b.dataset.replaceIdle),game.pendingIdleSkill);renderDisciplineDrawer();});
   host.querySelectorAll('[data-cancel-idle]').forEach(b=>b.onclick=()=>{game.pendingIdleSkill='';renderDisciplineDrawer();});

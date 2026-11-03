@@ -1,11 +1,11 @@
 {
   "name": "idle-or-dungeoneer",
-  "version": "10.1.0",
+  "version": "11.0.0",
   "private": true,
   "description": "A standalone fantasy RPG with a minimal runestone HUD, linked crafting and a readable Codex.",
   "scripts": {
     "start": "python3 -m http.server 8000 --bind 0.0.0.0",
-    "test": "node tests/smoke.cjs && node tests/combat.cjs && node tests/quality.cjs && node tests/systems.cjs && node tests/gestures.cjs && node tests/native-gestures.cjs && node tests/arena.cjs && node tests/dungeoneering.cjs && node tests/tiers.cjs && node tests/presentation.cjs && node tests/revision.cjs && node tests/zone-shop.cjs && node tests/testing-speed.cjs && node tests/environments.cjs && node tests/encounters.cjs && node tests/mobile.cjs && node tests/loading.cjs && node tests/ammunition.cjs && node tests/workshop.cjs && node tests/restoration.cjs && node tests/delve-travel.cjs && node tests/rare-elites.cjs && node tests/zone-depths.cjs && node tests/player-rig.cjs && node tests/spire-collisions.cjs && node tests/dungeon-combat.cjs",
+    "test": "node tests/smoke.cjs && node tests/combat.cjs && node tests/quality.cjs && node tests/systems.cjs && node tests/gestures.cjs && node tests/native-gestures.cjs && node tests/arena.cjs && node tests/dungeoneering.cjs && node tests/tiers.cjs && node tests/presentation.cjs && node tests/revision.cjs && node tests/zone-shop.cjs && node tests/testing-speed.cjs && node tests/environments.cjs && node tests/encounters.cjs && node tests/mobile.cjs && node tests/loading.cjs && node tests/ammunition.cjs && node tests/workshop.cjs && node tests/restoration.cjs && node tests/delve-travel.cjs && node tests/rare-elites.cjs && node tests/zone-depths.cjs && node tests/player-rig.cjs && node tests/spire-collisions.cjs && node tests/dungeon-combat.cjs && node tests/journey.cjs",
     "build": "node scripts/sync-systems.cjs",
     "report:balance": "node scripts/report-tier-balance.cjs",
     "review:ui": "node scripts/presentation-review.cjs",
@@ -30,7 +30,8 @@
     "review:motion": "node scripts/review-player-motion.cjs",
     "art:blessings": "node scripts/export-blessings.cjs",
     "review:combat": "node scripts/review-combat.cjs",
-    "review:spires": "node scripts/review-spires.cjs"
+    "review:spires": "node scripts/review-spires.cjs",
+    "review:journey": "node scripts/review-journey.cjs"
   },
   "devDependencies": {
     "acorn": "8.19.0",
