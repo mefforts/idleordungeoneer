@@ -8,7 +8,7 @@ const {createRuntime}=require('./runtime.cjs');
   async function profile(patch={},viewport={width:1440,height:1000},fixedRandom=false){
    const c=await browser.newContext({viewport});const seed={...base,onboardingDone:true,tutorialSeen:true,savedAt:Date.now(),...patch};if((patch.zone||patch.mastery)&&patch.zoneShopVersion===undefined){seed.zoneShopVersion=0;seed.zoneAbilityVersion=0;}if(patch.styles===null&&patch.equipmentVersion===undefined)seed.equipmentVersion=0;
    await c.addInitScript(({seed,fixedRandom})=>{if(!sessionStorage.getItem('systems-seeded')){localStorage.setItem('deepwell-prototype-v1',JSON.stringify(seed));sessionStorage.setItem('systems-seeded','1');}if(fixedRandom)Math.random=()=>.01;},{seed,fixedRandom});
-   const p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));await p.route(baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','window.__systemsCompleteFloor=()=>clearFloor();resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);')}));await p.goto(baseURL);await p.waitForFunction(()=>window.__deepwell&&!document.documentElement.classList.contains('game-loading'));return {c,p};
+   const p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));await p.route(baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','window.__systemsCompleteFloor=()=>clearFloor();window.__systemsCommonBonus=()=>{const roll=rollSkillBonusRarity;rollSkillBonusRarity=()=>SKILL_BONUS_RARITIES[0];try{return spawnSkillBonus();}finally{rollSkillBonusRarity=roll;}};resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);')}));await p.goto(baseURL);await p.waitForFunction(()=>window.__deepwell&&!document.documentElement.classList.contains('game-loading'));return {c,p};
   }
   const rich={gold:10000,ore:20000,silverOre:1000,opals:100,cutOpals:10,bars:2000,logs:2000,cloth:2000,scraps:2000,arrows:1000,runes:1000,essence:1000,blacksmithXp:3000};
   {
@@ -52,7 +52,7 @@ const {createRuntime}=require('./runtime.cjs');
   }
   {
    const {c,p}=await profile({...rich,ore:8});await p.click('#introSkills');await p.evaluate(()=>{__deepwell.enterActivity('forge');__deepwell.activeSkill('forge')});const before=await p.evaluate(()=>__deepwell.getState().data);
-   await p.evaluate(()=>{for(let i=0;i<3;i++){const id=__deepwell.spawnSkillBonus();if(id)__deepwell.claimSkillBonus(id)}});const after=await p.evaluate(()=>__deepwell.getState().data);assert.equal(after.bars,before.bars);assert.equal(after.ore,before.ore);assert.ok(after.skillingBuffs.some(b=>b.key==='forge'&&b.left>0));
+   await p.evaluate(()=>{for(let i=0;i<3;i++){const id=__systemsCommonBonus();if(id)__deepwell.claimSkillBonus(id)}});const after=await p.evaluate(()=>__deepwell.getState().data);assert.equal(after.bars,before.bars);assert.equal(after.ore,before.ore);assert.ok(after.skillingBuffs.some(b=>b.key==='forge'&&b.left>0));
    await p.evaluate(()=>{while(__deepwell.getState().data.ore>=2)__deepwell.produce('forge',true)});assert.equal(await p.evaluate(()=>__deepwell.spawnSkillBonus()),false);
    passed.push('Crafting sparks grant timed speed instead of instant crafts; missing resources prevent free crafts');await c.close();
   }

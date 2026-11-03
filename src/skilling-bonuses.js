@@ -15,6 +15,16 @@ function normalizeSkillingBuffs(){
 }
 function skillBuffs(key){return (data.skillingBuffs||[]).filter(b=>b.key===key&&b.left>1e-8).map(b=>({...b,definition:SKILL_BONUS_RARITIES.find(r=>r.id===b.rarity)})).filter(b=>b.definition).sort((a,b)=>b.definition.speed-a.definition.speed);}
 function skillBuffMultiplier(key){return 1+(skillBuffs(key)[0]?.definition.speed||0);}
+function skillBonusReward(node){
+ const rarity=SKILL_BONUS_RARITIES.find(r=>r.id===node.rarity)||SKILL_BONUS_RARITIES[0],strongest=skillBuffs(node.key)[0]?.definition.speed||0,instant=strongest>rarity.speed;
+ return {rarity,instant,amount:instant?node.windfall:node.amount};
+}
+function refreshSkillBonusOffer(node){
+ const reward=skillBonusReward(node),rarity=reward.rarity,skill=SKILLS[node.key],effect=reward.instant?'+'+reward.amount+' '+skill.item+' instantly':'+'+Math.round(rarity.speed*100)+'% '+(node.craft?'crafting':'gathering')+' speed for '+rarity.seconds+' seconds of active work',signature=(reward.instant?'resource:':'speed:')+effect;
+ if(node.el.dataset.effect===signature)return;
+ node.el.dataset.effect=signature;node.el.dataset.reward=reward.instant?'resource':'speed';const badge=node.el.querySelector(':scope > span');if(reward.instant)badge.innerHTML=artHTML(RESOURCE_ART[skill.resource])+'+'+reward.amount;else badge.textContent='+'+Math.round(rarity.speed*100)+'% · '+rarity.seconds+'s';
+ node.el.setAttribute('aria-label',rarity.name+' '+BONUS_DEFS[node.key].name+': '+effect+(reward.instant?' · stronger speed bonus already active':node.craft?'':', plus '+node.amount+' '+skill.item));node.el.title=rarity.name+' · '+effect+' · tap or drag across';
+}
 function grantSkillBuff(key,rarity){
  if(!data.skillingBuffs)data.skillingBuffs=[];
  const existing=data.skillingBuffs.find(b=>b.key===key&&b.rarity===rarity.id);
@@ -42,6 +52,7 @@ function tickSkillBonusReaction(dt){
 function skillBuffLabel(buff){return buff.definition.name+' · +'+Math.round(buff.definition.speed*100)+'% work speed · '+buff.left.toFixed(1)+'s of active work remaining';}
 function refreshSkillBuffUI(){
  const host=$('skillWorkBuff');if(!host)return;const key=game.scene,buffs=SKILLS[key]?skillBuffs(key):[],buff=buffs[0];
+ for(const node of bonusState().nodes)refreshSkillBonusOffer(node);
  host.classList.toggle('hidden',!buff);if(!buff){if(document.activeElement===host)$('skillHold').focus({preventScroll:true});return;}
  const rarity=buff.definition,working=game.holdSkill===key&&activeSkillCanAdvance(key);
  host.style.setProperty('--skill-rarity',rarity.color);host.dataset.rarity=rarity.id;
@@ -52,6 +63,6 @@ function refreshSkillBuffUI(){
 }
 function showSkillBuffDetails(){
  const key=game.scene,buffs=skillBuffs(key);if(!buffs.length)return;
- showOverlay('<p class="overlay-kicker">ACTIVE SKILLING BONUS</p><h2>'+SKILLS[key].name+'</h2>'+codexRuleList(buffs.map(b=>[b.definition.name,'+'+Math.round(b.definition.speed*100)+'% speed · '+b.left.toFixed(1)+'s remaining']))+'<p>The strongest bonus applies. Timers count real seconds of active work in this activity. Recollecting a rarity refreshes its duration. Ingredients are still required for every craft. Idling and offline work keep their normal rate.</p><button type="button" class="primary-button" id="skillBuffReturn">Return to work</button>','skill-buff');
+ showOverlay('<p class="overlay-kicker">ACTIVE SKILLING BONUS</p><h2>'+SKILLS[key].name+'</h2>'+codexRuleList(buffs.map(b=>[b.definition.name,'+'+Math.round(b.definition.speed*100)+'% speed · '+b.left.toFixed(1)+'s remaining']))+'<p>The strongest bonus applies. Timers count real seconds of active work in this activity. Equal pickups refresh it; stronger pickups improve it. Weaker pickups give 1–5 of this activity’s output instantly instead, as free bonus items. Normal crafting still consumes ingredients. Idling and offline work keep their normal rate.</p><button type="button" class="primary-button" id="skillBuffReturn">Return to work</button>','skill-buff');
  $('skillBuffReturn').onclick=()=>{hideOverlay();$('skillHold').focus({preventScroll:true});};
 }

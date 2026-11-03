@@ -1,5 +1,5 @@
 {
-  "version": "11.1.0",
+  "version": "11.1.1",
   "dungeons": [
     {
       "id": "deepwell",
@@ -617,7 +617,12 @@
       }
     ],
     "clock": "Real seconds of active work in the matching activity",
-    "stacking": "Strongest only; refresh the same rarity",
+    "stacking": "Strongest only; equal refreshes, weaker grants output",
+    "weakerPickup": {
+      "minimum": 1,
+      "maximum": 5,
+      "freeOutputItems": true
+    },
     "idle": false,
     "offline": false,
     "pickupInterval": 4.2,
@@ -626,13 +631,15 @@
       "base": {
         "seconds": 300,
         "bars": 107,
+        "bonusBars": 0,
         "oreSpent": 214,
         "pickups": 0
       },
       "collected": {
         "seconds": 300,
-        "bars": 170,
-        "oreSpent": 340,
+        "bars": 249,
+        "bonusBars": 80,
+        "oreSpent": 338,
         "pickups": 72
       }
     }

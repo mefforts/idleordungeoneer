@@ -33,7 +33,7 @@ Optional Mastery allocations share the bank after the first speed choice. Refund
 
 ## Active skilling discoveries
 
-Build 11.1 replaces 35% instant crafting progress with timed work speed. Every discovery has one rarity roll. Gathering discoveries also grant their existing material bundle; refining discoveries never bypass ingredients.
+Build 11.1 replaces 35% instant crafting progress with timed work speed. Every discovery has one rarity roll. Gathering speed discoveries also grant their existing material bundle. Since 11.1.1, a strictly weaker pickup instead grants 1–5 output items instantly, including refined materials. These windfalls are free bonus items; normal crafting still consumes its recipe.
 
 | Rarity | Chance | Active work speed | Duration |
 | --- | ---: | ---: | ---: |
@@ -42,11 +42,11 @@ Build 11.1 replaces 35% instant crafting progress with timed work speed. Every d
 | Rare | 9% | +75% | 10s |
 | Very rare | 2% | +100% | 15s |
 
-Discoveries appear after 1.2 seconds of engagement, then every 4.2 real seconds, with six seconds to collect. The strongest current boost applies; collecting the same rarity refreshes its bounded duration. Other rarities count down concurrently. There is no multiplying or unlimited time bank.
+Discoveries appear after 1.2 seconds of engagement, then every 4.2 real seconds, with six seconds to collect. The strongest current boost applies; equal pickups refresh its bounded duration and stronger pickups improve it. Weaker pickups leave the timers untouched and grant their displayed resource quantity instead. Earlier timers count down concurrently. There is no multiplying or unlimited time bank. Collecting a pickup alone does not sustain further discoveries without working.
 
 Timers count real seconds while actively working on that activity, including while earned Skilling speed accelerates production. Release, missing ingredients, menus, other activities and backgrounding pause them. Remaining time survives saves. These bonuses do not accelerate idle or offline work. Permanent Skilling game time and station/tool benefits retain their normal effects. Every accelerated craft still consumes its complete station-adjusted recipe.
 
-A seeded five-minute active refining check at 1× made **107 bars without pickups / 170 bars collecting all 72 discoveries**. The collected run consumed 340 ore: exactly two per bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
+A seeded five-minute active refining check at 1× made **107 bars without pickups / 249 bars collecting all 72 discoveries**. This includes 80 free windfall bars. The remaining 169 crafted bars consumed 338 ore: exactly two per crafted bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
 
 ## Equipment ceilings
 

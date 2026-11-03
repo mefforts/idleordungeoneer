@@ -123,26 +123,24 @@ function spawnSkillBonus(){
   if(!p)return false;
   const id=++s.serial,el=document.createElement('button');el.type='button';el.className='skill-bonus '+(craft?'craft-bonus':'gather-bonus');el.dataset.skillBonus=id;
   el.dataset.rarity=rarity.id;el.style.setProperty('--skill-rarity',rarity.color);
-  el.style.left=p.x+'px';el.style.top=p.y+'px';el.innerHTML=artHTML(def.art)+`<em aria-hidden="true">${rarity.name}</em><span>+${Math.round(rarity.speed*100)}% · ${rarity.seconds}s</span>`;
-  const effect='+'+Math.round(rarity.speed*100)+'% '+(craft?'crafting':'gathering')+' speed for '+rarity.seconds+' seconds of active work';
-  el.setAttribute('aria-label',rarity.name+' '+def.name+': '+effect+(craft?'':', plus '+amount+' '+SKILLS[key].item));el.title=rarity.name+' · '+effect+' · tap or drag across';
+  el.style.left=p.x+'px';el.style.top=p.y+'px';el.innerHTML=artHTML(def.art)+`<em aria-hidden="true">${rarity.name}</em><span></span>`;
   el.onclick=e=>{if(claimSkillBonus(id)&&e.detail===0)$('skillHold').focus({preventScroll:true});};
-  s.nodes.push({id,key,craft,amount,rarity:rarity.id,...p,left:6,el});$('skillBonusLayer').append(el);return id;
+  const node={id,key,craft,amount,windfall:1+Math.floor(Math.random()*5),rarity:rarity.id,...p,left:6,el};s.nodes.push(node);$('skillBonusLayer').append(el);refreshSkillBonusOffer(node);return id;
 }
 function claimSkillBonus(id){
   const s=bonusState(),node=s.nodes.find(n=>n.id===Number(id));if(!node||node.left<=0||node.key!==game.scene||!bonusEligible())return false;
-  const key=node.key;if(!canUseSkill(key)||!hasIngredients(skillCost(key)))return false;
-  s.nodes=s.nodes.filter(n=>n!==node);node.el.remove();noteSkillEngagement(key);
-  const rarity=SKILL_BONUS_RARITIES.find(r=>r.id===node.rarity)||SKILL_BONUS_RARITIES[0];
-  grantSkillBuff(key,rarity);beginSkillBonusReaction(key,rarity,node);
-  let reward='+'+Math.round(rarity.speed*100)+'% work speed for '+rarity.seconds+'s';
+  const key=node.key,result=skillBonusReward(node),{rarity,instant,amount}=result;if(!canUseSkill(key)||!instant&&!hasIngredients(skillCost(key)))return false;
+  s.nodes=s.nodes.filter(n=>n!==node);node.el.remove();
+  if(!instant)grantSkillBuff(key,rarity);beginSkillBonusReaction(key,rarity,node);
+  let reward=instant?'+'+amount+' '+SKILLS[key].item+' instantly':'+'+Math.round(rarity.speed*100)+'% work speed for '+rarity.seconds+'s';
+  if(instant||!node.craft){data[SKILLS[key].resource]+=amount;codexDiscover('resource_'+SKILLS[key].resource);if(instant)recordWorkshopReward(key,amount,0,'');}
   if(!node.craft){
-    data[SKILLS[key].resource]+=node.amount;data[SKILLS[key].xp]=(data[SKILLS[key].xp]||0)+1;
+    data[SKILLS[key].xp]=(data[SKILLS[key].xp]||0)+1;
     const xp=DISCIPLINES[disciplineFor(key)].xp;data[xp]=(data[xp]||0)+1;codexDiscover('resource_'+SKILLS[key].resource);
-    reward+=' · +'+node.amount+' '+SKILLS[key].item;
+    if(!instant)reward+=' · +'+amount+' '+SKILLS[key].item;
   }
   game.workAction=.48;game.lastActiveSkill=key;
-  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=uiIcon('speed')+'<strong>'+rarity.name+'</strong><span>+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s</span>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
+  const pop=document.createElement('span');pop.className='skill-bonus-pop';pop.style.left=node.x+'px';pop.style.top=node.y+'px';pop.style.setProperty('--skill-rarity',rarity.color);pop.setAttribute('aria-hidden','true');pop.innerHTML=(instant?artHTML(RESOURCE_ART[SKILLS[key].resource]):uiIcon('speed'))+'<strong>'+rarity.name+(instant?' find':'')+'</strong><span>'+(instant?'+'+amount+' '+SKILLS[key].item:'+'+Math.round(rarity.speed*100)+'% speed · '+rarity.seconds+'s')+'</span>';$('skillBonusLayer').append(pop);setTimeout(()=>pop.remove(),1350);
   $('skillBonusStatus').textContent=rarity.name+' '+BONUS_DEFS[key].name+' collected. '+reward;refreshUI();save();return true;
 }
 function tickSkillBonuses(dt){
@@ -150,7 +148,7 @@ function tickSkillBonuses(dt){
   if(!bonusEligible()){if(s.nodes.length||s.lastInput>-100)clearSkillBonuses();return;}
   if(game.holdSkill===game.scene)noteSkillEngagement(game.scene);
   const canWork=hasIngredients(skillCost(game.scene));
-  for(const n of [...s.nodes]){n.left-=dt;if(n.key!==game.scene||n.left<=0||!canWork){n.el.remove();s.nodes=s.nodes.filter(o=>o!==n);}else{n.el.style.setProperty('--bonus-life',Math.ceil(n.left/6*100)+'%');n.el.classList.toggle('expiring',n.left<1.4);}}
+  for(const n of [...s.nodes]){n.left-=dt;if(n.key!==game.scene||n.left<=0||!canWork&&!skillBonusReward(n).instant){n.el.remove();s.nodes=s.nodes.filter(o=>o!==n);}else{refreshSkillBonusOffer(n);n.el.style.setProperty('--bonus-life',Math.ceil(n.left/6*100)+'%');n.el.classList.toggle('expiring',n.left<1.4);}}
   if(canWork&&s.clock-s.lastInput<=6&&s.clock>=s.next){spawnSkillBonus();s.next=s.clock+4.2;}
 }
 function claimBonusesAlongPointer(e){
@@ -236,7 +234,7 @@ function installSystemsUI(){inspectedStyle=combatStyle();styleBench=combatStyle(
   $('combatWeaponSelector').closest('.panel-section').insertAdjacentHTML('beforebegin','<section class="panel-section"><div class="eyebrow">PERMANENT COMBAT STYLES</div><div id="combatStyles"></div></section><div class="divider"></div>');
   $('gearCraftLink').onclick=()=>openWorkshop(STYLE_DEFS[combatStyle()].group,'equipment');
   $('skillsNudgeOpen').onclick=()=>{data.skillsNudgeSeen=true;save();openWorkshop('blacksmithing','equipment');};$('skillsNudgeDismiss').onclick=()=>{data.skillsNudgeSeen=true;save();refreshSystemsUI();};
-  window.addEventListener('pointerdown',e=>{if(!bonusEligible())return;const node=e.target.closest('[data-skill-bonus]'),work=e.target===canvas||e.target.closest('#skillHold');if(!node&&!work)return;noteSkillEngagement(game.scene);const s=bonusState();s.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(work)game.workPointerId=e.pointerId;if(node){e.preventDefault();claimSkillBonus(node.dataset.skillBonus);}},true);
+  window.addEventListener('pointerdown',e=>{if(!bonusEligible())return;const node=e.target.closest('[data-skill-bonus]'),work=e.target===canvas||e.target.closest('#skillHold');if(!node&&!work)return;if(work)noteSkillEngagement(game.scene);const s=bonusState();s.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(work)game.workPointerId=e.pointerId;if(node){e.preventDefault();claimSkillBonus(node.dataset.skillBonus);}},true);
   window.addEventListener('pointermove',claimBonusesAlongPointer,true);
   for(const type of ['pointerup','pointercancel','lostpointercapture'])window.addEventListener(type,e=>{bonusState().pointers.delete(e.pointerId);if(game.workPointerId===e.pointerId)resetSkillHold();},true);
   document.addEventListener('visibilitychange',()=>{if(document.hidden){resetSkillHold();clearSkillBonuses();}});

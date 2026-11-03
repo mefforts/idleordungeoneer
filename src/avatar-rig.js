@@ -35,7 +35,7 @@ function poseRig(options={}){
  const workCycle=options.workCycle??Math.floor(time*workRate(pose)),variation=reduced?0:Math.sin(workCycle*2.399),accent=Math.sin(phase*Math.PI)**2;
  const body={x:walking?walk*.5:0,y:-42+(walking?Math.abs(walk)*1.4:breath),angle:(options.dash&&!reduced?.18:0)+(walking?walk*.025:0)};
  let main={x:21,y:-35},back={x:-17,y:-31},angle=.35,headAngle=walking?walk*.02:0,kneeling=false,twoHand=0,contact=false,workPiece=null;
- const tool=TOOLS[pose],placeTip=(x,y,toolAngle)=>{angle=toolAngle;const length=tool.height*tool.grip[1];main={x:x-Math.sin(angle)*length,y:y+Math.cos(angle)*length};};
+ const tool=TOOLS[pose],lowerGrip=tool?Math.max(0,Math.min(10,tool.height*(1-tool.grip[1])-1)):0,placeTip=(x,y,toolAngle)=>{angle=toolAngle;const length=tool.height*tool.grip[1];main={x:x-Math.sin(angle)*length,y:y+Math.cos(angle)*length};};
  if(walking){main.x-=walk*1.2;main.y+=walk*1.1;back.x+=walk*6;back.y-=Math.abs(walk)*.9;}
  if(weapon==='shield')back={x:-14,y:-49};
  if(weapon==='polearm'){main={x:17,y:-45};angle=.38;twoHand=-13;}
@@ -67,7 +67,8 @@ function poseRig(options={}){
    const impact=clipSample(keys,phase)[0],lift=working?impact:1;
    body.angle=working?.05+impact*.21+variation*accent*.009:.04;body.x=working?3+impact*3+variation*accent*.6:0;if(working)body.y+=impact*.65;
    main={x:working?30-lift+variation*accent*(1-lift)*1.4:27,y:working?-69+lift*28:-36};angle=working?lerp(.38+variation*accent*.035,pose==='smith'?1.72:pose==='wood'?1.64:1.53,lift):.65;
-   back=working?{x:pose==='smith'?24:14,y:pose==='smith'?-45:-43}:{x:-17,y:-31};twoHand=working&&pose!=='smith'?13:0;headAngle=working?.07+lift*.10:0;contact=working&&phase>.45&&lift>.95;
+   // The supporting palm stays on the short handle below the primary grip.
+   back=working?{x:pose==='smith'?24:14,y:pose==='smith'?-45:-43}:{x:-17,y:-31};twoHand=working&&pose!=='smith'?lowerGrip:0;headAngle=working?.07+lift*.10:0;contact=working&&phase>.45&&lift>.95;
   }else if(pose==='fletch'){
    const pass=clipSample([[0,0,4],[.16,0,0],[.60,1,0],[.76,1,5],[1,0,4]],phase);workPiece={x:31,y:-48,angle:0};back={x:15,y:-47.2};
    const cutX=34+pass[0]*(9+variation*accent*.8);placeTip(cutX,-47-(cutX-12)*2/31-pass[1],2.48+pass[0]*.18);body.angle=.12+Math.sin(cycle)*.018+variation*accent*.01;headAngle=.12+pass[0]*.035;contact=working&&phase>=.16&&phase<=.60;
@@ -91,7 +92,7 @@ function poseRig(options={}){
    if(['mine','smith','wood'].includes(pose)){
     const strike=clipSample(alternate?[[0,.72],[.22,0],[.48,1],[.61,.62],[.76,1],[1,.72]]:[[0,.72],[.30,0],[.62,1],[.77,1],[1,.72]],progress)[0];
     main={x:lerp(main.x,29,weight),y:lerp(main.y,-72+strike*31,weight)};angle=lerp(angle,lerp(.26,pose==='smith'?1.72:pose==='wood'?1.64:1.53,strike),weight);
-    body.angle=lerp(body.angle,.04+strike*.25,weight);headAngle+=weight*.035;twoHand=pose==='smith'?0:13;contact=weight>.85&&strike>.95;
+    body.angle=lerp(body.angle,.04+strike*.25,weight);headAngle+=weight*.035;twoHand=pose==='smith'?0:lowerGrip;contact=weight>.85&&strike>.95;
    }else if(pose==='fletch'){
     const lift=weight*(alternate?4:2);workPiece.y-=lift;back.y-=lift;
     const x=lerp(34,44,smooth(progress));const tipY=workPiece.y+1-(x-(workPiece.x-19))*2/31;
@@ -457,15 +458,22 @@ function render(c,options={}){
  if(!reaching)paintArm(c,rig.backArm,-1,kit,look);
  paintBody(c,rig,kit,look);
  if(reaching)paintArm(c,rig.backArm,-1,kit,look);
+ const wrist=arm=>Math.atan2(arm.hand.y-arm.elbow.y,arm.hand.x-arm.elbow.x)-Math.PI/2;
+ if(rig.activity){
+  // The supporting palm belongs to the far arm's depth. Drawing both hands
+  // last puts it through the nearer forearm when the two arms cross.
+  paintTool(c,rig);paintHand(c,rig.back,wrist(rig.backArm),-1,kit,look,rig.backGesture);
+  paintArm(c,rig.frontArm,1,kit,look);paintHead(c,rig,kit,look,data.reducedMotion||options.reducedMotion||motionPreference?.matches?0:time);
+  paintHand(c,rig.main,wrist(rig.frontArm),1,kit,look,rig.tool?'grip':'reach');c.restore();return kit;
+ }
  paintArm(c,rig.frontArm,1,kit,look);paintHead(c,rig,kit,look,data.reducedMotion||options.reducedMotion||motionPreference?.matches?0:time);
- if(rig.activity)paintTool(c,rig);else if(options.showWeapon!==false){
+ if(options.showWeapon!==false){
   art?.paintWeapon(c,data,rig.weapon==='shield'?'sword':rig.weapon,{x:rig.main.x,y:rig.main.y,angle:rig.angle});
   if(rig.weapon==='shield')art?.paintWeapon(c,data,'shield',{x:rig.back.x,y:rig.back.y,angle:-.12});
   if(rig.weapon==='bow'){c.beginPath();c.moveTo(rig.bowUpper.x,rig.bowUpper.y);c.lineTo(rig.back.x,rig.back.y);c.lineTo(rig.bowLower.x,rig.bowLower.y);c.strokeStyle='#ddcba3';c.lineWidth=.65;c.stroke();if(options.charge>.45&&((data.arrows||0)>0||(data.ammoCharges?.arrows||0)>0))stroke(c,rig.back,rig.arrowTip,'#cfb682',.9);}
   if(rig.weapon==='staff'&&options.attack>0)ellipse(c,rig.back.x,rig.back.y,3+rig.stroke*2,3+rig.stroke*2,'#a4d9e2aa');
  }
- const wrist=arm=>Math.atan2(arm.hand.y-arm.elbow.y,arm.hand.x-arm.elbow.x)-Math.PI/2;
- if(rig.weapon!=='shield'||rig.activity)paintHand(c,rig.back,wrist(rig.backArm),-1,kit,look,rig.backGesture);paintHand(c,rig.main,wrist(rig.frontArm),1,kit,look,rig.activity?rig.tool?'grip':'reach':options.showWeapon===false?'rest':'grip');c.restore();return kit;
+ if(rig.weapon!=='shield')paintHand(c,rig.back,wrist(rig.backArm),-1,kit,look,rig.backGesture);paintHand(c,rig.main,wrist(rig.frontArm),1,kit,look,options.showWeapon===false?'rest':'grip');c.restore();return kit;
 }
 global.DeepwellAvatar=Object.freeze({render,drawPart,appearance,poseRig,tier,normalizeCustom,STYLE_COUNTS,COLOR_SETS,BASE,setAssets,images:()=>[...images.values()],assetKeys:()=>[...['base',...Object.keys(ARMOR_PALETTES)].flatMap(set=>PHYSICAL_SLOTS.map(slot=>(set==='base'?'base':'armor-'+set)+'-'+slot)),...Object.keys(assets)],metrics:()=>({height:117,version:2,style:'illustrated-2d',armLengths:[...ARM_LENGTHS],legLengths:[...LEG_LENGTHS],physicalSlots:[...PHYSICAL_SLOTS]}),workRate,toolForPose:pose=>TOOLS[pose]||null,slots:Object.freeze([...PHYSICAL_SLOTS,'mainHand','offHand','tool','aura'])});
 })(window);

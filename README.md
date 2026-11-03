@@ -4,6 +4,10 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.1.1** fixes crossing arms during skilling: the supporting palm stays behind the nearer forearm, with both grips on the tool handle. The correction applies through regular work, bonus flourishes and both facings. [Crossing close-ups](preview-arm-crossings.png) · [Updated animation reel](preview-skilling-upgrade.mp4).
+
+When a stronger speed bonus is already active on the same activity, a weaker pickup now becomes **1–5 of that activity’s output instantly**, including refined materials. The pickup shows the item and quantity before collection. These are free bonus items; normal crafts retain their recipe costs. Equal pickups refresh speed and stronger ones improve it, while an instant reward leaves the active timer untouched. [Phone windfall](preview-skilling-windfall-mobile.png).
+
 **Build 11.1.0** upgrades the eight skilling animation families with distinct strike rhythms, subtle cycle variations, contact sparks/chips and two collection flourishes per family. Refining discoveries now grant timed crafting speed instead of a one-off progress jump. [Phone refining](preview-skilling-bonuses-mobile.png) · [Phone gathering](preview-skilling-gathering-mobile.png) · [Animation and bonus capture reel](preview-skilling-upgrade.mp4) · [Collection poses](preview-skilling-flourishes.png).
 
 | Discovery | Chance | Active speed | Working time |
@@ -13,7 +17,7 @@ The game, environments, creatures, equipment and icons are embedded in one HTML 
 | Rare | 9% | +75% | 10s |
 | Very rare | 2% | 2× | 15s |
 
-Pickups show their rarity, speed and duration; an active chip shows the remaining time and opens details. The strongest boost applies, and collecting the same rarity refreshes it. Timers count real seconds of active work on the matching activity, pause on release, missing ingredients, menus or backgrounding, and survive reloads. These temporary boosts apply to active work; permanent Skilling speed still includes online/offline idling. Gathering pickups also retain their material reward, and every accelerated craft consumes its ingredients.
+Pickups show their rarity, speed and duration; an active chip shows the remaining time and opens details. The strongest boost applies, and collecting the same rarity refreshes it. Weaker pickups instead grant 1–5 output items instantly. Timers count real seconds of active work on the matching activity, pause on release, missing ingredients, menus or backgrounding, and survive reloads. These temporary boosts apply to active work; permanent Skilling speed still includes online/offline idling. Gathering pickups also retain their material reward, and every accelerated craft consumes its ingredients.
 
 Melee helms reveal the face through the **original T-shaped cutout**. Cohesive chests use one centered breastplate, softer leather shading and centered robe collars. The previous closed-helm art and downloadable build remain preserved at [v11.0.2](https://github.com/mefforts/idleordungeoneer/tree/b3b03755ab730dbfbbb2e21a746bce9689a0f90a).
 
@@ -260,3 +264,5 @@ Generated icon sheets, calibrated regions and alignment metrics live in `assets/
 `npm run review:headwear` captures both full-helm and ranger-cap tiers, their portraits, motion poses and phone/desktop fitting with the live renderer.
 
 `npm run review:skilling` records all eight live work families, collects real rarity pickups, and captures the active timer and collection poses at phone, landscape and desktop sizes. Playwright video recording requires its FFmpeg dependency (`npx playwright install ffmpeg`); final MP4 encoding uses system FFmpeg. Add `-- --stills` to refresh screenshots without recording.
+
+`npm run review:arms` captures the corrected arm and hand crossings in regular work and both bonus reactions, using the live renderer and both facings. The rig suite checks actual surface occlusion as well as joint geometry.

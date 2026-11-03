@@ -1,4 +1,5 @@
 const fs=require('node:fs'),assert=require('node:assert/strict'),{createRuntime}=require('./runtime.cjs'),{playerFixture}=require('./player-fixture.cjs'),{workshopFixture}=require('./workshop-fixture.cjs');
+const {instrumentAvatar}=require('./arm-layer-fixture.cjs');
 (async()=>{const runtime=await createRuntime(),errors=[],passed=[];try{
  const html=fs.readFileSync('index.html','utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+workshopFixture.toString()+')();('+playerFixture.toString()+')();resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');const p=await runtime.browser.newPage({viewport:{width:1440,height:1000}});p.on('pageerror',e=>errors.push(e.message));await p.route(runtime.baseURL+'/**',r=>r.fulfill({contentType:'text/html',body:html}));await p.goto(runtime.baseURL);await p.waitForFunction(()=>!document.documentElement.classList.contains('game-loading'));await p.evaluate(()=>__playerTest.ready());
  const fixtures=await p.evaluate(()=>__playerTest.fixtures());assert.equal(fixtures.keys.length,50);assert.equal(fixtures.metrics.style,'illustrated-2d');assert.equal(fixtures.rasterImages,8);assert.deepEqual(fixtures.metrics.physicalSlots,['head','shoulders','chest','legs','boots','gloves']);for(const id of fixtures.armor)for(const part of fixtures.metrics.physicalSlots)assert.ok(fixtures.keys.includes('armor-'+id+'-'+part));assert.equal(new Set(fixtures.tools.map(t=>t.key)).size,8);
@@ -29,6 +30,17 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),{createRuntime}
  const layers=await p.evaluate(()=>__playerTest.layers());assert.equal(layers.length,378);assert.deepEqual(layers.filter(r=>!r.neckConnected||r.detached.length||r.visiblePixels<=1000),[]);
  const mix=await p.evaluate(()=>__playerTest.mix());assert.deepEqual(mix.pieces,{head:'magic_2',shoulders:'melee_2',chest:'ranged_1',legs:'ranged_2',boots:'base',gloves:'melee_1'});
  passed.push('Head, neck and torso stay visibly connected in 378 outfit, activity and facing combinations; the renderer can resolve each physical armor slot independently');
+ const avatarSource=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)][0][1];assert.equal(avatarSource,fs.readFileSync('src/avatar-rig.js','utf8'));await p.addScriptTag({content:instrumentAvatar(avatarSource)});
+ await p.evaluate(async()=>{__armLayerGlobal.DeepwellAvatar.setAssets(__playerTest.toolAssets());await Promise.all(__armLayerGlobal.DeepwellAvatar.images().map(image=>image.decode()));});
+ const occlusion=await p.evaluate(()=>{
+  const totals={cases:0,armCrossings:0,armErrors:0,farGrips:0,farGripErrors:0,nearGrips:0,nearGripErrors:0},failures=[],data=__deepwell.getState().data;
+  for(const pose of ['mine','smith','wood','fletch','ward','rune','polish','scavenge'])for(const facing of [-1,1])for(const armor of ['','melee_2','ranged_2','magic_2'])for(const state of [...[.12,.31,.65,.87].map(workPhase=>({workPhase})),...[0,1].flatMap(variant=>[.25,.5,.75].map(progress=>({workPhase:.65,bonusReaction:{variant,progress}})))]){
+   const options={pose,time:1.5,working:true,workBlend:1,facing,...state,data:{...data,equippedArmor:armor,enchant:0}},rig=DeepwellAvatar.poseRig(options),sample=__armLayerGlobal.armLayerProbe.capture(options);totals.cases++;for(const [key,value]of Object.entries(sample))totals[key]+=value;
+   if(sample.armErrors||sample.farGripErrors||sample.nearGripErrors)failures.push({pose,facing,armor,...state,...sample});
+   if(rig.tool&&rig.gripOffset&&Math.hypot(rig.gripOffset.x,rig.gripOffset.y)>rig.tool.height*(1-rig.tool.grip[1]))failures.push({pose,facing,reason:'Supporting grip beyond handle'});
+  }return {...totals,failures};
+ });assert.equal(occlusion.cases,640);assert.ok(occlusion.armCrossings>1000&&occlusion.farGrips>0&&occlusion.nearGrips>1000,JSON.stringify(occlusion));assert.deepEqual(occlusion.failures,[]);
+ passed.push('640 work and bonus poses across both facings and four material families keep the far palm behind the near forearm, both grips above their shaft, and the supporting grip within the handle');
  const coverage=await p.evaluate(()=>__playerTest.workArmCoverage());assert.equal(coverage.length,32);
  // Cuffs and the near hand can cover a few samples. A missing upper arm cannot
  // hide in that allowance, even if the torso joins its alpha mask to the wrist.

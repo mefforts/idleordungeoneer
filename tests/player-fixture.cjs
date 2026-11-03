@@ -4,6 +4,7 @@ function playerFixture(){
  function renderToCanvas(options={}){const canvas=document.createElement('canvas');canvas.width=canvas.height=600;const c=canvas.getContext('2d',{willReadFrequently:true});DeepwellAvatar.render(c,{x:240,y:540,scale:2.5,time:1.4,data:{...data,enchant:0,...options.data},...options});return {canvas,c};}
  window.__playerTest={
   ready,
+  toolAssets(){return PLAYER_ART;},
   openCreator(){creator.open();},
   closeCreator(){creator.close();},
   creatorPixels(){const canvas=$('wardrobeCanvas'),r=canvas.getBoundingClientRect(),scale=Math.min(r.width/145,r.height/135)*.89,x=r.width*.5*canvas.width/r.width,y=(r.height*.88-53*scale)*canvas.height/r.height,pixels=canvas.getContext('2d').getImageData(Math.round(x)-3,Math.round(y)-3,7,7).data;let green=0;for(let i=0;i<pixels.length;i+=4)green+=pixels[i+1]-pixels[i];return green/49;},
