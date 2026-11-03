@@ -1,0 +1,24 @@
+.player-ui .systems-workflow{grid-template-columns:repeat(3,minmax(0,1fr))}
+.player-ui .tier-promotion{margin:0;border:1px solid #bfa47377;padding:10px;background:#2c271c99}
+.player-ui .tier-promotion .recipe-actions{display:flex;flex-direction:column;gap:5px}
+.player-ui .craft-tile-body>small{display:block;color:#cfc2a3;font:11px/1.45 system-ui;margin:4px 0}
+.player-ui .craft-tile-body>strong{font:16px/1.25 Georgia;color:#efdfbb}
+.player-ui #transmuteResource{width:100%;min-width:0;min-height:36px;margin:4px 0;font:11px system-ui;color:#eadbb9;background:#27261e;border:1px solid #99835b}
+.player-ui .craft-tile .recipe-actions>button{min-height:44px;max-width:110px;padding:7px 9px;font-size:11px}
+.player-ui .craft-tile .craft-tile-icon,.player-ui .craft-tile>img{width:48px;height:48px;align-self:center;object-fit:contain}
+.player-ui .craft-tile{min-width:0}.player-ui .recipe-actions{min-width:62px}.player-ui .craft-tile-body{min-width:0}
+.player-ui .work-lock{position:static;padding:0 12px 8px;display:flex;align-items:center;gap:5px;font:10px/1.4 system-ui;color:#c7b996;white-space:normal}
+.work-tier-tag{display:block;font:9px system-ui;color:#bdbda1;margin:0 12px 7px}.jewelry-refinement{border-left:2px solid #ae8cd8}
+.dungeon-shop-tabs{display:flex;gap:6px;margin:0 0 16px}.dungeon-shop-tabs>button{flex:1;min-height:44px;font:13px Georgia;padding:8px}
+.dungeon-shop-tabs>button[aria-pressed="true"]{outline:1px solid #d8c28e}.blessing-shop-list{display:grid;gap:9px}
+body.blessing-choices-open #overlay{background:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.blessing-choices-open #overlayCard{background:none!important;background-image:none!important;border:0!important;box-shadow:none!important;padding:12px!important;max-height:calc(100dvh - 24px)}
+body.blessing-choices-open #overlayCard::before,body.blessing-choices-open #overlayCard::after{display:none!important}
+body.blessing-choices-open .elite-reward-choices{gap:9px}body.blessing-choices-open #eliteRewardLater{margin-top:10px}
+.compact-buffs .temporary-buff-count{display:none}.compact-buffs .temporary-buff-strip{gap:4px;width:44px;padding:0;scrollbar-width:none}.compact-buffs .temporary-buff-strip::-webkit-scrollbar{display:none}
+.player-ui .compact-buffs .temporary-buff{position:relative;width:44px;min-width:44px;min-height:44px;height:44px;display:block;padding:0;border:0!important;background:none!important;box-shadow:none!important}
+.player-ui .compact-buffs .temporary-buff::before,.player-ui .compact-buffs .temporary-buff::after{display:none!important}
+.player-ui .compact-buffs .temporary-buff>img{width:40px;height:40px;display:block;margin:2px;object-fit:contain}
+.compact-buffs .temporary-buff>span{position:absolute;inset:0;pointer-events:none}.compact-buffs .temporary-buff b,.compact-buffs .temporary-buff-effect,.compact-buffs .temporary-buff i{display:none}
+.compact-buffs .temporary-buff small{position:absolute;top:0;left:0;width:44px;text-align:center;color:#fff4d5;font:bold 11px/1.15 system-ui;text-shadow:-1px -1px 1px #111,1px -1px 1px #111,-1px 1px 1px #111,1px 1px 1px #111,0 1px 3px #000}
+@media(max-width:390px){.player-ui .craft-tile{gap:8px;padding:9px}.player-ui .craft-tile .craft-tile-icon,.player-ui .craft-tile>img{width:39px;height:39px}.player-ui .craft-tile-body>strong{font-size:14px}.player-ui .craft-tile .recipe-actions>button{max-width:82px;padding:7px 6px}}

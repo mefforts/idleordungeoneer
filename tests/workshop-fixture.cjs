@@ -3,9 +3,9 @@ function workshopFixture(){
  let frozen=null;const animate=workshopAnimation;
  workshopAnimation=(...args)=>{const frame=animate(...args);if(frozen!==null){frame.phase=frame.workPhase=frozen;frame.time=frozen*6;frame.workBlend=1;}return frame;};
  function fresh(key='scavenge',armor='ranged_1',zone=0){
-  resetArenaTouch();if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();data.floor=zoneStart(zone);data.cleared=Math.max(zoneEnd(0),zoneStart(zone)-1);data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=data.skillsNudgeSeen=data.zone2SkillsAnnounced=true;
+  resetArenaTouch();if(codexSession)closeCodex();closeDrawer();hideOverlay();data=defaults();zone=SKILLS[key]?.tier===2?Math.max(1,zone):zone;data.floor=zoneStart(zone);data.cleared=Math.max(zoneEnd(0),zoneStart(zone)-1);data.onboardingDone=data.tutorialSeen=data.masteryIntroSeen=data.skillsNudgeSeen=data.zone2SkillsAnnounced=true;
   data.unlockedWeapons=Object.keys(WEAPON_TYPES);data.ownedArmor=Object.keys(ARMOR_SETS);data.equippedArmor=armor;data.equipmentVersion=data.tierProgressionVersion=1;
-  for(const key of Object.keys(RESOURCE_LABEL))data[key]=200;data.gold=45;data.blacksmithXp=3000;normalizeProgression();normalizeZone();ensureJobs();resetRun();tourIndex=-1;
+  for(const key of Object.keys(RESOURCE_LABEL))data[key]=200;data.gold=45;for(const d of Object.values(DISCIPLINES))data[d.xp]=3000;normalizeProgression();normalizeZone();ensureJobs();resetRun();tourIndex=-1;
   game.status='ready';game.menuPaused=game.manualPaused=true;game.keys={};game.enemies=[];game.activeClockMs=10000;game.lastActiveAt={};game.activeHits=0;game.lastActiveSkill='';game.holdSkill=null;game.workReward=null;game.devSpeed=game.skillSpeed=1;frozen=null;
   enterActivity(key);$('toastStack').replaceChildren();refreshUI();
  }

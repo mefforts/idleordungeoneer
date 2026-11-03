@@ -48,9 +48,9 @@ function segmentDistance(px,py,ax,ay,bx,by){
 function tickDungeonHazards(dt){
  const p=game.player;game.hazards=(game.hazards||[]).filter(h=>{
   if(h.owner&&!game.enemies.includes(h.owner))return false;
-  if(h.delay>0){h.delay-=dt;return true;}h.life-=dt;h.age+=dt;if(h.life<=0)return false;
+  if(h.delay>0){h.delay-=dt;return true;}h.life-=dt;h.age+=dt;if(h.wave){h.inner+=h.waveSpeed*dt;h.r+=h.waveSpeed*dt;}if(h.life<=0)return false;
   const contains=actor=>h.type==='expanded'?expandedContains(actor,h):h.type==='ground'?Math.hypot(actor.x-h.x,actor.y-h.y)<h.r+(actor.rad||10):segmentDistance(actor.x,actor.y,h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length)<h.width/2+(actor.rad||10);
-  if(contains(p)&&!(h.type==='expanded'&&h.playerHit)){hurt(h.damage);if(h.type==='expanded')h.playerHit=true;}if(h.language==='friendly'||['ground','beam'].includes(h.type))damageMonstersInAttack(h.owner,h,contains);return game.status==='running'&&game.transition<=0;
+  if(contains(p)&&!(h.type==='expanded'&&h.playerHit&&!h.lingering)){hurt(h.damage);if(h.type==='expanded'&&!h.lingering)h.playerHit=true;}if(h.language==='friendly'||['ground','beam'].includes(h.type))damageMonstersInAttack(h.owner,h,contains);return game.status==='running'&&game.transition<=0;
  });
 }
 function paintWarningCircle(x,y,r,progress,theme,active=false){
@@ -169,7 +169,7 @@ function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFr
 
 function drawCombat(w,h){const b=biome();drawTiles(b,w,h);ctx.save();const jitter=game.shake>0&&!reducedMotion()?rand(-game.shake,game.shake):0;ctx.translate(w/2-game.camX+jitter,h/2-game.camY+jitter);
  const kind=biomeIndex();
- const worldObjects=worldScenery(kind,game.camX,game.camY,w,h);drawEnvironmentDecals(worldObjects);paintEncounterGround();
+ const worldObjects=worldScenery(kind,game.camX,game.camY,w,h);drawEnvironmentDecals(worldObjects);paintEncounterGround();paintGraveEchoes();
  const entries=game.enemies.map(e=>({y:e.y+e.rad*.65,enemy:e}));
  entries.push({y:game.player.y+15,player:true});
  for(const t of game.totems||[])entries.push({y:t.y+18,totem:t});

@@ -46,7 +46,7 @@ const WORKSHOP_THEMES=[{light:'#bed99a',deep:'#527b46',spark:'#e5d79c'},{light:'
 function workAnimationSpeed(rate){return .6+.15*(Math.min(4,Math.max(1,rate))-1);}
 function workSpeedTier(rate){return rate<=4?0:rate<10?1:rate<24?2:3;}
 function workshopAnimation(key,active,working){
- const base=SKILLS[key].scene||key,pose={mine:'mine',silverMine:'mine',forge:'smith',silverSmelt:'smith',wood:'wood',fletch:'fletch',ward:'ward',rune:'rune',polish:'polish',scavenge:'scavenge'}[base]||'scavenge';
+ const base=SKILLS[key].scene||key,pose=SKILLS[key].workPose||{mine:'mine',silverMine:'mine',forge:'smith',silverSmelt:'smith',wood:'wood',fletch:'fletch',ward:'ward',rune:'rune',polish:'polish',scavenge:'scavenge'}[base]||'scavenge';
  const interval=skillInterval(key,active),elapsed=active?(game.activeClockMs-(game.lastActiveAt?.[key]??game.activeClockMs))/1000:(data.jobTimers[key]||0),phase=working&&!reducedMotion()?Math.min(.9999,Math.max(0,elapsed/interval)):.3;
  const time=reducedMotion()?0:(game.workVisualClock||0),now=performance.now();
  if(!game.workPresentation||game.workPresentation.key!==key)game.workPresentation={key,at:now,blend:0};
@@ -75,6 +75,8 @@ function paintWorkshopWorkpiece(frame,rig,c=ctx){
   for(let row=0;row<5;row++){c.strokeStyle=row%2?theme.light:'#e2d6d7';c.lineWidth=.45;c.beginPath();c.moveTo(x-half+2,y+row*2);c.quadraticCurveTo(x,y+2+row*2,x+half-2,y+row*2);c.stroke();}
  }else if(pose==='rune'){
   c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#626d72';c.strokeStyle='#263438';c.lineWidth=1;c.beginPath();c.ellipse(0,0,8,5,-.2,0,Math.PI*2);c.fill();c.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);c.restore();
+ }else if(pose==='clean'){
+  c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#bcae7b';c.strokeStyle='#4f5142';c.lineWidth=1;c.beginPath();c.moveTo(-12,-3);c.lineTo(-5,-8);c.lineTo(9,-6);c.lineTo(13,1);c.lineTo(4,7);c.lineTo(-10,5);c.closePath();c.fill();c.stroke();c.strokeStyle=theme.deep;c.beginPath();c.arc(0,-1,4,.2,5.1);c.moveTo(-6,0);c.lineTo(7,1);c.stroke();c.globalAlpha=.35+(1-Math.cos(rig.phase*Math.PI*2))*.22;c.fillStyle='#756d57';for(let i=0;i<8;i++){c.beginPath();c.ellipse(-8+i*2.6,Math.sin(i*2)*3,2,1.4,0,0,Math.PI*2);c.fill();}c.restore();
  }else if(pose==='polish'){
   c.save();c.translate(x,y);c.rotate(piece.angle);c.fillStyle=SKILLS[key].tier===2?'#a7523a':'#a8d9ce';c.strokeStyle='#3a4b4c';c.lineWidth=.7;c.beginPath();c.moveTo(0,-5);c.lineTo(5,-1);c.lineTo(2,4);c.lineTo(-4,2);c.lineTo(-5,-2);c.closePath();c.fill();c.stroke();c.strokeStyle='#e4eee0';c.beginPath();c.moveTo(0,-5);c.lineTo(-1,0);c.lineTo(5,-1);c.moveTo(-1,0);c.lineTo(2,4);c.stroke();c.restore();
  }else if(pose==='fletch'){
@@ -147,6 +149,7 @@ function workshopProp(frame){
  if(pose==='fletch')return {art:'fletching',x:34,height:44};
  if(pose==='ward')return {art:'warding',x:29,height:26};
  if(pose==='rune')return {art:'engraving',x:33,height:44};
+ if(pose==='clean')return {art:'jeweling',x:27,height:39};
  if(pose==='polish')return {art:'jeweling',x:31,height:44};
  return null;
 }

@@ -1,5 +1,5 @@
 {
-  "version": "11.4.0",
+  "version": "11.5.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -42,8 +42,8 @@
       "zoneFinalBonus": 3,
       "masteredMonsterChance": 0.0042,
       "firstClearGuardianEchoes": 26,
-      "expectedRareElites": 3.7046519505803044,
-      "expectedFirstClearSigils": 36.79553799472856
+      "expectedRareElites": 6.401275555258057,
+      "expectedFirstClearSigils": 35.323242617674545
     },
     {
       "zone": 2,
@@ -60,9 +60,9 @@
       ],
       "zoneFinalBonus": 3,
       "masteredMonsterChance": 0.0042,
-      "firstClearGuardianEchoes": 56,
-      "expectedRareElites": 5.308262904657494,
-      "expectedFirstClearSigils": 69.34433811594351
+      "firstClearGuardianEchoes": 65,
+      "expectedRareElites": 11.296713891214399,
+      "expectedFirstClearSigils": 71.0949597202514
     },
     {
       "zone": 3,
@@ -80,8 +80,8 @@
       "zoneFinalBonus": 3,
       "masteredMonsterChance": 0.0042,
       "firstClearGuardianEchoes": 116,
-      "expectedRareElites": 5.971876628694306,
-      "expectedFirstClearSigils": 131.36596099880822
+      "expectedRareElites": 11.23255915423864,
+      "expectedFirstClearSigils": 129.3096980265208
     },
     {
       "zone": 4,
@@ -99,8 +99,8 @@
       "zoneFinalBonus": 3,
       "masteredMonsterChance": 0.0042,
       "firstClearGuardianEchoes": 116,
-      "expectedRareElites": 8.323839553118095,
-      "expectedFirstClearSigils": 134.25086803445873
+      "expectedRareElites": 15.341006092991375,
+      "expectedFirstClearSigils": 131.275329114268
     }
   ],
   "dungeonPerks": [
@@ -477,41 +477,49 @@
     {
       "level": 1,
       "zone": 2,
+      "label": "Reach Zone 2",
       "totalPoints": 1
     },
     {
       "level": 2,
-      "zone": 5,
+      "zone": 3,
+      "label": "Complete Zone 2",
       "totalPoints": 2
     },
     {
       "level": 3,
       "zone": 10,
+      "label": "Reach Zone 10",
       "totalPoints": 3
     },
     {
       "level": 4,
       "zone": 20,
+      "label": "Reach Zone 20",
       "totalPoints": 4
     },
     {
       "level": 5,
       "zone": 40,
+      "label": "Reach Zone 40",
       "totalPoints": 5
     },
     {
       "level": 6,
       "zone": 80,
+      "label": "Reach Zone 80",
       "totalPoints": 6
     },
     {
       "level": 7,
       "zone": 160,
+      "label": "Reach Zone 160",
       "totalPoints": 7
     },
     {
       "level": 8,
       "zone": 320,
+      "label": "Reach Zone 320",
       "totalPoints": 8
     }
   ],
@@ -750,8 +758,8 @@
       ],
       "swarmCount": 360,
       "spawnSeconds": 0.9166666666666666,
-      "hpScale": 1.2594220723037632,
-      "forecastSeconds": 599.5966115901587
+      "hpScale": 1.251910859571855,
+      "forecastSeconds": 600.3442369289235
     },
     {
       "index": 1,
@@ -777,13 +785,13 @@
       ],
       "swarmCount": 540,
       "spawnSeconds": 1.2222222222222223,
-      "hpScale": 3.2637818698056966,
-      "forecastSeconds": 1199.7454689029712
+      "hpScale": 3.1081361988823755,
+      "forecastSeconds": 1200.2069830686637
     },
     {
       "index": 2,
-      "minutes": 30,
-      "seconds": 1800,
+      "minutes": 44,
+      "seconds": 2640,
       "floors": 20,
       "weaponRank": 20,
       "speedRank": 10,
@@ -804,13 +812,14 @@
       ],
       "swarmCount": 720,
       "spawnSeconds": 1.3750000000000002,
-      "hpScale": 2.9751928897633677,
-      "forecastSeconds": 1799.9723742146678
+      "hpScale": 5.049167255084418,
+      "forecastSeconds": 2620.638308184102,
+      "previousTargetSeconds": 1800
     },
     {
       "index": 3,
-      "minutes": 35,
-      "seconds": 2100,
+      "minutes": 50,
+      "seconds": 3000,
       "floors": 20,
       "weaponRank": 20,
       "speedRank": 10,
@@ -831,8 +840,9 @@
       ],
       "swarmCount": 900,
       "spawnSeconds": 1.2833333333333334,
-      "hpScale": 3.148458745565039,
-      "forecastSeconds": 2099.9824978165925
+      "hpScale": 5.049167255084418,
+      "forecastSeconds": 2962.9547943352154,
+      "previousTargetSeconds": 2100
     }
   ],
   "zoneDepths": [
@@ -932,11 +942,94 @@
       "eliteForms": 12
     }
   ],
+  "craftingUpdate": {
+    "tierTwoLevel": 10,
+    "zoneTwoAlsoRequired": true,
+    "artisanXpMultiplier": 8,
+    "artisanCatchUp": true,
+    "jewelry": {
+      "maximum": 50,
+      "relativeStep": 0.0025,
+      "xp": 80
+    },
+    "tools": {
+      "maximum": 10,
+      "speedStep": 0.005
+    },
+    "activities": 21,
+    "transmutation": {
+      "essence": 100,
+      "minimum": 1,
+      "maximum": 10,
+      "resources": [
+        "ore",
+        "logs",
+        "cloth",
+        "scraps",
+        "silverOre",
+        "opals",
+        "coal",
+        "willowLogs",
+        "ancientSalvage",
+        "garnets"
+      ]
+    },
+    "voucherKinds": {
+      "iron": [
+        "weapon",
+        "speed",
+        "reach",
+        "armor",
+        "enchant",
+        "jewelry",
+        "tool-pickaxe",
+        "tool-hatchet",
+        "tool-mattock",
+        "station-blacksmithing",
+        "station-woodworking",
+        "station-warding",
+        "station-scavenging",
+        "station-artisan"
+      ],
+      "steel": [
+        "weapon",
+        "speed",
+        "reach",
+        "armor",
+        "enchant",
+        "station-blacksmithing",
+        "station-woodworking",
+        "station-warding",
+        "station-scavenging",
+        "station-artisan"
+      ]
+    },
+    "blessingStore": {
+      "durationMultiplier": 5,
+      "costs": {
+        "fervor": 60,
+        "windstep": 60,
+        "stoneguard": 60,
+        "silence": 100,
+        "quagmire": 100,
+        "bounty": 80,
+        "harvest": 80,
+        "cascade": 60,
+        "momentum": 60,
+        "longarm": 60
+      }
+    }
+  },
   "rareElites": {
-    "chance": 0.015,
+    "chance": 0.03,
     "healthMultiplier": 3.5,
     "maximumPerWave": 1,
-    "blessingChance": 1,
+    "zoneTwoFinal": {
+      "chance": 0.1,
+      "maximumRares": 3,
+      "knownElites": 6
+    },
+    "blessingChance": 0.35,
     "otherEliteBlessingChance": 0.35,
     "stacking": true,
     "lifesteal": 0.005,
@@ -1083,14 +1176,33 @@
     },
     "movingReflectCasters": true,
     "zoneTwoIncomingDamage": 1.25,
+    "zoneThreeIncomingDamage": 1.6,
+    "zoneThreeOpeningHealthStep": 1.25,
+    "zoneThreeDeathEchoes": {
+      "maximum": 5,
+      "warning": 0.85,
+      "pursuitSpeed": 110,
+      "life": 4.2
+    },
+    "zoneThreeOpeningPattern": "gravePulse",
+    "enlargedArenaDimensions": 1.5,
+    "emberCleaveSeconds": 3.2,
     "zoneTwoOpeningStars": {
       "growing": true,
       "returning": true,
+      "speed": 200,
+      "returnAfter": 2.2,
+      "minimumCasterGap": 230,
       "guardian": 0,
       "eliteEchoes": true
     },
-    "patterns": 28,
+    "patterns": 29,
     "expanded": {
+      "gravePulse": {
+        "name": "Grave Pulse",
+        "seconds": 1.7,
+        "hint": "Expanding bone rings · dash across the rims"
+      },
       "ringchain": {
         "name": "Rebounding Barrage",
         "seconds": 1.6,
@@ -1238,18 +1350,19 @@
       "dashRequiresExit": false,
       "dashShieldBypass": true,
       "shieldingElites": true,
-      "shieldWeaponDamageMultiplier": 0.65,
       "retaliation": "Only while summoning; normal defenses and invulnerability apply",
       "dashSafe": true,
-      "weaponDamage": true
+      "weaponDamage": false,
+      "persistAfterCasterDeath": true,
+      "phaseWaitsForSpiresAndSummons": true
     },
     "healing": {
       "chance": 0.02,
       "ordinary": 0.03,
       "elite": 0.12,
       "eliteChance": 0.55,
-      "rare": 0.15,
-      "rareChance": 0.7
+      "rare": 0.12,
+      "rareChance": 0.55
     },
     "healingStream": {
       "playerPerSecond": 0.0035,
@@ -1671,7 +1784,8 @@
       "verb": "CLEAN",
       "pose": "scavenge",
       "color": "#b6c6a0",
-      "scene": "scavenge",
+      "scene": "polish",
+      "workPose": "clean",
       "activeSeconds": 3.6,
       "group": "scavenging"
     },
@@ -1729,11 +1843,12 @@
       "seconds": 30,
       "amount": 1,
       "xp": "artisanXp",
-      "gain": 15,
+      "gain": 120,
       "verb": "PROSPECT",
       "pose": "scavenge",
       "color": "#e59b91",
-      "scene": "scavenge",
+      "scene": "polish",
+      "workPose": "clean",
       "activeSeconds": 4.5,
       "group": "artisan"
     },
@@ -1747,7 +1862,7 @@
       "seconds": 24,
       "amount": 1,
       "xp": "artisanXp",
-      "gain": 24,
+      "gain": 192,
       "cost": {
         "garnets": 1
       },
@@ -1763,7 +1878,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 552.8000000000279,
+      "seconds": 565.680000000031,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
@@ -1771,7 +1886,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1215.1600000000697,
+      "seconds": 1195.0000000000664,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
@@ -1779,34 +1894,34 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1841.3200000000638,
+      "seconds": 2596.6800000001426,
       "kills": 780,
       "referenceDps": 160,
-      "targetSeconds": 1800
+      "targetSeconds": 2640
     },
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2128.2000000001053,
+      "seconds": 2871.400000000112,
       "kills": 960,
       "referenceDps": 160,
-      "targetSeconds": 2100
+      "targetSeconds": 3000
     },
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2467.560000000139,
+      "seconds": 2931.8800000001024,
       "kills": 960,
       "referenceDps": 160,
-      "targetSeconds": 2400
+      "targetSeconds": 3000
     },
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2461.8800000001397,
+      "seconds": 2933.280000000102,
       "kills": 960,
       "referenceDps": 160,
-      "targetSeconds": 2400
+      "targetSeconds": 3000
     }
   ],
   "zonePressure": {
@@ -1822,7 +1937,79 @@
           "speed": 0
         },
         "maxHp": 144,
-        "seconds": 6.58,
+        "seconds": 7.98,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 7,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 19,
+        "careful": false,
+        "scale": 1.25,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 6.28,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 5,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 19,
+        "careful": true,
+        "scale": 1,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 8,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 98,
+        "hits": 2,
+        "damageTaken": 46,
+        "reflections": 0
+      },
+      {
+        "seed": 19,
+        "careful": true,
+        "scale": 1.25,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 8,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 86.5,
+        "hits": 2,
+        "damageTaken": 57.5,
+        "reflections": 0
+      },
+      {
+        "seed": 107,
+        "careful": false,
+        "scale": 1,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 7.38,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
@@ -1831,70 +2018,16 @@
         "reflections": 0
       },
       {
-        "seed": 19,
-        "careful": false,
-        "scale": 1.25,
-        "dps": 54.71772727272726,
-        "gear": {
-          "weapon": 7,
-          "speed": 0
-        },
-        "maxHp": 144,
-        "seconds": 5.88,
-        "status": "dead",
-        "bossDefeated": false,
-        "remainingHp": 0,
-        "hits": 5,
-        "damageTaken": 144,
-        "reflections": 0
-      },
-      {
-        "seed": 19,
-        "careful": true,
-        "scale": 1,
-        "dps": 54.71772727272726,
-        "gear": {
-          "weapon": 7,
-          "speed": 0
-        },
-        "maxHp": 144,
-        "seconds": 10.08,
-        "status": "running",
-        "bossDefeated": true,
-        "remainingHp": 117.5,
-        "hits": 1,
-        "damageTaken": 26.5,
-        "reflections": 1
-      },
-      {
-        "seed": 19,
-        "careful": true,
-        "scale": 1.25,
-        "dps": 54.71772727272726,
-        "gear": {
-          "weapon": 7,
-          "speed": 0
-        },
-        "maxHp": 144,
-        "seconds": 10.08,
-        "status": "running",
-        "bossDefeated": true,
-        "remainingHp": 110.9,
-        "hits": 1,
-        "damageTaken": 33.1,
-        "reflections": 1
-      },
-      {
         "seed": 107,
         "careful": false,
-        "scale": 1,
+        "scale": 1.25,
         "dps": 54.71772727272726,
         "gear": {
           "weapon": 7,
           "speed": 0
         },
         "maxHp": 144,
-        "seconds": 7.38,
+        "seconds": 6.86,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
@@ -1904,24 +2037,6 @@
       },
       {
         "seed": 107,
-        "careful": false,
-        "scale": 1.25,
-        "dps": 54.71772727272726,
-        "gear": {
-          "weapon": 7,
-          "speed": 0
-        },
-        "maxHp": 144,
-        "seconds": 6.68,
-        "status": "dead",
-        "bossDefeated": false,
-        "remainingHp": 0,
-        "hits": 4,
-        "damageTaken": 144,
-        "reflections": 0
-      },
-      {
-        "seed": 107,
         "careful": true,
         "scale": 1,
         "dps": 54.71772727272726,
@@ -1930,13 +2045,13 @@
           "speed": 0
         },
         "maxHp": 144,
-        "seconds": 10.64,
+        "seconds": 10.2,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 144,
-        "hits": 0,
-        "damageTaken": 0,
-        "reflections": 1
+        "remainingHp": 104.9,
+        "hits": 2,
+        "damageTaken": 39.1,
+        "reflections": 0
       },
       {
         "seed": 107,
@@ -1948,13 +2063,13 @@
           "speed": 0
         },
         "maxHp": 144,
-        "seconds": 10.64,
+        "seconds": 10.2,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 144,
-        "hits": 0,
-        "damageTaken": 0,
-        "reflections": 1
+        "remainingHp": 95.1,
+        "hits": 2,
+        "damageTaken": 48.9,
+        "reflections": 0
       },
       {
         "seed": 523,
@@ -1970,7 +2085,7 @@
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 5,
+        "hits": 6,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -1984,11 +2099,11 @@
           "speed": 0
         },
         "maxHp": 144,
-        "seconds": 6.68,
+        "seconds": 6.86,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 4,
+        "hits": 5,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -2002,13 +2117,13 @@
           "speed": 0
         },
         "maxHp": 144,
-        "seconds": 10.64,
+        "seconds": 10.2,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 144,
-        "hits": 0,
-        "damageTaken": 0,
-        "reflections": 1
+        "remainingHp": 104.9,
+        "hits": 2,
+        "damageTaken": 39.1,
+        "reflections": 0
       },
       {
         "seed": 523,
@@ -2020,15 +2135,329 @@
           "speed": 0
         },
         "maxHp": 144,
-        "seconds": 10.64,
+        "seconds": 10.2,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 144,
-        "hits": 0,
-        "damageTaken": 0,
-        "reflections": 1
+        "remainingHp": 95.1,
+        "hits": 2,
+        "damageTaken": 48.9,
+        "reflections": 0
       }
     ],
     "errors": []
+  },
+  "zoneChallengePressure": {
+    "scenario": "Approximately 150 DPS bow and reinforced Steel ranged armor, actual spawning/health/ammo/damage, no purchased combat perks; deterministic stationary and counterplay controllers",
+    "pressure": [
+      {
+        "zone": 2,
+        "stage": "Final floor",
+        "careful": false,
+        "seed": 19,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 0,
+        "seconds": 13.68,
+        "status": "dead",
+        "phase": 0,
+        "clearedOpeningGuardian": false,
+        "hits": 9,
+        "damage": 189,
+        "echoes": 0,
+        "casts": [
+          "beam",
+          "bloom",
+          "ground"
+        ]
+      },
+      {
+        "zone": 2,
+        "stage": "Final floor",
+        "careful": false,
+        "seed": 107,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 0,
+        "seconds": 12.9,
+        "status": "dead",
+        "phase": 0,
+        "clearedOpeningGuardian": false,
+        "hits": 8,
+        "damage": 211.7,
+        "echoes": 0,
+        "casts": [
+          "ground",
+          "bloom",
+          "beam"
+        ]
+      },
+      {
+        "zone": 2,
+        "stage": "Final floor",
+        "careful": false,
+        "seed": 523,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 0,
+        "seconds": 13.4,
+        "status": "dead",
+        "phase": 0,
+        "clearedOpeningGuardian": false,
+        "hits": 9,
+        "damage": 211.7,
+        "echoes": 0,
+        "casts": [
+          "beam",
+          "ground",
+          "bloom"
+        ]
+      },
+      {
+        "zone": 2,
+        "stage": "Final floor",
+        "careful": true,
+        "seed": 19,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 189,
+        "seconds": 28.58,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 0,
+        "damage": 0,
+        "echoes": 0,
+        "casts": [
+          "beam",
+          "bloom",
+          "ground",
+          "volley",
+          "cleave",
+          "crossfire",
+          "summon"
+        ]
+      },
+      {
+        "zone": 2,
+        "stage": "Final floor",
+        "careful": true,
+        "seed": 107,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 189,
+        "seconds": 27.84,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 0,
+        "damage": 0,
+        "echoes": 0,
+        "casts": [
+          "ground",
+          "bloom",
+          "beam",
+          "fury",
+          "crossfire"
+        ]
+      },
+      {
+        "zone": 2,
+        "stage": "Final floor",
+        "careful": true,
+        "seed": 523,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 189,
+        "seconds": 28.74,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 0,
+        "damage": 0,
+        "echoes": 0,
+        "casts": [
+          "beam",
+          "ground",
+          "bloom",
+          "cleave",
+          "shield",
+          "volley",
+          "reflect",
+          "fury",
+          "crossfire"
+        ]
+      },
+      {
+        "zone": 3,
+        "stage": "Opening floor",
+        "careful": false,
+        "seed": 19,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 0,
+        "seconds": 8.38,
+        "status": "dead",
+        "phase": 0,
+        "clearedOpeningGuardian": false,
+        "hits": 7,
+        "damage": 189,
+        "echoes": 3,
+        "casts": [
+          "ground"
+        ]
+      },
+      {
+        "zone": 3,
+        "stage": "Opening floor",
+        "careful": false,
+        "seed": 107,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 0,
+        "seconds": 8.66,
+        "status": "dead",
+        "phase": 0,
+        "clearedOpeningGuardian": false,
+        "hits": 6,
+        "damage": 189,
+        "echoes": 3,
+        "casts": [
+          "gravePulse"
+        ]
+      },
+      {
+        "zone": 3,
+        "stage": "Opening floor",
+        "careful": false,
+        "seed": 523,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 0,
+        "seconds": 9.92,
+        "status": "dead",
+        "phase": 0,
+        "clearedOpeningGuardian": false,
+        "hits": 7,
+        "damage": 189,
+        "echoes": 5,
+        "casts": [
+          "gravePulse"
+        ]
+      },
+      {
+        "zone": 3,
+        "stage": "Opening floor",
+        "careful": true,
+        "seed": 19,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 189,
+        "seconds": 22.22,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 0,
+        "damage": 0,
+        "echoes": 7,
+        "casts": [
+          "ground",
+          "mend",
+          "ricochet",
+          "crossfire",
+          "summon"
+        ]
+      },
+      {
+        "zone": 3,
+        "stage": "Opening floor",
+        "careful": true,
+        "seed": 107,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 189,
+        "seconds": 20.96,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 0,
+        "damage": 0,
+        "echoes": 7,
+        "casts": [
+          "gravePulse",
+          "ricochet",
+          "crossfire"
+        ]
+      },
+      {
+        "zone": 3,
+        "stage": "Opening floor",
+        "careful": true,
+        "seed": 523,
+        "dps": 150.18,
+        "gear": {
+          "weapon": 19,
+          "speed": 9
+        },
+        "maxHp": 189,
+        "remainingHp": 102.1,
+        "seconds": 21.06,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 3,
+        "damage": 109.6,
+        "echoes": 7,
+        "casts": [
+          "gravePulse",
+          "reflect",
+          "crossfire",
+          "summon"
+        ]
+      }
+    ]
   }
 }

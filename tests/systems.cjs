@@ -27,7 +27,7 @@ const {createRuntime}=require('./runtime.cjs');
    const {c,p}=await profile(rich);const timings=await p.evaluate(()=>{const before=__deepwell.skillInterval('forge');__deepwell.upgradeSkill('blacksmithing');return {before,after:__deepwell.skillInterval('forge'),idle:__deepwell.skillInterval('forge',false)};});assert.ok(timings.after<timings.before);assert.ok(Math.abs(timings.after-2.8/1.03)<1e-6);
    const result=await p.evaluate(()=>{const before=__deepwell.getState().data.ore;for(let i=0;i<50;i++)__deepwell.produce('forge',true);return {spent:before-__deepwell.getState().data.ore,data:__deepwell.getState().data};});assert.equal(result.spent,98);assert.equal(result.data.stationSaved.blacksmithing,2);assert.ok(Number.isInteger(result.data.ore));
    await p.evaluate(()=>{for(let i=0;i<4;i++)__deepwell.upgradeSkill('blacksmithing')});assert.equal(await p.evaluate(()=>__deepwell.upgradeSkill('blacksmithing')),false);assert.equal((await p.evaluate(()=>__deepwell.getState())).data.stationLevels.blacksmithing,5);
-   await p.click('#introSkills');await p.click('#quickSkills');await p.click('[data-workshop-view="tools"]');await p.screenshot({path:path.join(resultsDir,'systems-tools-station.png')});
+   await p.click('#introSkills');await p.click('#quickSkills');await p.click('[data-workshop-view="equipment"]');await p.screenshot({path:path.join(resultsDir,'systems-tools-station.png')});
    passed.push('Station levels cap at five; speed improves; ingredient conservation saves whole items without fractional inventory');await c.close();
   }
   {

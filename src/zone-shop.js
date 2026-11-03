@@ -124,7 +124,7 @@ function powerIncrement(id,rank=0){return powerSummary(id,Math.min(zoneAbilityCa
 function powerGain(id){return powerIncrement(id,zoneUpgradeRank(id));}
 
 function onKill(e){
- if(!game.enemies.includes(e))return;clearOwnerMechanics(e);flushBurnDamage(e);game.enemies.splice(game.enemies.indexOf(e),1);if(e.summoned){burst(e.x,e.y,6,combatTheme('shield').color);return;}
+ if(!game.enemies.includes(e))return;spawnGraveEcho(e);clearOwnerMechanics(e);flushBurnDamage(e);game.enemies.splice(game.enemies.indexOf(e),1);if(e.summoned){burst(e.x,e.y,6,combatTheme('shield').color);completeSummonCleanup();return;}
  const drops=[],effects=dungeonKillEffects(e);if(effects.gold)drops.push({key:'gold',amount:effects.gold});drops.push(...monsterMaterialDrops(e));
  earnStyleXp(e.boss?10:e.elite?4:1,e.lastDamageStyle||combatStyle());game.runKills++;game.phaseKills++;
  const b=biome();burst(e.x,e.y,e.boss?18:game.enemies.length>65?2:8,b.accent);game.shake=e.boss?7:1.5;
@@ -166,13 +166,13 @@ function zoneBalance(index=zoneNumber()){
  const forecast=scale=>{let seconds=floors*6*.72;for(let floor=0;floor<floors;floor++)for(let phase=0;phase<6;phase++){
   const boss=phase%2===1,progress=2*floor/Math.max(1,floors-1),baseHp=boss?[160,230,360][Math.floor(phase/2)]*(phase===5?(floor===floors-1?3.2:1.75):1):30+phase*4,hp=baseHp*Math.pow(1.14,progress)*scale;
   if(boss)seconds+=expectedAttacks(hp,hit,crit)*cooldown+1.5;
-  else{const echoes=floor===0?(phase===0?0:1):zoneVisualBand(index,floor+1),eligible=Math.max(0,targets[phase]-3-echoes),rare=1-Math.pow(1-RARE_ELITE_CHANCE,eligible),regular=Math.max(0,targets[phase]-echoes-rare);let attacks=0;
+  else{const echoes=index===1&&floor===floors-1?6:floor===0?(phase===0?0:1):zoneVisualBand(index,floor+1),eligible=Math.max(0,targets[phase]-3-echoes),rare=expectedRareCount(eligible,rareEliteSpawnChance(index,floor+1),rareEliteQuota(index,floor+1)),regular=Math.max(0,targets[phase]-echoes-rare);let attacks=0;
    for(let sample=0;sample<21;sample++)attacks+=(regular*expectedAttacks(hp*(.9+sample*.01),hit,crit)+echoes*expectedAttacks(hp*(.9+sample*.01)*2.8,hit,crit)+rare*expectedAttacks(hp*(.9+sample*.01)*3.5,hit,crit))/21;
    seconds+=Math.max(attacks*cooldown,(targets[phase]-1)*model.spawnSeconds+1.5);
   }
  }return seconds;};
  let lo=.001,hi=1;while(forecast(hi)<model.seconds)hi*=2;for(let n=0;n<38;n++){const mid=(lo+hi)/2;if(forecast(mid)<model.seconds)lo=mid;else hi=mid;}
- model.hpScale=(lo+hi)/2;model.forecastSeconds=forecast(model.hpScale);ZONE_BALANCE_CACHE.set(index,model);return model;
+ model.hpScale=Math.max((lo+hi)/2,index>=2?zoneBalance(1).hpScale*Math.pow(1.14,2)*1.25:0);model.forecastSeconds=forecast(model.hpScale);if(index>=2){model.previousTargetSeconds=model.seconds;model.seconds=Math.ceil(model.forecastSeconds/60)*60;model.minutes=model.seconds/60;}ZONE_BALANCE_CACHE.set(index,model);return model;
 }
 
 function investMastery(branch){

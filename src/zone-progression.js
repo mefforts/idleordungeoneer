@@ -106,8 +106,8 @@ function craftStyleUpgrade(id,kind,voucher){
  toast(STYLE_DEFS[id].name+' '+{weapon:'refinement',armor:'reinforcement',enchant:'enchantment',speed:'attack speed',reach:'reach'}[kind]+' '+s[kind]+' / '+cap,'Permanent '+STYLE_DEFS[id].name+' progression · '+TIER_LIMITS[styleTier(id)].name+' tier');
  save();refreshUI();renderDisciplineDrawer();return true;
 }
-function canUseSkill(key){return !!SKILLS[key]&&(!(SKILLS[key].tier===2)||tier2Unlocked())&&(!['silverMine','silverSmelt'].includes(key)||levelRange(data.blacksmithXp||0).lvl>=10);}
-function skillLockReason(key){return SKILLS[key]?.tier===2&&!tier2Unlocked()?'Clear Zone 1 · enter Zone 2':'Requires Blacksmithing level 10';}
+function canUseSkill(key){const skill=SKILLS[key];if(!skill)return false;if(skill.tier!==2&&!['silverMine','silverSmelt'].includes(key))return true;const level=disciplineLevel(disciplineFor(key));return (skill.tier!==2||tier2Unlocked())&&level>=10;}
+function skillLockReason(key){if(canUseSkill(key))return 'Available';const group=DISCIPLINES[disciplineFor(key)];return [SKILLS[key]?.tier===2&&!tier2Unlocked()?'Zone 2':'',disciplineLevel(disciplineFor(key))<10?group.name+' level 10':''].filter(Boolean).join(' · ')||'Available';}
 
 function goToSource(resource){
  if(resource==='gold'||resource==='essence'){closeDrawer();setScene('combat',true);toast(resource==='gold'?'Gold comes from delving or scavenging':'Defeat a guardian for essence');return;}
@@ -130,7 +130,7 @@ function refinementForTarget(id,target=zoneBalance().dps){
  return null;
 }
 
-function skillMenuState(){return JSON.stringify([workshopTier,workshopGroup,workshopView,styleBench,recipeCategory,data.floor,data.cleared,data.weaponType,data.equipmentVersion,data.ownedArmor,data.equippedArmor,data.styles,data.tools,data.stationLevels,data.stationCredits,data.stationSaved,data.craftGoal,data.idleJobs,data.idleNoticeSlots,game.pendingIdleSkill,...Object.keys(RESOURCE_LABEL).map(k=>data[k]),...Object.values(DISCIPLINES).map(d=>data[d.xp])]);}
+function skillMenuState(){return JSON.stringify([workshopTier,workshopGroup,workshopView,styleBench,recipeCategory,data.floor,data.cleared,data.weaponType,data.equipmentVersion,data.ownedArmor,data.equippedArmor,data.styles,data.tools,data.toolRefinements,data.trinketRefinements,data.specificVouchers,data.stationLevels,data.stationCredits,data.stationSaved,data.craftGoal,data.idleJobs,data.idleNoticeSlots,game.pendingIdleSkill,...Object.keys(RESOURCE_LABEL).map(k=>data[k]),...Object.values(DISCIPLINES).map(d=>data[d.xp])]);}
 
 function enterActivity(key){
  if(!SKILLS[key])return false;if(!canUseSkill(key)){toast('Activity locked',skillLockReason(key));return false;}
@@ -148,23 +148,25 @@ function goalDetails(action){
 }
 function installTierProgressionUI(){
  if(tierProgressionInstalled)return;tierProgressionInstalled=true;
- for(const [key,sk]of Object.entries(SKILLS).filter(([,s])=>s.tier===2)){
-  const panel=document.createElement('section');panel.className='panel';panel.id=key+'Panel';panel.setAttribute('aria-label',sk.name);$('gameDrawer').append(panel);
-  BONUS_DEFS[key]={name:sk.name+' bonus',art:'action-'+key};
+ for(const [key,sk]of Object.entries(SKILLS).filter(([,s])=>s.tier===2||s.workPose==='clean')){
+  if($(key+'Panel'))continue;const panel=document.createElement('section');panel.className='panel';panel.id=key+'Panel';panel.setAttribute('aria-label',sk.name);$('gameDrawer').append(panel);
+  BONUS_DEFS[key]={name:sk.name+' bonus',art:key==='relicClean'?'rough-opal':'action-'+key};
  }
- TOOL_DEFS.pickaxe.skills.push('coal');TOOL_DEFS.hatchet.skills.push('willow');TOOL_DEFS.mattock.skills.push('ancientScavenge','cleanAncient','garnetSearch');
+ TOOL_DEFS.pickaxe.skills.push('coal');TOOL_DEFS.hatchet.skills.push('willow');TOOL_DEFS.mattock.skills.push('ancientScavenge','cleanAncient','garnetSearch','relicClean');
  for(const key of TIER_RESOURCES)if(!CODEX_ITEMS.some(a=>a.id==='resource_'+key))CODEX_ITEMS.push({id:'resource_'+key,cat:'Materials',name:RESOURCE_LABEL[key],desc:'Zone 2 material · '+SKILLS[RESOURCE_SOURCE[key]].name+' · '+(SKILLS[RESOURCE_SOURCE[key]].cost?Object.entries(SKILLS[RESOURCE_SOURCE[key]].cost).map(([k,n])=>n+' '+RESOURCE_LABEL[k]).join(' + '):'Clear Zone 1 to gather')});
- for(const [id,sk]of Object.entries(SKILLS).filter(([,s])=>s.tier===2))CODEX_ITEMS.push({id:'skill_'+id,cat:'Skills',name:sk.name,desc:'Unlocked by clearing Zone 1 · '+sk.item});
+ for(const [id,sk]of Object.entries(SKILLS).filter(([,s])=>s.tier===2))CODEX_ITEMS.push({id:'skill_'+id,cat:'Skills',name:sk.name,desc:'Zone 2 and '+DISCIPLINES[disciplineFor(id)].name+' level 10 · '+sk.item});
  CODEX_ITEMS.push({id:'unlock_steel',cat:'Weapons',name:'Steel tier',desc:'Clear Zone 1, finish Iron refinement 10, train crafting to level 10 and promote a combat style. Refinement 11–20.'});
  zone2CampImage=new Image();zone2CampImage.src=iconAsset('zone2-gathering');
  $('consolidatedSkills').addEventListener('click',e=>{const promote=e.target.closest('[data-promote-style]'),tier=e.target.closest('[data-workshop-tier]');if(promote&&!promote.disabled)promoteStyle(promote.dataset.promoteStyle);if(tier){workshopTier=Number(tier.dataset.workshopTier);renderDisciplineDrawer();}});
 }
 function refreshTierProgressionUI(){
  if(!tierProgressionInstalled)return;
- if(tier2Unlocked()&&!data.zone2SkillsAnnounced){data.zone2SkillsAnnounced=true;toast('Zone 2 skilling unlocked','Coal and steel · willow · ancient salvage · garnets · runic cloth. Visit Skills to continue each discipline.');}
+ if(zoneNumber()===2&&!data.cryptWarningSeen&&game.scene==='combat'&&game.status==='running'&&!game.menuPaused&&!game.manualPaused&&!game.boss&&$('overlay').classList.contains('hidden')){data.cryptWarningSeen=true;toast('The Hollow Crypt','Fallen foes awaken as pursuing souls. Keep moving, and dash across expanding bone rings.');save();}
+ if(tier2Unlocked()&&!data.zone2SkillsAnnounced){data.zone2SkillsAnnounced=true;toast('Zone 2 skilling unlocked','Tier 2 recipes are visible in Skills. Each needs level 10 in its matching discipline as well as Zone 2 access.');}
  const key=game.scene;if(SKILLS[key]?.tier===2){
   $('activeTool').textContent=({steelSmelt:'Smithing hammer',steelFletch:'Fletching knife',aetherWeave:'Weaving shuttle',greaterRune:'Engraving burin',garnetCut:'Jeweler’s chisel'})[key]||TOOL_DEFS[toolForSkill(key)]?.name||'Prospecting mattock';
  }
+ if(SKILLS[game.scene]?.workPose==='clean')$('activeTool').textContent='Restoration brush';
 }
 
 function defaults(){return {preparationEconomyVersion:1,preparationEconomyCredit:0,lootPresentationVersion:1,upgradeVouchers:{iron:0,steel:0},voucherRolls:{},lootHistory:[],timeProgressionVersion:1,timeMilestones:0,timeRates:null,legacyDungeoneeringLevel:0,zoneLayoutVersion:1,tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,firstWeaponCrafted:false,eliteSpoils:[],eliteSpoilsSequence:0,eliteBoon:null,eliteBoons:null,eliteBoonSequence:0,weaponUpgradeTipSeen:false,firstMasteryTipSeen:false,essenceEnchantTipSeen:false,combatLanguageTipSeen:false,zone2TravelTipSeen:false,masteryRewardVersion:0,earlyMasteryClaimed:false,zoneAbilityVersion:0,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeonShopVersion:0,dungeonShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,ammoCharges:{arrows:0,runes:0},cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}

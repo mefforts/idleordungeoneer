@@ -41,14 +41,14 @@ function normalizeProgression(){
   data.skillsNudgeSeen=!!data.skillsNudgeSeen||data.unlockedWeapons?.length>1;
   data.idleNoticeSlots=Math.min(2,finiteRank(data.idleNoticeSlots));data.idleFirstAssigned=!!data.idleFirstAssigned||data.idleJobs?.some(Boolean)||false;
   if(data.idleJobs?.filter(Boolean).length>=idleSlotsUnlocked()&&idleSlotsUnlocked()>0)data.idleNoticeSlots=idleSlotsUnlocked();
-  data.progressionVersion=5;normalizeSkillingBuffs();normalizeArenaData();normalizeMonsterLoot();normalizeEquipment();normalizeTierProgression();normalizePreparationEconomy();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
+  data.progressionVersion=5;normalizeArtisanProgression();normalizeSkillingBuffs();normalizeArenaData();normalizeMonsterLoot();normalizeEquipment();normalizeTierProgression();normalizePreparationEconomy();normalizeDungeoneering();normalizeZoneShopProgression();normalizeFirstWeaponHint();normalizeAmmunition();normalizeMasteryMilestones();normalizeRareEliteProgression();projectCombatStyle();
 }
 
 function stationRank(group){return data.stationLevels?.[group]||0;}
 function toolForSkill(key){return Object.keys(TOOL_DEFS).find(id=>TOOL_DEFS[id].skills.includes(key));}
 function skillInterval(key,active=true){
   const rank=stationRank(disciplineFor(key)),tool=toolForSkill(key);
-  return (active?ACTIVE_INTERVAL[key]:SKILLS[key].seconds)/(1+rank*.03+(active&&tool&&data.tools?.[tool]? .08:0));
+  return (active?ACTIVE_INTERVAL[key]:SKILLS[key].seconds)/(1+rank*.03+(active&&tool&&data.tools?.[tool]? .08+toolRank(tool)*TOOL_REFINEMENT.speedStep:0));
 }
 // Whole ingredients stay whole. Fractional conservation carries between batches;
 // it is spent only when a craft succeeds, never by looking at a recipe.
@@ -164,8 +164,12 @@ function styleRecipeName(id,kind){return STYLE_DEFS[id].name+' '+({weapon:'Weapo
 
 function trinketBase(id){return {silverBars:TRINKETS[id].type==='ring'?6:9,cutOpals:1,gold:TRINKETS[id].type==='ring'?15:25};}
 
-function openWorkshop(group=workshopGroup,view=workshopView){workshopGroup=DISCIPLINES[group]?group:'blacksmithing';workshopView=['gather','refine','equipment','tools'].includes(view)?view:'gather';openDrawer('skills');}
+function openWorkshop(group=workshopGroup,view=workshopView){workshopGroup=DISCIPLINES[group]?group:'blacksmithing';workshopView=view==='tools'?'equipment':['gather','refine','equipment'].includes(view)?view:'gather';openDrawer('skills');}
 function bindWorkshop(host){
+  const transmute=host.querySelector('#transmuteResource');if(transmute)transmute.onchange=()=>{data.transmuteResource=transmute.value;save();renderDisciplineDrawer();};
+  host.querySelectorAll('[data-refine-tool]').forEach(b=>b.onclick=()=>refineTool(b.dataset.refineTool));
+  host.querySelectorAll('[data-refine-jewelry]').forEach(b=>b.onclick=()=>refineJewelry(b.dataset.refineJewelry));
+  host.querySelectorAll('[data-transmute-resource]').forEach(b=>b.onclick=()=>transmuteEssence(b.dataset.transmuteResource));
   host.querySelectorAll('[data-redeem-voucher]').forEach(b=>b.onclick=()=>redeemWorkshopVoucher(b.dataset.redeemVoucher,b.dataset.voucherTier));
   host.querySelectorAll('[data-preparation-next]').forEach(b=>b.onclick=()=>openPreparationStep());
   host.querySelectorAll('[data-prepare-ammo]').forEach(b=>b.onclick=()=>trackAmmunition(b.dataset.prepareAmmo));
@@ -174,7 +178,7 @@ function bindWorkshop(host){
   host.querySelectorAll('[data-replace-idle]').forEach(b=>b.onclick=()=>{setIdleJob(Number(b.dataset.replaceIdle),game.pendingIdleSkill);renderDisciplineDrawer();});
   host.querySelectorAll('[data-cancel-idle]').forEach(b=>b.onclick=()=>{game.pendingIdleSkill='';renderDisciplineDrawer();});
   host.querySelectorAll('[data-workshop-group]').forEach(b=>b.onclick=()=>{workshopGroup=b.dataset.workshopGroup;renderDisciplineDrawer();});
-  host.querySelectorAll('[data-workshop-view]').forEach(b=>b.onclick=()=>{workshopView=b.dataset.workshopView;renderDisciplineDrawer();});
+  host.querySelectorAll('[data-workshop-view]').forEach(b=>b.onclick=()=>{workshopView=b.dataset.workshopView==='tools'?'equipment':b.dataset.workshopView;renderDisciplineDrawer();});
   host.querySelectorAll('[data-enchant-style]').forEach(b=>b.onclick=()=>{styleBench=b.dataset.enchantStyle;renderDisciplineDrawer();});
   host.querySelectorAll('[data-source]').forEach(b=>b.onclick=()=>goToSource(b.dataset.source));
   host.querySelectorAll('[data-enter-activity]').forEach(b=>b.onclick=()=>enterActivity(b.dataset.enterActivity));
@@ -188,11 +192,11 @@ function bindWorkshop(host){
   host.querySelectorAll('[data-track-goal]').forEach(b=>b.onclick=()=>trackGoal(b.dataset.trackGoal));
   host.querySelectorAll('button').forEach(bindTouchNavigation);
 }
-function prospectOpal(){if(!spendAtStation({scraps:12},'scavenging'))return false;data.opals++;data.scavengingXp=(data.scavengingXp||0)+12;codexDiscover('resource_opals');toast('Opal recovered!','Relic fragments → one rough opal');save();renderDisciplineDrawer();refreshUI();return true;}
+function prospectOpal(){return enterActivity('relicClean');}
 function makeTrinket(id,voucher){
   const item=TRINKETS[id];if(!item||data.trinkets.includes(id)||!(voucher===undefined?spendAtStation(trinketBase(id),'artisan'):spendUpgradeVoucher('trinket:'+id,voucher)))return false;
   data.trinkets.push(id);if(item.type==='ring'){if(data.equippedRings.length<4)data.equippedRings.push(id);data.equippedRing=data.equippedRings[0]||'';}else data.equippedAmulet=id;
-  data.artisanDisciplineXp=(data.artisanDisciplineXp||0)+50;data.artisanXp=(data.artisanXp||0)+50;codexDiscover('trinket_'+id);
+  data.artisanDisciplineXp=(data.artisanDisciplineXp||0)+400;data.artisanXp=(data.artisanXp||0)+400;codexDiscover('trinket_'+id);
   toast(item.name+' crafted!',(item.type==='ring'&&!data.equippedRings.includes(id)?'Saved to Equipment · ':'Equipped · ')+item.effect);syncTrinketHealth();save();refreshUI();renderDisciplineDrawer();return true;
 }
 
@@ -221,7 +225,7 @@ function refreshSystemsUI(){
   const idleNotice=idleSlotsUnlocked()>data.idleNoticeSlots&&data.idleJobs.filter(Boolean).length<idleSlotsUnlocked();
   const idleNudge=$('idleUnlockNudge'),noticeVisible=idleNotice&&game.scene==='combat'&&!drawerKind&&$('overlay').classList.contains('hidden')&&tourIndex<0&&!game.boss&&!game.manualPaused;
   idleNudge?.classList.toggle('hidden',!noticeVisible);
-  const idleBar=$('activeIdleButton');if(idleBar&&SKILLS[game.scene]){const assigned=data.idleJobs.includes(game.scene),html=uiIcon(assigned?'stop':'idle')+'<span>Idle</span>';if(idleBar.innerHTML!==html)idleBar.innerHTML=html;idleBar.disabled=!idleSlotsUnlocked()||!canUseSkill(game.scene);idleBar.setAttribute('aria-pressed',String(assigned));idleBar.setAttribute('aria-label',!idleSlotsUnlocked()?'Idle unlocks at Zone 1 · Floor 2':(assigned?'Stop idling: ':'Idle: ')+SKILLS[game.scene].name);}
+  const idleBar=$('activeIdleButton');if(idleBar&&SKILLS[game.scene]){const assigned=data.idleJobs.includes(game.scene),html=uiIcon(assigned?'stop':'idle')+'<span>Idle</span>';if(idleBar.innerHTML!==html)idleBar.innerHTML=html;idleBar.disabled=!idleSlotsUnlocked()||!assigned&&!canUseSkill(game.scene);idleBar.setAttribute('aria-pressed',String(assigned));idleBar.setAttribute('aria-label',!idleSlotsUnlocked()?'Idle unlocks at Zone 1 · Floor 2':(assigned?'Stop idling: ':'Idle: ')+SKILLS[game.scene].name);}
   const nudge=$('skillsNudge'),show=!idleNotice&&!data.skillsNudgeSeen&&data.goldHighWater>=150&&!drawerKind&&game.scene==='combat'&&$('overlay').classList.contains('hidden')&&tourIndex<0&&!game.boss&&!game.manualPaused;
   if(nudge)nudge.classList.toggle('hidden',!show);$('quickSkills').classList.toggle('skills-suggested',show);refreshArenaUI();refreshProgressionGuide();
 }
@@ -245,7 +249,7 @@ function installSystemsUI(){inspectedStyle=combatStyle();styleBench=combatStyle(
 }
 
 function assignIdleSkill(key){
-  if(!SKILLS[key]||!canUseSkill(key))return false;
+  if(!SKILLS[key]||!canUseSkill(key)&&!data.idleJobs?.includes(key))return false;
   const limit=idleSlotsUnlocked();if(!limit){toast('Idle unlocks at Zone 1 · Floor 2','Clear Floor 1. You can always gather and craft actively.');return false;}
   ensureJobs();const existing=data.idleJobs.indexOf(key);if(existing>=0){setIdleJob(existing,'');renderDisciplineDrawer();return true;}
   const empty=data.idleJobs.findIndex(k=>!k);if(empty>=0){setIdleJob(empty,key);renderDisciplineDrawer();return true;}

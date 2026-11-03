@@ -1,5 +1,5 @@
 /* Mastery milestones and small, physical healing drops. */
-const RESTORATION={chance:.02,ordinary:.03,elite:.12,eliteChance:.55,rare:.15,rareChance:.7};
+const RESTORATION={chance:.02,ordinary:.03,elite:.12,eliteChance:.55,rare:.12,rareChance:.55};
 let restorationInstalled=false,healthDropImage=null;
 function normalizeMasteryMilestones(){
  if(data.masteryRewardVersion!==1){data.earlyMasteryClaimed=!!data.earlyMasteryClaimed||data.cleared>=1;data.masteryRewardVersion=1;}
@@ -12,8 +12,8 @@ function installRestorationUI(){
  if(!CODEX_ITEMS.some(entry=>entry.id==='health_pickup'))CODEX_ITEMS.push({id:'health_pickup',cat:'Guide',name:'Healing motes',desc:'Walk over a heart mote to recover health.'});
 }
 function dropHealth(enemy){
- if(enemy.boss||enemy.summoned||Math.random()>=(enemy.champion?RESTORATION.rareChance:enemy.elite?RESTORATION.eliteChance:RESTORATION.chance))return null;
- const mote={x:enemy.x,y:enemy.y,fraction:enemy.champion?RESTORATION.rare:enemy.elite?RESTORATION.elite:RESTORATION.ordinary,elite:!!enemy.elite};
+ if(enemy.boss||enemy.summoned||Math.random()>=(enemy.elite?RESTORATION.eliteChance:RESTORATION.chance))return null;
+ const mote={x:enemy.x,y:enemy.y,fraction:enemy.elite?RESTORATION.elite:RESTORATION.ordinary,elite:!!enemy.elite};
  (game.healthDrops||(game.healthDrops=[])).push(mote);codexDiscover('health_pickup');return mote;
 }
 function tickHealthDrops(dt=0){

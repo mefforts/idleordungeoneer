@@ -47,6 +47,7 @@ function abilityEffectsFixture(){
   },
   dodge(){game.player.x=-125;game.player.y=110;refreshUI();render();},
   cleanup(){for(const e of [...game.enemies])onKill(e);return art();},
+  breakSpires(){for(const t of [...game.totems])if(t.destructible)damageTotem(t,1e9,true);return art();},
   performance(){
    const shape={shape:'rect',rect:{left:0,top:0,right:390,bottom:844}},start=performance.now();for(let i=0;i<30;i++)paintAbilityField(shape,'sunder',i%4,combatTheme('danger'),.6,true);return (performance.now()-start)/30;
   }

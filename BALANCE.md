@@ -6,7 +6,7 @@ Build 10.1 adds physical counterplay to summoning spires: one bump breaks an ord
 
 ## Dungeoneering and game time
 
-Build 11 starts Dungeoneering at level 0. Reaching Zones 2, 5, 10, 20, 40 and so on grants one level and one shared point. After Zone 5 the milestone doubles each time. Replays and kills grant no extra points. This defines long-term milestones without adding Zone content.
+Build 11 starts Dungeoneering at level 0. Reaching Zone 2 grants the first level and point; completing Zone 2 grants the second. Later milestones remain Zones 10, 20, 40 and so on, doubling each time. Replays and kills grant no extra points. This defines long-term milestones without adding Zone content.
 
 | Rank | Delving | Skilling, including idle |
 | --- | ---: | ---: |
@@ -51,6 +51,16 @@ Build 11.2.1 removes visible rarity names from skilling pickups, collection feed
 Timers count real seconds while actively working on that activity, including while earned Skilling speed accelerates production. Release, missing ingredients, menus, other activities and backgrounding pause them. Remaining time survives saves. These bonuses do not accelerate idle or offline work. Permanent Skilling game time and station/tool benefits retain their normal effects. Every accelerated craft still consumes its complete station-adjusted recipe.
 
 A seeded five-minute active refining check at 1× made **107 bars without pickups / 252 bars collecting all 72 discoveries**. This includes 82 instantly crafted bars. All 252 bars consumed 504 ore: exactly two per crafted bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
+
+## Unified crafting and fine refinements
+
+Gather and Refine list both tiers together, including locked rows. Every tier-2 activity requires Zone 2 access and level 10 in its matching discipline, across active/idle/offline work; existing inventories and owned gear remain. Preparation falls back to available tier-1 ammunition/gold sources and directs blocked material work toward training. Steel promotions sit directly below their weapon list. Stations and tools use ordinary compact rows in Equipment, with no separate Tools tab or station footer.
+
+Artisan gathering/cutting XP is multiplied by eight and jewelry crafting gives 400 XP. Existing Artisan XP receives the same eightfold catch-up once. Owned jewelry supports 50 optional refinements, each adding 0.25% of its base effect, with 80 Artisan XP per successful rank. The Leech Ring gains 0.00125 percentage points of lifesteal per rank, from 0.5% to at most 0.5625%. Costs start at one silver bar and 10 gold, grow every ten ranks in silver and by three gold per rank, and add one cut opal each fifth rank.
+
+Crafted tools retain 8% active speed and support ten refinements of +0.5 percentage points each, with normal material/gold costs. They do not accelerate idle work. Relic prospecting is now a normal ingredient-paid activity: 12 fragments for one rough opal, 4s active / 20s idle before bonuses. Prospecting and ancient cleaning use a standing brush-and-relic pose at a bench, with no digging animation. Warding Refine offers a compact resource selector: exactly 100 essence for a random 1–10 chosen raw resources. Unlocks apply and conservation does not discount this essence cost.
+
+The Dungeon Shop has a Long blessings sub-store. Most effects cost 60 interchangeable Zone materials, Golden/Plentiful Hunt cost 80 and Silence/Stillworld cost 100. Purchase activates one independent stack at five times normal combat duration (200–300s), with existing pause, stacking, save and Dungeon rules. The 128-stack limit is checked before spending.
 
 ## Equipment ceilings
 
@@ -110,12 +120,12 @@ The shop displays the equipped style and explains that these effects change when
 
 | Zone | Expected Sigils / first clear |
 | --- | ---: |
-| 1 | 36.80 |
-| 2 | 69.34 |
-| 3 | 131.37 |
-| 4 | 134.25 |
+| 1 | 35.32 |
+| 2 | 71.09 |
+| 3 | 129.31 |
+| 4 | 131.28 |
 
-Ordinary enemies have a 0.3% chance of one Sigil, rising to 0.42% at Fortune 4. Other elites have a 35% chance of one. Rare creatures guarantee one. Guardians grant 1 / 1 / 2, with another 3 from the final overlord of each Zone. Summoned enemies and totems grant no rewards or wave progress. The estimate includes first-clear known-elite substitutions and expected rare spawns, without requiring an ability purchase.
+Ordinary enemies have a 0.3% chance of one Sigil, rising to 0.42% at Fortune 4. All elites, including rares, have a 35% chance of one. Guardians grant 1 / 1 / 2, with another 3 from the final overlord of each Zone. Summoned enemies and totems grant no rewards or wave progress. The estimate includes first-clear known-elite substitutions and expected rare spawns, without requiring an ability purchase.
 
 | Zone | Guardian gold | Floor caches | Baseline gold without elites |
 | --- | ---: | ---: | ---: |
@@ -136,7 +146,7 @@ Monster gold, Sigils, essence, rare materials and vouchers first land on the gro
 
 Only raw materials drop. Zone 1 uses ore, oak, cloth and fragments; later Zones use ore, coal, willow, ancient salvage and cloth. As a baseline reference, 360 ordinary kills would average 5.4 raw materials; 15 guardians average 16.2. Actual waves substitute some elites for ordinary monsters. Elites add occasional three-item bundles. This remains a supplement to gathering, not a replacement for skilling/refining. Discovery and the Scholar Ring increase material luck; Plentiful Hunt adds 50% chance while active, within the per-enemy caps. Elites and bosses never guarantee material drops.
 
-Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the first defeat of each guardian rolls, including across retries and reloads; completed-floor replays do not roll. The expected Zone 1 supply is about 0.99 vouchers. A voucher pays for one matching equipment rank or recipe: refinement, speed, reach, reinforcement, enchantment, weapon/armor/jewelry/tool crafting, Steel promotion or station upgrade. Either tier can pay for a station rank; current tools and jewelry use Iron. Normal Zone access, skill levels, ownership and caps apply, including refinement 10 and crafting 10 for promotion. Redemption is explicit at the recipe. Dungeon Shop and game-time purchases are excluded. Summons and totems grant neither resources nor vouchers.
+Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the first defeat of each guardian rolls, including across retries and reloads; completed-floor replays do not roll. The expected Zone 1 supply is about 0.99 vouchers. Each voucher names one rank upgrade: weapon refinement, attack speed, reach, reinforcement, enchantment, jewelry refinement, a specific owned tool, or a named station. Crafting weapons, armor, jewelry or tools and promoting a style to Steel require their normal materials. Iron covers jewelry/tools; either tier can cover its named station. Ownership, matching kind/tier and normal caps apply. Old wildcard inventory and ground balances split deterministically into named upgrades with their total count retained. Existing crafted items remain owned. Redemption is explicit on the matching row. Dungeon Shop and game-time purchases keep their own currencies. Summons and totems grant neither resources nor vouchers.
 
 Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of any Zone-material cost, in any combination. Earlier Zone banks are spent first; existing balances stay intact. Each even refinement, each final speed / reach / reinforcement / enchantment rank per tier, Steel promotion and station ranks 3 and 5 costs one. Starter weapon, armor and tool recipes gain no such cost. A full refinement + speed tier uses six; all five equipment paths use nine. Drop chances remain unchanged. Cost chips show the combined balance and explain the accepted materials; tracked preparation leads back to delving. Vouchers waive these ingredients too.
 
@@ -146,25 +156,27 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | --- | --- | ---: |
 | 1 | ~10 min | 80.0 |
 | 2 | ~20 min | 160.0 |
-| 3 | ~30 min | 160.0 |
-| 4 | ~35 min | 160.0 |
+| 3 | ~44 min | 160.0 |
+| 4 | ~50 min | 160.0 |
 
-- Live Zone 1: **9.2 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **20.3 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **30.7 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **35.5 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **41.1 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 15: **41.0 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 1: **9.4 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **19.9 min**, 570 rewarded defeats, 160.0 reference DPS.
+- Live Zone 3: **43.3 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **47.9 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **48.9 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 15: **48.9 min**, 960 rewarded defeats, 160.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 
-Bosses have 12% more health than the previous baseline and change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until destroyed or their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
+Bosses have 12% more health than the previous baseline and change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
 
-Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon or damage bonuses. Each bump removes one full impact segment from the existing health bar; weapon damage can help finish it. Contact uses a 28-unit ground radius and re-arms after leaving 40 units. A red summoning surge retaliates for 8% / 12% player maximum HP before regional damage scaling, normal defenses and invulnerability. Idle, disabled and silenced spires are safe to bump; dashing is always safe. Each accepted dash uses swept contact across the visible base, counts once per spire, bypasses existing walking contact and retains a full impact through shields. Shielding elites prefer summoning spires within 340 units; their shields reduce weapon damage by 35% and disappear with either endpoint. A fast pass counts once, and destroying a spire cancels its pending arrival. Existing minions remain. Spires grant no rewards or wave progress.
+Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon or damage bonuses. Each bump removes one full impact segment from the existing health bar; weapons cannot target or damage them through any primary or secondary path. Contact uses a 28-unit ground radius and re-arms after leaving 40 units. A red summoning surge retaliates for 8% / 12% player maximum HP before regional damage scaling, normal defenses and invulnerability. Idle, disabled and silenced spires are safe to bump; dashing is always safe. Each accepted dash uses swept contact across the visible base, counts once per spire, bypasses existing walking contact and retains a full impact through shields. Shielding elites can link summoning spires within 340 units. Their shields do not block bump/dash impacts and disappear with either endpoint. Spires keep summoning after their caster dies; the phase waits for the remaining spires and their minions, with no additional rewards from either. Retry, defeat and phase transitions clear transient encounter state. A fast pass counts once, and destroying a spire cancels its pending arrival. Existing minions remain. Spires grant no rewards or wave progress.
 
-Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing health, spawn counts, equipment or rewards. The first Zone 2 guardian and its elite echoes open with growing stars that turn back toward their moving caster after 1.25s. Other Zones retain their existing opening patterns.
+Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing health, spawn counts, equipment or rewards. Build 11.5 makes growing stars more frequent in Zone 2 and raises them to speed 200. They remain outbound at least 2.2s and normally reach 230 units from the moving caster before returning; a 3.7s fallback prevents indefinite outbound flight. Cleaves leave 3.2s of red fire dealing 25% of the cleave hit per tick before defenses/invulnerability. Its final floor substitutes six known elites per wave and permits up to three rares at 10% spawn chance. Other floors use a doubled 3% rare chance and one rare per wave. Rares now use the ordinary elite gold, Sigil, blessing, material and healing tables.
 
-The separate zone-pressure fixture uses real damage, 144 HP Iron ranged armor, 54.7 DPS, ammunition and normal defenses, without purchased perks or blessings. Across three fixed seeds, stationary play died after 5.9–6.7 seconds at the new multiplier; a moving counterplay bot won after 10.1–10.6 seconds with 111–144 HP. At the previous multiplier, stationary play died after 6.6–7.4 seconds and the moving bot retained 118–144 HP. Both comparisons use the new attack patterns. These short first-guardian trials illustrate counterplay and are not a human difficulty rating.
+Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. Existing 80/160 equipment ceilings and earned DPS are retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with two expanding Grave Pulse rims; dash across or outrun them. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
+
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 12.9–13.7s on Zone 2’s finale and 8.4–9.9s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 189 HP remained in the finale trials and 102.1–189 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 Codex is nested inside Inventory (C still opens it). Defeat can open the last available skill directly without reviving or restarting the floor; returning to Delve offers the regular retry. All ten chosen blessings stack through the normal picker, multiply or add according to their effect, retain independent saved timers and show combined strength; chain chance retains its 85% cap and Silence lasts while any copy remains.
 
@@ -182,8 +194,9 @@ Build 11.2 adds illustrated, animated roots, molten eruptions, bone hands, cryst
 
 Instruction labels fade in, fade out and recur on a real-time clock; changing instructions restart the reminder. Hazard geometry and health bars remain visible. Reduced motion uses steady visibility windows. Colors are reinforced by outlines, shapes and labels. Violet attacks deal 35% ordinary, 12% elite or 2.5% boss maximum HP before shields, once per cast; the caster is immune. These hits cannot trigger player lifesteal, enchantment or weapon procs.
 
-The encounter library now has 28 patterns: the ten existing attacks plus the following eighteen. Final guardians use a broad rotation and forced phase attacks.
+The encounter library now has 29 patterns: the ten original attacks plus nineteen expanded patterns. Final guardians use a broad rotation and forced phase attacks.
 
+- **Grave Pulse**: Expanding bone rings · dash across the rims.
 - **Rebounding Barrage**: Three rings · gaps rotate · violet shots rebound.
 - **Growing Stars**: Projectiles grow · leave a wider gap.
 - **Homeward Blades**: Red blades turn home · watch the return path.
@@ -207,7 +220,7 @@ Rebounding Barrage fires three spaced rings that bounce off the marked arena bou
 
 ## Stackable blessings and healing
 
-Rare creatures always leave a blessing choice. Other non-summoned elites leave one 35% of the time. Walk over spoils to pause combat and choose A/B/C by click, touch or keys 1/2/3. Movement and Escape cannot select or dismiss it; Skip explicitly discards it. Choice contents are fixed when dropped and persist through reload.
+Rare and other non-summoned elites each leave a blessing choice 35% of the time. Walk over spoils to pause combat and choose one of three cards by click, touch or keys 1/2/3. The outer frame and fullscreen tint/blur are removed; only the three cards and Skip remain over the arena. Movement and Escape cannot select or dismiss it; Skip explicitly discards it. Choice contents are fixed when dropped and persist through reload.
 
 | Blessing | Duration | Effect |
 | --- | ---: | --- |
@@ -222,16 +235,16 @@ Rare creatures always leave a blessing choice. Other non-summoned elites leave o
 | Momentum | 45s | +10% hit damage · +8% attack speed |
 | Long Reach | 50s | +25% attack reach for Melee, Mage and Ranged |
 
-A vertical, scrollable combat column shows temporary buffs, stack counts and the next expiry. Details list every independent remaining time, including Rally. Different blessings and repeated copies stack with independent combat timers. Damage, attack speed, reach and movement multipliers multiply; extra gold adds; material luck increases the capped drop chance. Menus, pause and skilling freeze timers. Blessings carry across Zones in the same Dungeon. Secondary proc attacks do not recursively trigger more procs. No new blessing heals.
+A vertical, scrollable combat column shows temporary buffs. On mobile it is 44 units wide and shows only icons with timers above them, retaining 44-unit touch targets. Desktop keeps names, effects and counts. Details list every independent remaining time, including Rally. Different blessings and repeated copies stack with independent combat timers. Damage, attack speed, reach and movement multipliers multiply; extra gold adds; material luck increases the capped drop chance. Menus, pause and skilling freeze timers. Blessings carry across Zones in the same Dungeon. Secondary proc attacks do not recursively trigger more procs. No new blessing heals.
 
-Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 55% chance of 12%; rares have a 70% chance of 15%. Intercepted healing restores 0.35% player maximum HP per second, with a finite 15% lifetime reserve per healing totem. Once depleted it still blocks the caster’s healing. An uninterrupted stream restores 0.4% caster maximum HP per second. Healing streams do not stack. The lifesteal ring remains at 0.5% of actual health removed.
+Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 55% chance of 12%; rares use that same 55% chance and 12% heal. Intercepted healing restores 0.35% player maximum HP per second, with a finite 15% lifetime reserve per healing totem. Once depleted it still blocks the caster’s healing. An uninterrupted stream restores 0.4% caster maximum HP per second. Healing streams do not stack. The lifesteal ring starts at 0.5% of actual health removed; fifty fine refinements raise it to at most 0.5625%.
 
 ## Persistent progression and migration
 
-Dungeoneering levels now follow Zone milestones. Combat XP is retained as a historical ledger; old saved ground XP is banked once and no new XP diamonds spawn. Existing equipment, materials, point balances, allocations and prior combat-perk unlocks survive migration. The first new point is earned at Zone 2, and the next at Zone 5. Ammunition still supplies ten seconds of firing per arrow or rune.
+Dungeoneering levels now follow Zone milestones. Combat XP is retained as a historical ledger; old saved ground XP is banked once and no new XP diamonds spawn. Existing equipment, materials, point balances, allocations and prior combat-perk unlocks survive migration. The first new point is earned at Zone 2, and the second on completing Zone 2. Ammunition still supplies ten seconds of firing per arrow or rune.
 
 After Zone 1 Floor 1, the result and a saved, dismissible reminder explain that all five floors lead to the first Mastery point at Zone 2, with a Delving / Skilling-including-idle choice. Once enough essence is held for an owned style’s first enchantment, a separate reminder opens that Warding recipe and explains the remaining bars and gem. Reminders defer during bosses, menus, pauses and active holds. Floor travel, equipment, 55 authored floors and 42 ordinary / 42 rare creature forms are preserved.
 
 Old Zone wallets and the full historical price of every purchased rank are refunded at 25 seals per Sigil. Fractional credit is retained and a versioned receipt prevents a second refund. Original Zone ledgers are archived in the save. Earlier progression first passes through the existing XP / Mastery migration. Gold, materials, equipment, cached XP and Mastery are preserved. A legacy active blessing becomes one entry in the stacking collection.
 
-Run npm test for the browser suites, including 72 new-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.
+Run npm test for the browser suites, including 76 new-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.

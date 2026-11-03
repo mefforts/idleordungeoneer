@@ -91,7 +91,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     await p.setViewportSize({width:1440,height:1000});
     await p.evaluate(()=>__arenaTest.notify('A message <not markup>','A missed notice remains readable.'));
     assert.equal(await p.locator('.toast strong').last().innerText(),'A message <not markup>');assert.equal(await p.locator('.toast not').count(),0);
-    await p.click('#noticeHistoryButton');assert.ok(await p.locator('#recentMessages').evaluate(el=>el.open));assert.match(await p.locator('#recentMessages').innerText(),/A missed notice/);
+    assert.equal(await p.locator('#noticeHistoryButton').count(),0);await p.click('#quickSettings');await p.locator('#recentMessages summary').click();assert.ok(await p.locator('#recentMessages').evaluate(el=>el.open));assert.match(await p.locator('#recentMessages').innerText(),/A missed notice/);
     await p.click('#drawerClose');await p.evaluate(()=>__deepwell.start());await p.evaluate(()=>{__arenaTest.quietCombat();__arenaTest.placeXp([{x:3000,y:3000,value:17,life:.01}]);__arenaTest.tick(32);__deepwell.save();});
     assert.equal(await p.evaluate(()=>__deepwell.xpOrbs().reduce((sum,g)=>sum+g.value,0)),17);
     await p.evaluate(()=>__deepwell.changeScene('mine'));await p.evaluate(()=>__deepwell.changeScene('combat',false));
@@ -110,8 +110,8 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     const dps=await p.evaluate(()=>Object.keys(__deepwell.getState().data.styles).map(style=>({style,dps:__deepwell.weaponDps(style==='ranged'?'bow':style==='magic'?'staff':'sword')})));assert.ok(dps.every(row=>row.dps>0));
     results.push('Equipment lists owned weapons and current damage, health, attack speed and range; all six weapon profiles report positive DPS');
     const models=await p.evaluate(()=>Array.from({length:15},(_,i)=>__deepwell.zoneBalance(i)));
-    assert.deepEqual(models.slice(0,4).map(m=>m.minutes),[10,20,30,35]);
-    assert.ok(models.slice(3).every(m=>m.minutes>=30&&m.minutes<=40));
+    assert.deepEqual(models.slice(0,2).map(m=>m.minutes),[10,20]);assert.ok(models[2].hpScale>=models[1].hpScale*Math.pow(1.14,2)*1.25-1e-8,'Crypt entry health exceeds the Embervault finale');
+    assert.ok(models.slice(2).every(m=>m.minutes>=40&&m.minutes<=60));
     assert.ok(models.every(m=>Math.abs(m.forecastSeconds-m.seconds)<m.seconds*.02));
     const simulated=[];
     for(const i of [0,1,2,3,8,14]){

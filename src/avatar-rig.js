@@ -7,8 +7,8 @@ const STYLE_COUNTS=Object.freeze({hair:6,eyes:4,chest:4,legs:3,boots:4});
 const COLOR_SETS=Object.freeze({hairColor:['#74513b','#3f3332','#c59650','#dcb76e','#a75f41','#853f40','#655374','#d8d2b9','#6c7c77','#f1d7ac'],eyeColor:['#2387aa','#3f9d6e','#8564c1','#b78b42','#546b9b','#d76b6b','#4aaeb2','#7f674f','#b1cae0','#d6ae64'],chestColor:['#72937c','#577da0','#8d5b65','#aa8952','#655a8f','#3f8c83','#9a6b44','#b0afa1','#464b55','#c17c6d'],legsColor:['#705b48','#484c57','#4f765c','#8e705b','#5f5380','#978c77','#333f48','#8f5861','#a28d64','#607c84'],bootsColor:['#93704f','#4e4243','#65534c','#6a7779','#8e5f53','#a18d69','#4a5c52','#70718a','#b07a43','#414a56'],skinColor:['#e3b18a','#f1cba9','#dba07e','#bc8068','#a86952','#80513f','#f1d6bc','#ce9876','#9c6854','#684737']});
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n)),lerp=(a,b,t)=>a+(b-a)*t,smooth=t=>t*t*(3-2*t);
 const PHYSICAL_SLOTS=Object.freeze(['head','shoulders','chest','legs','boots','gloves']);
-const TOOLS=Object.freeze({mine:{key:'pickaxe',name:'Pickaxe',height:50,grip:[.5,.84]},smith:{key:'hammer',name:'Smithing hammer',height:44,grip:[.5,.82]},wood:{key:'hatchet',name:'Hatchet',height:50,grip:[.24,.84]},scavenge:{key:'mattock',name:'Mattock',height:32,grip:[.466,.84]},fletch:{key:'knife',name:'Fletching knife',height:17,grip:[.5,.82]},ward:{key:'spindle',name:'Weaving shuttle',height:24,grip:[.5,.83]},rune:{key:'burin',name:'Engraving burin',height:16,grip:[.5,.84]},polish:{key:'file',name:'Jeweler’s chisel',height:14,grip:[.5,.83]}});
-const WORK_RATES=Object.freeze({mine:1.05,smith:1.2,wood:.92,fletch:.85,ward:.62,rune:.7,polish:1.15,scavenge:.72});
+const TOOLS=Object.freeze({clean:{key:'brush',name:'Restoration brush',height:24,grip:[.5,.84]},mine:{key:'pickaxe',name:'Pickaxe',height:50,grip:[.5,.84]},smith:{key:'hammer',name:'Smithing hammer',height:44,grip:[.5,.82]},wood:{key:'hatchet',name:'Hatchet',height:50,grip:[.24,.84]},scavenge:{key:'mattock',name:'Mattock',height:32,grip:[.466,.84]},fletch:{key:'knife',name:'Fletching knife',height:17,grip:[.5,.82]},ward:{key:'spindle',name:'Weaving shuttle',height:24,grip:[.5,.83]},rune:{key:'burin',name:'Engraving burin',height:16,grip:[.5,.84]},polish:{key:'file',name:'Jeweler’s chisel',height:14,grip:[.5,.83]}});
+const WORK_RATES=Object.freeze({clean:.68,mine:1.05,smith:1.2,wood:.92,fletch:.85,ward:.62,rune:.7,polish:1.15,scavenge:.72});
 function workRate(pose){return WORK_RATES[pose]||1;}
 const ARM_LENGTHS=Object.freeze([20,19.5]),LEG_LENGTHS=Object.freeze([19,18]);
 const motionPreference=global.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -82,6 +82,8 @@ function poseRig(options={}){
    workPiece={x:31,y:-47,angle:0};back={x:23,y:-46};placeTip(31+lerp(Math.cos(cycle)*3.8,trace[0],mix),-48+lerp(Math.sin(cycle)*2.6,trace[1],mix),2.10+Math.sin(cycle)*.16);body.angle=.15+Math.cos(cycle)*.018;headAngle=.14+Math.sin(cycle)*.02;contact=working;
   }else if(pose==='polish'){
    const lift=clipSample([[0,0],[.20,1],[.36,1],[.60,0],[.74,0],[1,0]],phase)[0];workPiece={x:31,y:-47,angle:Math.sin(cycle)*.14};back={x:23,y:-45};placeTip(32+Math.sin(cycle)*1.8+variation*accent*.6,-49-lift*5.5,2.12+Math.cos(cycle)*.18);body.angle=.15+lift*.035;headAngle=.12+lift*.035;contact=working&&phase>=.58&&phase<=.76;
+  }else if(pose==='clean'){
+   const pass=(1-Math.cos(cycle))*.5;body.angle=.05+Math.sin(cycle)*.008;back={x:7,y:-40};headAngle=.12;workPiece={x:26,y:-42,angle:Math.sin(cycle)*.025};placeTip(33+pass*6,-44+Math.sin(cycle)*.8,2.25+Math.sin(cycle)*.025);contact=working&&phase>.12&&phase<.75;
   }else if(pose==='scavenge'){
    kneeling=true;body.x=-11;body.y=-17;body.angle=1.00+(working?Math.sin(cycle)*.025:0);back={x:22,y:-4};headAngle=.35;
    if(working)placeTip(61+Math.sin(cycle)*8+variation*accent*.8,-2-Math.max(0,-Math.cos(cycle))*8,1.62+Math.sin(cycle)*.16);
@@ -105,7 +107,7 @@ function poseRig(options={}){
     // Lift the finished weave or stretch it taut, retaining opposite edge grips.
     const lift=weight*(alternate?3:6),stretch=weight*(alternate?2:0);
     back.x-=stretch;back.y-=lift;main.x+=stretch;main.y-=lift;workPiece.y-=lift;workPiece.width=30+stretch*2;angle-=weight*.10;headAngle+=weight*.025;
-   }else if(pose==='rune'||pose==='polish'){
+   }else if(pose==='rune'||pose==='polish'||pose==='clean'){
     workPiece.y-=weight*5;workPiece.angle+=weight*(alternate?.35:-.20);back.y-=weight*5;
     const targetAngle=2.0,target={x:35-Math.sin(targetAngle)*tool.height*tool.grip[1],y:-61+Math.cos(targetAngle)*tool.height*tool.grip[1]};
     main={x:lerp(main.x,target.x,weight),y:lerp(main.y,target.y,weight)};angle=lerp(angle,targetAngle,weight);headAngle-=weight*.04;contact=false;
@@ -137,7 +139,7 @@ function poseRig(options={}){
   legs.push({side,hip:joint.shoulder,knee:joint.elbow,ankle:joint.hand,footAngle:kneeling?-.3:walking?side*walk*.08:0});
  }
  const point=(x,y)=>({x:main.x+x*Math.cos(angle)-y*Math.sin(angle),y:main.y+x*Math.sin(angle)+y*Math.cos(angle)}),tip=tool?point(0,-tool.height*tool.grip[1]):null;
- const backGesture=activity?(pose==='scavenge'?'plant':['ward','cast'].includes(pose)?'reach':offset||blend>.5&&['mine','wood','fletch','rune','polish'].includes(pose)?'grip':'rest'):weapon==='staff'&&(pose==='combat'||pose==='attack')?'reach':offset?'grip':'rest';
+ const backGesture=activity?(pose==='scavenge'?'plant':['ward','cast'].includes(pose)?'reach':offset||blend>.5&&['mine','wood','fletch','rune','polish','clean'].includes(pose)?'grip':'rest'):weapon==='staff'&&(pose==='combat'||pose==='attack')?'reach':offset?'grip':'rest';
  return {weapon,activity,walking,backpedal,walk,stroke:Math.sin(attack*Math.PI),angle,main,back,body,head,kneeling,phase,frontArm,backArm,legs,neck:headBase,bowUpper:point(-12,-25),bowLower:point(-12,25),arrowTip:point(27,0),toolTip:tip,tool:tool||null,gripOffset:offset,workPiece,contact:contact&&blend>.95,backGesture};
 }
 const INK='#293337';
@@ -449,7 +451,7 @@ function illustratedFace(c,look,time,hideHair=false){
 
  c.restore();
 }
-function paintTool(c,rig){const tool=rig.tool;if(!tool)return false;const asset=assets['tool-'+tool.key],image=imageFor('tool-'+tool.key);if(!image||!asset)return false;const width=tool.height*asset.width/asset.height;c.save();c.translate(rig.main.x,rig.main.y);c.rotate(rig.angle);c.drawImage(image,-tool.grip[0]*width,-tool.grip[1]*tool.height,width,tool.height);c.restore();return true;}
+function paintTool(c,rig){const tool=rig.tool;if(!tool)return false;if(tool.key==='brush'){c.save();c.translate(rig.main.x,rig.main.y);c.rotate(rig.angle);path(c,[-1.7,3,1.7,3,1.7,-12,-1.7,-12],'#946e45');path(c,[-2.6,-10,2.6,-10,3,-15,-3,-15],'#a3a997');path(c,[-3,-14,3,-14,3.8,-20,-3.8,-20],'#dbcd9d');for(let i=-2;i<=2;i++)line(c,i,-15,i*1.35,-20,'#9c8d67',.6);c.restore();return true;}const asset=assets['tool-'+tool.key],image=imageFor('tool-'+tool.key);if(!image||!asset)return false;const width=tool.height*asset.width/asset.height;c.save();c.translate(rig.main.x,rig.main.y);c.rotate(rig.angle);c.drawImage(image,-tool.grip[0]*width,-tool.grip[1]*tool.height,width,tool.height);c.restore();return true;}
 function paintAura(c,level,time){if(level<=0)return;c.save();c.globalAlpha=.25;for(let i=0;i<3;i++){const angle=time*.8+i*Math.PI*2/3;ellipse(c,Math.cos(angle)*20,-48+Math.sin(angle)*25,1.3,2,'#91d7df');}c.restore();}
 function render(c,options={}){
  const {x=0,y=0,scale=1,time=0,data={},facing=1}=options,look=normalizeCustom(data.custom),kit=appearance(data,options.parts),rig=poseRig(options),art=global.DeepwellEquipmentArt;

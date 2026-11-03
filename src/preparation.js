@@ -1,8 +1,8 @@
 /* Read-only recipe planning. All work and spending still use normal controls. */
 function preparationActivity(resource){
- if(resource==='gold')return tier2Unlocked()?'ancientScavenge':'scavenge';
- if(resource==='arrows'&&tier2Unlocked())return 'steelFletch';
- if(resource==='runes'&&tier2Unlocked())return 'greaterRune';
+ if(resource==='gold')return canUseSkill('ancientScavenge')?'ancientScavenge':'scavenge';
+ if(resource==='arrows'&&canUseSkill('steelFletch'))return 'steelFletch';
+ if(resource==='runes'&&canUseSkill('greaterRune'))return 'greaterRune';
  return RESOURCE_SOURCE[resource];
 }
 function preparationRequirements(action){
@@ -32,7 +32,7 @@ function preparationPlan(action=data.craftGoal){
  }
  function ensure(resource,amount,depth){
   if((stock[resource]||0)>=amount)return;
-  const activity=resource==='opals'?'prospect':preparationActivity(resource),skill=SKILLS[activity];
+  const activity=preparationActivity(resource),skill=SKILLS[activity];
   if(!skill&&activity!=='prospect'){if(!byActivity.has(resource)){const step={activity:null,resource,amount:amount-(stock[resource]||0),blocked:true};steps.push(step);byActivity.set(resource,step);}stock[resource]=amount;return;}
   const outputResource=activity==='prospect'?'opals':skill.resource,yieldAmount=activity==='prospect'?1:skillYield(activity),perGold=activity==='prospect'?0:skillGoldYield(activity);
   while((stock[resource]||0)<amount){
@@ -57,9 +57,10 @@ function preparationNext(plan){
  if(!plan)return null;const missing=plan.requirements.find(r=>!r.ready);
  if(missing?.action==='delve')return {kind:'delve',label:'Reach Zone 2',...missing};
  if(missing?.action==='train'){
-  const step=plan.steps.find(s=>s.activity&&s.activity!=='prospect'&&disciplineFor(s.activity)===missing.group&&!s.blocked),activity=step?.activity||{blacksmithing:'mine',woodworking:'wood',warding:'ward',scavenging:'scavenge',artisan:tier2Unlocked()?'garnetSearch':'polish'}[missing.group];
+  const step=plan.steps.find(s=>s.activity&&s.activity!=='prospect'&&disciplineFor(s.activity)===missing.group&&!s.blocked),activity=step?.activity||{blacksmithing:'mine',woodworking:'wood',warding:'ward',scavenging:'scavenge',artisan:canUseSkill('garnetSearch')?'garnetSearch':'polish'}[missing.group];
   return {kind:'activity',activity,label:'Train '+DISCIPLINES[missing.group].name};
  }
+ const blocked=plan.steps.find(s=>s.blocked&&s.activity&&SKILLS[s.activity]);if(blocked){if(SKILLS[blocked.activity].tier===2&&!tier2Unlocked())return {kind:'delve',label:'Reach Zone 2'};const group=disciplineFor(blocked.activity),activity={blacksmithing:'mine',woodworking:'wood',warding:'ward',scavenging:'scavenge',artisan:'polish'}[group];return {kind:'activity',activity,label:'Train '+DISCIPLINES[group].name+' to 10'};}
  if(plan.steps[0]){const step=plan.steps[0];return {kind:step.activity==='prospect'?'prospect':step.activity?'activity':'resource',activity:step.activity,resource:step.resource,label:step.activity==='prospect'?'Prospect opals':step.activity?SKILLS[step.activity].name:'Earn '+RESOURCE_LABEL[step.resource]};}
  if(missing?.action==='refine')return {kind:'bench',group:missing.group,label:'Refine Iron weapon'};
  return {kind:'bench',group:plan.goal.group,view:plan.goal.view,label:'Return to '+plan.goal.name};

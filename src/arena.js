@@ -92,9 +92,9 @@ function installArenaUI(){installZoneShopPin();
   $('speedToggle').onclick=()=>{const host=$('speedOptions'),expanded=host.classList.toggle('hidden')===false;$('speedToggle').setAttribute('aria-expanded',String(expanded));if(expanded){refreshSpeedChoices();positionSpeedChoices();host.querySelector('.active')?.focus({preventScroll:true});}};
   $('speedOptions').querySelectorAll('[data-speed]').forEach(b=>b.onclick=()=>setArenaSpeed(Number(b.dataset.speed)));
   for(const pin of ARENA_PINS){const button=pin.id==='speed'?$('speedToggle'):$(pin.element);button.dataset.tooltip=pin.name;if(pin.id!=='pause')button.removeAttribute('title');}
-  $('stageWrap').insertAdjacentHTML('beforeend','<aside class="notice-column" id="noticeColumn" aria-label="Warnings and recent notifications"><button type="button" id="noticeHistoryButton" class="notice-history-button '+((data.noticeHistory||[]).length?'':'hidden')+'" aria-label="Read recent messages" title="Read recent messages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Zm4 4h8M8 12h6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button></aside>');
+  $('stageWrap').insertAdjacentHTML('beforeend','<aside class="notice-column" id="noticeColumn" aria-label="Warnings and recent notifications"></aside>');
   $('noticeColumn').append($('idleWarning'),$('toastStack'),$('idleUnlockNudge'),$('skillsNudge'));
-  $('toastStack').classList.add('arena-notices');$('noticeHistoryButton').onclick=()=>{openDrawer('settings');const history=$('recentMessages');history.open=true;history.scrollIntoView({block:'start'});history.querySelector('summary').focus();};
+  $('toastStack').classList.add('arena-notices');
   $('damageStat').closest('.panel-section').insertAdjacentHTML('afterend','<section class="panel-section combat-readiness" id="combatReadiness"></section>');
   $('stageWrap').dataset.hudSide=data.hudLayout.side;arenaInstalled=true;applyHudLayout();refreshArenaUI();
   document.addEventListener('pointerdown',e=>{if(!e.target.closest('#speedControl'))closeSpeedChoices();});
@@ -103,7 +103,7 @@ function installArenaUI(){installZoneShopPin();
 }
 function resetRun(){
  checkpointGroundLoot();
- game.healthDrops=[];game.lootDrops=[];game.rareEliteSpawned=false;game.workBonusReaction=null;
+ game.healthDrops=[];game.lootDrops=[];game.rareEliteSpawned=false;game.rareEliteCount=0;game.workBonusReaction=null;
  resetArenaTouch();
  if(!data.styles){normalizeProgression();styleBench=combatStyle();inspectedStyle=combatStyle();game.lastActiveAt={};game.pendingIdleSkill='';clearSkillBonuses();}
  normalizeZone();checkpointGroundXp();const p=game.player;
@@ -119,7 +119,7 @@ function resetRun(){
 
 function save(){if(game.restoringSave)return;checkpointGroundXp();checkpointGroundLoot();try{data.goldHighWater=Math.max(data.goldHighWater||0,data.gold);data.savedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}catch(err){if(!saveWarningShown&&$('toastStack')){saveWarningShown=true;toast('Progress could not be saved','Allow browser storage, or back up your save in Settings.')}}}
 
-function finishPhase(){clearEncounterState();game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
+function finishPhase(){if(remainingSummonThreats()){if(!game.phaseCleanupPending)announce('BREAK THE SPIRES · CLEAR THEIR SUMMONS',2);game.phaseCleanupPending=true;game.transition=0;game.spawnTimer=999;return false;}clearEncounterState();game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
 
 function nextPhase(){
   clearEncounterState();game.phase++;game.enemies=[];game.shots=[];game.hostileShots=[];game.boss=null;game.phaseKills=0;game.phaseSpawned=0;game.phaseTime=0;game.spawnTimer=.25;game.transition=0;

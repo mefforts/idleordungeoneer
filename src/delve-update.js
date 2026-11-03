@@ -1,6 +1,6 @@
 /* Delve preparation, readable blessing stacks and regional incoming damage. */
 const ZONE_TWO_DAMAGE=1.25;
-function incomingDamageScale(){return zoneNumber()===1?ZONE_TWO_DAMAGE:1;}
+function incomingDamageScale(){return zoneNumber()>=2?ZONE_THREE_DAMAGE:zoneNumber()===1?ZONE_TWO_DAMAGE:1;}
 function hurt(amount){
  const p=game.player;p.hitPose=.26;if(game.status!=='running'||p.invuln>0)return;
  const damage=amount*incomingDamageScale()*(1-styleStats().guardPercent/100)*(1-trinketBonus('guard'))*(1-.02*waveRank('ward'))*(data.weaponType==='shield'?.72:1)*eliteBoonValue('protection');

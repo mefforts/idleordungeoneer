@@ -73,6 +73,12 @@ function paintAbilityMine(x,y,kind,theme,progress){
  const m=abilityMaterial(kind);ctx.save();ctx.translate(x,y);ellipse(0,1,16,5,m.dark+'c0');ctx.translate(0,-4-Math.sin(abilityEffectTime()*2)*2);ctx.scale(.65+.35*progress,.65+.35*progress);
  poly([-12,-4,-7,-16,6,-18,14,-7,10,5,-3,9,-13,3],m.base,m.dark,2);poly([-7,-14,6,-16,11,-7,-2,-5],m.light);poly([-6,-4,0,-11,7,-5,1,3],theme.color,m.dark,1);line(-4,-3,1,-8,1.3,theme.hot);ctx.restore();
 }
+function paintEmberFlame(x,y,size,phase){
+ const flicker=reducedMotion()?0:Math.sin(abilityEffectTime()*8+phase)*2;
+ ctx.save();ctx.translate(x,y);ctx.scale(size/20,size/20);ellipse(0,0,13,4,'#b9482766');glow(0,-9,18,'#ff9a3548');
+ ctx.beginPath();ctx.moveTo(-9,0);ctx.bezierCurveTo(-16,-12,-5,-16,-8,-25-flicker);ctx.bezierCurveTo(0,-20,0,-29,3,-35-flicker);ctx.bezierCurveTo(9,-26,4,-18,10,-20);ctx.bezierCurveTo(17,-11,12,-3,9,0);ctx.closePath();ctx.fillStyle='#e96e2d';ctx.fill();ctx.strokeStyle='#8d3925';ctx.lineWidth=1;ctx.stroke();
+ ctx.beginPath();ctx.moveTo(-5,0);ctx.quadraticCurveTo(-7,-9,0,-19-flicker);ctx.quadraticCurveTo(0,-11,5,-13);ctx.quadraticCurveTo(10,-4,5,0);ctx.closePath();ctx.fillStyle='#ffe39a';ctx.fill();ctx.restore();
+}
 function paintAbilityField(shape,type,kind,theme,progress=1,active=false){
  if(shape.shape==='quarters'){
   for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i);if(rect.left!==shape.safe.left||rect.top!==shape.safe.top)paintRuinQuarter(rect,kind,theme,progress,active);}return;
@@ -82,7 +88,9 @@ function paintAbilityField(shape,type,kind,theme,progress=1,active=false){
  else if(shape.shape==='cone'){ctx.moveTo(shape.origin.x,shape.origin.y);ctx.arc(shape.origin.x,shape.origin.y,shape.reach,shape.angle-shape.halfAngle,shape.angle+shape.halfAngle);ctx.closePath();}
  else{ctx.arc(shape.x,shape.y,shape.r,0,Math.PI*2);if(shape.inner)ctx.arc(shape.x,shape.y,shape.inner,0,Math.PI*2,true);}
  ctx.clip();ctx.globalAlpha*=active?.92:.64;const rise=active?.42+.58*Math.sin(clamp(progress,0,1)*Math.PI):.12+progress*.18;
- if(shape.shape==='rect'){
+ if(type==='emberCleave'&&shape.shape==='cone'){
+  let index=0;for(const radius of [38,78,118,155])for(let i=0;i<5;i++){const a=shape.angle-shape.halfAngle+(i+.5)*shape.halfAngle*2/5;paintEmberFlame(shape.origin.x+Math.cos(a)*radius,shape.origin.y+Math.sin(a)*radius,14+(index%3)*2,index++);}
+ }else if(shape.shape==='rect'){
   const r=shape.rect,cols=Math.min(6,Math.max(1,Math.ceil((r.right-r.left)/90))),rows=Math.min(5,Math.max(1,Math.ceil((r.bottom-r.top)/90)));
   for(let row=0;row<rows;row++)for(let col=0;col<cols;col++){const x=r.left+(col+.5)*(r.right-r.left)/cols,y=r.top+(row+.58)*(r.bottom-r.top)/rows;paintAbilityEruption(x,y,active?23:16,kind,rise,theme);}
  }else if(shape.shape==='cone'){

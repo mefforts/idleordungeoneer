@@ -14,24 +14,24 @@ function progressionUpdateFixture(){
   save(){save();},
   upgradeMatrix(){const rows=[];for(const tier of [1,2])for(const style of Object.keys(STYLE_DEFS))for(const kind of ['weapon','armor','speed','reach','enchant']){
    fresh(tier);data.unlockedWeapons=Object.keys(WEAPON_TYPES);data.ownedArmor=[style+'_'+tier];data.equippedArmor=style+'_'+tier;data.styles[style].tier=tier;data.styles[style][kind]=tier===1?0:TIER_LIMITS[1][kind];projectCombatStyle();game.player.maxHp=maxHp()+waveVitality();game.player.hp=game.player.maxHp-15;const hp=game.player.hp;
-   const bank=tier===1?'iron':'steel';data.upgradeVouchers[bank]=1;const before=inputs(),rank=data.styles[style][kind],xp=data[DISCIPLINES[STYLE_DEFS[style].group].xp],result=redeemUpgradeVoucher(style,kind);
-   rows.push({tier,style,kind,result,rank:data.styles[style][kind]-rank,left:data.upgradeVouchers[bank],unchanged:before===inputs(),xp:data[DISCIPLINES[STYLE_DEFS[style].group].xp]-xp,heal:game.player.hp-hp});
+   const bank=tier===1?'iron':'steel';data.specificVouchers[bank+'_'+kind]=1;const before=inputs(),rank=data.styles[style][kind],xp=data[DISCIPLINES[STYLE_DEFS[style].group].xp],result=redeemUpgradeVoucher(style,kind);
+   rows.push({tier,style,kind,result,rank:data.styles[style][kind]-rank,left:data.specificVouchers[bank+'_'+kind],unchanged:before===inputs(),xp:data[DISCIPLINES[STYLE_DEFS[style].group].xp]-xp,heal:game.player.hp-hp});
   }return rows;},
-  recipeMatrix(){const rows=[];const attempt=(action,tier)=>{const before=inputs(),result=redeemWorkshopVoucher(action,tier);rows.push({action,tier,result,left:data.upgradeVouchers[tier],unchanged:before===inputs()});};
-   for(const id of Object.keys(WEAPON_TYPES).filter(w=>w!=='sword')){fresh();richTraining();data.upgradeVouchers.iron=1;attempt('weapon:'+id,'iron');}
-   for(const a of Object.values(ARMOR_SETS)){fresh(a.tier);richTraining();data.upgradeVouchers[a.tier===1?'iron':'steel']=1;attempt('armor:'+a.id,a.tier===1?'iron':'steel');}
-   for(const id of Object.keys(TOOL_DEFS)){fresh();data.upgradeVouchers.iron=1;attempt('tool:'+id,'iron');}
-   for(const id of Object.keys(TRINKETS)){fresh();data.upgradeVouchers.iron=1;attempt('trinket:'+id,'iron');}
-   for(const group of Object.keys(DISCIPLINES))for(const tier of ['iron','steel'])for(let rank=0;rank<5;rank++){fresh();data.stationLevels[group]=rank;data.upgradeVouchers[tier]=1;attempt('station:'+group,tier);}
-   for(const style of Object.keys(STYLE_DEFS)){fresh(2);richTraining();data.unlockedWeapons.push(STYLE_DEFS[style].weapon);data.styles[style].weapon=10;data.upgradeVouchers.steel=1;attempt('promotion:'+style,'steel');}
+  recipeMatrix(){const rows=[];const attempt=(action,tier)=>{const [type,id]=action.split(':'),kind=type==='station'?'station-'+id:type==='armor'?'armor':type==='tool'?'tool-'+id:type==='trinket'?'jewelry':'weapon';data.specificVouchers[tier+'_'+kind]=1;const before=inputs(),result=redeemWorkshopVoucher(action,tier);rows.push({action,tier,result,left:data.specificVouchers[tier+'_'+kind],unchanged:before===inputs()});};
+   for(const id of Object.keys(WEAPON_TYPES).filter(w=>w!=='sword')){fresh();richTraining();attempt('weapon:'+id,'iron');}
+   for(const a of Object.values(ARMOR_SETS)){fresh(a.tier);richTraining();attempt('armor:'+a.id,a.tier===1?'iron':'steel');}
+   for(const id of Object.keys(TOOL_DEFS)){fresh();attempt('tool:'+id,'iron');}
+   for(const id of Object.keys(TRINKETS)){fresh();attempt('trinket:'+id,'iron');}
+   for(const group of Object.keys(DISCIPLINES))for(const tier of ['iron','steel'])for(let rank=0;rank<5;rank++){fresh();data.stationLevels[group]=rank;attempt('station:'+group,tier);}
+   for(const style of Object.keys(STYLE_DEFS)){fresh(2);richTraining();data.unlockedWeapons.push(STYLE_DEFS[style].weapon);data.styles[style].weapon=10;attempt('promotion:'+style,'steel');}
    return rows;
   },
-  blockedVouchers(){fresh();data.upgradeVouchers={iron:30,steel:30};const rows=[];const reject=(action,tier)=>{const before=JSON.stringify(data),result=redeemWorkshopVoucher(action,tier);rows.push({action,tier,result,unchanged:before===JSON.stringify(data)});};
+  blockedVouchers(){fresh();for(const tier of ['iron','steel'])for(const kind of voucherKinds(tier))data.specificVouchers[tier+'_'+kind]=30;const rows=[];const reject=(action,tier)=>{const before=JSON.stringify(data),result=redeemWorkshopVoucher(action,tier);rows.push({action,tier,result,unchanged:before===JSON.stringify(data)});};
    reject('weapon:greatsword','iron');reject('armor:melee_2','steel');reject('promotion:melee','steel');reject('upgrade:ranged:weapon','iron');reject('upgrade:melee:armor','iron');reject('upgrade:melee:weapon','steel');reject('tool:pickaxe','steel');reject('station:unknown','iron');reject('shop:fire','iron');reject('time:delve','iron');reject('upgrade:melee:unknown','iron');reject('upgrade:melee:weapon:extra','iron');
    data.styles.melee.weapon=10;reject('upgrade:melee:weapon','iron');data.stationLevels.warding=5;reject('station:warding','steel');data.tools.hatchet=true;reject('tool:hatchet','iron');reject('weapon:sword','iron');return rows;
   },
-  armorTier(){fresh(2);data.ownedArmor=['melee_2'];data.styles.melee.armor=5;data.upgradeVouchers.steel=1;return {tier:voucherTier('melee','armor'),result:redeemUpgradeVoucher('melee','armor'),rank:data.styles.melee.armor};},
-  voucherView(group='blacksmithing',view='equipment'){fresh(2);richTraining();data.upgradeVouchers={iron:3,steel:3};data.ownedArmor=['melee_1'];openWorkshop(group,view);},
+  armorTier(){fresh(2);data.ownedArmor=['melee_2'];data.styles.melee.armor=5;data.specificVouchers.steel_armor=1;return {tier:voucherTier('melee','armor'),result:redeemUpgradeVoucher('melee','armor'),rank:data.styles.melee.armor};},
+  voucherView(group='blacksmithing',view='equipment'){fresh(2);richTraining();data.specificVouchers.iron_speed=data.specificVouchers['iron_station-blacksmithing']=data.specificVouchers['steel_station-blacksmithing']=3;data.ownedArmor=['melee_1'];openWorkshop(group,view);},
   materialChecks(){fresh();data.biomeLoot={0:2,1:1,2:1,3:1};const total=data.zoneMaterials,saved=JSON.parse(JSON.stringify(data));data.styles.melee.weapon=1;Object.assign(data,{bars:100,gold:1000});const cost=styleUpgradeCost('melee','weapon');const done=craftStyleUpgrade('melee','weapon');const banks={...data.biomeLoot};data.zoneMaterials-=3;const combined={...data.biomeLoot};data.biomeLoot={0:0,1:0,2:0,3:0};data.styles.melee.weapon=3;const before=inputs(),blocked=craftStyleUpgrade('melee','weapon');data.craftGoal='upgrade:melee:weapon';const plan=preparationPlan();return {total,saved,banks,combined,cost,done,blocked,unchanged:before===inputs(),plan:plan.steps,stationCosts:[0,1,2,3,4].map(r=>{data.stationLevels.warding=r;return stationUpgradeCost('warding').zoneMaterials||0;})};},
   wardGeometry(){
    const distance=(p,a,b)=>{const dx=b.x-a.x,dy=b.y-a.y,t=clamp(((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy),0,1);return Math.hypot(p.x-a.x-dx*t,p.y-a.y-dy*t);},cross=(a,b,c,d)=>{const orient=(p,q,r)=>(q.x-p.x)*(r.y-p.y)-(q.y-p.y)*(r.x-p.x);return orient(a,b,c)*orient(a,b,d)<-1e-6&&orient(c,d,a)*orient(c,d,b)<-1e-6;};

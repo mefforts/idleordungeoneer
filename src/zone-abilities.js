@@ -68,7 +68,6 @@ function currencyDropChance(){return Math.min(.03,ZONE_ABILITY_REWARDS.monsterCh
 function dungeonCurrencyReward(enemy){
  if(enemy.summoned||enemy.totem)return 0;
  if(enemy.boss)return ZONE_ABILITY_REWARDS.guardians[enemy.bossIndex]+(enemy.bossIndex===2&&isZoneFinal()?ZONE_ABILITY_REWARDS.zoneFinalBonus:0);
- if(enemy.champion)return ZONE_ABILITY_REWARDS.rare;
  return Math.random()<(enemy.elite?ZONE_ABILITY_REWARDS.eliteChance:currencyDropChance())?1:0;
 }
 function dungeonStylePerk(id,style){

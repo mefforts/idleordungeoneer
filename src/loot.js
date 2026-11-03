@@ -2,7 +2,7 @@
 const MONSTER_LOOT={normal:{chance:.015,amount:1,cap:.06},elite:{chance:.08,amount:3,cap:.16},boss:{chance:.18,amount:6,cap:.28},voucher:.06,finalVoucher:.15};
 const lootImages=new Map();
 function normalizeMonsterLoot(){
- const vouchers=data.upgradeVouchers||{};data.upgradeVouchers=Object.fromEntries(['iron','steel'].map(tier=>[tier,Math.max(0,Math.min(100000,Math.floor(Number(vouchers[tier])||0)))]));
+ normalizeSpecificVouchers();
  data.voucherRolls=Object.fromEntries(Object.entries(data.voucherRolls||{}).filter(([key,value])=>/^\d+:[012]$/.test(key)&&value===true));
  if(data.lootPresentationVersion!==1){
   // Bank old ground XP once so no saved progression is discarded.
@@ -18,21 +18,21 @@ function monsterMaterialChance(enemy){
 function monsterMaterialDrops(enemy){
  if(enemy.summoned||enemy.totem)return [];const drops=[],rule=MONSTER_LOOT[enemy.boss?'boss':enemy.elite?'elite':'normal'];
  if(Math.random()<monsterMaterialChance(enemy)){
-  const pool=zoneNumber()===0?['ore','logs','cloth','scraps']:['ore','coal','willowLogs','ancientSalvage','cloth'],key=pool[Math.floor(Math.random()*pool.length)],amount=rule.amount;
+  const pool=zoneNumber()===0?['ore','logs','cloth','scraps']:['ore','coal','willowLogs','ancientSalvage','cloth'],available=pool.filter(key=>!SKILLS[RESOURCE_SOURCE[key]]?.tier||canUseSkill(RESOURCE_SOURCE[key])),key=available[Math.floor(Math.random()*available.length)],amount=rule.amount;
   drops.push({key,amount});
  }
  const rollKey=data.floor+':'+enemy.bossIndex;
  if(enemy.boss&&data.floor>data.cleared&&!data.voucherRolls[rollKey]){
   data.voucherRolls[rollKey]=true;
   if(Math.random()<(enemy.bossIndex===2&&isZoneFinal()?MONSTER_LOOT.finalVoucher:MONSTER_LOOT.voucher)){
-   const tier=zoneNumber()===0?'iron':'steel';drops.push({key:'voucher_'+tier,amount:1});
+   const tier=zoneNumber()===0?'iron':'steel',kinds=dropVoucherKinds(tier),kind=kinds[Math.floor(Math.random()*kinds.length)];drops.push({key:'voucher_'+tier+'_'+kind,amount:1});
   }
  }
  return drops;
 }
 function lootDetails(key){
  if(key==='sigils')return {name:'Dungeon Sigils',art:zoneCurrency().art};
- if(key.startsWith('voucher_'))return {name:(key.endsWith('iron')?'Iron':'Steel')+' upgrade voucher',art:'codex-upgrade_vouchers',voucher:true};
+ if(key.startsWith('voucher_'))return {name:voucherLootName(key),art:'codex-upgrade_vouchers',voucher:true};
  if(key.startsWith('loot_'))return {name:['Verdant Seeds','Ember Cores','Grave Dust','Rift Shards'][Number(key.slice(5))],art:'codex-loot_'+key.slice(5)};
  return {name:RESOURCE_LABEL[key]||key,art:RESOURCE_ART[key]||'coins'};
 }
@@ -50,7 +50,7 @@ function paintLootReceipts(){
    const centerX=clamp(drop.x,game.camX-game.viewWidth/2+90,game.camX+game.viewWidth/2-90),centerY=clamp(drop.y,game.camY-game.viewHeight/2+200,game.camY+game.viewHeight/2-90),x=centerX+(i%2-.5)*91,y=centerY-24-Math.floor(i/2)*27-rise;let image=lootImages.get(item.art);if(!image){image=new Image();image.src=iconAsset(item.art);lootImages.set(item.art,image);}
    ctx.fillStyle=item.voucher?'#4b3b20ed':'#15282be8';ctx.strokeStyle=item.voucher?'#f3d38e':'#b1c6ab8c';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(x-41,y-13,85,25,5);ctx.fill();ctx.stroke();
    if(image.complete&&image.naturalWidth)ctx.drawImage(image,x-38,y-11,22,22);
-   const name={gold:'Gold',sigils:'Sigil',essence:'Ess.',ore:'Ore',coal:'Coal',logs:'Oak',cloth:'Cloth',scraps:'Frag.',willowLogs:'Willow',ancientSalvage:'Salvage',loot_0:'Seeds',loot_1:'Cores',loot_2:'Dust',loot_3:'Shards'}[item.key]||'VOUCHER';
+   const kind=item.voucher?item.key.split('_')[2]:'',name=item.voucher?({weapon:'Refine',speed:'Atk speed',reach:'Reach',armor:'Armor',enchant:'Enchant',jewelry:'Jewelry'}[kind]||voucherKindName(kind||'').replace(/ refinement| upgrade/g,'').slice(0,10)):{gold:'Gold',sigils:'Sigil',essence:'Ess.',ore:'Ore',coal:'Coal',logs:'Oak',cloth:'Cloth',scraps:'Frag.',willowLogs:'Willow',ancientSalvage:'Salvage',loot_0:'Seeds',loot_1:'Cores',loot_2:'Dust',loot_3:'Shards'}[item.key]||'VOUCHER';
    ctx.font='700 '+(item.voucher?8:10)+'px system-ui';ctx.textAlign='left';ctx.fillStyle=item.voucher?'#ffe2a5':'#f6ead1';ctx.fillText('+'+uiCompact(item.amount)+' '+name,x-12,y+4);
   });ctx.restore();
  }
@@ -59,29 +59,26 @@ function voucherTier(style,kind='weapon'){return (kind==='armor'&&tier2Unlocked(
 function workshopVoucherOffer(action){
  const [type,id,kind,...extra]=String(action).split(':');if(extra.length)return null;
  const ownedStyle=style=>data.unlockedWeapons.some(w=>styleForWeapon(w)===style);
- if(type==='upgrade'&&STYLE_DEFS[id]&&['weapon','armor','enchant','speed','reach'].includes(kind))return {name:STYLE_DEFS[id].name+' '+{weapon:'refinement',armor:'reinforcement',enchant:'enchantment',speed:'attack speed',reach:'reach'}[kind],tiers:[voucherTier(id,kind)],eligible:data.styles[id][kind]<styleUpgradeCap(id,kind)&&(kind==='armor'?data.ownedArmor.some(k=>ARMOR_SETS[k]?.style===id):ownedStyle(id))};
+ if(type==='upgrade'&&STYLE_DEFS[id]&&['weapon','armor','enchant','speed','reach'].includes(kind))return {name:STYLE_DEFS[id].name+' '+voucherKindName(kind),kind,tiers:[voucherTier(id,kind)],eligible:data.styles[id][kind]<styleUpgradeCap(id,kind)&&(kind==='armor'?data.ownedArmor.some(k=>ARMOR_SETS[k]?.style===id):ownedStyle(id))};
  if(kind!==undefined)return null;
- if(type==='weapon'&&Object.hasOwn(WEAPON_TYPES,id))return {name:weaponDisplayName(id),tiers:[voucherTier(styleForWeapon(id))],eligible:!data.unlockedWeapons.includes(id)&&weaponCraftLevel(id)>=WEAPON_LEVELS[id]};
- if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];return {name:a.name,tiers:[a.tier===2?'steel':'iron'],eligible:!data.ownedArmor.includes(id)&&(a.tier===1||tier2Unlocked())&&levelRange(data[DISCIPLINES[a.group].xp]||0).lvl>=a.level};}
- if(type==='tool'&&TOOL_DEFS[id])return {name:TOOL_DEFS[id].name,tiers:['iron'],eligible:!data.tools[id]};
- if(type==='trinket'&&TRINKETS[id])return {name:TRINKETS[id].name,tiers:['iron'],eligible:!data.trinkets.includes(id)};
- if(type==='station'&&DISCIPLINES[id])return {name:DISCIPLINES[id].name+' station upgrade',tiers:['iron','steel'],eligible:stationRank(id)<5};
- if(type==='promotion'&&STYLE_DEFS[id])return {name:STYLE_DEFS[id].name+' Steel promotion',tiers:['steel'],eligible:ownedStyle(id)&&tier2Unlocked()&&styleTier(id)===1&&data.styles[id].weapon>=10&&weaponCraftLevel(STYLE_DEFS[id].weapon)>=10};
+ if(type==='jewelry'&&TRINKETS[id])return {name:TRINKETS[id].name+' refinement',kind:'jewelry',tiers:['iron'],eligible:data.trinkets.includes(id)&&jewelryRank(id)<JEWELRY_REFINEMENT.maximum};
+ if(type==='tool-upgrade'&&TOOL_DEFS[id])return {name:TOOL_DEFS[id].name+' refinement',kind:'tool-'+id,tiers:['iron'],eligible:!!data.tools[id]&&toolRank(id)<TOOL_REFINEMENT.maximum};
+ if(type==='station'&&DISCIPLINES[id])return {name:DISCIPLINES[id].name+' station upgrade',kind:'station-'+id,tiers:['iron','steel'],eligible:stationRank(id)<5};
  return null;
 }
-function canRedeemWorkshopVoucher(action,tier){const offer=workshopVoucherOffer(action);return !!offer?.eligible&&offer.tiers.includes(tier)&&(data.upgradeVouchers?.[tier]||0)>0;}
-function spendUpgradeVoucher(action,tier){if(!canRedeemWorkshopVoucher(action,tier))return false;data.upgradeVouchers[tier]--;return true;}
+function canRedeemWorkshopVoucher(action,tier){const offer=workshopVoucherOffer(action);return !!offer?.eligible&&offer.tiers.includes(tier)&&(data.specificVouchers?.[tier+'_'+offer.kind]||0)>0;}
+function spendUpgradeVoucher(action,tier){if(!canRedeemWorkshopVoucher(action,tier))return false;data.specificVouchers[tier+'_'+workshopVoucherOffer(action).kind]--;return true;}
 function redeemWorkshopVoucher(action,tier){
  if(!canRedeemWorkshopVoucher(action,tier))return false;const offer=workshopVoucherOffer(action),[type,id,kind]=action.split(':');
- const result=type==='upgrade'?craftStyleUpgrade(id,kind,tier):type==='weapon'?chooseWeapon(id,tier):type==='armor'?makeArmor(id,tier):type==='tool'?makeTool(id,tier):type==='trinket'?makeTrinket(id,tier):type==='promotion'?promoteStyle(id,tier):upgradeSkill(id,tier);
- if(!result)return false;if(goalDetails(data.craftGoal)?.done)data.craftGoal='';
- toast('Voucher redeemed',offer.name+' · no materials or gold spent.');save();refreshUI();renderDisciplineDrawer();return true;
+ const result=type==='upgrade'?craftStyleUpgrade(id,kind,tier):type==='jewelry'?refineJewelry(id,tier):type==='tool-upgrade'?refineTool(id,tier):upgradeSkill(id,tier);
+ if(!result)return false;if(goalDetails(data.craftGoal)?.done)data.craftGoal='';toast('Voucher redeemed',offer.name+' · one rank paid.');save();refreshUI();renderDisciplineDrawer();return true;
 }
 function canRedeemVoucher(style,kind='weapon'){return !!STYLE_DEFS[style]&&canRedeemWorkshopVoucher('upgrade:'+style+':'+kind,voucherTier(style,kind));}
 function redeemUpgradeVoucher(style,kind='weapon'){return !!STYLE_DEFS[style]&&redeemWorkshopVoucher('upgrade:'+style+':'+kind,voucherTier(style,kind));}
 function workshopVoucherButtonHtml(action){
  const offer=workshopVoucherOffer(action);if(!offer)return '';
- return offer.tiers.filter(tier=>(data.upgradeVouchers?.[tier]||0)>0).map(tier=>'<button type="button" class="voucher-redeem" data-redeem-voucher="'+action+'" data-voucher-tier="'+tier+'" data-focus-key="voucher-'+action+'-'+tier+'" aria-label="Use '+tier+' voucher for '+escapeHTML(offer.name)+'" '+(offer.eligible?'':'disabled')+'>Use '+(tier==='iron'?'Iron':'Steel')+' voucher · '+data.upgradeVouchers[tier]+' owned</button>').join('');
+ return offer.tiers.filter(tier=>(data.specificVouchers?.[tier+'_'+offer.kind]||0)>0).map(tier=>{const name=(tier==='iron'?'Iron':'Steel')+' '+voucherKindName(offer.kind).toLowerCase();return '<button type="button" class="voucher-redeem" data-redeem-voucher="'+action+'" data-voucher-tier="'+tier+'" data-focus-key="voucher-'+action+'-'+tier+'" aria-label="Use '+escapeHTML(name)+' voucher for '+escapeHTML(offer.name)+'" '+(offer.eligible?'':'disabled')+'>Use '+escapeHTML(name)+' voucher · '+data.specificVouchers[tier+'_'+offer.kind]+' owned</button>';}).join('');
 }
 function voucherButtonHtml(style,kind='weapon'){return workshopVoucherButtonHtml('upgrade:'+style+':'+kind);}
+
 function lootHistoryHtml(){const entries=[...(data.lootHistory||[])].reverse();return entries.length?'<details class="loot-history"><summary>Recent monster loot</summary><ol>'+entries.map(r=>'<li><b>+'+uiCompact(r.amount)+'</b> '+escapeHTML(r.name)+'<small>Zone '+r.zone+'</small></li>').join('')+'</ol></details>':'';}

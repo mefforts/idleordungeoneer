@@ -1,10 +1,10 @@
 /* Dungeoneering milestones and earned game clocks share one point bank. */
-function dungeoneeringMilestone(rank){return rank<=1?2:5*Math.pow(2,rank-2);}
+function dungeoneeringMilestone(rank){return rank<=1?2:rank===2?3:10*Math.pow(2,rank-3);}
 function dungeoneeringJourney(){
  const frontier=Math.max(1,Math.floor(Number(data.cleared)||0)+1),zone=zoneForFloor(frontier)+1;let level=0;
  while(level<40&&zone>=dungeoneeringMilestone(level+1))level++;
  const nextZone=dungeoneeringMilestone(level+1),previous=level?zoneStart(dungeoneeringMilestone(level)-1):1,next=zoneStart(nextZone-1);
- return {level,zone,nextZone,xp:Math.max(0,frontier-previous),required:Math.max(1,next-previous)};
+ return {level,zone,nextZone,nextLabel:masteryMilestoneLabel(level+1),xp:Math.max(0,frontier-previous),required:Math.max(1,next-previous)};
 }
 function normalizeTimeProgression(){
  const m=data.dungeonMastery,journey=dungeoneeringJourney();if(!m)return;
@@ -46,10 +46,10 @@ function setTimeRate(kind,value){
 }
 function gameTimeShopHtml(){
  const m=masteryFor(),journey=dungeoneeringJourney();
- return '<section class="game-time-shop" aria-labelledby="gameTimeTitle"><div class="game-time-heading"><h3 id="gameTimeTitle">Game time</h3><span>'+artHTML('mastery-points')+'<b>'+format(m.points)+'</b> '+(m.points===1?'point':'points')+'</span></div><p class="time-milestone">Dungeoneering '+journey.level+' · '+(journey.level?'Next point: Zone '+journey.nextZone:'First point: reach Zone 2')+'</p>'+(m.points===1&&!timeRank('delve')&&!timeRank('skilling')?'<p class="time-first-choice">Your first point: choose faster Delving or faster Skilling.</p>':'')+'<div class="game-time-choices">'+['delve','skilling'].map(kind=>{
+ return '<section class="game-time-shop" aria-labelledby="gameTimeTitle"><div class="game-time-heading"><h3 id="gameTimeTitle">Game time</h3><span>'+artHTML('mastery-points')+'<b>'+format(m.points)+'</b> '+(m.points===1?'point':'points')+'</span></div><p class="time-milestone">Dungeoneering '+journey.level+' · '+(journey.level?'Next point: '+journey.nextLabel:'First point: reach Zone 2')+'</p>'+(m.points===1&&!timeRank('delve')&&!timeRank('skilling')?'<p class="time-first-choice">Your first point: choose faster Delving or faster Skilling.</p>':'')+'<div class="game-time-choices">'+['delve','skilling'].map(kind=>{
   const name=kind==='delve'?'Delving':'Skilling',current=earnedTimeRate(kind),next=timeRateForRank(kind,timeRank(kind)+1);
   return '<article class="game-time-card"><h4>'+uiIcon(kind==='delve'?'sword':'idle')+name+'</h4><p>'+(kind==='delve'?'Faster combat and encounters.':'Gathering, crafting <b>and idling</b>, online and offline.')+'</p><div class="time-rate"><strong>'+current+'×</strong>'+uiIcon('arrow')+'<strong>'+next+'×</strong></div><button type="button" data-buy-time="'+kind+'" data-focus-key="time-'+kind+'" '+(m.points<1?'disabled':'')+' aria-label="Increase '+name+' from '+current+' to '+next+' times for one Dungeoneering point">'+(m.points?'1 point':'Need 1 point')+'</button></article>';
- }).join('')+'</div><small>Each rank costs one shared Dungeoneering point. Milestones: Zones 2, 5, 10, 20, 40…</small></section>';
+ }).join('')+'</div><small>Each rank costs one shared Dungeoneering point. Milestones: reach Zone 2, complete Zone 2, then reach Zones 10, 20, 40…</small></section>';
 }
 function refreshSpeedChoices(){
  const host=$('speedOptions'),kind=game.scene==='combat'?'delve':'skilling',signature=JSON.stringify([kind,timeRank('delve'),timeRank('skilling'),!!data.devSpeedUnlocked]);

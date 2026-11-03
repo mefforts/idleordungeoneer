@@ -1,8 +1,8 @@
 /* Rewards land before collection. Each floor retains its unclaimed spoils. */
 const GROUND_LOOT_RESOURCES=new Set(['gold','essence','ore','bars','logs','arrows','cloth','runes','scraps','silverOre','silverBars','opals','cutOpals','coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth','sigils']);
-function validGroundLootItem(item){return item&&typeof item.key==='string'&&Number.isSafeInteger(item.amount)&&item.amount>0&&(GROUND_LOOT_RESOURCES.has(item.key)||/^voucher_(iron|steel)$/.test(item.key)||/^loot_[0-3]$/.test(item.key));}
+function validGroundLootItem(item){return item&&typeof item.key==='string'&&Number.isSafeInteger(item.amount)&&item.amount>0&&(GROUND_LOOT_RESOURCES.has(item.key)||validVoucherLootKey(item.key)||/^loot_[0-3]$/.test(item.key));}
 function normalizeGroundLoot(){
- data.groundLootCaches=Object.fromEntries(Object.entries(data.groundLootCaches||{}).filter(([floor,drops])=>/^\d+$/.test(floor)&&Number(floor)>0&&Number(floor)<=zoneEnd(999)&&Array.isArray(drops)).map(([floor,drops])=>[floor,drops.filter(d=>d&&Number.isFinite(d.x)&&Number.isFinite(d.y)&&Array.isArray(d.items)).map(d=>({x:Math.max(-10000,Math.min(10000,d.x)),y:Math.max(-10000,Math.min(10000,d.y)),age:.4,items:d.items.filter(validGroundLootItem).map(i=>({key:i.key,amount:Math.min(1e12,i.amount)}))})).filter(d=>d.items.length)]));
+ data.groundLootCaches=Object.fromEntries(Object.entries(data.groundLootCaches||{}).filter(([floor,drops])=>/^\d+$/.test(floor)&&Number(floor)>0&&Number(floor)<=zoneEnd(999)&&Array.isArray(drops)).map(([floor,drops])=>[floor,drops.filter(d=>d&&Number.isFinite(d.x)&&Number.isFinite(d.y)&&Array.isArray(d.items)).map(d=>({x:Math.max(-10000,Math.min(10000,d.x)),y:Math.max(-10000,Math.min(10000,d.y)),age:.4,items:normalizeVoucherLootItems(d.items.filter(validGroundLootItem).map(i=>({key:i.key,amount:Math.min(1e12,i.amount)})))})).filter(d=>d.items.length)]));
 }
 function checkpointGroundLoot(){
  if(typeof game==='undefined'||game.lootOwner!==data||!game.lootFloor)return;
@@ -22,7 +22,7 @@ function collectGroundLoot(drop){
  const index=game.groundLoot?.indexOf(drop)??-1;if(index<0||game.lootOwner!==data||game.lootFloor!==data.floor)return false;
  game.groundLoot.splice(index,1);for(const item of drop.items){
   if(item.key==='sigils')grantZoneCurrency(item.amount);
-  else if(item.key.startsWith('voucher_')){const tier=item.key.slice(8);data.upgradeVouchers[tier]+=item.amount;codexDiscover('upgrade_vouchers');toast((tier==='iron'?'Iron':'Steel')+' upgrade voucher','Choose a matching equipment recipe, upgrade, tool or station in Skills.');}
+  else if(item.key.startsWith('voucher_')){grantSpecificVoucherLoot(item.key,item.amount);codexDiscover('upgrade_vouchers');toast(voucherLootName(item.key),'One matching upgrade on an owned item or its named station.');}
   else if(item.key.startsWith('loot_')){const kind=Number(item.key.slice(5));data.biomeLoot[kind]=(data.biomeLoot[kind]||0)+item.amount;codexDiscover(item.key);}
   else{data[item.key]=(data[item.key]||0)+item.amount;codexDiscover(item.key==='essence'?'permanent_essence':'resource_'+item.key);}
  }

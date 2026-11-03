@@ -150,7 +150,7 @@
       "seconds": 20,
       "amount": 1,
       "xp": "artisanXp",
-      "gain": 16,
+      "gain": 128,
       "cost": {
         "opals": 1
       },
@@ -272,7 +272,8 @@
       "verb": "CLEAN",
       "pose": "scavenge",
       "color": "#b6c6a0",
-      "scene": "scavenge"
+      "scene": "polish",
+      "workPose": "clean"
     },
     "aetherWeave": {
       "icon": "✦",
@@ -321,11 +322,12 @@
       "seconds": 30,
       "amount": 1,
       "xp": "artisanXp",
-      "gain": 15,
+      "gain": 120,
       "verb": "PROSPECT",
       "pose": "scavenge",
       "color": "#e59b91",
-      "scene": "scavenge"
+      "scene": "polish",
+      "workPose": "clean"
     },
     "garnetCut": {
       "icon": "✦",
@@ -336,7 +338,7 @@
       "seconds": 24,
       "amount": 1,
       "xp": "artisanXp",
-      "gain": 24,
+      "gain": 192,
       "cost": {
         "garnets": 1
       },
@@ -344,6 +346,24 @@
       "pose": "fletch",
       "color": "#e6a3aa",
       "scene": "polish"
+    },
+    "relicClean": {
+      "name": "Relic Prospecting",
+      "resource": "opals",
+      "item": "Rough Opal",
+      "seconds": 20,
+      "amount": 1,
+      "xp": "scavengeXp",
+      "gain": 20,
+      "cost": {
+        "scraps": 12
+      },
+      "verb": "CLEAN",
+      "pose": "clean",
+      "workPose": "clean",
+      "scene": "polish",
+      "color": "#edcc83",
+      "icon": "◇"
     }
   },
   "ACTIVE_INTERVAL": {
@@ -366,7 +386,8 @@
     "aetherWeave": 3,
     "greaterRune": 3.6,
     "garnetSearch": 4.5,
-    "garnetCut": 4
+    "garnetCut": 4,
+    "relicClean": 4
   },
   "DISCIPLINES": {
     "blacksmithing": {
@@ -415,6 +436,7 @@
       "icon": "⌕",
       "actions": [
         "scavenge",
+        "relicClean",
         "ancientScavenge",
         "cleanAncient"
       ],
@@ -493,7 +515,7 @@
     "scraps": "scavenge",
     "silverOre": "silverMine",
     "silverBars": "silverSmelt",
-    "opals": "scavenge",
+    "opals": "relicClean",
     "cutOpals": "polish",
     "coal": "coal",
     "steelBars": "steelSmelt",
