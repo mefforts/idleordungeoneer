@@ -23,7 +23,7 @@ function tier(n){return n<=0?0:n<3?1:n<6?2:3;}
 function appearance(data={},overrides={}){
  const set=global.DeepwellEquipmentArt?.describe(data).armor||null,pieces={};
  for(const slot of PHYSICAL_SLOTS){const candidate=overrides[slot];pieces[slot]=candidate==='base'||Object.hasOwn(ARMOR_PALETTES,candidate)?candidate:set?.id||'base';}
- return {weapon:Math.max(0,Number(data.weapon)||0),armor:Math.max(0,Number(data.armor)||0),enchant:Math.max(0,Number(data.enchant)||0),armorSet:set?.id||'',armorTier:set?.tier||0,head:pieces.head==='base'?'hair':pieces.head.startsWith('melee')?'helmet':pieces.head.startsWith('magic')?'wizard-hat':'hood',chest:pieces.chest==='base'?'tunic':pieces.chest.startsWith('magic')?'robes':pieces.chest.startsWith('ranged')?'ranger':'armor',legs:pieces.legs.startsWith('magic')?'robe':'trousers',boots:pieces.boots==='base'?'leather':'reinforced',cape:'none',mainHand:data.weaponType||'sword',offHand:data.weaponType==='shield'?'buckler':'none',aura:data.enchant>0?'lightning':'none',pieces};
+ return {weapon:Math.max(0,Number(data.weapon)||0),armor:Math.max(0,Number(data.armor)||0),enchant:Math.max(0,Number(data.enchant)||0),armorSet:set?.id||'',armorTier:set?.tier||0,head:pieces.head==='base'?'hair':pieces.head.startsWith('melee')?'helmet':pieces.head.startsWith('magic')?'wizard-hat':'ranger-hat',chest:pieces.chest==='base'?'tunic':pieces.chest.startsWith('magic')?'robes':pieces.chest.startsWith('ranged')?'ranger':'armor',legs:pieces.legs.startsWith('magic')?'robe':'trousers',boots:pieces.boots==='base'?'leather':'reinforced',cape:'none',mainHand:data.weaponType||'sword',offHand:data.weaponType==='shield'?'buckler':'none',aura:data.enchant>0?'lightning':'none',pieces};
 }
 function transform(body,point){const y=point.y+40,cs=Math.cos(body.angle),sn=Math.sin(body.angle);return {x:body.x+point.x*cs-y*sn,y:body.y+point.x*sn+y*cs};}
 function inverseKinematics(root,target,bend,lengths){const dx=target.x-root.x,dy=target.y-root.y,raw=Math.max(.0001,Math.hypot(dx,dy)),distance=clamp(raw,Math.abs(lengths[0]-lengths[1])+.01,lengths[0]+lengths[1]-.02),ux=dx/raw,uy=dy/raw,along=(lengths[0]**2-lengths[1]**2+distance**2)/(2*distance),height=Math.sqrt(Math.max(0,lengths[0]**2-along**2));return {shoulder:{...root},hand:{x:root.x+ux*distance,y:root.y+uy*distance},elbow:{x:root.x+ux*along-uy*height*bend,y:root.y+uy*along+ux*height*bend},lengths:[...lengths]};}
@@ -209,11 +209,14 @@ function paintBody(c,rig,kit,look){
  if(plain&&look.chest===3)path(c,[7,-.5,14,0,13.3,6,7.3,5.4],shade(p.leather,.84),INK,.8);
  c.restore();
 }
-function paintWizardHat(c,p,look){
+function paintHatHair(c,look){
  // Small exposed locks sit below the brim; the face and its anchors stay put.
  path(c,[-14,-5,-10,-6,-11,1,-14,5,-15,0],shade(look.hairColor,.75),INK,.7);
  path(c,[11,-6,15,-5,15,1,12,5,12,-1],look.hairColor,INK,.7);
  path(c,[-11,-6,-4,-8,7,-7,12,-5,7,-3,0,-5,-6,-3,-7,-5],look.hairColor,'',0);
+}
+function paintWizardHat(c,p,look){
+ paintHatHair(c,look);
  // A folded cloth cone, with a sideways tip instead of an enclosing hood.
  path(c,[-16,-11,-10,-29,0,-39,11,-35,20,-25,11,-28,6,-29,14,-11],p.mid,INK,1.3);
  path(c,[-13,-15,-8,-28,0,-36,5,-35,-3,-29,-7,-16],p.light,'',0);
@@ -229,23 +232,47 @@ function paintWizardHat(c,p,look){
  // One stitched arcane star, shared by the cream and blue robe tiers.
  path(c,[-3,-29,-1.8,-25.4,1,-24,-1.8,-22.7,-3,-19,-4.3,-22.7,-7,-24,-4.3,-25.4],p.trim,p.dark,.65);
 }
+function paintFullHelm(c,p){
+ const plume=p===ARMOR_PALETTES.melee_1?{mid:'#a94c43',light:'#e08b70',dark:'#65313b'}:{mid:'#b04b59',light:'#ec9190',dark:'#682f43'};
+ // Short horsehair plume grows from the crown mount and sweeps to one side.
+ path(c,[-3,-29,-3,-36,2,-42,10,-43,18,-38,23,-33,28,-31,20,-31,26,-25,18,-27,9,-34,3,-34,1,-29],plume.mid,INK,1.1);
+ path(c,[-2,-36,3,-41,10,-41,17,-37,21,-33,13,-36,6,-37],plume.light,'',0);
+ path(c,[3,-34,10,-36,19,-31,25,-26,18,-27,9,-32],plume.dark,'',0);
+ line(c,5,-39,13,-37,plume.mid,.8);line(c,11,-34,18,-30,plume.light,.7);
+ path(c,[-4,-29,-4,-32,-1,-34,3,-33,5,-29],p.dark,INK,.8);path(c,[-3,-31,-1,-32,3,-31,3,-28,-3,-28],p.light,INK,.7);
+ // Enclosing shell, faceted brow and cheek plates protect the whole face.
+ path(c,[-17,-8,-18,-18,-12,-24,-1,-29,10,-26,17,-18,18,7,12,14,1,19,-10,15,-17,8],p.dark,INK,1.35);
+ path(c,[-15,-17,-10,-23,-2,-26,-2,-8,-14,-5],p.light,'',0);
+ path(c,[1,-26,9,-23,15,-17,15,-6,3,-8],p.mid,'',0);
+ path(c,[-15,-5,-3,-2,1,2,1,16,-9,12,-15,6],p.mid,'',0);
+ path(c,[3,-2,15,-6,15,6,10,12,3,16],shade(p.mid,.9),'',0);
+ line(c,-1,-26,-1,-7,p.light,1.5);line(c,-14,-5,-3,-2,p.light,.85);
+ // The narrow T-shaped visor stays dark and legible at the combat scale.
+ path(c,[-13,-3,-3,0,2,1,13,-3,12,1,3,5,3,14,-.5,15,-.5,5,-12,1],INK,'',0);
+ line(c,-11,-2,-4,0,p.dark,.65);line(c,5,1,11,-1,p.dark,.65);
+ for(const [x,y]of [[-9,6],[-5.5,7.5],[-9,9.5],[7,6.5],[10.5,5.5],[7,10],[10.5,9]])path(c,[x-.7,y-.9,x+.6,y-.5,x+.6,y+.9,x-.7,y+.5],p.dark,'',0);
+ line(c,-14,6,-9,11,p.light,.8);line(c,4,16,11,12,p.mid,.8);
+}
+function paintRangerCap(c,p,look){
+ paintHatHair(c,look);
+ // A low soft crown and folded band leave ears, cheeks and neck open.
+ path(c,[-16,-6,-15,-16,-10,-23,0,-26,10,-23,16,-17,17,-10,20,-8,12,-4,1,-6,-10,-3],p.mid,INK,1.15);
+ path(c,[-13,-13,-9,-21,0,-24,6,-23,-3,-18,-7,-10],p.light,'',0);
+ path(c,[7,-23,14,-18,16,-10,10,-7,6,-9,9,-17],p.dark,'',0);
+ path(c,[-19,-10,-14,-7,1,-9,18,-13,19,-7,3,-4,-15,-2,-19,-5],p.dark,INK,.95);
+ path(c,[-18,-9,-14,-6,1,-8,17,-12,17,-9,2,-5,-14,-3,-18,-5],p.mid,'',0);
+ line(c,-15,-4,1,-6,p.trim,1);line(c,1,-6,16,-10,p.trim,1);
+ // One slender feather is tucked into the band, with a continuous quill.
+ path(c,[10,-13,12,-24,18,-34,26,-40,24,-31,19,-23,13,-17], '#ece4c9',INK,.8);
+ path(c,[13,-18,18,-27,25,-38,23,-30,18,-23], '#b5bc95','',0);
+ line(c,10,-11,15,-24,p.dark,.85);line(c,15,-24,25,-38,p.dark,.7);
+ line(c,14,-23,13,-27,'#d2cba9',.6);line(c,17,-27,17,-31,'#d2cba9',.6);line(c,20,-31,23,-32,'#f8f0d7',.6);
+ path(c,[9,-13,12,-14,13,-11,10,-10],p.trim,p.dark,.6);
+}
 function paintHead(c,rig,kit,look,time){
  const p=paletteFor(kit,'head',look),armored=p.style!=='travel';c.save();c.translate(rig.head.x,rig.head.y);c.rotate(rig.head.angle);c.scale(1.20,1.20);
- if(armored&&p.style==='ranged'){
-  c.beginPath();c.moveTo(-16,14);c.quadraticCurveTo(-23,-2,-15,-17);c.quadraticCurveTo(-4,-29,8,-24);c.quadraticCurveTo(23,-15,18,12);c.lineTo(11,18);c.lineTo(-7,18);c.closePath();c.fillStyle=p.dark;c.fill();c.strokeStyle=INK;c.lineWidth=1.4;c.stroke();
- }
- illustratedFace(c,look,time,armored);
- if(armored&&p.style==='melee'){
-  path(c,[-17,-6,-18,-16,-11,-23,-1,-26,10,-22,17,-15,18,-6,11,-8,-10,-8],p.dark,INK,1.3);
-  path(c,[-15,-15,-10,-21,-2,-23,-2,-9,-13,-9],p.light,'',0);path(c,[1,-23,10,-20,15,-14,12,-9,1,-9],p.mid,'',0);line(c,-16,-7,16,-7,p.mid,3);line(c,-13,-6,13,-6,p.light,.7);
-  path(c,[-17,-6,-12,-4,-12,10,-15,12,-18,2],p.mid,INK,.8);path(c,[13,-6,18,-5,17,6,13,12,11,10,12,-2],p.dark,INK,.8);line(c,-15,-1,-14,7,p.light,.9);
- }else if(p.style==='magic')paintWizardHat(c,p,look);
- else if(armored){
-  path(c,[-17,-2,-16,-14,-9,-22,-1,-25,9,-22,16,-14,19,-3,13,-6,8,-13,0,-17,-8,-12,-12,-4],p.mid,INK,1.2);
-  path(c,[-15,-10,-9,-20,-1,-23,1,-19,-6,-15,-11,-5],p.light,'',0);
-  path(c,[-18,-1,-13,-3,-12,8,-5,13,-8,18,-17,13],p.mid,INK,.9);path(c,[14,-3,19,-1,17,13,8,18,6,14,12,8],p.dark,INK,.9);
-  line(c,-12,8,-6,13,p.light,1.0);line(c,8,14,13,9,p.trim,.8);
- }
+ if(p.style==='melee')paintFullHelm(c,p);
+ else{illustratedFace(c,look,time,armored);if(p.style==='magic')paintWizardHat(c,p,look);else if(p.style==='ranged')paintRangerCap(c,p,look);}
  c.restore();
 }
 function drawPart(c,slot,options={}){

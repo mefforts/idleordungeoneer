@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.0.2** gives Iron and Steel armor enclosed full helms with narrow visors and red plumes. Ranger leathers now have slimmer, open-faced caps with a single pale feather. Combat, skilling, Appearance, Inventory and Codex use the same headwear. [Compare both tiers](preview-headwear.png) · [Phone full helm](preview-full-helm-mobile.png) · [Phone ranger cap](preview-ranger-cap-mobile.png) · [Phone Inventory](preview-headwear-inventory-mobile.png).
+
 **Build 11.0.1** replaces the Mage hoods with small wizard hats: a folded point, broad brim and stitched arcane star, in linen cream or blue to match the robes. The same hats appear in combat, skilling, Inventory and Codex portraits. [Both robe sets](preview-wizard-hats.png) · [Phone Warding](preview-wizard-hat-warding-mobile.png) · [Phone Inventory](preview-wizard-hat-inventory-mobile.png).
 
 **Build 11.0** adds a meaningful first game-time choice, clearer preparation, and visible monster loot. [Time choices](preview-game-time-mobile.png) · [Preparation route](preview-preparation-mobile.png) · [Loot and active buffs](preview-loot-buffs-mobile.png).
@@ -241,3 +243,5 @@ Generated icon sheets, calibrated regions and alignment metrics live in `assets/
 `npm run review:hats` captures both Mage hats, the outfit lineup, phone combat/work/Inventory and portrait/landscape fitting, using the live renderer and isolated review states.
 
 `npm run review:spires` captures phone and desktop spire states and records ordinary/crowned bumps, red-window retaliation and a safe dash. It exports an MP4 and a looping GIF with FFmpeg, using isolated encounter fixtures and the real movement/collision loop.
+
+`npm run review:headwear` captures both full-helm and ranger-cap tiers, their portraits, motion poses and phone/desktop fitting with the live renderer.

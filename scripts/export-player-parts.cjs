@@ -34,10 +34,11 @@ class VectorContext{
 for(const key of ['fillStyle','strokeStyle','lineWidth','lineCap','lineJoin','globalAlpha'])Object.defineProperty(VectorContext.prototype,key,{get(){return this.state[key];},set(value){this.state[key]=value;}});
 const context={window:{}};vm.runInNewContext(fs.readFileSync(path.join(root,'src/avatar-rig.js'),'utf8'),context,{timeout:1000});
 const avatar=context.window.DeepwellAvatar,slots=avatar.metrics().physicalSlots,sets=['base','melee_1','melee_2','ranged_1','ranged_2','magic_1','magic_2'];
+const headViews={melee:[-34,-55,70,83],ranged:[-30,-51,65,78],magic:[-33,-49,66,79]};
 const views={head:[-31,-38,62,68],shoulders:[-12,-10,25,21],chest:[-19,-35,38,51],legs:[-18,-5,36,48],boots:[-12,-11,27,22],gloves:[-10,-10,20,20]},metrics=[];
 fs.mkdirSync(path.join(folder,'parts'),{recursive:true});
 for(const set of sets)for(const slot of slots){
- const recorder=new VectorContext();avatar.drawPart(recorder,slot,{set});const key=(set==='base'?'base':'armor-'+set)+'-'+slot,viewBox=slot==='head'&&set.startsWith('magic')?[-33,-49,66,79]:views[slot],svg=recorder.svg(viewBox);
+ const recorder=new VectorContext();avatar.drawPart(recorder,slot,{set});const key=(set==='base'?'base':'armor-'+set)+'-'+slot,viewBox=slot==='head'?headViews[set.split('_')[0]]||views.head:views[slot],svg=recorder.svg(viewBox);
  fs.writeFileSync(path.join(folder,'parts',key+'.svg'),svg);metrics.push({key,slot,set,viewBox,paths:recorder.elements.length,bytes:Buffer.byteLength(svg)});
 }
 fs.writeFileSync(path.join(folder,'vector-metrics.json'),JSON.stringify(metrics,null,2)+'\n');

@@ -292,7 +292,7 @@ function installPresentationUI(){
  installMobileUI();installWorkshopUI();installRestorationUI();installDelveTravelUI();installRareEliteUI();refreshPresentationUI();
 }
 function drawAvatarPreview(){
- const preview=$('avatarPreview');if(!preview)return;const c=preview.getContext('2d'),r=preview.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));if(preview.width!==w||preview.height!==h){preview.width=w;preview.height=h;}c.setTransform(w/220,0,0,h/190,0,0);c.clearRect(0,0,220,190);DeepwellAvatar.render(c,{x:84,y:177,scale:DeepwellAvatar.appearance(data).head==='wizard-hat'?1.20:1.30,time:game.frame,pose:'idle',data});
+ const preview=$('avatarPreview');if(!preview)return;const c=preview.getContext('2d'),r=preview.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));if(preview.width!==w||preview.height!==h){preview.width=w;preview.height=h;}c.setTransform(w/220,0,0,h/190,0,0);c.clearRect(0,0,220,190);DeepwellAvatar.render(c,{x:84,y:177,scale:DeepwellAvatar.appearance(data).head==='hair'?1.30:1.20,time:game.frame,pose:'idle',data});
 }
 function presentationResourceImage(key){
  if(!presentationResourceImages.has(key)){const im=new Image();im.src=iconAsset(RESOURCE_ART[key]||'relic');presentationResourceImages.set(key,im);}return presentationResourceImages.get(key);
