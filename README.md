@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 10.0.2** fixes skilling arms that looked detached from the shirt. Working and reaching arms now keep a continuous shoulder-to-wrist outline across all eight work families. [Phone mining](preview-player-mining-mobile.png) · [Phone warding](preview-player-warding-mobile.png) · [Work loops](preview-player-work-loops.gif).
+
 **Build 10.0.1** protects gameplay holds from Safari text selection, highlighting and Copy/Look Up callouts. Mining and touch movement continue while held; releasing, cancelling or losing pointer capture stops them. Menus retain scrolling, keyboard controls and editable/save controls retain native behavior.
 
 A lightweight loading screen appears before the embedded assets arrive and hands over to the intro when the first scene is ready. It supports reduced motion and offers retry if startup fails. [Phone preview](preview-loading-mobile.png) · [Desktop preview](preview-loading.png).

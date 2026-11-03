@@ -27,8 +27,8 @@ function motionReviewFixture(){
    const cycle=t%1,attack=cycle<.38?1-cycle/.38:0;
    weapons.forEach(([weapon,name,armor],i)=>person(c,panel(c,i,3,name,'Attack → recovery → ready'),{pose:'combat',time:t,attack,charge:cycle,aimAngle:Math.sin(t*1.2)*.35},armor,weapon,facing));
   }else{
-   title(c,'Skilling · eight work families','1× work clocks · steady loops · facing changes after four seconds · start/stop transitions in the scene reel');
-   work.forEach(([pose,name,armor],i)=>person(c,panel(c,i,4,name,'Live rig · '+(facing>0?'facing right':'facing left')),{pose,time:t,working:true,workBlend:1,workPhase:(t*DeepwellAvatar.workRate(pose))%1},armor,'sword',facing));
+   title(c,'Skilling · eight work families','1× work clocks · travel clothes first, then armor facing left · start/stop transitions in the scene reel');
+   work.forEach(([pose,name,armor],i)=>person(c,panel(c,i,4,name,facing>0?'Travel clothes · facing right':'Armor · facing left'),{pose,time:t,working:true,workBlend:1,workPhase:(t*DeepwellAvatar.workRate(pose))%1},facing>0?'':armor,'sword',facing));
   }
  }
  function begin(kind){
@@ -54,9 +54,9 @@ function ffmpeg(args){const result=spawnSync('ffmpeg',['-hide_banner','-loglevel
   const p=await runtime.browser.newPage({viewport:{width:600,height:1000}});p.on('pageerror',e=>errors.push(e.message));await p.route(runtime.baseURL+'/**',route=>route.fulfill({contentType:'text/html',body:html}));await p.goto(runtime.baseURL);await p.waitForFunction(()=>!document.documentElement.classList.contains('game-loading'));await p.evaluate(()=>Promise.all([__playerTest.ready(),__workshopTest.ready()]));
   await p.evaluate(()=>__motionReview.begin('overview'));await p.waitForTimeout(24000);let recording=await p.evaluate(()=>__motionReview.stop());const overviewWebm=path.join(runtime.resultsDir,'player-motion-overview.webm');fs.writeFileSync(overviewWebm,Buffer.from(recording,'base64'));
   console.log('Captured movement, six weapons and eight work loops.');
-  await p.evaluate(()=>{__workshopTest.fresh('mine','melee_1',0);__motionReview.sceneLabel='Mining';__motionReview.stage='starting / working';});await p.waitForTimeout(60);
+  await p.evaluate(()=>{__workshopTest.fresh('mine','',0);__motionReview.sceneLabel='Mining';__motionReview.stage='starting / working';});await p.waitForTimeout(60);
   await p.evaluate(()=>__motionReview.begin('scenes'));
-  for(const [key,label,armor,zone]of [['mine','Mining','melee_1',0],['forge','Smithing','melee_2',1],['wood','Woodcutting','ranged_1',0],['fletch','Fletching','ranged_2',1],['ward','Warding','magic_1',0],['rune','Runecrafting','magic_2',2],['polish','Artisan','ranged_1',1],['scavenge','Scavenging','ranged_2',0]]){
+  for(const [key,label,armor,zone]of [['mine','Mining','',0],['forge','Smithing','melee_2',1],['wood','Woodcutting','ranged_1',0],['fletch','Fletching','ranged_2',1],['ward','Warding','',0],['rune','Runecrafting','magic_2',2],['polish','Artisan','ranged_1',1],['scavenge','Scavenging','ranged_2',0]]){
    await p.evaluate(({key,label,armor,zone})=>{__motionReview.sceneLabel=label;__motionReview.stage='starting / working';__workshopTest.motion(key,armor,zone);},{key,label,armor,zone});await p.waitForTimeout(3000);
    await p.evaluate(()=>{__motionReview.stage='release / rest';__motionReview.release();});await p.waitForTimeout(600);
   }

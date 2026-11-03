@@ -1642,15 +1642,14 @@ function paintShoulder(c,root,angle,side,kit,look){
  else{path(c,[-8,-1.3,-5.0,-5.4,1,-6.2,7.2,-3.0,8.5,3.8,3.3,6.1,-6.8,4.7],p.mid,INK,1.2);path(c,[-6,-1.9,-3.8,-4.1,1,-4.5,5.4,-2.5,2.1,-.6],p.light,'',0);line(c,-6.4,3.3,6.4,3.1,p.style==='magic'?p.trim:p.dark,1);}
  c.restore();
 }
-function paintArm(c,joints,side,kit,look,forearmOnly=false){
- if(forearmOnly){const a=boneFrame(joints.elbow,joints.hand);c.save();c.translate(joints.elbow.x,joints.elbow.y);c.rotate(Math.atan2(a.dy,a.dx)-Math.PI/2);c.beginPath();c.rect(-8,-1,16,a.length+9);c.clip();c.rotate(-Math.atan2(a.dy,a.dx)+Math.PI/2);c.translate(-joints.elbow.x,-joints.elbow.y);}
+function paintArm(c,joints,side,kit,look){
  const p=paletteFor(kit,'chest',look),plain=p.style==='travel',mage=p.style==='magic';
  fillLimb(c,joints.shoulder,joints.elbow,joints.hand,plain?4.4:mage?5.9:5.2,plain?3.2:mage?4.6:3.8,plain?look.skinColor:p.style==='melee'?p.cloth:p.mid,plain?shade(look.skinColor,.70):p.dark,plain?shade(look.skinColor,1.12):p.light);
  if(plain){const end={x:lerp(joints.shoulder.x,joints.elbow.x,.43),y:lerp(joints.shoulder.y,joints.elbow.y,.43)};band(c,joints.shoulder,end,4.8,look.chestColor,shade(look.chestColor,1.3));}
  else if(p.style==='melee'||p.style==='ranged'){
   const start={x:lerp(joints.elbow.x,joints.hand.x,.2),y:lerp(joints.elbow.y,joints.hand.y,.2)},end={x:lerp(joints.elbow.x,joints.hand.x,.86),y:lerp(joints.elbow.y,joints.hand.y,.86)};band(c,start,end,p.style==='melee'?4.1:3.8,p.style==='melee'?p.mid:p.leather,p.style==='melee'?p.light:shade(p.leather,1.3));
  }else{const axis=boneFrame(joints.elbow,joints.hand),at={x:lerp(joints.elbow.x,joints.hand.x,.83),y:lerp(joints.elbow.y,joints.hand.y,.83)};line(c,at.x-axis.nx*4.6,at.y-axis.ny*4.6,at.x+axis.nx*4.6,at.y+axis.ny*4.6,p.trim,1.2);}
- const angle=Math.atan2(joints.elbow.y-joints.shoulder.y,joints.elbow.x-joints.shoulder.x)-Math.PI/2;if(!forearmOnly)paintShoulder(c,joints.shoulder,angle,side,kit,look);else c.restore();
+ const angle=Math.atan2(joints.elbow.y-joints.shoulder.y,joints.elbow.x-joints.shoulder.x)-Math.PI/2;paintShoulder(c,joints.shoulder,angle,side,kit,look);
 }
 function paintHand(c,point,angle,side,kit,look,handPose='rest'){
  const p=paletteFor(kit,'gloves',look),bare=p.style==='travel',color=bare?look.skinColor:p.style==='melee'&&kit.pieces.gloves.endsWith('_2')?p.mid:p.leather,light=shade(color,1.20),dark=shade(color,.72);
@@ -1803,8 +1802,13 @@ function render(c,options={}){
  c.save();c.translate(x,y);c.scale(scale*(facing<0?-1:1),scale);ellipse(c,1,1,16,3.4,'#0b0f1260');paintAura(c,kit.enchant,data.reducedMotion||options.reducedMotion||motionPreference?.matches?0:time);
  for(const leg of rig.legs)paintLeg(c,rig,leg,kit,look);
  const collar=transform(rig.body,{x:0,y:-71});stroke(c,collar,rig.neck,shade(look.skinColor,.82),8);stroke(c,{x:collar.x-1,y:collar.y},{x:rig.neck.x-1,y:rig.neck.y},look.skinColor,5.8);
- paintArm(c,rig.backArm,-1,kit,look);paintBody(c,rig,kit,look);
- if(rig.back.x>rig.body.x-2)paintArm(c,rig.backArm,-1,kit,look,true);
+ // Reaching arms need a continuous shoulder-to-wrist silhouette in front of
+ // the shirt. Clipping a second copy at the elbow exposes upper-arm fragments
+ // when the bones fold back across each other, leaving a floating forearm.
+ const reaching=rig.activity||rig.back.x>rig.body.x-2;
+ if(!reaching)paintArm(c,rig.backArm,-1,kit,look);
+ paintBody(c,rig,kit,look);
+ if(reaching)paintArm(c,rig.backArm,-1,kit,look);
  paintArm(c,rig.frontArm,1,kit,look);paintHead(c,rig,kit,look,data.reducedMotion||options.reducedMotion||motionPreference?.matches?0:time);
  if(rig.activity)paintTool(c,rig);else if(options.showWeapon!==false){
   art?.paintWeapon(c,data,rig.weapon==='shield'?'sword':rig.weapon,{x:rig.main.x,y:rig.main.y,angle:rig.angle});

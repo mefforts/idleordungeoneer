@@ -29,6 +29,12 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),{createRuntime}
  const layers=await p.evaluate(()=>__playerTest.layers());assert.equal(layers.length,378);assert.deepEqual(layers.filter(r=>!r.neckConnected||r.detached.length||r.visiblePixels<=1000),[]);
  const mix=await p.evaluate(()=>__playerTest.mix());assert.deepEqual(mix.pieces,{head:'magic_2',shoulders:'melee_2',chest:'ranged_1',legs:'ranged_2',boots:'base',gloves:'melee_1'});
  passed.push('Head, neck and torso stay visibly connected in 378 outfit, activity and facing combinations; the renderer can resolve each physical armor slot independently');
+ const coverage=await p.evaluate(()=>__playerTest.workArmCoverage());assert.equal(coverage.length,32);
+ // Cuffs and the near hand can cover a few samples. A missing upper arm cannot
+ // hide in that allowance, even if the torso joins its alpha mask to the wrist.
+ assert.deepEqual(coverage.filter(row=>row.covered/row.total<.8),[]);
+ for(const pose of new Set(coverage.map(row=>row.pose))){const rows=coverage.filter(row=>row.pose===pose),covered=rows.reduce((n,row)=>n+row.covered,0),total=rows.reduce((n,row)=>n+row.total,0);assert.ok(covered/total>.9,JSON.stringify({pose,covered,total}));}
+ passed.push('Travel-clothes upper arms stay visibly connected below their sleeves in 4,608 pixel probes across eight work loops, 48 phases, both facings and two display scales');
  await p.setViewportSize({width:390,height:844});await p.evaluate(()=>__workshopTest.motion('mine','melee_1'));await p.waitForTimeout(250);const start=await p.evaluate(()=>__workshopTest.pose('mine',.1));assert.ok(start.main.x>0);await p.locator('#skillHold').dispatchEvent('pointerup');
  await p.evaluate(()=>__playerTest.openCreator());assert.equal(await p.locator('[data-pose]').count(),8);for(const pose of ['idle','walk','attack','mine','smith','wood','ward','scavenge'])await p.locator('[data-pose="'+pose+'"]').click();
  await p.locator('[data-pose="attack"]').click();await p.evaluate(()=>{

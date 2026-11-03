@@ -54,6 +54,24 @@ function playerFixture(){
     rows.push({armor,pose,facing,workPhase,neckConnected:!!seen[neck.y*600+neck.x],detached,visiblePixels:queue.length});
    }return rows;
   },
+  workArmCoverage(){
+   const rows=[],canvas=document.createElement('canvas');canvas.width=240;canvas.height=270;const c=canvas.getContext('2d',{willReadFrequently:true});
+   const skin=['#e3b18a','#9f7c61','#fec69b'].map(hex=>hex.slice(1).match(/../g).map(value=>parseInt(value,16)));
+   for(const pose of ['mine','smith','wood','fletch','ward','rune','polish','scavenge'])for(const facing of [-1,1])for(const scale of [1.5,2.5]){
+    let covered=0,total=0;const misses=[];
+    for(let frame=0;frame<48;frame++){
+     const options={pose,facing,working:true,workBlend:1,workPhase:frame/48,time:0,data:{...data,custom:{...DeepwellAvatar.BASE},equippedArmor:'',enchant:0}},rig=DeepwellAvatar.poseRig(options),arm=rig.backArm;
+     c.clearRect(0,0,240,270);DeepwellAvatar.render(c,{...options,x:110,y:260,scale});
+     // A torso-colored interruption below the sleeve is the floating-arm bug:
+     // joint coordinates and whole-character alpha connectivity cannot catch it.
+     for(const t of [.55,.65,.80]){
+      const x=Math.round(110+(arm.shoulder.x+(arm.elbow.x-arm.shoulder.x)*t)*scale*facing),y=Math.round(260+(arm.shoulder.y+(arm.elbow.y-arm.shoulder.y)*t)*scale),pixels=c.getImageData(x-1,y-1,3,3).data;
+      let visible=false;for(let i=0;i<pixels.length;i+=4)if(pixels[i+3]>240&&skin.some(rgb=>rgb.every((value,k)=>Math.abs(pixels[i+k]-value)<12)))visible=true;
+      total++;if(visible)covered++;else misses.push({frame,t});
+     }
+    }rows.push({pose,facing,scale,covered,total,misses});
+   }return rows;
+  },
   gallery(){
    const canvas=document.createElement('canvas');canvas.id='playerReviewCanvas';canvas.width=1540;canvas.height=400;canvas.style='position:fixed;inset:0;z-index:999999;background:#28271f';document.body.append(canvas);const c=canvas.getContext('2d'),sets=['',...Object.keys(ARMOR_SETS)];c.fillStyle='#28271f';c.fillRect(0,0,1540,400);c.font='15px Georgia';
    sets.forEach((id,i)=>{c.fillStyle='#e5d6b7';c.textAlign='center';c.fillText(ARMOR_SETS[id]?.name||'Travel clothes',i*220+104,30);DeepwellAvatar.render(c,{x:i*220+94,y:365,scale:2.6,time:1.5,pose:'idle',showWeapon:false,data:{...data,equippedArmor:id,enchant:0}});});
