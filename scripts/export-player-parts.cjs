@@ -37,8 +37,8 @@ const avatar=context.window.DeepwellAvatar,slots=avatar.metrics().physicalSlots,
 const views={head:[-31,-38,62,68],shoulders:[-12,-10,25,21],chest:[-19,-35,38,51],legs:[-18,-5,36,48],boots:[-12,-11,27,22],gloves:[-10,-10,20,20]},metrics=[];
 fs.mkdirSync(path.join(folder,'parts'),{recursive:true});
 for(const set of sets)for(const slot of slots){
- const recorder=new VectorContext();avatar.drawPart(recorder,slot,{set});const key=(set==='base'?'base':'armor-'+set)+'-'+slot,svg=recorder.svg(views[slot]);
- fs.writeFileSync(path.join(folder,'parts',key+'.svg'),svg);metrics.push({key,slot,set,viewBox:views[slot],paths:recorder.elements.length,bytes:Buffer.byteLength(svg)});
+ const recorder=new VectorContext();avatar.drawPart(recorder,slot,{set});const key=(set==='base'?'base':'armor-'+set)+'-'+slot,viewBox=slot==='head'&&set.startsWith('magic')?[-33,-49,66,79]:views[slot],svg=recorder.svg(viewBox);
+ fs.writeFileSync(path.join(folder,'parts',key+'.svg'),svg);metrics.push({key,slot,set,viewBox,paths:recorder.elements.length,bytes:Buffer.byteLength(svg)});
 }
 fs.writeFileSync(path.join(folder,'vector-metrics.json'),JSON.stringify(metrics,null,2)+'\n');
 fs.writeFileSync(path.join(folder,'catalog.json'),JSON.stringify({version:2,style:'illustrated-2d',physicalSlots:slots,armorSets:sets.slice(1),hairstyles:6,vectorParts:metrics.length,tools:8,assets:metrics.length+8,coordinateSystem:'Foot origin; shared shoulders, elbows, knees, wrists and ankles',renderer:'src/avatar-rig.js',sourceSheets:['tools.png','ward-artisan.png']},null,2)+'\n');

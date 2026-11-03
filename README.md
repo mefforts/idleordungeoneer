@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.0.1** replaces the Mage hoods with small wizard hats: a folded point, broad brim and stitched arcane star, in linen cream or blue to match the robes. The same hats appear in combat, skilling, Inventory and Codex portraits. [Both robe sets](preview-wizard-hats.png) · [Phone Warding](preview-wizard-hat-warding-mobile.png) · [Phone Inventory](preview-wizard-hat-inventory-mobile.png).
+
 **Build 11.0** adds a meaningful first game-time choice, clearer preparation, and visible monster loot. [Time choices](preview-game-time-mobile.png) · [Preparation route](preview-preparation-mobile.png) · [Loot and active buffs](preview-loot-buffs-mobile.png).
 
 Reach **Zone 2** for your first Dungeoneering level and point, then **Zones 5, 10, 20, 40…** for the next points. In the Dungeon Shop, spend one point per rank on **Delving: 1.25×, 1.5×, 1.75×, 2×, 2.25×…** or **Skilling: 2×, 3×…10×, 12×, 14×…24×…**. Skilling includes gathering, crafting, online idling and offline idling. The eight initial combat perks still use Dungeon Sigils and remain available from the start.
@@ -235,5 +237,7 @@ Generated icon sheets, calibrated regions and alignment metrics live in `assets/
 `npm run art:blessings` exports the original blessing emblems and embedded WebP caches. `npm run review:combat` records six actual boss patterns and captures the Dungeon Shop and blessing picker; it requires FFmpeg and Playwright video support.
 
 `npm run review:journey` captures game-time choices, compound preparation, actual loot receipts and temporary buff timers at phone and desktop sizes.
+
+`npm run review:hats` captures both Mage hats, the outfit lineup, phone combat/work/Inventory and portrait/landscape fitting, using the live renderer and isolated review states.
 
 `npm run review:spires` captures phone and desktop spire states and records ordinary/crowned bumps, red-window retaliation and a safe dash. It exports an MP4 and a looping GIF with FFmpeg, using isolated encounter fixtures and the real movement/collision loop.

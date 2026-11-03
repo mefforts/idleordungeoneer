@@ -63,7 +63,7 @@ function draw(t){if(!show)return;const canvas=$('wardrobeCanvas'),rect=canvas.ge
  const c=canvas.getContext('2d');c.setTransform(pxW/w,0,0,pxH/h,0,0);c.clearRect(0,0,w,h);
  // Subtle plinth and decorative lighting anchor the character without hiding gear.
  const glow=c.createRadialGradient(w*.5,h*.56,10,w*.5,h*.6,w*.7);glow.addColorStop(0,'#a5c0aa27');glow.addColorStop(1,'#15251a00');c.fillStyle=glow;c.fillRect(0,0,w,h);
- const gear=api.getGear(),previewHeight=pose==='attack'&&gear.weaponType==='polearm'?165:135;
+ const gear=api.getGear(),previewHeight=Math.max(!baseOnly&&A.appearance(gear).head==='wizard-hat'?150:135,pose==='attack'&&gear.weaponType==='polearm'?165:0);
  const anchorX=w*.5,anchorY=h*.88,scale=Math.min(w/145,h/previewHeight)*.89;
  c.fillStyle='#0b1119a0';c.beginPath();c.ellipse(anchorX,anchorY+6,w*.24,9,0,0,Math.PI*2);c.fill();
  c.strokeStyle='#d9b97944';c.lineWidth=2;c.beginPath();c.ellipse(anchorX,anchorY+6,w*.29,13,0,0,Math.PI*2);c.stroke();

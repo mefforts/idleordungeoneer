@@ -394,13 +394,13 @@
     "slot": "head",
     "set": "magic_1",
     "viewBox": [
-      -31,
-      -38,
-      62,
-      68
+      -33,
+      -49,
+      66,
+      79
     ],
-    "paths": 38,
-    "bytes": 6389
+    "paths": 50,
+    "bytes": 8356
   },
   {
     "key": "armor-magic_1-shoulders",
@@ -472,13 +472,13 @@
     "slot": "head",
     "set": "magic_2",
     "viewBox": [
-      -31,
-      -38,
-      62,
-      68
+      -33,
+      -49,
+      66,
+      79
     ],
-    "paths": 38,
-    "bytes": 6389
+    "paths": 50,
+    "bytes": 8356
   },
   {
     "key": "armor-magic_2-shoulders",

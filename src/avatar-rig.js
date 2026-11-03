@@ -23,7 +23,7 @@ function tier(n){return n<=0?0:n<3?1:n<6?2:3;}
 function appearance(data={},overrides={}){
  const set=global.DeepwellEquipmentArt?.describe(data).armor||null,pieces={};
  for(const slot of PHYSICAL_SLOTS){const candidate=overrides[slot];pieces[slot]=candidate==='base'||Object.hasOwn(ARMOR_PALETTES,candidate)?candidate:set?.id||'base';}
- return {weapon:Math.max(0,Number(data.weapon)||0),armor:Math.max(0,Number(data.armor)||0),enchant:Math.max(0,Number(data.enchant)||0),armorSet:set?.id||'',armorTier:set?.tier||0,head:pieces.head==='base'?'hair':pieces.head.startsWith('melee')?'helmet':'hood',chest:pieces.chest==='base'?'tunic':pieces.chest.startsWith('magic')?'robes':pieces.chest.startsWith('ranged')?'ranger':'armor',legs:pieces.legs.startsWith('magic')?'robe':'trousers',boots:pieces.boots==='base'?'leather':'reinforced',cape:'none',mainHand:data.weaponType||'sword',offHand:data.weaponType==='shield'?'buckler':'none',aura:data.enchant>0?'lightning':'none',pieces};
+ return {weapon:Math.max(0,Number(data.weapon)||0),armor:Math.max(0,Number(data.armor)||0),enchant:Math.max(0,Number(data.enchant)||0),armorSet:set?.id||'',armorTier:set?.tier||0,head:pieces.head==='base'?'hair':pieces.head.startsWith('melee')?'helmet':pieces.head.startsWith('magic')?'wizard-hat':'hood',chest:pieces.chest==='base'?'tunic':pieces.chest.startsWith('magic')?'robes':pieces.chest.startsWith('ranged')?'ranger':'armor',legs:pieces.legs.startsWith('magic')?'robe':'trousers',boots:pieces.boots==='base'?'leather':'reinforced',cape:'none',mainHand:data.weaponType||'sword',offHand:data.weaponType==='shield'?'buckler':'none',aura:data.enchant>0?'lightning':'none',pieces};
 }
 function transform(body,point){const y=point.y+40,cs=Math.cos(body.angle),sn=Math.sin(body.angle);return {x:body.x+point.x*cs-y*sn,y:body.y+point.x*sn+y*cs};}
 function inverseKinematics(root,target,bend,lengths){const dx=target.x-root.x,dy=target.y-root.y,raw=Math.max(.0001,Math.hypot(dx,dy)),distance=clamp(raw,Math.abs(lengths[0]-lengths[1])+.01,lengths[0]+lengths[1]-.02),ux=dx/raw,uy=dy/raw,along=(lengths[0]**2-lengths[1]**2+distance**2)/(2*distance),height=Math.sqrt(Math.max(0,lengths[0]**2-along**2));return {shoulder:{...root},hand:{x:root.x+ux*distance,y:root.y+uy*distance},elbow:{x:root.x+ux*along-uy*height*bend,y:root.y+uy*along+ux*height*bend},lengths:[...lengths]};}
@@ -209,9 +209,29 @@ function paintBody(c,rig,kit,look){
  if(plain&&look.chest===3)path(c,[7,-.5,14,0,13.3,6,7.3,5.4],shade(p.leather,.84),INK,.8);
  c.restore();
 }
+function paintWizardHat(c,p,look){
+ // Small exposed locks sit below the brim; the face and its anchors stay put.
+ path(c,[-14,-5,-10,-6,-11,1,-14,5,-15,0],shade(look.hairColor,.75),INK,.7);
+ path(c,[11,-6,15,-5,15,1,12,5,12,-1],look.hairColor,INK,.7);
+ path(c,[-11,-6,-4,-8,7,-7,12,-5,7,-3,0,-5,-6,-3,-7,-5],look.hairColor,'',0);
+ // A folded cloth cone, with a sideways tip instead of an enclosing hood.
+ path(c,[-16,-11,-10,-29,0,-39,11,-35,20,-25,11,-28,6,-29,14,-11],p.mid,INK,1.3);
+ path(c,[-13,-15,-8,-28,0,-36,5,-35,-3,-29,-7,-16],p.light,'',0);
+ path(c,[3,-37,11,-34,18,-26,11,-28,6,-29,14,-11,6,-12],p.dark,'',0);
+ line(c,4,-32,8,-17,p.mid,1.2);
+ const band=p===ARMOR_PALETTES.magic_1?p.leather:p.dark;
+ path(c,[-16,-14,-8,-15,7,-15,13,-13,14,-10,-17,-10],band,INK,.7);
+ line(c,-15,-13,-7,-14,p.trim,.9);line(c,-7,-14,7,-14,p.trim,.9);line(c,7,-14,12,-12,p.trim,.9);
+ // Broad top plane and a thin shaded edge keep the brim readable at game size.
+ path(c,[-25,-5,-16,-11,-7,-12,9,-12,16,-9,25,-3,18,0,9,-4,-10,-5,-19,-1],p.light,INK,1.1);
+ path(c,[-25,-5,-19,-1,-10,-5,9,-4,18,0,25,-3,19,2,9,-2,-10,-3,-19,1],p.dark,INK,.7);
+ line(c,-17,-8,-9,-10,p.mid,.8);line(c,10,-9,20,-4,p.mid,.8);
+ // One stitched arcane star, shared by the cream and blue robe tiers.
+ path(c,[-3,-29,-1.8,-25.4,1,-24,-1.8,-22.7,-3,-19,-4.3,-22.7,-7,-24,-4.3,-25.4],p.trim,p.dark,.65);
+}
 function paintHead(c,rig,kit,look,time){
  const p=paletteFor(kit,'head',look),armored=p.style!=='travel';c.save();c.translate(rig.head.x,rig.head.y);c.rotate(rig.head.angle);c.scale(1.20,1.20);
- if(armored&&p.style!=='melee'){
+ if(armored&&p.style==='ranged'){
   c.beginPath();c.moveTo(-16,14);c.quadraticCurveTo(-23,-2,-15,-17);c.quadraticCurveTo(-4,-29,8,-24);c.quadraticCurveTo(23,-15,18,12);c.lineTo(11,18);c.lineTo(-7,18);c.closePath();c.fillStyle=p.dark;c.fill();c.strokeStyle=INK;c.lineWidth=1.4;c.stroke();
  }
  illustratedFace(c,look,time,armored);
@@ -219,7 +239,8 @@ function paintHead(c,rig,kit,look,time){
   path(c,[-17,-6,-18,-16,-11,-23,-1,-26,10,-22,17,-15,18,-6,11,-8,-10,-8],p.dark,INK,1.3);
   path(c,[-15,-15,-10,-21,-2,-23,-2,-9,-13,-9],p.light,'',0);path(c,[1,-23,10,-20,15,-14,12,-9,1,-9],p.mid,'',0);line(c,-16,-7,16,-7,p.mid,3);line(c,-13,-6,13,-6,p.light,.7);
   path(c,[-17,-6,-12,-4,-12,10,-15,12,-18,2],p.mid,INK,.8);path(c,[13,-6,18,-5,17,6,13,12,11,10,12,-2],p.dark,INK,.8);line(c,-15,-1,-14,7,p.light,.9);
- }else if(armored){
+ }else if(p.style==='magic')paintWizardHat(c,p,look);
+ else if(armored){
   path(c,[-17,-2,-16,-14,-9,-22,-1,-25,9,-22,16,-14,19,-3,13,-6,8,-13,0,-17,-8,-12,-12,-4],p.mid,INK,1.2);
   path(c,[-15,-10,-9,-20,-1,-23,1,-19,-6,-15,-11,-5],p.light,'',0);
   path(c,[-18,-1,-13,-3,-12,8,-5,13,-8,18,-17,13],p.mid,INK,.9);path(c,[14,-3,19,-1,17,13,8,18,6,14,12,8],p.dark,INK,.9);

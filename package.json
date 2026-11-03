@@ -1,6 +1,6 @@
 {
   "name": "idle-or-dungeoneer",
-  "version": "11.0.0",
+  "version": "11.0.1",
   "private": true,
   "description": "A standalone fantasy RPG with a minimal runestone HUD, linked crafting and a readable Codex.",
   "scripts": {
@@ -31,7 +31,8 @@
     "art:blessings": "node scripts/export-blessings.cjs",
     "review:combat": "node scripts/review-combat.cjs",
     "review:spires": "node scripts/review-spires.cjs",
-    "review:journey": "node scripts/review-journey.cjs"
+    "review:journey": "node scripts/review-journey.cjs",
+    "review:hats": "node scripts/review-wizard-hats.cjs"
   },
   "devDependencies": {
     "acorn": "8.19.0",
