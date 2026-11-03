@@ -83,7 +83,7 @@ const {mobileFixture}=require('./mobile-fixture.cjs');
   const fileEvent=p.waitForEvent('filechooser');await p.locator('#settingsImport').click();assert.equal((await fileEvent).isMultiple(),false);
   passed.push('Menus scroll with real touch; settings fields retain native copy/paste and shortcut typing; backup download and restore picker still open');
 
-  await p.tap('#drawerClose');await p.tap('#quickCodex');assert.deepEqual(await native('#codexSearch'),allowed);assert.deepEqual(await native('#overlayCard h2'),allowed);
+  await p.tap('#drawerClose');await p.tap('#quickGear');await p.tap('#equipmentCodex');assert.deepEqual(await native('#codexSearch'),allowed);assert.deepEqual(await native('#overlayCard h2'),allowed);
   const card=await p.locator('#overlayCard').boundingBox(),cx=card.x+card.width/2,cy=card.y+card.height*.8;
   await touch('touchStart',[{x:cx,y:cy,id:1}]);for(let step=1;step<=12;step++){await touch('touchMove',[{x:cx,y:cy-step*25,id:1}]);await p.waitForTimeout(20);}await touch('touchEnd',[]);
   await p.waitForFunction(()=>document.querySelector('#overlayCard').scrollTop>50,null,{timeout:2000});

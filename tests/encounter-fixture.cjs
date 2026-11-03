@@ -12,7 +12,7 @@ function encounterFixture(){
   const e=spawnEnemy(true,index);e.boss=!elite;e.elite=elite;e.name=biome().boss[index]+(elite?' Echo':'');e.x=0;e.y=-150;e.hp=e.maxHp=1000;e.speed=0;e.contact=1e6;e.castCooldown=1e6;
   if(!elite)game.boss=e;return e;
  }
- function cast(e,type){e.phaseQueue=[type];if(!beginBossCast(e))throw Error('Cast deferred: '+type);return e.cast;}
+ function cast(e,type){e.phaseQueue=[type];const choose=reflectVariantFor;reflectVariantFor=()=> 'jaw';try{if(!beginBossCast(e))throw Error('Cast deferred: '+type);return e.cast;}finally{reflectVariantFor=choose;}}
  function intercept(t){const a=encounterFoot(t),b=encounterFoot(t.owner);game.player.x=(a.x+b.x)/2;game.player.y=(a.y+b.y)/2-13;}
  function node(type='mend',kind=0){fresh(kind,3);const e=owner(2);const c=cast(e,type);tickBossSpecial(e,c.total+.01);return game.totems[0];}
  window.__encounterTest={
@@ -20,9 +20,9 @@ function encounterFixture(){
   reflect(position,lethal=false){
    fresh();const e=owner(0),c=cast(e,'reflect'),p=game.player;
    if(lethal)e.hp=80;
-   p.x=c.point.x+(position==='ring'?(c.point.r+c.point.inner)/2:position==='outside'?c.point.r+30:0);p.y=c.point.y-13;
+   const radius=position==='ring'?(c.point.r+c.point.inner)/2:position==='outside'?c.point.r+30:0,angle=c.point.gapAngle+Math.PI;p.x=c.point.x+Math.cos(angle)*radius;p.y=c.point.y+Math.sin(angle)*radius-13;
    const before={hp:p.hp,enemy:e.hp,kills:game.runKills,points:masteryFor().points};
-   tickBossSpecial(e,c.total-.05);const during={hp:p.hp,enemy:e.hp};tickBossSpecial(e,.06);
+   tickBossSpecial(e,.02);const during={hp:p.hp,enemy:e.hp};if(e.cast)tickBossSpecial(e,c.total);
    const after={hp:p.hp,enemy:e.hp,stagger:e.stagger,kills:game.runKills,points:masteryFor().points,alive:game.enemies.includes(e),burn:e.burn||0};
    resolveBossCast(e,c);return {before,during,after,repeated:e.hp,point:c.point,warning:c.total};
   },
@@ -66,8 +66,8 @@ function encounterFixture(){
    fresh(0,3);const a=owner(2,true),b=owner(2,true),c=owner(2,true);a.x=-80;b.x=80;c.y=-230;
    const ca=cast(a,'beam'),cb=cast(b,'beam');c.mechanicIndex=0;const third=beginBossCast(c);c.mechanicIndex=2;const counterWait=beginBossCast(c),reserved=game.counterRequest===c;
    a.cast=b.cast=null;a.mechanicIndex=0;const offenseWait=beginBossCast(a);game.hazards=[{life:1}];const hazardWait=beginBossCast(c);game.hazards=[];
-   const reflection=beginBossCast(c),point=c.cast?.point;const noOverlap=beginBossCast(a),absorbed=reflectAbsorbsShot(point),notAbsorbed=reflectAbsorbsShot({x:point.x+80,y:point.y});
-   return {third,counterWait,reserved,offenseWait,hazardWait,reflection,noOverlap,absorbed,notAbsorbed,active:game.enemies.filter(e=>e.cast).length};
+   const choose=reflectVariantFor;reflectVariantFor=()=> 'rebound';let reflection;try{reflection=beginBossCast(c);}finally{reflectVariantFor=choose;}const point=c.cast?.point,unarmedAbsorbed=reflectAbsorbsShot(point);point.armed=true;const noOverlap=beginBossCast(a),absorbed=reflectAbsorbsShot(point),notAbsorbed=reflectAbsorbsShot({x:point.x+80,y:point.y});
+   return {third,counterWait,reserved,offenseWait,hazardWait,reflection,noOverlap,unarmedAbsorbed,absorbed,notAbsorbed,active:game.enemies.filter(e=>e.cast).length};
   },
   nodeBudget(){
    const t=node('mend'),a=owner(1,true),b=owner(1,true);a.x=-90;b.x=90;a.mechanicIndex=b.mechanicIndex=1;

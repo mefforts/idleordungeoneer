@@ -10,13 +10,13 @@ const {createRuntime}=require('./runtime.cjs'),{dungeonCombatFixture}=require('.
  passed.push('Ordinary spires break in one safe collision in early and later Zones with all six weapons, without rewards or damage to their caster');
  for(const zone of [0,3,8]){
   const before=await setup({royal:true,zone});await p.evaluate(()=>__spireTest.boost());await at();let s=await step();assert.equal(s.source.hp,before.source.maxHp/2,'Offensive perks cannot turn two physical impacts into one');assert.equal(s.source.bumps,1);
-  assert.ok((await p.evaluate(()=>__spireTest.texts())).includes('STEP CLEAR · BUMP AGAIN'),'A surviving spire explains how to land the next impact');
+  assert.ok((await p.evaluate(()=>__spireTest.texts())).includes('STEP CLEAR OR DASH AGAIN'),'A surviving spire explains how to land the next impact');
   s=await p.evaluate(()=>__spireTest.advance(1));assert.equal(s.source.hp,before.source.maxHp/2,'Standing in the base cannot spend another bump');
   for(const x of [30,27,32,26]){await at(x);s=await step();assert.equal(s.source.bumps,1,'Boundary jitter does not re-arm a collision');}
   await at(42);await step();await at();s=await step();assert.equal(s.source.exists,false);assert.equal(s.hp,before.hp);
  }
  passed.push('Crowned spires require two separate impacts; camping and boundary jitter never count as repeated hits, even with damage perks');
- await setup({royal:true});const pass=await p.evaluate(()=>__spireTest.dashPass());assert.equal(pass.first.source.bumps,1);assert.equal(pass.after.source.bumps,1);assert.equal(pass.after.source.exists,true,'A fast exit is not a second collision in the same dash');await at();assert.equal((await step()).source.exists,false);
+ await setup({royal:true});const pass=await p.evaluate(()=>__spireTest.dashPass());assert.equal(pass.first.source.bumps,1);assert.equal(pass.after.source.bumps,1);assert.equal(pass.after.source.exists,true,'A fast exit is not a second collision in the same dash');await p.evaluate(()=>__spireTest.advance(.10));await at();assert.equal((await step()).source.exists,false);
  for(const [royal,fraction]of [[false,.08],[true,.12]]){
   const before=await setup({royal,mode:'surging'});await at();const s=await step();assert.ok(Math.abs((before.hp-s.hp)/before.maxHp-fraction)<1e-8);assert.equal(s.source.exists,royal);
  }

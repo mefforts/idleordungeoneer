@@ -18,9 +18,14 @@ function creatureWeights(kind){
 function rareEliteRole(enemy){const kind=enemy.biome??biomeIndex(),variant=enemy.visualType||0;return variant<6?BASE_ELITE_ROLES[kind][variant]:BESTIARY_FAMILIES[kind][variant-6].role;}
 function specialAttackName(type,kind){return {charge:['Briar Charge','Cinder Rush','Grave Rush','Phase Rush'],ricochet:['Seed Ricochet','Cinder Ricochet','Bone Ricochet','Star Ricochet'],shield:['Rootguard','Ironbound','Soulguard','Prismguard']}[type]?.[kind]||'';}
 function shieldRecipient(enemy){return game.enemies.some(source=>source!==enemy&&(source.shieldLink?.target===enemy&&source.shieldLink.life>0||source.cast?.type==='shield'&&source.cast.shieldTarget===enemy));}
+function shieldTargetAlive(target){return !!target&&target.hp>0&&(game.enemies.includes(target)||target.destructible&&(game.totems||[]).includes(target));}
 function shieldingTarget(source){
  if(source.shieldLink||shieldRecipient(source))return null;
- return game.enemies.filter(other=>other!==source&&other.elite&&!other.boss&&!other.shieldLink&&other.cast?.type!=='shield'&&!shieldRecipient(other)&&Math.hypot(other.x-source.x,other.y-source.y)<340).sort((a,b)=>Math.hypot(a.x-source.x,a.y-source.y)-Math.hypot(b.x-source.x,b.y-source.y))[0]||null;
+ const candidates=[...(game.totems||[]).filter(t=>t.destructible),...game.enemies.filter(e=>e.elite&&!e.boss)];
+ return candidates.filter(other=>other!==source&&shieldTargetAlive(other)&&!other.shieldLink&&other.cast?.type!=='shield'&&!shieldRecipient(other)&&Math.hypot(other.x-source.x,other.y-source.y)<340).sort((a,b)=>Number(!!b.destructible)-Number(!!a.destructible)||Math.hypot(a.x-source.x,a.y-source.y)-Math.hypot(b.x-source.x,b.y-source.y))[0]||null;
+}
+function clearDeadShieldLinks(){
+ for(const source of game.enemies){if(source.shieldLink&&!shieldTargetAlive(source.shieldLink.target))source.shieldLink=null;if(source.cast?.type==='shield'&&!shieldTargetAlive(source.cast.shieldTarget)){source.cast=null;source.castCooldown=1;}}
 }
 function enemyShieldMultiplier(enemy){
  if(enemy.guardIds?.some(g=>game.enemies.includes(g)&&g.hp>0))return .30;
@@ -28,7 +33,7 @@ function enemyShieldMultiplier(enemy){
  return game.enemies.some(source=>source.hp>0&&source.shieldLink?.target===enemy&&source.shieldLink.life>0&&!shieldRecipient(source))?.65:1;
 }
 function tickEliteLinks(dt){
- for(const source of game.enemies){const link=source.shieldLink;if(!link)continue;link.life-=dt;if(link.life<=0||!game.enemies.includes(link.target)||link.target.hp<=0||link.target.shieldLink||link.target.cast?.type==='shield'||Math.hypot(link.target.x-source.x,link.target.y-source.y)>450)source.shieldLink=null;}
+ for(const source of game.enemies){const link=source.shieldLink;if(!link)continue;link.life-=dt;if(link.life<=0||!shieldTargetAlive(link.target)||link.target.hp<=0||link.target.shieldLink||link.target.cast?.type==='shield'||Math.hypot(link.target.x-source.x,link.target.y-source.y)>450)source.shieldLink=null;}
 }
 function ricochetPoints(owner){
  const p=game.player,axis=Math.atan2(p.y-owner.y,p.x-owner.x),radius=Math.min(112,Math.max(70,game.viewWidth*.23)),points=[];
@@ -44,7 +49,7 @@ function resolveEliteSpecial(enemy,cast,damage){
   const distance=Math.min(340,Math.max(100,Math.hypot(cast.target.x-cast.origin.x,cast.target.y-cast.origin.y)+65));enemy.charge={angle:cast.angle,remaining:distance,hitPlayer:false,enemyHits:new Set()};return true;
  }
  if(cast.type==='shield'){
-  const target=cast.shieldTarget;if(target&&game.enemies.includes(target)&&!target.shieldLink&&target.cast?.type!=='shield'&&!shieldRecipient(enemy)&&!shieldRecipient(target))enemy.shieldLink={target,life:8};return true;
+  const target=cast.shieldTarget;if(target&&shieldTargetAlive(target)&&!target.shieldLink&&target.cast?.type!=='shield'&&!shieldRecipient(enemy)&&!shieldRecipient(target))enemy.shieldLink={target,life:8};return true;
  }
  if(cast.type==='ricochet'){
   const points=cast.ricochetPoints;if(!points?.length)return true;const angle=Math.atan2(points[0].y-enemy.y,points[0].x-enemy.x),speed=185;
@@ -86,7 +91,7 @@ function paintEliteSpecialWarning(enemy,cast,theme,progress){
  return false;
 }
 function paintEliteLinks(){
- for(const source of game.enemies){const target=source.shieldLink?.target;if(!target||!game.enemies.includes(target))continue;const theme=combatTheme('shield');line(source.x,source.y-22,target.x,target.y-22,3,theme.dark+'a0');line(source.x,source.y-22,target.x,target.y-22,1.3,theme.hot+'b0');ctx.save();ctx.strokeStyle=theme.color+'c0';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(target.x,target.y-17,Math.max(22,target.rad+8),35,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
- for(const source of game.enemies){const target=source.shieldLink?.target;if(target&&game.enemies.includes(target))paintAbilityShield(target.x,target.y-25,17,combatTheme('shield'));}
+ for(const source of game.enemies){const target=source.shieldLink?.target;if(!target||!shieldTargetAlive(target))continue;const theme=combatTheme('shield');line(source.x,source.y-22,target.x,target.y-22,3,theme.dark+'a0');line(source.x,source.y-22,target.x,target.y-22,1.3,theme.hot+'b0');ctx.save();ctx.strokeStyle=theme.color+'c0';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(target.x,target.y-17,Math.max(22,target.rad+8),35,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
+ for(const source of game.enemies){const target=source.shieldLink?.target;if(target&&shieldTargetAlive(target))paintAbilityShield(target.x,target.y-25,17,combatTheme('shield'));}
  for(const boss of game.enemies){const guards=boss.guardIds?.filter(g=>game.enemies.includes(g)&&g.hp>0)||[];if(!guards.length)continue;const theme=combatTheme('shield');for(const guard of guards)line(guard.x,guard.y-20,boss.x,boss.y-55,2,theme.color+'90');ctx.save();ctx.strokeStyle=theme.color;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(boss.x,boss.y-57,65,87,0,0,Math.PI*2);ctx.stroke();ctx.restore();paintAbilityShield(boss.x,boss.y-60,25,theme);encounterLabel('BLUE SHIELD · '+guards.length+' GUARDS',boss.x,boss.y-150,theme.hot,10);}
 }

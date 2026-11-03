@@ -7,12 +7,12 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
   const p=await runtime.browser.newPage({viewport:{width:1440,height:1000}});p.on('pageerror',e=>errors.push(e.message));await p.route(runtime.baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));await p.goto(runtime.baseURL);await p.evaluate(()=>__encounterTest.ready());
   assert.deepEqual(await p.evaluate(()=>__encounterTest.assets()),{count:12,unique:12,loaded:true});
   for(const position of ['center','ring','outside']){
-   const r=await p.evaluate(position=>__encounterTest.reflect(position),position);assert.deepEqual(r.during,{hp:r.before.hp,enemy:r.before.enemy});assert.equal(r.warning,1.9);
-   if(position==='center'){assert.equal(r.after.enemy,880);assert.equal(r.after.hp,r.before.hp);assert.equal(r.after.stagger,1.6);assert.equal(r.after.burn,0);}else{assert.equal(r.after.enemy,1000);assert.equal(r.after.hp<r.before.hp,position==='ring');}
+   const r=await p.evaluate(position=>__encounterTest.reflect(position),position);assert.equal(r.warning,3);assert.equal(r.during.enemy,position==='center'?880:1000);
+   if(position==='center'){assert.equal(r.after.enemy,880);assert.equal(r.after.hp,r.before.hp);assert.equal(r.after.stagger,1.6);assert.equal(r.after.burn,0);}else{assert.equal(r.after.enemy,1000);assert.ok(r.after.hp<r.before.hp);}
    assert.equal(r.repeated,r.after.enemy,'A resolved counter cannot deal damage twice');
   }
   const lethal=await p.evaluate(()=>__encounterTest.reflect('center',true));assert.equal(lethal.after.alive,false);assert.equal(lethal.after.kills,1);assert.equal(lethal.after.points,lethal.before.points);
-  passed.push('Reflect warnings do no early damage; the center returns exactly 12% HP and staggers, the annulus hits, escape avoids damage, and a lethal counter rewards once');
+  passed.push('Reflect centers return exactly 12% HP immediately and stagger, closed jaws hurt, ignoring the timer hurts at any distance, and a lethal counter rewards once');
   for(const type of ['mend','fury']){
    const r=await p.evaluate(type=>__encounterTest.streams(type),type);
    if(type==='mend'){assert.equal(r.unblocked.hp,504);assert.equal(r.blocked.hp,504);assert.equal(r.blocked.player,503.5);assert.equal(r.resumed.hp,508);assert.equal(r.resumed.player,503.5);}
@@ -33,7 +33,7 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
   const unseen=await p.evaluate(()=>__encounterTest.elites(3,[false,false,false]));assert.equal(unseen.count,0);
   const known=await p.evaluate(()=>__encounterTest.elites(3,[false,true,false]));assert.deepEqual(known.types,[1,1,1]);
   passed.push('Later floors substitute two or three simultaneous known elites, favor different guardians, keep wave totals and rewards intact, and never introduce an unseen boss');
-  const schedule=await p.evaluate(()=>__encounterTest.scheduling());assert.deepEqual(schedule,{third:false,counterWait:false,reserved:true,offenseWait:false,hazardWait:false,reflection:true,noOverlap:false,absorbed:true,notAbsorbed:false,active:1});
+  const schedule=await p.evaluate(()=>__encounterTest.scheduling());assert.deepEqual(schedule,{third:false,counterWait:false,reserved:true,offenseWait:false,hazardWait:false,reflection:true,noOverlap:false,unarmedAbsorbed:false,absorbed:true,notAbsorbed:false,active:1});
   const budget=await p.evaluate(()=>__encounterTest.nodeBudget());assert.deepEqual(budget,{first:true,second:true,secondType:'shield',count:2,remaining:2,targets:0,afterDamage:2,afterCasterDeath:1});
   assert.deepEqual(await p.evaluate(()=>__encounterTest.dual()),{types:['fury','mend'],next:true,attack:'sunder',count:2});
   passed.push('Permanent untargetable totems remain after a minute, leave with their caster, support both stream types, and advance duplicate/full slots to another attack without freezing the boss');

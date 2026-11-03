@@ -9,3 +9,5 @@
 .player-ui .icon-rail .speed-options{display:block;width:236px;padding:12px;max-height:min(65vh,calc(100vh - 20px));overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
 .speed-option-group{margin:0 0 10px;padding:0 0 10px;border-bottom:1px solid #b8a16a66}.speed-option-group h3{font:18px/1.2 Georgia;margin:0;color:#f1dfbc}.speed-option-group p{font:10px/1.4 system-ui;color:#c9bca2;margin:4px 0 9px}.speed-rate-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
 .player-ui .speed-options .speed-rate-grid button{min-height:44px;min-width:0;padding:5px 2px;font:11px system-ui}.player-ui .speed-options>.speed-shop-link{width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:5px;font:12px system-ui}
+
+.temporary-buff-effect{font:normal 9px/1.35 system-ui;color:#d1d9bd;display:block;max-width:102px}.temporary-buff b{line-height:1.3}.temporary-buff>span{min-width:0}

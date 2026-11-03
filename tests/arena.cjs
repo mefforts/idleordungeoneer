@@ -32,7 +32,7 @@ function instrumentation(){
             // Reflections, spires and shield guards require deliberate movement.
             if(eliteRewardOpen())closeEliteReward(true);
             const p=game.player,mirror=game.enemies.find(e=>['reflect','reversal'].includes(e.cast?.type)),spire=(game.totems||[]).find(t=>t.destructible),guard=game.enemies.find(e=>e.bastionGuard),stream=(game.totems||[]).find(t=>t.type==='mend'),nearest=combatTargets().sort((a,b)=>bodyDistance(a,p.x,p.y)-bodyDistance(b,p.x,p.y))[0];let target=null;
-            if(mirror)target={x:mirror.cast.point.x,y:mirror.cast.point.y-13};
+            if(mirror){const q=mirror.cast.point,dx=p.x-q.x,dy=p.y+13-q.y,d=Math.hypot(dx,dy);if(!q.armed)target={x:q.x+(d?dx/d:1)*65,y:q.y+(d?dy/d:0)*65-13};else target={x:q.x,y:q.y-13};}
             else if(spire){const base=encounterFoot(spire),dx=p.x-base.x,dy=p.y+13-base.y,distance=Math.hypot(dx,dy),retreat=SUMMON_BUMPS.releaseRadius+8;target=spire.bumpContact?{x:base.x+(distance?dx/distance:1)*retreat,y:base.y+(distance?dy/distance:0)*retreat-13}:{x:base.x,y:base.y-13};}
             else if(guard)target=bodyPoint(guard,p.x,p.y);
             else if(stream){const from=encounterFoot(stream.owner),to=encounterFoot(stream),distance=Math.hypot(to.x-from.x,to.y-from.y),fraction=Math.min(.5,55/Math.max(1,distance));target={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction-13};}
@@ -66,8 +66,8 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     let order=await p.evaluate(()=>__deepwell.getState().data.hudLayout);
     assert.equal(order.side,'left');assert.ok(order.order.indexOf('skills')<order.order.indexOf('gear'));
     assert.equal(await p.locator('[data-pin-move="skills"][data-direction="-1"]').evaluate(el=>document.activeElement===el),true,'Keyboard focus survives reordering');
-    await p.locator('[data-order-pin="codex"]').dragTo(p.locator('[data-order-pin="delve"]'));
-    order=await p.evaluate(()=>__deepwell.getState().data.hudLayout);assert.equal(order.order[0],'codex');
+    await p.locator('[data-order-pin="gear"]').dragTo(p.locator('[data-order-pin="delve"]'));
+    order=await p.evaluate(()=>__deepwell.getState().data.hudLayout);assert.equal(order.order[0],'gear');
     await p.click('#drawerClose');await p.reload();assert.deepEqual(await p.evaluate(()=>__deepwell.getState().data.hudLayout),order);
     await p.click('#introSkills');
     for(const size of [{width:320,height:844},{width:390,height:844},{width:844,height:390},{width:1440,height:1000}]){
@@ -123,7 +123,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     results.push('Full live combat simulation, including every spawn, hit, guard, spire and reflection with active counterplay and no shop or timed perks, verifies the first four zones and the long-term plateau');
     await p.close();
     const speed=await page({viewport:{width:390,height:844}});
-    await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),false);
+    await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),true);
     const seed=await speed.evaluate(()=>{const d=__deepwell.getState().data;d.dungeonMastery={points:0,earned:4,delveSpeed:4,skillingSpeed:0,onslaught:0,fortune:0,adaptation:0,intensity:0};d.timeRates={delve:2,skilling:1};return d;});
     await speed.addInitScript(d=>localStorage.setItem('deepwell-prototype-v1',JSON.stringify({...d,savedAt:Date.now()})),seed);
     await speed.reload();await speed.click('#introSkills');assert.equal(await speed.locator('#speedControl').isVisible(),true);await speed.evaluate(()=>__deepwell.start());assert.ok(await speed.locator('#speedControl').isVisible());

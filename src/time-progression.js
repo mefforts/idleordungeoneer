@@ -27,7 +27,7 @@ function normalizeTimeProgression(){
 function timeRank(kind){return Math.max(0,Math.floor(Number(data.dungeonMastery?.[kind==='delve'?'delveSpeed':'skillingSpeed'])||0));}
 function timeRateForRank(kind,rank){return rank<=0?1:kind==='delve'?1+rank*.25:rank<=9?rank+1:10+(rank-9)*2;}
 function earnedTimeRate(kind){return timeRateForRank(kind,timeRank(kind));}
-function timeRateChoices(kind){return Array.from({length:timeRank(kind)+1},(_,rank)=>timeRateForRank(kind,rank));}
+function timeRateChoices(kind){return [...(kind==='delve'?[.25,.5,.75]:[]),...Array.from({length:timeRank(kind)+1},(_,rank)=>timeRateForRank(kind,rank))];}
 function selectedTimeRate(kind){const value=Number(data.timeRates?.[kind]);return timeRateChoices(kind).includes(value)?value:earnedTimeRate(kind);}
 function delvingTimeMultiplier(){return selectedTimeRate('delve')*(data.devSpeedUnlocked?(game.devSpeed||1):1);}
 function settleIdleTime(){
@@ -36,8 +36,8 @@ function settleIdleTime(){
 }
 function buyTimeUpgrade(kind){
  if(!['delve','skilling'].includes(kind)||masteryFor().points<1)return false;
- settleIdleTime();const m=masteryFor(),key=kind==='delve'?'delveSpeed':'skillingSpeed';m[key]++;m.points--;
- data.timeRates[kind]=earnedTimeRate(kind);masteryDraft=null;shopSignature='';
+ settleIdleTime();const previous=selectedTimeRate(kind),m=masteryFor(),key=kind==='delve'?'delveSpeed':'skillingSpeed';m[key]++;m.points--;
+ data.timeRates[kind]=kind==='delve'&&previous<1?previous:earnedTimeRate(kind);masteryDraft=null;shopSignature='';
  toast((kind==='delve'?'Delving':'Skilling')+' '+earnedTimeRate(kind)+'×',(kind==='skilling'?'Gathering, crafting and idle work, including offline.':'Combat, enemies and ammunition advance together.')+' Use the Speed button to choose your rate.');
  save();refreshUI();return true;
 }
@@ -56,10 +56,10 @@ function refreshSpeedChoices(){
  if(host.dataset.context&&host.dataset.context!==kind)closeSpeedChoices();host.dataset.context=kind;
  if(host.dataset.choices!==signature){
   host.dataset.choices=signature;host.setAttribute('aria-label','Game speed');
-  const testing=data.devSpeedUnlocked?'<section class="speed-option-group" aria-labelledby="testingSpeedTitle"><h3 id="testingSpeedTitle">Testing · '+(kind==='delve'?'Delving':'Skilling')+'</h3><p>Additional multiplier</p><div class="speed-rate-grid">'+[1,2,5,10,25,50,100,500].map(rate=>'<button type="button" data-speed="'+rate+'" aria-label="Testing '+(kind==='delve'?'Delving':'Skilling')+' multiplier '+rate+' times">'+rate+'×</button>').join('')+'</div></section>':'';
+  const testing=data.devSpeedUnlocked?'<section class="speed-option-group" aria-labelledby="testingSpeedTitle"><h3 id="testingSpeedTitle">Testing · '+(kind==='delve'?'Delving':'Skilling')+'</h3><p>Additional multiplier</p><div class="speed-rate-grid">'+[1,2,5,10,25,50,100,500].map(rate=>'<button type="button" data-speed="'+rate+'" aria-label="Testing '+(kind==='delve'?'Delving':'Skilling')+' multiplier '+rate+' times">'+(rate<1?rate.toFixed(2):rate)+'×</button>').join('')+'</div></section>':'';
   host.innerHTML=testing+[kind,kind==='delve'?'skilling':'delve'].map(path=>{
    const name=path==='delve'?'Delving':'Skilling';
-   return '<section class="speed-option-group" aria-labelledby="'+path+'SpeedTitle"><h3 id="'+path+'SpeedTitle">'+name+'</h3><p>'+(path==='delve'?'Combat and encounters':'Includes active work and idling')+'</p><div class="speed-rate-grid">'+timeRateChoices(path).map(rate=>'<button type="button" data-time-kind="'+path+'" data-time-rate="'+rate+'" '+(!data.devSpeedUnlocked&&path===kind?'data-speed="'+rate+'" ':'')+'aria-label="'+name+' speed '+rate+' times">'+rate+'×</button>').join('')+'</div></section>';
+   return '<section class="speed-option-group" aria-labelledby="'+path+'SpeedTitle"><h3 id="'+path+'SpeedTitle">'+name+'</h3><p>'+(path==='delve'?'Slow down freely · Mastery unlocks faster delving':'Includes active work and idling · Mastery unlocks faster skilling')+'</p><div class="speed-rate-grid">'+timeRateChoices(path).map(rate=>'<button type="button" data-time-kind="'+path+'" data-time-rate="'+rate+'" '+(!data.devSpeedUnlocked&&path===kind?'data-speed="'+rate+'" ':'')+'aria-label="'+name+' speed '+rate+' times">'+(rate<1?rate.toFixed(2):rate)+'×</button>').join('')+'</div></section>';
   }).join('')+'<button type="button" class="speed-shop-link" id="speedShopLink">Unlock more speeds '+uiIcon('arrow')+'</button>';
   host.querySelectorAll('[data-time-rate]').forEach(button=>button.onclick=()=>{if(setTimeRate(button.dataset.timeKind,Number(button.dataset.timeRate))){closeSpeedChoices(true);refreshArenaUI();}});
   host.querySelectorAll('[data-speed]:not([data-time-rate])').forEach(button=>button.onclick=()=>setArenaSpeed(Number(button.dataset.speed)));

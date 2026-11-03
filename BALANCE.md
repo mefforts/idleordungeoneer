@@ -2,7 +2,7 @@
 
 Build 10.0 replaces individual Zone Shops with a permanent Dungeon Shop. All current Zones belong to The First Descent. The data model can assign future Zones to a new Dungeon with a separate wallet and purchases. Equipment, global Dungeoneering and Mastery retain their own roles.
 
-Build 10.1 adds physical counterplay to summoning spires: one bump breaks an ordinary spire; a crowned spire takes two. Leave the base between impacts. Teal is safe; red means a summoning surge. Dash through a surge or wait for teal to avoid retaliation.
+Build 10.1 adds physical counterplay to summoning spires: one bump breaks an ordinary spire; a crowned spire takes two. Leave the base between walking impacts, or use another dash. Teal is safe; red means a summoning surge. Dash through a surge or wait for teal to avoid retaliation.
 
 ## Dungeoneering and game time
 
@@ -29,7 +29,7 @@ Build 11 starts Dungeoneering at level 0. Reaching Zones 2, 5, 10, 20, 40 and so
 
 Each permanent rank costs one point. The first choice is 1.25× Delving or 2× Skilling. Delving adds 0.25× per rank. Skilling advances in ones to 10×, then in twos. Skilling applies to active work, online idle and up to eight real hours of offline production. The offline cap is applied before the earned multiplier. Selected earned rates persist; testing speed remains separate and does not multiply offline production. Existing unlocked 2× Delving is retained on migration.
 
-Build 11.2.1 keeps the Speed button visible in every scene after either time path is purchased. Its separate Delving and Skilling selectors offer 1× and every purchased rank; selections persist. Code-unlocked testing multipliers remain separate choices in the same menu. The quick badge reports the combined game-time rate.
+Build 11.4 keeps the Speed button visible from the start. Delving offers free 0.25×, 0.50×, 0.75× and 1× choices plus every purchased rank. Skilling offers 1× and every purchased rank, including idling; it never goes below 1×. Selections persist, and buying a rank preserves a selected slow Delving rate. Code-unlocked testing multipliers remain separate choices in the same menu. The quick badge reports the combined game-time rate.
 
 Optional Mastery allocations share the bank after the first speed choice. Refunding these allocations does not refund permanent time ranks. Existing point balances and allocated ranks are retained; earlier XP-based combat-perk unlocks remain available.
 
@@ -50,7 +50,7 @@ Build 11.2.1 removes visible rarity names from skilling pickups, collection feed
 
 Timers count real seconds while actively working on that activity, including while earned Skilling speed accelerates production. Release, missing ingredients, menus, other activities and backgrounding pause them. Remaining time survives saves. These bonuses do not accelerate idle or offline work. Permanent Skilling game time and station/tool benefits retain their normal effects. Every accelerated craft still consumes its complete station-adjusted recipe.
 
-A seeded five-minute active refining check at 1× made **107 bars without pickups / 249 bars collecting all 72 discoveries**. This includes 80 instantly crafted bars. All 249 bars consumed 498 ore: exactly two per crafted bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
+A seeded five-minute active refining check at 1× made **107 bars without pickups / 252 bars collecting all 72 discoveries**. This includes 82 instantly crafted bars. All 252 bars consumed 504 ore: exactly two per crafted bar. This is a perfect-collection test; actual gains depend on attention and rarity rolls. Idle production is tested separately and receives no temporary bonus.
 
 ## Equipment ceilings
 
@@ -149,18 +149,24 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 3 | ~30 min | 160.0 |
 | 4 | ~35 min | 160.0 |
 
-- Live Zone 1: **9.5 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 1: **9.2 min**, 375 rewarded defeats, 80.0 reference DPS.
 - Live Zone 2: **20.3 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **31.1 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **35.8 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **41.2 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 15: **41.2 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 3: **30.7 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **35.5 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **41.1 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 15: **41.0 min**, 960 rewarded defeats, 160.0 reference DPS.
 
-The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It moves to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
+The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 
 Bosses have 12% more health than the previous baseline and change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until destroyed or their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
 
-Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon or damage bonuses. Each bump removes one full impact segment from the existing health bar; weapon damage can help finish it. Contact uses a 28-unit ground radius and re-arms after leaving 40 units. A red summoning surge retaliates for 8% / 12% player maximum HP before normal defenses and invulnerability. Idle, disabled and silenced spires are safe to bump; dashing is always safe. A fast pass counts once, and destroying a spire cancels its pending arrival. Existing minions remain. Spires grant no rewards or wave progress.
+Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon or damage bonuses. Each bump removes one full impact segment from the existing health bar; weapon damage can help finish it. Contact uses a 28-unit ground radius and re-arms after leaving 40 units. A red summoning surge retaliates for 8% / 12% player maximum HP before regional damage scaling, normal defenses and invulnerability. Idle, disabled and silenced spires are safe to bump; dashing is always safe. Each accepted dash uses swept contact across the visible base, counts once per spire, bypasses existing walking contact and retains a full impact through shields. Shielding elites prefer summoning spires within 340 units; their shields reduce weapon damage by 35% and disappear with either endpoint. A fast pass counts once, and destroying a spire cancels its pending arrival. Existing minions remain. Spires grant no rewards or wave progress.
+
+Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing health, spawn counts, equipment or rewards. The first Zone 2 guardian and its elite echoes open with growing stars that turn back toward their moving caster after 1.25s. Other Zones retain their existing opening patterns.
+
+The separate zone-pressure fixture uses real damage, 144 HP Iron ranged armor, 54.7 DPS, ammunition and normal defenses, without purchased perks or blessings. Across three fixed seeds, stationary play died after 5.9–6.7 seconds at the new multiplier; a moving counterplay bot won after 10.1–10.6 seconds with 111–144 HP. At the previous multiplier, stationary play died after 6.6–7.4 seconds and the moving bot retained 118–144 HP. Both comparisons use the new attack patterns. These short first-guardian trials illustrate counterplay and are not a human difficulty rating.
+
+Codex is nested inside Inventory (C still opens it). Defeat can open the last available skill directly without reviving or restarting the floor; returning to Delve offers the regular retry. All ten chosen blessings stack through the normal picker, multiply or add according to their effect, retain independent saved timers and show combined strength; chain chance retains its 85% cap and Silence lasts while any copy remains.
 
 ## Warning language and ability library
 
@@ -168,7 +174,7 @@ Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon
 | --- | --- |
 | Red | Dangerous to the player only |
 | Violet | Dangerous to player and other monsters |
-| Gold / white center | Stand in the center to reflect |
+| Gold / white center | Touch the center to reflect immediately |
 | Teal | Safe area or an intercepted benefit |
 | Blue | Shield; remove its source / Royal Guards |
 
@@ -191,13 +197,13 @@ The encounter library now has 28 patterns: the ten existing attacks plus the fol
 - **Calling Spire**: Bump once to break · dash or wait while red.
 - **Royal Calling**: Bump twice · step away between hits · dash or wait while red.
 - **Royal Guard**: Blue shield · defeat both guards.
-- **Hungry Mirror**: Gold center reflects · a missed mirror heals the boss.
+- **Hungry Mirror**: Touch the gold rune; step out first if it appears under you · missing hurts and heals the boss.
 - **Marked Ground**: Red marks lock on cast · step between them.
 - **Siphon Tether**: Break the red tether · move beyond the ring.
 - **Orbital Blades**: Red blades orbit then fly outward.
 - **Ruinous Rush**: Violet charge leaves a burning trail.
 
-Rebounding Barrage fires three spaced rings that bounce off the marked arena bounds. Growing Stars expand from radius 6 to at most 23. Homeward Blades turn back toward their caster after 1.25s. A successful reflect returns 12% maximum HP and staggers for 1.6s; a missed Hungry Mirror restores 5% boss HP. Royal Guards reduce boss damage taken by 70% until both are defeated. Major arena attacks and reflect warnings do not overlap other casts; projectile rings remain visible and their center can be protected by a reflect ward.
+Rebounding Barrage fires three spaced rings that bounce off the marked arena bounds. Growing Stars expand from radius 6 to at most 23. Homeward Blades turn back toward their caster after 1.25s. Build 11.4 rotates three reflect variants: illustrated dangerous jaws with a safe teal opening, a distant timed rune, and an underfoot rune requiring exit beyond 48 units before returning. Touching the 34-unit center triggers immediately, including a swept dash entry. Casters keep pursuing while the ward is active. Timers allow at least 3 seconds (3.4 for underfoot runes), increased for distant travel. Closed jaws hurt for 4% maximum HP; ignoring a timer hurts for 8% at any distance, both before defenses and invulnerability. These two fractions do not gain the Zone 2 damage multiplier. A successful reflect returns 12% caster maximum HP and staggers for 1.6s; a missed Hungry Mirror also restores 5% boss HP. Royal Guards reduce boss damage taken by 70% until both are defeated. Major arena attacks and reflect warnings do not overlap other casts; projectile rings remain visible and their center can be protected by a reflect ward.
 
 ## Stackable blessings and healing
 

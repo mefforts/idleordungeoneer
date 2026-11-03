@@ -19,7 +19,7 @@ function restorationFixture(){
  try{
   const html=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+restorationFixture.toString()+')();resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
   const p=await runtime.browser.newPage();p.on('pageerror',e=>errors.push(e.message));await p.route(runtime.baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));await p.goto(runtime.baseURL);await p.waitForFunction(()=>!document.documentElement.classList.contains('game-loading'));await p.evaluate(()=>__restorationTest.fresh());
-  let state=await p.evaluate(()=>__restorationTest.xp());assert.equal(state.level,0);assert.equal(state.points,0);assert.equal(state.unlocked,false);assert.equal(await p.locator('#speedControl').isVisible(),false);
+  let state=await p.evaluate(()=>__restorationTest.xp());assert.equal(state.level,0);assert.equal(state.points,0);assert.equal(state.unlocked,false);assert.equal(await p.locator('#speedControl').isVisible(),true);
   for(const index of [0,1,2]){state=await p.evaluate(index=>__restorationTest.boss(1,index),index);assert.equal(state.points,0);assert.equal(state.unlocked,false);}
   state=await p.evaluate(()=>__restorationTest.frontier(2));assert.equal(state.points,1);assert.equal(state.level,1);assert.equal(state.unlocked,true);assert.equal(await p.locator('#speedControl').isVisible(),true);
   for(const [zone,points] of [[2,1],[4,1],[5,2],[10,3]]){state=await p.evaluate(zone=>__restorationTest.frontier(zone),zone);assert.equal(state.points,points);}

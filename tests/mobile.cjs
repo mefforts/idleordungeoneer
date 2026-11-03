@@ -44,10 +44,10 @@ const {createRuntime}=require('./runtime.cjs'),{mobileFixture}=require('./mobile
   const metrics=[];
   for(const viewport of [{width:320,height:844},{width:390,height:844},{width:844,height:390},{width:1440,height:1000}]){
    await p.setViewportSize(viewport);await p.evaluate(()=>__mobileTest.fresh(true));
-   for(const side of ['left','right']){await p.evaluate(side=>__mobileTest.pins(side),side);const rows=await p.evaluate(()=>__mobileTest.iconMetrics());assert.equal(rows.length,8);for(const row of rows){assert.ok(row.fill>=.9,viewport.width+' '+row.id+' fill '+row.fill);assert.ok(row.x>=0&&row.y>=0&&row.right<=viewport.width+1&&row.bottom<=viewport.height+1);}metrics.push({viewport,side,fill:Math.min(...rows.map(r=>r.fill))});}
+   for(const side of ['left','right']){await p.evaluate(side=>__mobileTest.pins(side),side);const rows=await p.evaluate(()=>__mobileTest.iconMetrics());assert.equal(rows.length,7);for(const row of rows){assert.ok(row.fill>=.9,viewport.width+' '+row.id+' fill '+row.fill);assert.ok(row.x>=0&&row.y>=0&&row.right<=viewport.width+1&&row.bottom<=viewport.height+1);}metrics.push({viewport,side,fill:Math.min(...rows.map(r=>r.fill))});}
    await p.tap('#quickGear');for(const tab of ['weapons','armor','jewelry','materials']){await p.tap('[data-equipment-tab="'+tab+'"]');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);}
   }
-  passed.push('All eight pins visibly fill at least 90% of their buttons at 320, 390, landscape and desktop widths on either side; all four Inventory tabs fit');
+  passed.push('All seven pins visibly fill at least 90% of their buttons at 320, 390, landscape and desktop widths on either side; all four Inventory tabs fit');
   assert.deepEqual(errors,[]);console.log(JSON.stringify({passed,metrics,errors},null,2));
  }finally{await runtime.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

@@ -20,7 +20,7 @@ function instrumentation(){
       fresh(floorAtZone(theme,sampleFloorStage(theme,stage)));game.phase=index*2;nextPhase();const boss=game.boss;
       boss.x=boss.y=0;game.player.x=0;game.player.y=170;game.player.hp=game.player.maxHp=500;game.player.invuln=1e8;return bossPlan(boss);
     },
-    projectiles(theme){this.boss(theme,1,0);beginBossCast(game.boss);tickBossSpecial(game.boss,1.2);return game.hostileShots.map(s=>({biome:s.biome,damage:s.damage}));},
+    projectiles(theme){this.boss(theme,1,0);beginBossCast(game.boss);tickBossSpecial(game.boss,game.boss.cast.total+.01);tickBossBursts(.01);return game.hostileShots.map(s=>({biome:s.biome,damage:s.damage}));},
     cycle(seconds){for(let time=0;time<seconds;time+=.04)tickCombat(Math.min(.04,seconds-time));return {used:[...game.boss.mechanicsUsed],shots:game.hostileShots.map(s=>({biome:s.biome,damage:s.damage})),hazards:(game.hazards||[]).map(h=>h.type)};},
     warning(type,avoid){
       fresh(3);const boss=spawnEnemy(true,2);boss.x=boss.y=0;boss.hp=boss.maxHp=10000;game.boss=boss;game.player.hp=game.player.maxHp=500;game.player.invuln=0;game.player.x=0;game.player.y=170;

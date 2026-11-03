@@ -1,5 +1,5 @@
 {
-  "version": "11.3.0",
+  "version": "11.4.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -517,6 +517,14 @@
   ],
   "gameTime": {
     "costPerRank": 1,
+    "freeDelve": [
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "minimumSkilling": 1,
+    "controlsFromStart": true,
     "delve": [
       1,
       1.25,
@@ -664,9 +672,9 @@
       },
       "collected": {
         "seconds": 300,
-        "bars": 249,
-        "bonusBars": 80,
-        "oreSpent": 498,
+        "bars": 252,
+        "bonusBars": 82,
+        "oreSpent": 504,
         "pickups": 72
       }
     }
@@ -1060,6 +1068,27 @@
     ]
   },
   "encounters": {
+    "reflectWards": {
+      "variants": [
+        "jaw",
+        "rebound",
+        "rune"
+      ],
+      "seconds": 3,
+      "reboundSeconds": 3.4,
+      "inner": 34,
+      "gapHalf": 0.7,
+      "failure": 0.08,
+      "wallDamage": 0.04
+    },
+    "movingReflectCasters": true,
+    "zoneTwoIncomingDamage": 1.25,
+    "zoneTwoOpeningStars": {
+      "growing": true,
+      "returning": true,
+      "guardian": 0,
+      "eliteEchoes": true
+    },
     "patterns": 28,
     "expanded": {
       "ringchain": {
@@ -1129,8 +1158,8 @@
       },
       "reversal": {
         "name": "Hungry Mirror",
-        "seconds": 1.9,
-        "hint": "Gold center reflects · a missed mirror heals the boss"
+        "seconds": 3,
+        "hint": "Touch the gold rune; step out first if it appears under you · missing hurts and heals the boss"
       },
       "minefield": {
         "name": "Marked Ground",
@@ -1196,6 +1225,8 @@
       "maximumSpires": 2,
       "rewards": false,
       "bumps": {
+        "dashRadius": 38,
+        "dashRise": 16,
         "normal": 1,
         "royal": 2,
         "radius": 28,
@@ -1203,7 +1234,11 @@
         "normalBacklash": 0.08,
         "royalBacklash": 0.12
       },
-      "requiresExit": true,
+      "walkingRequiresExit": true,
+      "dashRequiresExit": false,
+      "dashShieldBypass": true,
+      "shieldingElites": true,
+      "shieldWeaponDamageMultiplier": 0.65,
       "retaliation": "Only while summoning; normal defenses and invulnerability apply",
       "dashSafe": true,
       "weaponDamage": true
@@ -1728,7 +1763,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 568.8000000000301,
+      "seconds": 552.8000000000279,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 600
@@ -1736,7 +1771,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1215.7200000000712,
+      "seconds": 1215.1600000000697,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1200
@@ -1744,7 +1779,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 1866.1600000000683,
+      "seconds": 1841.3200000000638,
       "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 1800
@@ -1752,7 +1787,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 2146.2800000001093,
+      "seconds": 2128.2000000001053,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2100
@@ -1760,7 +1795,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 2469.8400000001407,
+      "seconds": 2467.560000000139,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
@@ -1768,10 +1803,232 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 2471.520000000142,
+      "seconds": 2461.8800000001397,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 2400
     }
-  ]
+  ],
+  "zonePressure": {
+    "scenario": "First Zone 2 guardian, basic Iron ranged armor, approximately 55 DPS, no perks/blessings, real health/ammo/damage; deterministic stationary and counterplay bots",
+    "rows": [
+      {
+        "seed": 19,
+        "careful": false,
+        "scale": 1,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 6.58,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 6,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 19,
+        "careful": false,
+        "scale": 1.25,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 5.88,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 5,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 19,
+        "careful": true,
+        "scale": 1,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 10.08,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 117.5,
+        "hits": 1,
+        "damageTaken": 26.5,
+        "reflections": 1
+      },
+      {
+        "seed": 19,
+        "careful": true,
+        "scale": 1.25,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 10.08,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 110.9,
+        "hits": 1,
+        "damageTaken": 33.1,
+        "reflections": 1
+      },
+      {
+        "seed": 107,
+        "careful": false,
+        "scale": 1,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 7.38,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 5,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 107,
+        "careful": false,
+        "scale": 1.25,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 6.68,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 4,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 107,
+        "careful": true,
+        "scale": 1,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 10.64,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 144,
+        "hits": 0,
+        "damageTaken": 0,
+        "reflections": 1
+      },
+      {
+        "seed": 107,
+        "careful": true,
+        "scale": 1.25,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 10.64,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 144,
+        "hits": 0,
+        "damageTaken": 0,
+        "reflections": 1
+      },
+      {
+        "seed": 523,
+        "careful": false,
+        "scale": 1,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 7.38,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 5,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 523,
+        "careful": false,
+        "scale": 1.25,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 6.68,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 4,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 523,
+        "careful": true,
+        "scale": 1,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 10.64,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 144,
+        "hits": 0,
+        "damageTaken": 0,
+        "reflections": 1
+      },
+      {
+        "seed": 523,
+        "careful": true,
+        "scale": 1.25,
+        "dps": 54.71772727272726,
+        "gear": {
+          "weapon": 7,
+          "speed": 0
+        },
+        "maxHp": 144,
+        "seconds": 10.64,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 144,
+        "hits": 0,
+        "damageTaken": 0,
+        "reflections": 1
+      }
+    ],
+    "errors": []
+  }
 }

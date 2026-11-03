@@ -4,7 +4,6 @@ const ARENA_PINS = [
   {id:'gear',element:'quickGear',name:'Inventory'},
   {id:'skills',element:'quickSkills',name:'Skills'},
   {id:'shop',element:'quickShop',name:'Dungeon Shop'},
-  {id:'codex',element:'quickCodex',name:'Codex'},
   {id:'settings',element:'quickSettings',name:'Settings'},
   {id:'pause',element:'quickPause',name:'Pause / resume'},
   {id:'speed',element:'speedControl',name:'Speed'}
@@ -85,6 +84,7 @@ function positionSpeedChoices(){
 }
 
 function installArenaUI(){installZoneShopPin();
+  $('quickCodex').classList.add('hidden');$('quickCodex').setAttribute('aria-hidden','true');$('quickCodex').tabIndex=-1;
   const nav=document.querySelector('.hud-actions');nav.classList.add('icon-rail');document.querySelector('.hud-center').append($('phaseBadge'));
   $('quickPause').classList.add('hud-icon');$('quickPause').removeAttribute('title');
   $('speedToggle').classList.add('hud-icon');$('speedToggle').innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="m5 7 11 9L5 25V7Zm12 0 11 9-11 9V7Z" fill="currentColor"/></svg><span class="speed-badge">1×</span>';

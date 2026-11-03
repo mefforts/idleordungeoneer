@@ -169,7 +169,7 @@ function paintAbilityGroundArt(){
  for(const fx of game.counterEffects||[])if(fx.type==='cleave')paintAbilityField({...fx.cast,shape:'cone'},'cleave',fx.biome,combatTheme('friendly'),fx.life/fx.total,true);
 }
 function paintAbilityProjectile(s){
- const kind=s.biome??biomeIndex(),m=abilityMaterial(kind),theme=combatTheme(s.language||'danger'),angle=Math.atan2(s.vy,s.vx),r=s.rad||6,time=abilityEffectTime(),blade=s.boomerang||s.orbit||['return','orbit'].includes(s.abilityType);
+ const kind=s.biome??biomeIndex(),m=abilityMaterial(kind),theme=combatTheme(s.language||'danger'),angle=Math.atan2(s.vy,s.vx),r=s.rad||6,time=abilityEffectTime(),blade=!s.growing&&(s.boomerang||s.orbit||['return','orbit'].includes(s.abilityType));
  glow(s.x,s.y,Math.max(15,r*2.5),theme.color+'55');ctx.save();ctx.translate(s.x,s.y);ctx.rotate(angle);ctx.lineJoin='round';
  if(!s.preview){line(-r*2.7,0,-r*.6,0,Math.max(2,r*.5),theme.color+'80');line(-r*1.7,0,-r*.6,0,1.2,theme.hot+'b0');}
  if(blade)paintAbilityBlade(0,0,r*1.1,s.preview?0:time*(s.returning?-4:4),theme,kind);
