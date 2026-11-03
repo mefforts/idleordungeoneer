@@ -143,12 +143,12 @@ Guardians have a 6% voucher chance, or 15% for the Zone-final overlord. Only the
 | 3 | ~30 min | 160.0 |
 | 4 | ~35 min | 160.0 |
 
-- Live Zone 1: **9.2 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **20.1 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **30.9 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **35.7 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 1: **9.4 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **20.2 min**, 570 rewarded defeats, 160.0 reference DPS.
+- Live Zone 3: **31.0 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **35.8 min**, 960 rewarded defeats, 160.0 reference DPS.
 - Live Zone 9: **40.9 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 15: **41.0 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 15: **40.7 min**, 960 rewarded defeats, 160.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It moves to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
 
@@ -165,6 +165,8 @@ Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon
 | Gold / white center | Stand in the center to reflect |
 | Teal | Safe area or an intercepted benefit |
 | Blue | Shield; remove its source / Royal Guards |
+
+Build 11.2 adds illustrated, animated roots, molten eruptions, bone hands, crystal ruptures, physical projectiles, chains, shield emblems and summoning portals. Threat rims retain their existing geometry and colors. Artwork stays outside safe quarters and ring centers. Decorative motion uses the paused combat clock, with steady reduced-motion appearances. Totem streams use green crosses for healing and red swords for damage; the attack-speed palette uses blue chevrons. Stream colors persist through interception; disabled links are muted. This presentation pass does not change damage, collision, durations or rewards.
 
 Instruction labels fade in, fade out and recur on a real-time clock; changing instructions restart the reminder. Hazard geometry and health bars remain visible. Reduced motion uses steady visibility windows. Colors are reinforced by outlines, shapes and labels. Violet attacks deal 35% ordinary, 12% elite or 2.5% boss maximum HP before shields, once per cast; the caster is immune. These hits cannot trigger player lifesteal, enchantment or weapon procs.
 

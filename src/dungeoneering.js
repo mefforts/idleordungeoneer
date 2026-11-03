@@ -54,7 +54,7 @@ function tickDungeonHazards(dt){
  });
 }
 function paintWarningCircle(x,y,r,progress,theme,active=false){
-  ctx.save();ctx.fillStyle=theme.color+(active?'37':'18');ctx.strokeStyle=theme.color;ctx.lineWidth=active?3:2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.save();ctx.fillStyle=theme.color+(active?'16':'18');ctx.strokeStyle=theme.color;ctx.lineWidth=active?3:2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
   ctx.strokeStyle=theme.hot;ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,r+5,-Math.PI/2,-Math.PI/2+Math.PI*2*progress);ctx.stroke();
   for(let i=0;i<6;i++){const a=i*Math.PI/3;line(x+Math.cos(a)*(r-7),y+Math.sin(a)*(r-7),x+Math.cos(a)*(r-2),y+Math.sin(a)*(r-2),1.5,theme.hot);}
   ctx.restore();
@@ -76,18 +76,12 @@ function paintThreatTelegraphs(){
  }
  for(const h of game.hazards||[]){const theme=combatTheme(h.language||'friendly');
   if(h.type==='expanded'){paintExpandedShape(h,theme,h.delay>0?.3:h.life/h.total,h.delay<=0);continue;}
-  if(h.type==='ground'){paintWarningCircle(h.x,h.y,h.r,h.life/h.total,theme,true);for(let i=0;i<8;i++){const a=i*Math.PI/4;line(h.x+Math.cos(a)*h.r*.35,h.y+Math.sin(a)*h.r*.35,h.x+Math.cos(a)*h.r*.75,h.y+Math.sin(a)*h.r*.75,3,theme.color+'c9');}}
-  else{line(h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length,h.width,theme.color+'60');line(h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length,8,theme.hot);}
+  if(h.type==='ground')paintWarningCircle(h.x,h.y,h.r,h.life/h.total,theme,true);
+  else{line(h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length,h.width,theme.color+'25');line(h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length,1.5,theme.hot+'90');}
  }
 }
 function paintDungeonProjectile(s){
- const motif=DUNGEON_THEMES[s.biome??biomeIndex()].motif,theme=combatTheme(s.language||'danger'),a=Math.atan2(s.vy,s.vx),scale=Math.max(.85,(s.rad||6)/6);glow(s.x,s.y,Math.max(18,s.rad*2.2),theme.color+'45');ctx.save();ctx.translate(s.x,s.y);ctx.rotate(a);ctx.scale(scale,scale);
- if(s.boomerang){poly([11,0,-6,-9,-2,0,-6,9],theme.color,theme.hot,1.2);if(s.returning)line(-8,-4,-13,0,1.5,theme.hot);}
- else if(motif==='leaf'){poly([12,0,-5,-7,-11,0,-5,7],theme.color,theme.dark,1);line(-7,0,8,0,1.4,theme.hot);}
- else if(motif==='ember'){poly([11,0,-9,-8,-5,0,-11,7],theme.color,theme.dark,1);disc(2,0,3,theme.hot);}
- else if(motif==='star')poly([12,0,3,3,0,11,-3,3,-12,0,-3,-3,0,-11,3,-3],theme.color,theme.hot,1);
- else{disc(0,0,8,theme.dark);disc(0,0,6,theme.color);disc(2,-1,2.4,theme.hot);}
- ctx.restore();
+ paintAbilityProjectile(s);
 }
 function drawBoss(e,b){
   if(e.champion){paintRareElite(e);return;}

@@ -56,7 +56,7 @@ function bossPlan(e){
 }
 function bossMechanicHint(){
  const e=game.boss;if(!e)return '';if(e.stagger>0)return 'Reflected · staggered';
- if(e.cast)return e.cast.hint||(['reflect','reversal'].includes(e.cast.type)?'Gold center · reflect':['mend','fury'].includes(e.cast.type)?'Teal stream · approach totem':e.cast.label);
+ if(e.cast)return e.cast.hint||(['reflect','reversal'].includes(e.cast.type)?'Gold center · reflect':e.cast.type==='mend'?'Green healing stream · approach totem':e.cast.type==='fury'?'Red damage stream · approach totem':e.cast.label);
  if(e.guardIds?.some(g=>game.enemies.includes(g)&&g.hp>0))return 'Blue shield · defeat Royal Guards';
  const owned=(game.totems||[]).filter(t=>t.owner===e);return owned.length?(owned.some(t=>t.destructible)?'Spire · bump to break · dash while red':owned.some(t=>t.blocked)?'Stream redirected':'Totem · approach'):'';
 }
@@ -185,6 +185,7 @@ function paintReflectWard(point,progress,kind,active=false){
  ctx.restore();
 }
 function paintEncounterGround(){
+ paintAbilityGroundArt();
  for(const e of game.enemies)if(['reflect','reversal'].includes(e.cast?.type))paintReflectWard(e.cast.point,clamp(1-e.cast.windup/e.cast.total,0,1),e.biome);
  for(const fx of game.counterEffects||[]){ctx.save();ctx.globalAlpha=fx.life/fx.total;if(fx.type==='cleave')paintEnemyCleave(fx.cast,combatTheme('friendly'),1,true);else if(fx.type==='ricochet')for(const point of fx.points)paintRicochetBank(point,DUNGEON_THEMES[fx.biome]);else paintReflectWard(fx,1,fx.biome,true);ctx.restore();}
 }
@@ -194,20 +195,18 @@ function paintTotem(t){
  ellipse(t.x,foot.y,23,7,'#090f1360');
  if(image.complete&&image.naturalWidth)ctx.drawImage(image,t.x-width/2,foot.y-height,width,height);
  else {disc(t.x,foot.y-28,15,theme.dark);encounterLabel(t.type==='mend'?'+':'ϟ',t.x,foot.y-24,theme.hot,22);}
-
+ paintAbilityTotemCrest(t);
 }
 function paintEncounterLinks(){
  for(const t of game.totems||[]){
   if(t.destructible)continue;
-  const a={x:t.x,y:t.y-22},b={x:t.owner.x,y:t.owner.y-22},p={x:game.player.x,y:game.player.y-18},theme=combatTheme(t.disabled?'shield':'safe'),end=t.blocked?p:b;
-  ctx.save();ctx.lineCap='round';
-  if(t.blocked){ctx.setLineDash([4,6]);line(p.x,p.y,b.x,b.y,1.5,theme.color+'50');ctx.setLineDash([]);}
-  line(a.x,a.y,end.x,end.y,7,theme.dark+'c0');line(a.x,a.y,end.x,end.y,3,t.blocked?'#f3e7b6':theme.color);line(a.x,a.y,end.x,end.y,1,theme.hot);
-  const steps=reducedMotion()?1:4;for(let i=0;i<steps;i++){const u=reducedMotion()?.5:((game.frame*.7+i/steps)%1);disc(a.x+(end.x-a.x)*u,a.y+(end.y-a.y)*u,2.5,theme.hot);}
-  ctx.restore();
-  encounterLabel(t.disabled?'DISABLED':t.blocked?(t.type==='mend'&&t.healReserve<=0?'HEALING DEPLETED · BLOCKED':'Linked to you'):'Approach',t.x,t.y-62,t.blocked?'#f3e7b6':theme.hot);
+  const a={x:t.x,y:t.y-22},b={x:t.owner.x,y:t.owner.y-22},p={x:game.player.x,y:game.player.y-18},theme=totemSignal(t),end=t.blocked?p:b;
+  paintAbilityStream(t,a,end,b);
+  const label=t.disabled?'DISABLED':t.blocked?(t.type==='mend'&&t.healReserve<=0?'HEALING DEPLETED · BLOCKED':theme.label+' · YOU'):theme.label+' · APPROACH';
+  encounterTip(label,t.x,t.y-62,theme.hot,10,t,label,'stream');
  }
  for(const e of game.enemies){
+  if(e.cast?.type==='tether')paintAbilityTether(e,e.cast);
   if(['reflect','reversal'].includes(e.cast?.type)){
    const point=e.cast.point;
    // The safe boundary stays readable when a large creature overlaps the mark.
@@ -217,5 +216,5 @@ function paintEncounterLinks(){
   if(e.stagger>0)encounterLabel('STAGGERED',e.x,e.y-e.rad-24,DUNGEON_THEMES[e.biome].hot);
  }
  for(const fx of game.counterEffects||[])if(fx.reflected){ctx.save();ctx.globalAlpha=fx.life/fx.total;line(fx.x,fx.y,fx.tx,fx.ty,8,DUNGEON_THEMES[fx.biome].color+'60');line(fx.x,fx.y,fx.tx,fx.ty,2.5,DUNGEON_THEMES[fx.biome].hot);ctx.restore();}
- const p=game.player;if(p.mending||p.rallyTime>0)encounterLabel(p.mending?'+ HP':'+10% DMG',p.x,p.y+39,'#f3e7b6');
+ const p=game.player;if(p.mending||p.rallyTime>0)encounterLabel(p.mending?'+ HP':'+10% DMG',p.x,p.y+39,(p.mending?TOTEM_SIGNALS.mend:TOTEM_SIGNALS.fury).hot);
 }

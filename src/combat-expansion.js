@@ -69,7 +69,7 @@ function expandedContains(actor,shape){
  if(shape.shape==='cone')return cleaveContains(actor,shape);
  return false;
 }
-function addExpandedHazard(owner,cast,shape,damage,delay=0){(game.hazards||(game.hazards=[])).push({...shape,type:'expanded',owner,enemyHits:cast.enemyHits,language:castLanguage(cast.type),biome:owner.biome,life:.65+delay,total:.65,delay,damage,age:0});}
+function addExpandedHazard(owner,cast,shape,damage,delay=0){(game.hazards||(game.hazards=[])).push({...shape,type:'expanded',abilityType:cast.type,owner,enemyHits:cast.enemyHits,language:castLanguage(cast.type),biome:owner.biome,life:.65+delay,total:.65,delay,damage,age:0});}
 function resolveExpandedCast(enemy,cast,damage){
  const type=cast.type;if(!EXPANDED_ABILITIES[type]||type==='reversal')return false;
  if(cast.shapes.length&&type!=='tether')for(const shape of cast.shapes)addExpandedHazard(enemy,cast,shape,damage*1.15,shape.delay||0);
@@ -150,7 +150,7 @@ function tickBossBursts(dt){
   const {owner,type,index,damage,cast}=event,count=type==='spiral'?8:type==='orbit'?8:16,offset=index*.21+(owner.mechanicIndex||0)*.28,speed=type==='bloom'?125:type==='return'?175:165;
   for(let i=0;i<count;i++){
    if(type!=='orbit'&&i%4===0)continue;const a=i*Math.PI*2/count+offset;
-   game.hostileShots.push({x:owner.x,y:owner.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,speed,rad:6,baseRad:6,life:type==='return'?6:5,age:0,damage:damage*.85,owner,biome:owner.biome,language:castLanguage(type),enemyHits:cast.enemyHits,bounce:type==='ringchain'?2:0,bounds:cast.arena,growing:type==='bloom',boomerang:type==='return',orbit:type==='orbit'?{angle:a,radius:70,remaining:1.3}:null});
+   game.hostileShots.push({x:owner.x,y:owner.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,speed,rad:6,baseRad:6,life:type==='return'?6:5,age:0,damage:damage*.85,owner,biome:owner.biome,language:castLanguage(type),abilityType:type,enemyHits:cast.enemyHits,bounce:type==='ringchain'?2:0,bounds:cast.arena,growing:type==='bloom',boomerang:type==='return',orbit:type==='orbit'?{angle:a,radius:70,remaining:1.3}:null});
   }return false;
  });
 }
@@ -183,11 +183,11 @@ function paintExpandedShape(shape,theme,progress=1,active=false){
  if(shape.shape==='quarters'){
   for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i),safe=rect.left===shape.safe.left&&rect.top===shape.safe.top;paintExpandedShape({shape:'rect',rect},safe?combatTheme('safe'):theme,progress,active);if(safe)encounterLabel('◇ SAFE',(rect.left+rect.right)/2,(rect.top+rect.bottom)/2,combatTheme('safe').hot,12);}
  }else if(shape.shape==='rect'){
-  const r=shape.rect;quad(r.left,r.top,r.right-r.left,r.bottom-r.top,theme.color+(active?'4d':'22'),theme.color,2);const step=28;ctx.save();ctx.beginPath();ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);ctx.clip();for(let x=r.left-(r.bottom-r.top);x<r.right;x+=step)line(x,r.top,x+r.bottom-r.top,r.bottom,1,theme.color+'55');ctx.restore();
+  const r=shape.rect;quad(r.left,r.top,r.right-r.left,r.bottom-r.top,theme.color+(active?'1c':'22'),theme.color,2);const step=28;if(!active){ctx.save();ctx.beginPath();ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);ctx.clip();for(let x=r.left-(r.bottom-r.top);x<r.right;x+=step)line(x,r.top,x+r.bottom-r.top,r.bottom,1,theme.color+'55');ctx.restore();}
   if(shape.order)encounterLabel(String(shape.order),(r.left+r.right)/2,(r.top+r.bottom)/2,theme.hot,20);
  }else if(shape.shape==='circle')paintWarningCircle(shape.x,shape.y,shape.r,progress,theme,active);
  else if(shape.shape==='ring'){
-  ctx.save();ctx.beginPath();ctx.arc(shape.x,shape.y,shape.r,0,Math.PI*2);if(shape.inner)ctx.arc(shape.x,shape.y,shape.inner,0,Math.PI*2,true);ctx.fillStyle=theme.color+(active?'4d':'22');ctx.fill();ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.stroke();ctx.restore();if(shape.inner){paintWarningCircle(shape.x,shape.y,shape.inner,progress,combatTheme('safe'));encounterLabel('◇ SAFE',shape.x,shape.y,combatTheme('safe').hot);}
+  ctx.save();ctx.beginPath();ctx.arc(shape.x,shape.y,shape.r,0,Math.PI*2);if(shape.inner)ctx.arc(shape.x,shape.y,shape.inner,0,Math.PI*2,true);ctx.fillStyle=theme.color+(active?'1c':'22');ctx.fill();ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.stroke();ctx.restore();if(shape.inner){paintWarningCircle(shape.x,shape.y,shape.inner,progress,combatTheme('safe'));encounterLabel('◇ SAFE',shape.x,shape.y,combatTheme('safe').hot);}
  }else if(shape.shape==='cone')paintEnemyCleave(shape,theme,progress,active);
 }
 function paintExpandedWarning(enemy,cast,progress){
@@ -204,6 +204,7 @@ function paintSummonTotem(t){
  const disabled=totemsDisabled()||(t.disabledUntil||0)>game.frame,surging=!!t.spawnPoint&&!disabled,theme=combatTheme(disabled?'shield':surging?'danger':'safe'),foot=encounterFoot(t),image=encounterImage(t.biome,'fury'),height=82,width=height*image.naturalWidth/Math.max(1,image.naturalHeight),bumps=summonBumpsLeft(t);
  ellipse(t.x,foot.y,26,8,'#080d1480');ctx.save();ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(t.x,foot.y-2,27,10,0,0,Math.PI*2);ctx.stroke();
  if(disabled)ctx.globalAlpha=.48;
+ paintAbilityPortal({x:t.x,y:foot.y-10},surging?1:.65,TOTEM_SIGNALS.summon,t.eliteSummon);
  if(image.complete&&image.naturalWidth)ctx.drawImage(image,t.x-width/2,foot.y-height,width,height);
  else{poly([t.x-11,foot.y-4,t.x-15,foot.y-55,t.x,foot.y-76,t.x+15,foot.y-55,t.x+11,foot.y-4],theme.dark,theme.color,2);}
  ctx.restore();
@@ -217,7 +218,7 @@ function paintSummonTotem(t){
  if((t.bumpFlashUntil||0)>game.frame)paintWarningCircle(foot.x,foot.y,31,1,combatTheme('safe'));
  if(t.spawnPoint){paintWarningCircle(t.spawnPoint.x,t.spawnPoint.y,22,1-t.spawnWarn/1.3,theme);encounterLabel('SUMMON',t.spawnPoint.x,t.spawnPoint.y-27,theme.hot,8);}
 }
-function combatGuideHtml(){return codexParagraph('Move, dash and attack automatically. Each warning uses both a color and a shape or label. Threats lock their aim when the warning appears.')+codexRuleList([['Red · danger','Hurts you only. Leave the marked area.'],['Violet · friendly fire','Hurts you and other enemies. Lure monsters into sweeps, charges, beams, eruptions and rebounding rings.'],['Gold / white · reflect','Stand inside the small white center to reflect. Hungry Mirrors heal their caster when missed.'],['Teal · safe / benefit','Safe quarters and circles, or a totem stream redirected to you.'],['Blue · shield','Break guards or a shield source to expose the protected target.'],['Spire · bump to break','Walk into an ordinary spire once, or a crowned spire twice. Step clear of its base before another bump. Teal is safe; a red, surging spire retaliates for 8% / 12% maximum health before defenses. Dash through or wait for teal to avoid that damage. Weapons can still damage spires. Healing and power totems remain stream interceptions.'],['Reinforcements','Summoned monsters and guards drop no rewards and do not count toward the wave.']])+codexParagraph('Bosses change patterns at health thresholds. Rebounding rings arrive in three waves; growing shots widen; returning blades come back to their caster. Watch their shape as well as their color.');}
+function combatGuideHtml(){return codexParagraph('Move, dash and attack automatically. Each warning uses both a color and a shape or label. Threats lock their aim when the warning appears.')+codexRuleList([['Red · danger','Hurts you only. Leave the marked area.'],['Violet · friendly fire','Hurts you and other enemies. Lure monsters into sweeps, charges, beams, eruptions and rebounding rings.'],['Gold / white · reflect','Stand inside the small white center to reflect. Hungry Mirrors heal their caster when missed.'],['Teal · safe / benefit','Safe quarters and circles, or the ring around a stream redirected to you.'],['Totem beams · follow the symbol','Green crosses carry healing; red swords carry damage boosts. These support streams do not deal contact damage. Blue chevrons identify attack-speed effects. A disabled stream is muted and stops sending symbols.'],['Blue · shield','Break guards or a shield source to expose the protected target.'],['Spire · bump to break','Walk into an ordinary spire once, or a crowned spire twice. Step clear of its base before another bump. Teal is safe; a red, surging spire retaliates for 8% / 12% maximum health before defenses. Dash through or wait for teal to avoid that damage. Weapons can still damage spires. Healing and power totems remain stream interceptions.'],['Reinforcements','Summoned monsters and guards drop no rewards and do not count toward the wave.']])+codexParagraph('Bosses change patterns at health thresholds. Rebounding rings arrive in three waves; growing shots widen; returning blades come back to their caster. Watch their shape as well as their color.');}
 
 function announceWeaponUpgradeTip(){
  if(data.weaponUpgradeTipSeen)return;data.weaponUpgradeTipSeen=true;toast('Strengthen your new weapon','Refine it at its crafting bench, then visit Warding to enchant it. Both improvements are permanent.');
