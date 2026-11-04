@@ -1,21 +1,22 @@
 /* Fractions are base maximum-health damage; protection still mitigates them. */
 const ENCOUNTER_DAMAGE={projectile:.10,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35};
-const ENEMY_RESOLVE={perAlly:.10,maximum:.50};
+const ENEMY_RESOLVE={perAlly:.10,maximum:.50,dashLockout:5};
 const ENCOUNTER_AREA={common:1.25};
 function resolveEnemy(enemy){return !!enemy&&enemy.hp>0&&!enemy.totem&&!enemy.uncommon&&!!(enemy.boss||enemy.elite||enemy.bossElite||enemy.champion);}
+function enemyResolveBlocked(enemy){return enemy.stagger>0||(enemy.resolveDisabledUntil||0)>game.frame;}
 function enemyResolveReduction(enemy){
- if(!resolveEnemy(enemy)||enemy.stagger>0||!game.enemies.includes(enemy))return 0;
- const allies=game.enemies.filter(other=>other!==enemy&&resolveEnemy(other)&&!(other.stagger>0)).length;
+ if(!resolveEnemy(enemy)||enemyResolveBlocked(enemy)||!game.enemies.includes(enemy))return 0;
+ const allies=game.enemies.filter(other=>other!==enemy&&resolveEnemy(other)&&!enemyResolveBlocked(other)).length;
  return Math.min(ENEMY_RESOLVE.maximum,allies*ENEMY_RESOLVE.perAlly);
 }
 function enemyChargeHalfWidth(enemy){return (enemy.rad+8)*ENCOUNTER_AREA.common;}
 function enemyChargeLength(cast){return Math.min(340,Math.max(100,Math.hypot(cast.target.x-cast.origin.x,cast.target.y-cast.origin.y)+65));}
 function paintEnemyResolve(enemy){
- if(!resolveEnemy(enemy))return;const reduction=enemyResolveReduction(enemy),stunned=enemy.stagger>0;
- if(!reduction&&!(stunned&&game.enemies.some(other=>other!==enemy&&resolveEnemy(other))))return;
- const theme=combatTheme(stunned?'reflect':'shield'),x=enemy.x+(enemy.rad||20)+15,y=enemy.y-45;
- ctx.save();ctx.globalAlpha=stunned?.65:1;paintAbilityShield(x,y,10,theme);
- if(stunned){line(x-6,y-8,x+1,y-1,2,theme.hot);line(x+1,y-1,x-2,y+5,2,theme.hot);}
+ if(!resolveEnemy(enemy))return;const reduction=enemyResolveReduction(enemy),blocked=enemyResolveBlocked(enemy);
+ if(!reduction&&!(blocked&&game.enemies.some(other=>other!==enemy&&resolveEnemy(other))))return;
+ const theme=combatTheme(blocked?'reflect':'shield'),x=enemy.x+(enemy.rad||20)+15,y=enemy.y-45;
+ ctx.save();ctx.globalAlpha=blocked?.65:1;paintAbilityShield(x,y,10,theme);
+ if(blocked){line(x-6,y-8,x+1,y-1,2,theme.hot);line(x+1,y-1,x-2,y+5,2,theme.hot);}
  else{themedArc(enemy.x,enemy.y+enemy.rad*.65,enemy.rad+9,.25+reduction,theme.color+'a0',2);}
  textAt(Math.round(reduction*100)+'%',x,y+19,'700 10px system-ui',theme.hot);ctx.restore();
 }

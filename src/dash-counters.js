@@ -14,6 +14,7 @@ function tickDashStuns(from,dashing){
   if(!resolveEnemy(enemy)||enemy.stunnedByDash===serial)continue;
   const body=enemyBody(enemy);if(segmentsDistance(from.x,from.y-13,p.x,p.y,body.x,body.top,body.x,body.bottom)>body.r+9)continue;
   enemy.stunnedByDash=serial;enemy.stagger=Math.max(enemy.stagger||0,DASH_COUNTERS.stun);
+  enemy.resolveDisabledUntil=Math.max(enemy.resolveDisabledUntil||0,game.frame+ENEMY_RESOLVE.dashLockout);
   if(enemy.eliteTask)interruptEliteTask(enemy,'dash');
   if(enemy.charge){enemy.charge=null;refundCounterDash();}
   if(enemy.cast?.siphon)finishSiphonTether(enemy,enemy.cast,true);

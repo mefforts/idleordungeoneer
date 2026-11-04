@@ -10,7 +10,7 @@ function clearEncounterState(){
  game.eliteRecruits=new Map();game.elitePromotionCount=0;game.dashSweep=null;
  game.phaseCleanupPending=false;game.graveEchoes=[];game.totems=[];game.counterEffects=[];game.counterRequest=null;game.reflectCooldown=0;game.disruptReadyAt=0;game.bossBursts=[];
  if(game.player){game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
- for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;}
+ for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;e.resolveDisabledUntil=0;}
 }
 function clearOwnerMechanics(owner){
  game.themedEvents=(game.themedEvents||[]).filter(e=>e.owner!==owner&&e.partner!==owner);

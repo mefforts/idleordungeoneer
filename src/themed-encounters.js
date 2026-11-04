@@ -284,7 +284,7 @@ function themedRallyMultiplier(enemy){return (game.themedEvents||[]).some(e=>e.t
 function installThemedEncounters(){
  installEliteTaskGuide();installTravellingArt();
  SVG_FILES['codex-siphon_tethers.svg']=encounterBoonIcon('siphon');CODEX_ITEMS.push({id:'siphon_tethers',cat:'Enemies',name:'Siphon Tethers',desc:'A red chain drains small rapid health ticks. Hungry Siphon breaks when you dash away from its caster; Knotted Siphon breaks when you dash through its yellow cut point. Walking alone does not sever either channel.'});
- SVG_FILES['codex-warband_resolve.svg']=encounterBoonIcon('resolve');CODEX_ITEMS.push({id:'warband_resolve',cat:'Enemies',name:'Warband Resolve',desc:'Each other elite, rare, boss or guardian Echo grants 10% damage reduction, up to 50%. Stunned enemies lose this protection and stop granting it to allies until they recover.'});
+ SVG_FILES['codex-warband_resolve.svg']=encounterBoonIcon('resolve');CODEX_ITEMS.push({id:'warband_resolve',cat:'Enemies',name:'Warband Resolve',desc:'Each other elite, rare, boss or guardian Echo grants 10% damage reduction, up to 50%. Stunned enemies lose this protection and stop granting it to allies.'});
  SVG_FILES['codex-uncommon_creatures.svg']=THEMED_EFFECT_ART['icon-uncommon'];
  CODEX_ITEMS.push({id:'uncommon_creatures',cat:'Enemies',name:'Uncommon creatures',desc:'Twice ordinary health, one ranged attack and a small active cap that grows by Zone. Ordinary loot.'});
  for(const [id,d]of Object.entries(THEMED_MECHANICS)){CODEX_ITEMS.push({id:'mechanic_'+id,cat:'Enemies',name:d.name,desc:d.guide});SVG_FILES['codex-mechanic_'+id+'.svg']=THEMED_EFFECT_ART['icon-'+id];}

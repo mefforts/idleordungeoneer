@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.11.1** makes dash-throughs a longer opening against **Warband Resolve**. The enemy keeps its existing stagger, then remains unable to receive or grant the shared damage-reduction boon until **five combat seconds after impact**. Fresh dashes refresh the window; pauses and skilling freeze it. The cracked shield stays at 0% during recovery, with no new in-game hint.
+
 **Build 11.11.0** gives travelling mechanics physical artwork and deliberate repeat patterns. **Walking Hedge** sends two or three world-spanning thorn walls through offset teal openings. They keep travelling faster than running and retire after passing the encounter; crossing a Hedge keeps the normal dash cooldown. The space between walls allows a dash through one, then a walking route through the next opening.
 
 **Grave Pulse** keeps its single opening ring, then grows to two or three rings later in a floor or fight. Rings are **1.2 combat seconds apart**. Each completed dash crossing immediately resets dash for the next ring; merely grazing the rim does not. Every ring keeps expanding until it passes the fight. Bone crests, skulls, spirit trails and a small sequence symbol replace a plain colored band.

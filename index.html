@@ -2596,7 +2596,7 @@ const THEMED_LINK={minimum:220,preferred:260,crossing:70,landing:70};
 
 const ENCOUNTER_DAMAGE={projectile:.10,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35};
 
-const ENEMY_RESOLVE={perAlly:.10,maximum:.50};
+const ENEMY_RESOLVE={perAlly:.10,maximum:.50,dashLockout:5};
 
 const ENCOUNTER_AREA={common:1.25};
 
@@ -3962,7 +3962,7 @@ function clearEncounterState(){
  game.eliteRecruits=new Map();game.elitePromotionCount=0;game.dashSweep=null;
  game.phaseCleanupPending=false;game.graveEchoes=[];game.totems=[];game.counterEffects=[];game.counterRequest=null;game.reflectCooldown=0;game.disruptReadyAt=0;game.bossBursts=[];
  if(game.player){game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
- for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;}
+ for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;e.resolveDisabledUntil=0;}
 }
 
 function clearOwnerMechanics(owner){
@@ -6617,7 +6617,7 @@ function themedRallyMultiplier(enemy){return (game.themedEvents||[]).some(e=>e.t
 function installThemedEncounters(){
  installEliteTaskGuide();installTravellingArt();
  SVG_FILES['codex-siphon_tethers.svg']=encounterBoonIcon('siphon');CODEX_ITEMS.push({id:'siphon_tethers',cat:'Enemies',name:'Siphon Tethers',desc:'A red chain drains small rapid health ticks. Hungry Siphon breaks when you dash away from its caster; Knotted Siphon breaks when you dash through its yellow cut point. Walking alone does not sever either channel.'});
- SVG_FILES['codex-warband_resolve.svg']=encounterBoonIcon('resolve');CODEX_ITEMS.push({id:'warband_resolve',cat:'Enemies',name:'Warband Resolve',desc:'Each other elite, rare, boss or guardian Echo grants 10% damage reduction, up to 50%. Stunned enemies lose this protection and stop granting it to allies until they recover.'});
+ SVG_FILES['codex-warband_resolve.svg']=encounterBoonIcon('resolve');CODEX_ITEMS.push({id:'warband_resolve',cat:'Enemies',name:'Warband Resolve',desc:'Each other elite, rare, boss or guardian Echo grants 10% damage reduction, up to 50%. Stunned enemies lose this protection and stop granting it to allies.'});
  SVG_FILES['codex-uncommon_creatures.svg']=THEMED_EFFECT_ART['icon-uncommon'];
  CODEX_ITEMS.push({id:'uncommon_creatures',cat:'Enemies',name:'Uncommon creatures',desc:'Twice ordinary health, one ranged attack and a small active cap that grows by Zone. Ordinary loot.'});
  for(const [id,d]of Object.entries(THEMED_MECHANICS)){CODEX_ITEMS.push({id:'mechanic_'+id,cat:'Enemies',name:d.name,desc:d.guide});SVG_FILES['codex-mechanic_'+id+'.svg']=THEMED_EFFECT_ART['icon-'+id];}
@@ -6751,9 +6751,11 @@ function paintThemedGround(){for(const event of game.themedEvents||[])if(!event.
 
 function resolveEnemy(enemy){return !!enemy&&enemy.hp>0&&!enemy.totem&&!enemy.uncommon&&!!(enemy.boss||enemy.elite||enemy.bossElite||enemy.champion);}
 
+function enemyResolveBlocked(enemy){return enemy.stagger>0||(enemy.resolveDisabledUntil||0)>game.frame;}
+
 function enemyResolveReduction(enemy){
- if(!resolveEnemy(enemy)||enemy.stagger>0||!game.enemies.includes(enemy))return 0;
- const allies=game.enemies.filter(other=>other!==enemy&&resolveEnemy(other)&&!(other.stagger>0)).length;
+ if(!resolveEnemy(enemy)||enemyResolveBlocked(enemy)||!game.enemies.includes(enemy))return 0;
+ const allies=game.enemies.filter(other=>other!==enemy&&resolveEnemy(other)&&!enemyResolveBlocked(other)).length;
  return Math.min(ENEMY_RESOLVE.maximum,allies*ENEMY_RESOLVE.perAlly);
 }
 
@@ -6762,11 +6764,11 @@ function enemyChargeHalfWidth(enemy){return (enemy.rad+8)*ENCOUNTER_AREA.common;
 function enemyChargeLength(cast){return Math.min(340,Math.max(100,Math.hypot(cast.target.x-cast.origin.x,cast.target.y-cast.origin.y)+65));}
 
 function paintEnemyResolve(enemy){
- if(!resolveEnemy(enemy))return;const reduction=enemyResolveReduction(enemy),stunned=enemy.stagger>0;
- if(!reduction&&!(stunned&&game.enemies.some(other=>other!==enemy&&resolveEnemy(other))))return;
- const theme=combatTheme(stunned?'reflect':'shield'),x=enemy.x+(enemy.rad||20)+15,y=enemy.y-45;
- ctx.save();ctx.globalAlpha=stunned?.65:1;paintAbilityShield(x,y,10,theme);
- if(stunned){line(x-6,y-8,x+1,y-1,2,theme.hot);line(x+1,y-1,x-2,y+5,2,theme.hot);}
+ if(!resolveEnemy(enemy))return;const reduction=enemyResolveReduction(enemy),blocked=enemyResolveBlocked(enemy);
+ if(!reduction&&!(blocked&&game.enemies.some(other=>other!==enemy&&resolveEnemy(other))))return;
+ const theme=combatTheme(blocked?'reflect':'shield'),x=enemy.x+(enemy.rad||20)+15,y=enemy.y-45;
+ ctx.save();ctx.globalAlpha=blocked?.65:1;paintAbilityShield(x,y,10,theme);
+ if(blocked){line(x-6,y-8,x+1,y-1,2,theme.hot);line(x+1,y-1,x-2,y+5,2,theme.hot);}
  else{themedArc(enemy.x,enemy.y+enemy.rad*.65,enemy.rad+9,.25+reduction,theme.color+'a0',2);}
  textAt(Math.round(reduction*100)+'%',x,y+19,'700 10px system-ui',theme.hot);ctx.restore();
 }
@@ -6882,6 +6884,7 @@ function tickDashStuns(from,dashing){
   if(!resolveEnemy(enemy)||enemy.stunnedByDash===serial)continue;
   const body=enemyBody(enemy);if(segmentsDistance(from.x,from.y-13,p.x,p.y,body.x,body.top,body.x,body.bottom)>body.r+9)continue;
   enemy.stunnedByDash=serial;enemy.stagger=Math.max(enemy.stagger||0,DASH_COUNTERS.stun);
+  enemy.resolveDisabledUntil=Math.max(enemy.resolveDisabledUntil||0,game.frame+ENEMY_RESOLVE.dashLockout);
   if(enemy.eliteTask)interruptEliteTask(enemy,'dash');
   if(enemy.charge){enemy.charge=null;refundCounterDash();}
   if(enemy.cast?.siphon)finishSiphonTether(enemy,enemy.cast,true);

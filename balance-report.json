@@ -1,5 +1,5 @@
 {
-  "version": "11.11.0",
+  "version": "11.11.1",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1467,6 +1467,7 @@
     "resolve": {
       "perAlly": 0.1,
       "maximum": 0.5,
+      "dashLockout": 5,
       "allZones": true,
       "stunnedReceive": false,
       "stunnedContribute": false
