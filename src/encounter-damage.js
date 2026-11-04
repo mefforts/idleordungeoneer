@@ -1,0 +1,32 @@
+/* Fractions are base maximum-health damage; protection still mitigates them. */
+const ENCOUNTER_DAMAGE={projectile:.10,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35};
+function hostileDamage(owner,fraction){const boost=(owner?.furyLinked?1.12:1)*themedRallyMultiplier(owner);return game.player.maxHp*Math.min(.5,fraction*boost)/incomingDamageScale();}
+function bossAttackDamage(owner,type=owner.cast?.type){
+ if(owner.uncommon)return hostileDamage(owner,type==='ground'?.08:type==='charge'||owner.charge?.10:.06);
+ if(themedAbility(type))return hostileDamage(owner,ENCOUNTER_DAMAGE.heavy);
+ const scale=type==='ricochet'?.85:['ringchain','bloom','return','spiral','orbit','gravePulse'].includes(type)?.85:['sunder','gauntlet','donut','nova','crossfire','pincer','minefield'].includes(type)?1.15:1;
+ const fraction=['volley','ricochet','ringchain','bloom','return','spiral','orbit'].includes(type)?ENCOUNTER_DAMAGE.projectile:['sunder','donut'].includes(type)?ENCOUNTER_DAMAGE.major:['cleave','charge','beam','ground','gravePulse','eruptionTrail','gauntlet','nova','crossfire','pincer','minefield'].includes(type)?ENCOUNTER_DAMAGE.heavy:ENCOUNTER_DAMAGE.standard;
+ return hostileDamage(owner,fraction)/scale;
+}
+function tickCombatDot(source,key,contains,fraction=ENCOUNTER_DAMAGE.dot){
+ const timers=source.dotTimers||(source.dotTimers={});
+ if(!contains(game.player)){delete timers[key];return;}
+ const timer=timers[key];
+ if(!timer||game.frame-timer.seen>.12){timers[key]={next:game.frame+ENCOUNTER_DAMAGE.dotInterval,seen:game.frame};return;}
+ timer.seen=game.frame;
+ if(game.frame+1e-9<timer.next)return;timer.next=game.frame+ENCOUNTER_DAMAGE.dotInterval;
+ const p=game.player;if(game.frame-(p.dotWindowAt??-1)>ENCOUNTER_DAMAGE.dotInterval){p.dotWindowAt=game.frame;p.dotWindowSpent=0;}const paid=Math.min(fraction,Math.max(0,.05-(p.dotWindowSpent||0)));if(paid<=0)return;const before=p.hp;hurt(p.maxHp*paid/incomingDamageScale(),{dot:true});if(p.hp<before)p.dotWindowSpent=(p.dotWindowSpent||0)+paid;
+}
+function interludePackSize(index=zoneNumber(),stage=zoneStage()){return 3+zoneVisualBand(index,stage);}
+function interludeEscortCount(index=zoneNumber()){let count=0;for(let stage=1;stage<=zoneFloorCount(index);stage++)count+=2*(interludePackSize(index,stage)-1);return count;}
+function spawnInterludePack(leader){
+ const total=interludePackSize(),p=game.player;
+ for(let i=1;i<total;i++){
+  const enemy=spawnEnemy(false),angle=Math.atan2(leader.y-p.y,leader.x-p.x)+(i%2?1:-1)*Math.ceil(i/2)*.6,radius=220+(i%2)*35;
+  Object.assign(enemy,{elite:true,bossElite:true,interludeEscort:true,bossIndex:i%3,rad:23,x:p.x+Math.cos(angle)*radius,y:p.y+Math.sin(angle)*radius,castCooldown:1.3+i*.7});
+  enemy.hp=enemy.maxHp=zoneEnemyHp(false,0,1,enemy)*2.8*encounterHealthMultiplier(enemy);enemy.speed*=.82;enemy.name=biome().boss[enemy.bossIndex]+' Echo';assignEnemyAppearance(enemy);
+ }
+ game.phaseTarget=total;game.phaseSpawned=total;
+}
+
+function enemyShieldMultiplier(enemy,from=game.player){return linkedShieldMultiplier(enemy)*themedShieldMultiplier(enemy,from);}

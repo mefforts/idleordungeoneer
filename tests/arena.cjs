@@ -118,7 +118,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
       const sim=await p.evaluate(i=>__arenaTest.simulate(i),i);simulated.push(sim);
       if(i<2)assert.ok(Math.abs(sim.seconds-sim.targetSeconds)<sim.targetSeconds*.12,'Actual zone '+(i+1)+' combat remains near forecast: '+sim.seconds);
       else assert.ok(sim.seconds<sim.targetSeconds*1.12&&sim.seconds>models[i].baseForecastSeconds*2,'Zone '+(i+1)+' keeps a material health jump under percent-health counters: '+sim.seconds+'s; raw-DPS forecast '+sim.targetSeconds+'s');
-      assert.equal(sim.kills,models[i].swarmCount+3*models[i].floors);
+      assert.equal(sim.kills,models[i].swarmCount+3*models[i].floors+models[i].escortCount);
     }
     fs.writeFileSync(path.join(resultsDir,'zone-pacing.json'),JSON.stringify({models,simulated},null,2));
     results.push('Full live combat simulation, including every spawn, hit, guard, spire and reflection with active counterplay and no shop or timed perks, verifies the first four zones and the long-term plateau');

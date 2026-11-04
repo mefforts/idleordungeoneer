@@ -9,7 +9,7 @@ function instrumentation(){
     normalizeProgression();normalizeZone();ensureJobs();seedCodex();resetRun();drawerKind='';$('app').classList.remove('drawer-open');hideOverlay();game.scene='combat';game.status='running';game.menuPaused=game.manualPaused=false;game.keys={};game.holdSkill=null;game.lastActiveAt={};game.devSpeed=1;game.lastJobsAt=Date.now();game.activeClockMs=0;game.attackTimer=1e6;game.transition=0;game.phase=1;game.enemies=[];game.boss=null;setScene('combat',false);
   }
   window.__dungeonTest={
-    fresh,ready(){game.status='ready';},
+    fresh,legacyPlan(plan){return plan.filter(id=>!themedAbility(id));},ready(){game.status='ready';},
     trial(speed,skill){
       fresh();game.devSpeed=1;masteryFor().delveSpeed=(speed-1)*4;masteryFor().earned=masterySpent(masteryFor());data.timeRates.delve=speed;
       if(skill){game.scene=skill;game.menuPaused=true;game.holdSkill=skill;}
@@ -71,7 +71,7 @@ function instrumentation(){
     const bossResults=[];
     for(let theme=0;theme<4;theme++){
       const floorPlan=await p.evaluate(theme=>__dungeonTest.boss(theme,1,2),theme);assert.ok(floorPlan.includes('ringchain')&&floorPlan.includes('sunder')&&floorPlan.includes('bastion'));
-      const plan=await p.evaluate(theme=>__dungeonTest.boss(theme,3,2),theme);assert.deepEqual(plan,floorPlan);
+      const plan=await p.evaluate(theme=>__dungeonTest.boss(theme,3,2),theme);const originals=await p.evaluate(plans=>plans.map(plan=>__dungeonTest.legacyPlan(plan)),[plan,floorPlan]);assert.deepEqual(originals[0],originals[1],'Floor variants preserve every original attack');
       const result=await p.evaluate(()=>__dungeonTest.cycle(45));assert.ok(result.used.includes('ringchain')&&result.used.includes('sunder')&&result.used.length>=4);assert.ok(result.shots.every(s=>s.biome===theme&&s.damage>0));const shots=await p.evaluate(theme=>__dungeonTest.projectiles(theme),theme);assert.ok(shots.length>=8);assert.ok(shots.every(s=>s.biome===theme&&s.damage>0));bossResults.push({theme,used:result.used,projectiles:shots.length});
       await p.screenshot({path:path.join(resultsDir,'dungeon-boss-'+theme+'.png')});
     }

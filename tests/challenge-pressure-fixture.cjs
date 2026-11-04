@@ -7,11 +7,11 @@ function challengePressureFixture(){
   Object.assign(gear,chosen);projectCombatStyle();data.seenElites[biomeIndex()]=[true,true,true];
   const original={random:Math.random,hurt,spawnGraveEcho};let value=seed,damage=0,hits=0,echoes=0,seconds=0;const casts=new Set();
   Math.random=()=>((value=(Math.imul(value,1664525)+1013904223)>>>0)/4294967296);
-  hurt=amount=>{const before=game.player.hp;original.hurt(amount);if(game.player.hp<before){hits++;damage+=before-game.player.hp;}};
+  hurt=(amount,...args)=>{const before=game.player.hp;original.hurt(amount,...args);if(game.player.hp<before){hits++;damage+=before-game.player.hp;}};
   spawnGraveEcho=e=>{const before=(game.graveEchoes||[]).length;original.spawnGraveEcho(e);echoes+=Math.max(0,(game.graveEchoes||[]).length-before);};
   try{
    startFloor();game.menuPaused=game.manualPaused=false;game.devSpeed=game.skillSpeed=1;const hp=game.player.hp,dps=weaponDps('bow'),dt=.02;
-   for(;seconds<150&&game.status==='running'&&game.phase<2;seconds+=dt){
+   for(;seconds<300&&game.status==='running'&&game.phase<2;seconds+=dt){
     if(eliteRewardOpen()){const drop=data.eliteSpoils.find(d=>d.id===eliteRewardId),order=['fervor','stoneguard','quagmire','windstep','momentum'];chooseEliteBoon(order.find(id=>drop.choices.includes(id))||drop.choices[0]);}
     const p=game.player;for(const e of game.enemies)if(e.cast)casts.add(e.cast.type);let target=null;
     if(careful){

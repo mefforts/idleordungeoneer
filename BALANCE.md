@@ -1,5 +1,7 @@
 # Dungeon progression and balance
 
+Build 11.8 adds 39 selected themed mechanics, 4/5/6-enemy guardian interludes and capped uncommon ranged creatures. [Selected mechanics and counterplay](SELECTED_MECHANICS.md); [50 new theme-neutral proposals only](THEME_NEUTRAL_IDEAS.md). Per-enemy health and ordinary spawn cadence retain their previous calibration.
+
 Build 11.7 gives Iron 3 weapon refinements, Steel 12 and Mithril 10, with exponential late Steel material costs. The all-three-style 80% material reference trains each discipline to about level 20; idle runs at 25% of base active speed. Equipment ceilings are 80 / 240 / 480 DPS, with a stronger Mithril starting point. See [SKILL_ECONOMY.md](SKILL_ECONOMY.md) for the reproducible material and XP budget. Enemy health and spawn cadence retain their previous calibration.
 
 Build 10.0 replaces individual Zone Shops with a permanent Dungeon Shop. All current Zones belong to The First Descent. The data model can assign future Zones to a new Dungeon with a separate wallet and purchases. Equipment, global Dungeoneering and Mastery retain their own roles.
@@ -74,7 +76,7 @@ Levels 1–10 retain their original thresholds. Level 20 now requires 32,166 tot
 
 A one-time save conversion retains each existing skill level and fractional progress, rather than dropping earned levels when the curve changes. Levels, equipment, materials and earlier unlocks survive actual reloads. New gains use the slower curve.
 
-Completing Zone 3 unlocks Mithril resources and equipment at matching discipline level 20. Owned Steel weapons can promote without max refinement; each tier has its own weapon ranks (3 Iron / 12 Steel / 10 Mithril). Speed, reach and reinforcement retain their cumulative caps of 5 / 10 / 15; enchantment retains 2 / 4 / 6. Armor is crafted separately. Mithril metal, blue ranged leathers and green Runewoven robes use the same silhouettes and joints, with small belt and shoulder changes. Ten activities introduce mithril ore/bars, yew, verdant cloth, enchanted salvage/fragments and sapphires. No new authored Zone layouts or attacks are added. Steel reaches 240 equipment DPS; Mithril starts around 300 with Steel speed training and reaches 480. Soft budgets of at least 100 / 300 / 600 follow equipped tier. Enemy HP calibration remains fixed at its previous values.
+Completing Zone 3 unlocks Mithril resources and equipment at matching discipline level 20. Owned Steel weapons can promote without max refinement; each tier has its own weapon ranks (3 Iron / 12 Steel / 10 Mithril). Speed, reach and reinforcement retain their cumulative caps of 5 / 10 / 15; enchantment retains 2 / 4 / 6. Armor is crafted separately. Mithril metal, blue ranged leathers and green Runewoven robes use the same silhouettes and joints, with small belt and shoulder changes. Ten activities introduce mithril ore/bars, yew, verdant cloth, enchanted salvage/fragments and sapphires. The equipment tier does not change authored floor layouts. Steel reaches 240 equipment DPS; Mithril starts around 300 with Steel speed training and reaches 480. Soft budgets of at least 100 / 300 / 600 follow equipped tier. Enemy HP calibration remains fixed at its previous values.
 
 The work-scene controls now separate Skills navigation from direct Gather/Refine or input-source swaps. A swap clears held input, consumes no materials and leaves assigned idle tasks untouched.
 
@@ -90,7 +92,7 @@ The Dungeon Shop has a Long blessings sub-store. Most effects cost 60 interchang
 
 ## Encounter health experiment
 
-Build 11.6 retains +75% regular elite health and +50% rare, guardian Echo (boss elite) and boss health. Build 11.6.1 added 2× ordinary minion health and 6× health for special enemies from Zone 3 onward, measured against v11.6.0. Build 11.6.2 doubles ordinary minions again: 4× v11.6.0, or 2× v11.6.1. Special enemies retain their existing 6×; they do not inherit the ordinary multiplier. Zones 1–2 keep their current health. Rare and boss-elite flags retain their category precedence. Summoning-spire health and one/two-impact rules remain unchanged. All multipliers apply after the existing health-scale calibration: player damage, incoming damage, rewards, spawn counts and cadence are preserved. Forecast times below include the added durability.
+Build 11.6 retains +75% regular elite health and +50% rare, guardian Echo (boss elite) and boss health. Build 11.6.1 added 2× ordinary minion health and 6× health for special enemies from Zone 3 onward, measured against v11.6.0. Build 11.6.2 doubles ordinary minions again: 4× v11.6.0, or 2× v11.6.1. Special enemies retain their existing 6×; they do not inherit the ordinary multiplier. Zones 1–2 keep their current health. Rare and boss-elite flags retain their category precedence. Summoning-spire health and one/two-impact rules remain unchanged. All multipliers apply after the existing health-scale calibration: the equipment curve and per-enemy health remain unchanged. In Build 11.8 the two interludes add escorts, eligible uncommons have 2× ordinary HP, and elite/rare/boss damage uses maximum-health fractions. Forecast times below include escort durability and a chance-weighted uncommon estimate; concurrent caps can reduce the latter.
 
 ## Equipment ceilings
 
@@ -150,10 +152,10 @@ The shop displays the equipped style and explains that these effects change when
 
 | Zone | Expected Sigils / first clear |
 | --- | ---: |
-| 1 | 35.32 |
-| 2 | 71.09 |
-| 3 | 129.31 |
-| 4 | 131.28 |
+| 1 | 48.62 |
+| 2 | 98.39 |
+| 3 | 184.61 |
+| 4 | 186.58 |
 
 Ordinary enemies have a 0.3% chance of one Sigil, rising to 0.42% at Fortune 4. All elites, including rares, have a 35% chance of one. Guardians grant 1 / 1 / 2, with another 3 from the final overlord of each Zone. Summoned enemies and totems grant no rewards or wave progress. The estimate includes first-clear known-elite substitutions and expected rare spawns, without requiring an ability purchase.
 
@@ -184,18 +186,18 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 
 | Zone | Forecast at 1× | Reference DPS |
 | --- | --- | ---: |
-| 1 | ~12 min | 80.0 |
-| 2 | ~18 min | 240.0 |
-| 3 | ~174 min | 240.0 |
-| 4 | ~189 min | 240.0 |
-| 5 | ~101 min | 480.0 |
+| 1 | ~14 min | 80.0 |
+| 2 | ~22 min | 240.0 |
+| 3 | ~239 min | 240.0 |
+| 4 | ~254 min | 240.0 |
+| 5 | ~135 min | 480.0 |
 
-- Live Zone 1: **10.8 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **17.9 min**, 570 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **151.9 min**, 780 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **161.3 min**, 960 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **105.3 min**, 960 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **104.3 min**, 960 rewarded defeats, 480.0 reference DPS.
+- Live Zone 1: **12.6 min**, 413 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **20.3 min**, 648 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **179.8 min**, 938 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **192.0 min**, 1118 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **133.0 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **129.7 min**, 1118 rewarded defeats, 480.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
@@ -209,7 +211,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with one continuously expanding Grave Pulse ring. Dash through it: it has no fixed lifetime or travel limit and always moves faster than running, including movement buffs. Pulse casts cannot overlap, and the next warning allows dash recharge before impact. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.9s on Zone 2’s finale and 4.8–5.5s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 4 of 6 trials: 54.1–115.8 HP remained in the finale trials and 0–143.2 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 8.7–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 92.6–189 HP remained in the finale trials and 122.5–189 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
@@ -231,7 +233,17 @@ Build 11.2 adds illustrated, animated roots, molten eruptions, bone hands, cryst
 
 Instruction labels fade in, fade out and recur on a real-time clock; changing instructions restart the reminder. Hazard geometry and health bars remain visible. Reduced motion uses steady visibility windows. Colors are reinforced by outlines, shapes and labels. Violet attacks deal 35% ordinary, 12% elite or 2.5% boss maximum HP before shields, once per cast; the caster is immune. These hits cannot trigger player lifesteal, enchantment or weapon procs.
 
-The encounter library now has 29 patterns: the ten original attacks plus nineteen expanded patterns. Final guardians use a broad rotation and forced phase attacks.
+The encounter library now has 68 patterns: the prior 29 plus 39 selected themed mechanics. Ten new mechanics belong to Overgrowth, nine each to Embervault, Hollow Crypt and Astral Rift, and two span all themes. Floor bands and enemy families gate/rotate introductions while retaining each original attack. [Complete selected list](SELECTED_MECHANICS.md).
+
+Build 11.8 uses maximum-health base damage: projectiles start at 10%, heavy hits around 25%, the clearest major failures up to 50%, contact 15%, and missed reflects 15%. Regional flat-damage multipliers are normalized once for these attacks; armor, guard perks, shields and protection still reduce damage. Fury/Rally boosts remain bounded at 50%. Ordinary minion contact retains its existing regional damage. Uncommons instead use 6% shots, 8% single-hit ground marks or 10% charges.
+
+Persistent fire uses 2.5% base damage per 0.35 combat seconds; selected vents/trails range from 1.5% to 3.5%. All simultaneous DoTs share a 5%-per-interval base cap. Hit invulnerability does not erase fire pressure, but dash protection does. Leaving a field resets its first-tick delay. Small combined tick receipts replace repeated heavy screen shake.
+
+The two between-wave interludes now contain a lead guardian and three/four/five Echo escorts, for 4/5/6 total early/middle/deep in each Zone. They must all fall before progression; the final overlord remains separate. Echo health/rewards retain their category rules. Ordinary wave totals and cadence are unchanged.
+
+Uncommons replace 7% of eligible ordinary spawns after the first four, excluding elites, rares, bosses, summons and interludes. Active caps are one in Zone 1, two in Zone 2, three in Zone 3 and four thereafter. They have twice ordinary HP, ordinary loot and one repeatable ranged ability, with staggered first casts and standoff movement. Forecasts approximate the chance-weighted extra durability before active-cap suppression.
+
+Selected mechanics use 156 authored SVG props/medallions, shared warning/collision geometry, timer arcs and teal/gold symbols, with the detailed rule in the Codex. Only one new major pattern runs at once; large existing attacks and Grave Pulse cannot overlap it. Mandatory dash warnings allow recharge. Decorative motion stops under reduced motion while essential hazard travel stays visible.
 
 - **Grave Pulse**: Expanding bone ring · dash through the rim.
 - **Rebounding Barrage**: Three rings · gaps rotate · violet shots rebound.
@@ -253,7 +265,7 @@ The encounter library now has 29 patterns: the ten original attacks plus ninetee
 - **Orbital Blades**: Red blades orbit then fly outward.
 - **Ruinous Rush**: Violet charge leaves a burning trail.
 
-Rebounding Barrage fires three spaced rings that bounce off the marked arena bounds. Growing Stars expand from radius 6 to at most 23. Homeward Blades turn back toward their caster after 1.25s. Build 11.4 rotates three reflect variants: illustrated dangerous jaws with a safe teal opening, a distant timed rune, and an underfoot rune requiring exit beyond 48 units before returning. Touching the 34-unit center triggers immediately, including a swept dash entry. Casters keep pursuing while the ward is active. Timers allow at least 3 seconds (3.4 for underfoot runes), increased for distant travel. Closed jaws hurt for 4% maximum HP; ignoring a timer hurts for 8% at any distance, both before defenses and invulnerability. These two fractions do not gain the Zone 2 damage multiplier. A successful reflect returns 12% caster maximum HP and staggers for 1.6s; a missed Hungry Mirror also restores 5% boss HP. Royal Guards reduce boss damage taken by 70% until both are defeated. Major arena attacks and reflect warnings do not overlap other casts; projectile rings remain visible and their center can be protected by a reflect ward.
+Rebounding Barrage fires three spaced rings that bounce off the marked arena bounds. Growing Stars expand from radius 6 to at most 23. Homeward Blades turn back toward their caster after 1.25s. Build 11.4 rotates three reflect variants: illustrated dangerous jaws with a safe teal opening, a distant timed rune, and an underfoot rune requiring exit beyond 48 units before returning. Touching the 34-unit center triggers immediately, including a swept dash entry. Casters keep pursuing while the ward is active. Timers allow at least 3 seconds (3.4 for underfoot runes), increased for distant travel. Closed jaws hurt for 4% maximum HP; ignoring a timer hurts for 15% at any distance, both before defenses and invulnerability. These two fractions do not gain the Zone 2 damage multiplier. A successful reflect returns 12% caster maximum HP and staggers for 1.6s; a missed Hungry Mirror also restores 5% boss HP. Royal Guards reduce boss damage taken by 70% until both are defeated. Major arena attacks and reflect warnings do not overlap other casts; projectile rings remain visible and their center can be protected by a reflect ward.
 
 ## Stackable blessings and healing
 
@@ -284,4 +296,4 @@ After Zone 1 Floor 1, the result and a saved, dismissible reminder explain that 
 
 Old Zone wallets and the full historical price of every purchased rank are refunded at 25 seals per Sigil. Fractional credit is retained and a versioned receipt prevents a second refund. Original Zone ledgers are archived in the save. Earlier progression first passes through the existing XP / Mastery migration. Gold, materials, equipment, cached XP and Mastery are preserved. A legacy active blessing becomes one entry in the stacking collection.
 
-Run npm test for the browser suites, including 76 new-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.
+Run npm test for the browser suites, including all 39 themed mechanics and their counterplay, proportional damage, DoT limits, interlude completion, capped uncommon spawns, 76 older-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.

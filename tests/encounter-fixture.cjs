@@ -64,17 +64,17 @@ function encounterFixture(){
   },
   scheduling(){
    fresh(0,3);const a=owner(2,true),b=owner(2,true),c=owner(2,true);a.x=-80;b.x=80;c.y=-230;
-   const ca=cast(a,'beam'),cb=cast(b,'beam');c.mechanicIndex=0;const third=beginBossCast(c);c.mechanicIndex=2;const counterWait=beginBossCast(c),reserved=game.counterRequest===c;
-   a.cast=b.cast=null;a.mechanicIndex=0;const offenseWait=beginBossCast(a);game.hazards=[{life:1}];const hazardWait=beginBossCast(c);game.hazards=[];
+   const ca=cast(a,'beam'),cb=cast(b,'beam');c.phaseQueue=['beam'];const third=beginBossCast(c);c.phaseQueue=['reflect'];const counterWait=beginBossCast(c),reserved=game.counterRequest===c;
+   a.cast=b.cast=null;a.phaseQueue=['beam'];const offenseWait=beginBossCast(a);game.hazards=[{life:1}];const hazardWait=beginBossCast(c);game.hazards=[];
    const choose=reflectVariantFor;reflectVariantFor=()=> 'rebound';let reflection;try{reflection=beginBossCast(c);}finally{reflectVariantFor=choose;}const point=c.cast?.point,unarmedAbsorbed=reflectAbsorbsShot(point);point.armed=true;const noOverlap=beginBossCast(a),absorbed=reflectAbsorbsShot(point),notAbsorbed=reflectAbsorbsShot({x:point.x+80,y:point.y});
    return {third,counterWait,reserved,offenseWait,hazardWait,reflection,noOverlap,unarmedAbsorbed,absorbed,notAbsorbed,active:game.enemies.filter(e=>e.cast).length};
   },
   nodeBudget(){
-   const t=node('mend'),a=owner(1,true),b=owner(1,true);a.x=-90;b.x=90;a.mechanicIndex=b.mechanicIndex=1;
+   const t=node('mend'),a=owner(1,true),b=owner(1,true);a.x=-90;b.x=90;a.phaseQueue=['mend'];b.phaseQueue=['mend','shield'];
    const first=beginBossCast(a),second=beginBossCast(b),secondType=b.cast?.type;tickBossSpecial(a,1.5);tickBossSpecial(b,1.5);const count=game.totems.length;
    tickEncounterObjects(60);const remaining=game.totems.length,targets=combatTargets().filter(e=>e.totem).length;damageTotem(game.totems[0],1e9);const afterDamage=game.totems.length;onKill(game.totems.find(node=>node.owner.elite).owner);return {first,second,secondType,count,remaining,targets,afterDamage,afterCasterDeath:game.totems.length};
   },
-  dual(){fresh(0,3);const e=owner(2);const a=cast(e,'fury');tickBossSpecial(e,a.total+.01);const b=cast(e,'mend');tickBossSpecial(e,b.total+.01);const types=game.totems.map(t=>t.type);e.phaseQueue=['fury'];const next=beginBossCast(e);return {types,next,attack:e.cast?.type,count:game.totems.length};},
+  dual(){fresh(0,3);const e=owner(2);const a=cast(e,'fury');tickBossSpecial(e,a.total+.01);const b=cast(e,'mend');tickBossSpecial(e,b.total+.01);const types=game.totems.map(t=>t.type);e.phaseQueue=['fury','sunder'];const next=beginBossCast(e);return {types,next,attack:e.cast?.type,count:game.totems.length};},
   assets(){return {count:Object.keys(ENCOUNTER_ART).length,unique:new Set(Object.values(ENCOUNTER_ART).map(a=>a.src)).size,loaded:[...encounterImages.values()].every(image=>image.complete&&image.naturalWidth>200&&image.naturalHeight>300)};},
   cleanup(which){
    const t=node('fury');game.player.rallyTime=5;game.counterRequest=t.owner;

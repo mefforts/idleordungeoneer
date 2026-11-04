@@ -27,7 +27,7 @@ function shieldingTarget(source){
 function clearDeadShieldLinks(){
  for(const source of game.enemies){if(source.shieldLink&&!shieldTargetAlive(source.shieldLink.target))source.shieldLink=null;if(source.cast?.type==='shield'&&!shieldTargetAlive(source.cast.shieldTarget)){source.cast=null;source.castCooldown=1;}}
 }
-function enemyShieldMultiplier(enemy){
+function linkedShieldMultiplier(enemy){
  if(enemy.guardIds?.some(g=>game.enemies.includes(g)&&g.hp>0))return .30;
  if(enemy.shieldLink||enemy.cast?.type==='shield')return 1;
  return game.enemies.some(source=>source.hp>0&&source.shieldLink?.target===enemy&&source.shieldLink.life>0&&!shieldRecipient(source))?.65:1;
@@ -62,9 +62,9 @@ function tickEnemyCharge(enemy,dt){
  const charge=enemy.charge;if(!charge)return false;const distance=Math.min(charge.remaining,460*dt*enemyMovementFactor()),x=enemy.x+Math.cos(charge.angle)*distance,y=enemy.y+Math.sin(charge.angle)*distance;
  if(!encounterClear(x,y+enemy.rad*.65,Math.max(10,enemy.rad*.7))){enemy.charge=null;burst(enemy.x,enemy.y,7,combatTheme('friendly').color);return true;}
  const oldX=enemy.x,oldY=enemy.y;enemy.x=x;enemy.y=y;charge.remaining-=distance;
- if(!charge.hitPlayer&&segmentDistance(game.player.x,game.player.y,oldX,oldY,x,y)<enemy.rad+17){charge.hitPlayer=true;hurt(bossAttackDamage(enemy)*1.1);enemy.contact=.8;}
+ if(!charge.hitPlayer&&segmentDistance(game.player.x,game.player.y,oldX,oldY,x,y)<enemy.rad+17){charge.hitPlayer=true;hurt(bossAttackDamage(enemy,'charge'));enemy.contact=.8;}
  damageMonstersInAttack(enemy,charge,other=>segmentDistance(other.x,other.y,oldX,oldY,x,y)<enemy.rad+other.rad+9);
- if(charge.trail){charge.trailClock-=dt;if(charge.trailClock<=0){charge.trailClock=.18;game.hazards.push({type:'ground',language:'friendly',x:oldX,y:oldY,r:28,life:1.3,total:1.3,age:0,owner:enemy,enemyHits:charge.enemyHits,damage:bossAttackDamage(enemy)*.7,biome:enemy.biome});}}
+ if(charge.trail){charge.trailClock-=dt;if(charge.trailClock<=0){charge.trailClock=.18;game.hazards.push({type:'ground',language:'friendly',lingering:true,x:oldX,y:oldY,r:28,life:1.3,total:1.3,age:0,owner:enemy,enemyHits:charge.enemyHits,damage:bossAttackDamage(enemy,'charge')*.7,biome:enemy.biome});}}
  if(charge.remaining<=0)enemy.charge=null;return true;
 }
 function advanceRicochet(shot,dt){

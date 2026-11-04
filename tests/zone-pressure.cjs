@@ -8,7 +8,7 @@ function pressureFixture(){
   for(let w=0;w<=10;w++)for(let a=0;a<=5;a++){s.weapon=w;s.speed=a;projectCombatStyle();const error=Math.abs(weaponDps('bow')-55);if(error<closest){closest=error;chosen={weapon:w,speed:a};}}
   Object.assign(s,chosen);projectCombatStyle();game.player.hp=game.player.maxHp=maxHp();game.player.invuln=0;game.player.x=0;game.player.y=140;game.attackTimer=0;game.phase=1;
   const oldRandom=Math.random,oldScale=incomingDamageScale;let value=seed;Math.random=()=>((value=(Math.imul(value,1664525)+1013904223)>>>0)/4294967296);incomingDamageScale=()=>scale;
-  let hits=0,lost=0,seconds=0,reflections=0;const oldHurt=hurt,oldResolve=resolveReflectWard;hurt=amount=>{const before=game.player.hp;oldHurt(amount);if(game.player.hp<before){hits++;lost+=before-game.player.hp;}};resolveReflectWard=(e,c)=>{oldResolve(e,c);if(c.reflected)reflections++;};
+  let hits=0,lost=0,seconds=0,reflections=0;const oldHurt=hurt,oldResolve=resolveReflectWard;hurt=(amount,...args)=>{const before=game.player.hp;oldHurt(amount,...args);if(game.player.hp<before){hits++;lost+=before-game.player.hp;}};resolveReflectWard=(e,c)=>{oldResolve(e,c);if(c.reflected)reflections++;};
   try{
    const e=spawnEnemy(true,0);e.hp=e.maxHp=zoneEnemyHp(true,0);e.x=0;e.y=-100;game.boss=e;e.castCooldown=.2;const hp=game.player.hp,dps=weaponDps('bow');
    for(;seconds<90&&game.status==='running'&&game.enemies.includes(e);seconds+=.02){

@@ -1,5 +1,5 @@
 /* Moving casters leave readable counter windows with an immediate trigger. */
-const REFLECT_WARDS={variants:['jaw','rebound','rune'],seconds:3,reboundSeconds:3.4,inner:34,gapHalf:.70,failure:.08,wallDamage:.04};
+const REFLECT_WARDS={variants:['jaw','rebound','rune'],seconds:3,reboundSeconds:3.4,inner:34,gapHalf:.70,failure:.15,wallDamage:.04};
 function isReflectCast(cast){return !!cast&&['reflect','reversal'].includes(cast.type);}
 function reflectVariantFor(owner){return REFLECT_WARDS.variants[((owner.reflectSerial||0)+(owner.bossIndex||0)+data.floor-1)%REFLECT_WARDS.variants.length];}
 function configureReflectWard(owner,cast){

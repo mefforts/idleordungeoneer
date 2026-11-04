@@ -110,7 +110,7 @@ function damageMonstersInAttack(owner,shape,contains){
  if(!owner||!game.enemies.includes(owner)||game.status!=='running')return;const hits=shape.enemyHits||(shape.enemyHits=new Set());
  for(const enemy of [...game.enemies]){
   if(!game.enemies.includes(owner)||game.status!=='running')break;if(enemy===owner||hits.has(enemy)||!contains(enemy))continue;
-  hits.add(enemy);const damage=enemy.maxHp*(enemy.boss?.025:enemy.elite?.12:.35)*enemyShieldMultiplier(enemy);enemy.hp-=damage;enemy.lastHitAt=game.frame;enemy.lastDamageStyle=combatStyle();
+  hits.add(enemy);const damage=enemy.maxHp*(enemy.boss?.025:enemy.elite?.12:.35)*enemyShieldMultiplier(enemy,owner);enemy.hp-=damage;enemy.lastHitAt=game.frame;enemy.lastDamageStyle=combatStyle();
   if(game.floaters.length<90)floater(enemy.x,enemy.y-25,Number(damage.toFixed(1)),combatTheme('friendly').hot);burst(enemy.x,enemy.y,3,combatTheme('friendly').color);if(enemy.hp<=0)onKill(enemy);
  }
 }

@@ -1,5 +1,5 @@
 {
-  "version": "11.7.1",
+  "version": "11.8.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -14,7 +14,7 @@
       "guardians": 126,
       "clears": 65,
       "total": 191,
-      "perMinute": 15.916666667
+      "perMinute": 13.642857143
     },
     {
       "zone": 2,
@@ -22,7 +22,7 @@
       "guardians": 189,
       "clears": 104,
       "total": 293,
-      "perMinute": 16.277777778
+      "perMinute": 13.318181818
     }
   ],
   "currencies": [
@@ -41,9 +41,10 @@
       ],
       "zoneFinalBonus": 3,
       "masteredMonsterChance": 0.0042,
-      "firstClearGuardianEchoes": 26,
+      "firstClearGuardianEchoes": 64,
+      "interludeEscorts": 38,
       "expectedRareElites": 6.401275555258057,
-      "expectedFirstClearSigils": 35.323242617674545
+      "expectedFirstClearSigils": 48.62324261767455
     },
     {
       "zone": 2,
@@ -60,9 +61,10 @@
       ],
       "zoneFinalBonus": 3,
       "masteredMonsterChance": 0.0042,
-      "firstClearGuardianEchoes": 65,
+      "firstClearGuardianEchoes": 143,
+      "interludeEscorts": 78,
       "expectedRareElites": 11.296713891214399,
-      "expectedFirstClearSigils": 71.0949597202514
+      "expectedFirstClearSigils": 98.39495972025139
     },
     {
       "zone": 3,
@@ -79,9 +81,10 @@
       ],
       "zoneFinalBonus": 3,
       "masteredMonsterChance": 0.0042,
-      "firstClearGuardianEchoes": 116,
+      "firstClearGuardianEchoes": 274,
+      "interludeEscorts": 158,
       "expectedRareElites": 11.23255915423864,
-      "expectedFirstClearSigils": 129.3096980265208
+      "expectedFirstClearSigils": 184.6096980265208
     },
     {
       "zone": 4,
@@ -98,9 +101,10 @@
       ],
       "zoneFinalBonus": 3,
       "masteredMonsterChance": 0.0042,
-      "firstClearGuardianEchoes": 116,
+      "firstClearGuardianEchoes": 274,
+      "interludeEscorts": 158,
       "expectedRareElites": 15.341006092991375,
-      "expectedFirstClearSigils": 131.275329114268
+      "expectedFirstClearSigils": 186.57532911426802
     }
   ],
   "dungeonPerks": [
@@ -749,8 +753,8 @@
   "zones": [
     {
       "index": 0,
-      "minutes": 12,
-      "seconds": 684,
+      "minutes": 14,
+      "seconds": 822,
       "floors": 5,
       "weaponRank": 3,
       "speedRank": 5,
@@ -770,16 +774,17 @@
         0
       ],
       "swarmCount": 360,
+      "escortCount": 38,
       "spawnSeconds": 0.9166666666666666,
       "hpScale": 1.251910859571855,
       "previousTargetSeconds": 600,
-      "baseForecastSeconds": 600.3442369289235,
-      "forecastSeconds": 683.386276203157
+      "baseForecastSeconds": 701.4010125374733,
+      "forecastSeconds": 821.9062997680246
     },
     {
       "index": 1,
-      "minutes": 18,
-      "seconds": 1067,
+      "minutes": 22,
+      "seconds": 1291,
       "floors": 10,
       "weaponRank": 12,
       "speedRank": 10,
@@ -799,16 +804,17 @@
         0
       ],
       "swarmCount": 540,
+      "escortCount": 78,
       "spawnSeconds": 1.2222222222222223,
       "hpScale": 3.1081361988823755,
       "previousTargetSeconds": 1200,
-      "baseForecastSeconds": 955.6691385305006,
-      "forecastSeconds": 1066.0433705691514
+      "baseForecastSeconds": 1114.1833329242427,
+      "forecastSeconds": 1290.416414325705
     },
     {
       "index": 2,
-      "minutes": 174,
-      "seconds": 10435,
+      "minutes": 239,
+      "seconds": 14296,
       "floors": 20,
       "weaponRank": 12,
       "speedRank": 10,
@@ -828,16 +834,17 @@
         0
       ],
       "swarmCount": 720,
+      "escortCount": 158,
       "spawnSeconds": 1.3750000000000002,
       "hpScale": 5.049167255084418,
       "previousTargetSeconds": 1800,
-      "baseForecastSeconds": 1932.5275083213132,
-      "forecastSeconds": 10434.958034881804
+      "baseForecastSeconds": 2429.6052831081124,
+      "forecastSeconds": 14295.34073997024
     },
     {
       "index": 3,
-      "minutes": 189,
-      "seconds": 11299,
+      "minutes": 254,
+      "seconds": 15207,
       "floors": 20,
       "weaponRank": 12,
       "speedRank": 10,
@@ -857,16 +864,17 @@
         0
       ],
       "swarmCount": 900,
+      "escortCount": 158,
       "spawnSeconds": 1.2833333333333334,
       "hpScale": 5.049167255084418,
       "previousTargetSeconds": 2100,
-      "baseForecastSeconds": 2189.4361715615087,
-      "forecastSeconds": 11298.577828782089
+      "baseForecastSeconds": 2697.2914390743263,
+      "forecastSeconds": 15206.03451439826
     },
     {
       "index": 4,
-      "minutes": 101,
-      "seconds": 6028,
+      "minutes": 135,
+      "seconds": 8049,
       "floors": 20,
       "weaponRank": 10,
       "speedRank": 15,
@@ -886,11 +894,12 @@
         0
       ],
       "swarmCount": 900,
+      "escortCount": 158,
       "spawnSeconds": 1.32,
       "hpScale": 5.166143530978628,
       "previousTargetSeconds": 2160,
-      "baseForecastSeconds": 1653.613428141461,
-      "forecastSeconds": 6027.589517982251
+      "baseForecastSeconds": 1918.9131204491534,
+      "forecastSeconds": 8048.568054543431
     }
   ],
   "zoneDepths": [
@@ -1389,7 +1398,7 @@
       "minion": 4,
       "special": 6
     },
-    "healthCalibration": "Ordinary hpScale, spawn counts, cadence and player damage are preserved; health multipliers apply after calibration",
+    "healthCalibration": "Per-enemy hpScale, ordinary wave counts/cadence and player damage are preserved; interludes add 4/5/6 packs and eligible uncommons have twice ordinary HP",
     "reflectWards": {
       "variants": [
         "jaw",
@@ -1400,7 +1409,7 @@
       "reboundSeconds": 3.4,
       "inner": 34,
       "gapHalf": 0.7,
-      "failure": 0.08,
+      "failure": 0.15,
       "wallDamage": 0.04
     },
     "movingReflectCasters": true,
@@ -1435,7 +1444,7 @@
       "guardian": 0,
       "eliteEchoes": true
     },
-    "patterns": 29,
+    "patterns": 68,
     "expanded": {
       "gravePulse": {
         "name": "Grave Pulse",
@@ -1533,6 +1542,544 @@
         "hint": "Violet charge leaves a burning trail"
       }
     },
+    "selected": {
+      "burrowingBriar": {
+        "id": "burrowingBriar",
+        "proposal": 1,
+        "biome": 0,
+        "name": "Burrowing Briar",
+        "seconds": 1.8,
+        "duration": 1.2,
+        "art": "root",
+        "guide": "Move after the root stops tracking",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "rootGates": {
+        "id": "rootGates",
+        "proposal": 2,
+        "biome": 0,
+        "name": "Root Gates",
+        "seconds": 2.1,
+        "duration": 4.4,
+        "art": "root",
+        "guide": "Cross the two offset openings",
+        "band": 2,
+        "language": "danger",
+        "dash": false
+      },
+      "walkingHedge": {
+        "id": "walkingHedge",
+        "proposal": 3,
+        "biome": 0,
+        "name": "Walking Hedge",
+        "seconds": 2,
+        "duration": 4.4,
+        "art": "thorns",
+        "guide": "Follow the opening in the moving hedge",
+        "band": 3,
+        "language": "danger",
+        "dash": false
+      },
+      "seedChain": {
+        "id": "seedChain",
+        "proposal": 4,
+        "biome": 0,
+        "name": "Seed Chain",
+        "seconds": 1.8,
+        "duration": 3.8,
+        "art": "pod",
+        "guide": "Read the next swelling seed",
+        "band": 1,
+        "language": "friendly",
+        "dash": false
+      },
+      "briarLeash": {
+        "id": "briarLeash",
+        "proposal": 5,
+        "biome": 0,
+        "name": "Briar Leash",
+        "seconds": 2,
+        "duration": 4.2,
+        "art": "root",
+        "guide": "Dash across the tether to cut it",
+        "band": 2,
+        "language": "danger",
+        "dash": true
+      },
+      "sporeFan": {
+        "id": "sporeFan",
+        "proposal": 6,
+        "biome": 0,
+        "name": "Spore Fan",
+        "seconds": 1.8,
+        "duration": 5.4,
+        "art": "mushroom",
+        "guide": "Step between spores and their clouds",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "pollenTide": {
+        "id": "pollenTide",
+        "proposal": 7,
+        "biome": 0,
+        "name": "Pollen Tide",
+        "seconds": 1.8,
+        "duration": 4.2,
+        "art": "seed",
+        "guide": "Move sideways through the debris",
+        "band": 2,
+        "language": "danger",
+        "dash": false
+      },
+      "clingingSeeds": {
+        "id": "clingingSeeds",
+        "proposal": 8,
+        "biome": 0,
+        "name": "Clinging Seeds",
+        "seconds": 1.8,
+        "duration": 5.6,
+        "art": "seed",
+        "guide": "A dash shakes off attached seeds",
+        "band": 2,
+        "language": "danger",
+        "dash": true
+      },
+      "graftedSwap": {
+        "id": "graftedSwap",
+        "proposal": 9,
+        "biome": 0,
+        "name": "Grafted Swap",
+        "seconds": 2.1,
+        "duration": 1.8,
+        "art": "sapling",
+        "guide": "Both root portals preview the swap",
+        "band": 3,
+        "language": "danger",
+        "dash": false
+      },
+      "fallingCanopy": {
+        "id": "fallingCanopy",
+        "proposal": 10,
+        "biome": 0,
+        "name": "Falling Canopy",
+        "seconds": 2,
+        "duration": 3.8,
+        "art": "branch",
+        "guide": "Leave each falling branch shadow",
+        "band": 3,
+        "language": "friendly",
+        "dash": false
+      },
+      "rollingFurnace": {
+        "id": "rollingFurnace",
+        "proposal": 11,
+        "biome": 1,
+        "name": "Rolling Furnace",
+        "seconds": 1.9,
+        "duration": 4.6,
+        "art": "boulder",
+        "guide": "The cracked boulder rebounds once",
+        "band": 1,
+        "language": "friendly",
+        "dash": false
+      },
+      "forgeHammers": {
+        "id": "forgeHammers",
+        "proposal": 12,
+        "biome": 1,
+        "name": "Forge Hammers",
+        "seconds": 2,
+        "duration": 3.8,
+        "art": "hammer",
+        "guide": "The raised hammer strikes next",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "furnaceVents": {
+        "id": "furnaceVents",
+        "proposal": 13,
+        "biome": 1,
+        "name": "Furnace Vents",
+        "seconds": 1.9,
+        "duration": 4.2,
+        "art": "vent",
+        "guide": "Follow the grates lighting in order",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "coolingIslands": {
+        "id": "coolingIslands",
+        "proposal": 14,
+        "biome": 1,
+        "name": "Cooling Islands",
+        "seconds": 2.4,
+        "duration": 6.6,
+        "art": "stone",
+        "guide": "Move to the next cooling island",
+        "band": 3,
+        "language": "danger",
+        "dash": false
+      },
+      "cinderStitch": {
+        "id": "cinderStitch",
+        "proposal": 16,
+        "biome": 1,
+        "name": "Cinder Stitch",
+        "seconds": 1.8,
+        "duration": 5.8,
+        "art": "needle",
+        "guide": "Cross before the stitched trail ignites",
+        "band": 2,
+        "language": "danger",
+        "dash": false
+      },
+      "moltenDroplets": {
+        "id": "moltenDroplets",
+        "proposal": 17,
+        "biome": 1,
+        "name": "Molten Droplets",
+        "seconds": 2,
+        "duration": 4.4,
+        "art": "droplet",
+        "guide": "Splash marks include the smaller bursts",
+        "band": 2,
+        "language": "friendly",
+        "dash": false
+      },
+      "slagAnchors": {
+        "id": "slagAnchors",
+        "proposal": 18,
+        "biome": 1,
+        "name": "Slag Anchors",
+        "seconds": 2.1,
+        "duration": 5.4,
+        "art": "anchor",
+        "guide": "Dash through an anchor to tear the fire curtain",
+        "band": 2,
+        "language": "danger",
+        "dash": true
+      },
+      "backdraft": {
+        "id": "backdraft",
+        "proposal": 19,
+        "biome": 1,
+        "name": "Backdraft",
+        "seconds": 1.9,
+        "duration": 4.4,
+        "art": "vent",
+        "guide": "Your older footprints ignite first",
+        "band": 3,
+        "language": "friendly",
+        "dash": false
+      },
+      "emberCatch": {
+        "id": "emberCatch",
+        "proposal": 20,
+        "biome": 1,
+        "name": "Ember Catch",
+        "seconds": 2.1,
+        "duration": 4.2,
+        "art": "droplet",
+        "guide": "Touch the gold ember to return a violet blast",
+        "band": 2,
+        "language": "friendly",
+        "dash": false
+      },
+      "boneLoom": {
+        "id": "boneLoom",
+        "proposal": 21,
+        "biome": 2,
+        "name": "Bone Loom",
+        "seconds": 2.1,
+        "duration": 4.6,
+        "art": "rib",
+        "guide": "Thread the wide corridor between the ribs",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "soulLantern": {
+        "id": "soulLantern",
+        "proposal": 22,
+        "biome": 2,
+        "name": "Soul Lantern",
+        "seconds": 2,
+        "duration": 6.4,
+        "art": "lantern",
+        "guide": "Intercept healing souls or dash through the lantern",
+        "band": 1,
+        "language": "danger",
+        "dash": true
+      },
+      "coffinPress": {
+        "id": "coffinPress",
+        "proposal": 23,
+        "biome": 2,
+        "name": "Coffin Press",
+        "seconds": 2.1,
+        "duration": 3.8,
+        "art": "coffin",
+        "guide": "Leave through the open ends",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "hauntedFootsteps": {
+        "id": "hauntedFootsteps",
+        "proposal": 24,
+        "biome": 2,
+        "name": "Haunted Footsteps",
+        "seconds": 1.9,
+        "duration": 3.6,
+        "art": "ghost",
+        "guide": "The ghost repeats the marked route",
+        "band": 1,
+        "language": "friendly",
+        "dash": false
+      },
+      "graveClock": {
+        "id": "graveClock",
+        "proposal": 25,
+        "biome": 2,
+        "name": "Grave Clock",
+        "seconds": 2.1,
+        "duration": 4.2,
+        "art": "clock",
+        "guide": "Use the broken hand; it reverses after a pause",
+        "band": 2,
+        "language": "danger",
+        "dash": false
+      },
+      "returningSigil": {
+        "id": "returningSigil",
+        "proposal": 27,
+        "biome": 2,
+        "name": "Returning Sigil",
+        "seconds": 2,
+        "duration": 7.8,
+        "art": "lantern",
+        "guide": "Touch each gold rune before its arc runs out",
+        "band": 2,
+        "language": "danger",
+        "dash": false
+      },
+      "ribcageRise": {
+        "id": "ribcageRise",
+        "proposal": 28,
+        "biome": 2,
+        "name": "Ribcage Rise",
+        "seconds": 2.2,
+        "duration": 3.8,
+        "art": "rib",
+        "guide": "Leave through the opening before the ribs collapse",
+        "band": 3,
+        "language": "danger",
+        "dash": false
+      },
+      "hollowChorus": {
+        "id": "hollowChorus",
+        "proposal": 29,
+        "biome": 2,
+        "name": "Hollow Chorus",
+        "seconds": 2.1,
+        "duration": 5.4,
+        "art": "ghost",
+        "guide": "Raised lanterns show the order of the waves",
+        "band": 2,
+        "language": "friendly",
+        "dash": false
+      },
+      "borrowedBreath": {
+        "id": "borrowedBreath",
+        "proposal": 30,
+        "biome": 2,
+        "name": "Borrowed Breath",
+        "seconds": 2.2,
+        "duration": 4.6,
+        "art": "wisp",
+        "guide": "Visit a teal stone before the curse closes",
+        "band": 3,
+        "language": "danger",
+        "dash": false
+      },
+      "astralSlingshot": {
+        "id": "astralSlingshot",
+        "proposal": 31,
+        "biome": 3,
+        "name": "Astral Slingshot",
+        "seconds": 2,
+        "duration": 5.2,
+        "art": "lens",
+        "guide": "Shots curve around the lens",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "gravityWell": {
+        "id": "gravityWell",
+        "proposal": 32,
+        "biome": 3,
+        "name": "Gravity Well",
+        "seconds": 2,
+        "duration": 4.2,
+        "art": "lens",
+        "guide": "Escape the pull before its burst",
+        "band": 1,
+        "language": "friendly",
+        "dash": false
+      },
+      "orbitTransfer": {
+        "id": "orbitTransfer",
+        "proposal": 33,
+        "biome": 3,
+        "name": "Orbit Transfer",
+        "seconds": 2,
+        "duration": 5.4,
+        "art": "blade",
+        "guide": "Watch the bridge and the blade’s next owner",
+        "band": 2,
+        "language": "danger",
+        "dash": false
+      },
+      "stargateVolley": {
+        "id": "stargateVolley",
+        "proposal": 34,
+        "biome": 3,
+        "name": "Stargate Volley",
+        "seconds": 2,
+        "duration": 4.6,
+        "art": "portal",
+        "guide": "The second portal previews the exit direction",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "constellationCage": {
+        "id": "constellationCage",
+        "proposal": 35,
+        "biome": 3,
+        "name": "Constellation Cage",
+        "seconds": 2,
+        "duration": 1.6,
+        "art": "star",
+        "guide": "Leave the outlined triangle before it connects",
+        "band": 1,
+        "language": "danger",
+        "dash": false
+      },
+      "riftScissors": {
+        "id": "riftScissors",
+        "proposal": 36,
+        "biome": 3,
+        "name": "Rift Scissors",
+        "seconds": 2.1,
+        "duration": 3.8,
+        "art": "rift",
+        "guide": "Use the openings beyond the crescent tips",
+        "band": 2,
+        "language": "danger",
+        "dash": false
+      },
+      "collapsingNova": {
+        "id": "collapsingNova",
+        "proposal": 37,
+        "biome": 3,
+        "name": "Collapsing Nova",
+        "seconds": 2.3,
+        "duration": 9.8,
+        "art": "star",
+        "guide": "Counter the gold rune or cross the delayed pulse",
+        "band": 3,
+        "language": "danger",
+        "dash": true
+      },
+      "prismRelay": {
+        "id": "prismRelay",
+        "proposal": 39,
+        "biome": 3,
+        "name": "Prism Relay",
+        "seconds": 2.1,
+        "duration": 4.2,
+        "art": "prism",
+        "guide": "Read the beam’s route through both crystals",
+        "band": 2,
+        "language": "friendly",
+        "dash": false
+      },
+      "cometLadder": {
+        "id": "cometLadder",
+        "proposal": 40,
+        "biome": 3,
+        "name": "Comet Ladder",
+        "seconds": 2,
+        "duration": 4.2,
+        "art": "comet",
+        "guide": "Zigzag between alternating comet lanes",
+        "band": 3,
+        "language": "danger",
+        "dash": false
+      },
+      "turningBulwark": {
+        "id": "turningBulwark",
+        "proposal": 41,
+        "biome": -1,
+        "name": "Turning Bulwark",
+        "seconds": 1.8,
+        "duration": 5.8,
+        "art": "shield",
+        "guide": "Circle behind the rotating front shield",
+        "band": 1,
+        "language": "shield",
+        "dash": false
+      },
+      "rallyThread": {
+        "id": "rallyThread",
+        "proposal": 46,
+        "biome": -1,
+        "name": "Rally Thread",
+        "seconds": 1.8,
+        "duration": 5.4,
+        "art": "banner",
+        "guide": "Dash across the enemy buff thread",
+        "band": 2,
+        "language": "danger",
+        "dash": true
+      }
+    },
+    "damage": {
+      "projectile": 0.1,
+      "contact": 0.15,
+      "standard": 0.18,
+      "heavy": 0.25,
+      "major": 0.5,
+      "reflect": 0.15,
+      "dot": 0.025,
+      "dotInterval": 0.35
+    },
+    "uncommons": {
+      "chance": 0.07,
+      "health": 2,
+      "caps": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "projectile": 0.06,
+      "ground": 0.08,
+      "charge": 0.1
+    },
+    "interludes": {
+      "early": 4,
+      "middle": 5,
+      "deep": 6
+    },
+    "effectAssets": 156,
     "colors": {
       "danger": {
         "color": "#f16d68",
@@ -2474,50 +3021,50 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 646.0800000000299,
-      "kills": 375,
+      "seconds": 753.4000000000215,
+      "kills": 413,
       "referenceDps": 80,
-      "targetSeconds": 684
+      "targetSeconds": 822
     },
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1071.640000000049,
-      "kills": 570,
+      "seconds": 1217.6800000000649,
+      "kills": 648,
       "referenceDps": 240,
-      "targetSeconds": 1067
+      "targetSeconds": 1291
     },
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 9116.160000001628,
-      "kills": 780,
+      "seconds": 10785.360000001243,
+      "kills": 938,
       "referenceDps": 240,
-      "targetSeconds": 10435
+      "targetSeconds": 14296
     },
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 9676.760000001783,
-      "kills": 960,
+      "seconds": 11518.720000000782,
+      "kills": 1118,
       "referenceDps": 240,
-      "targetSeconds": 11299
+      "targetSeconds": 15207
     },
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 6316.080000000279,
-      "kills": 960,
+      "seconds": 7979.72000000113,
+      "kills": 1118,
       "referenceDps": 480,
-      "targetSeconds": 6837
+      "targetSeconds": 9151
     },
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 6257.680000000249,
-      "kills": 960,
+      "seconds": 7781.120000001024,
+      "kills": 1118,
       "referenceDps": 480,
-      "targetSeconds": 6837
+      "targetSeconds": 9151
     }
   ],
   "zonePressure": {
@@ -2533,11 +3080,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 7.98,
+        "seconds": 8.78,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 7,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -2545,60 +3092,6 @@
         "seed": 19,
         "careful": false,
         "scale": 1.25,
-        "dps": 54.82533333333334,
-        "gear": {
-          "weapon": 2,
-          "speed": 2
-        },
-        "maxHp": 144,
-        "seconds": 7.38,
-        "status": "dead",
-        "bossDefeated": false,
-        "remainingHp": 0,
-        "hits": 6,
-        "damageTaken": 144,
-        "reflections": 0
-      },
-      {
-        "seed": 19,
-        "careful": true,
-        "scale": 1,
-        "dps": 54.82533333333334,
-        "gear": {
-          "weapon": 2,
-          "speed": 2
-        },
-        "maxHp": 144,
-        "seconds": 13.52,
-        "status": "running",
-        "bossDefeated": true,
-        "remainingHp": 104.9,
-        "hits": 2,
-        "damageTaken": 39.1,
-        "reflections": 1
-      },
-      {
-        "seed": 19,
-        "careful": true,
-        "scale": 1.25,
-        "dps": 54.82533333333334,
-        "gear": {
-          "weapon": 2,
-          "speed": 2
-        },
-        "maxHp": 144,
-        "seconds": 13.52,
-        "status": "running",
-        "bossDefeated": true,
-        "remainingHp": 95.1,
-        "hits": 2,
-        "damageTaken": 48.9,
-        "reflections": 1
-      },
-      {
-        "seed": 107,
-        "careful": false,
-        "scale": 1,
         "dps": 54.82533333333334,
         "gear": {
           "weapon": 2,
@@ -2609,7 +3102,61 @@
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 7,
+        "hits": 8,
+        "damageTaken": 144,
+        "reflections": 0
+      },
+      {
+        "seed": 19,
+        "careful": true,
+        "scale": 1,
+        "dps": 54.82533333333334,
+        "gear": {
+          "weapon": 2,
+          "speed": 2
+        },
+        "maxHp": 144,
+        "seconds": 14.08,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 115.2,
+        "hits": 2,
+        "damageTaken": 28.8,
+        "reflections": 0
+      },
+      {
+        "seed": 19,
+        "careful": true,
+        "scale": 1.25,
+        "dps": 54.82533333333334,
+        "gear": {
+          "weapon": 2,
+          "speed": 2
+        },
+        "maxHp": 144,
+        "seconds": 14.08,
+        "status": "running",
+        "bossDefeated": true,
+        "remainingHp": 115.2,
+        "hits": 2,
+        "damageTaken": 28.8,
+        "reflections": 0
+      },
+      {
+        "seed": 107,
+        "careful": false,
+        "scale": 1,
+        "dps": 54.82533333333334,
+        "gear": {
+          "weapon": 2,
+          "speed": 2
+        },
+        "maxHp": 144,
+        "seconds": 9.48,
+        "status": "dead",
+        "bossDefeated": false,
+        "remainingHp": 0,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -2623,11 +3170,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 8.08,
+        "seconds": 9.48,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 6,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -2641,13 +3188,13 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 14.1,
+        "seconds": 15.14,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 98,
+        "remainingHp": 93.6,
         "hits": 2,
-        "damageTaken": 46,
-        "reflections": 1
+        "damageTaken": 50.4,
+        "reflections": 0
       },
       {
         "seed": 107,
@@ -2659,13 +3206,13 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 14.1,
+        "seconds": 15.14,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 86.5,
+        "remainingHp": 93.6,
         "hits": 2,
-        "damageTaken": 57.5,
-        "reflections": 1
+        "damageTaken": 50.4,
+        "reflections": 0
       },
       {
         "seed": 523,
@@ -2677,11 +3224,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 8.78,
+        "seconds": 9.48,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 7,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -2695,11 +3242,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 8.08,
+        "seconds": 9.48,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 6,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -2713,13 +3260,13 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 14.1,
+        "seconds": 16.2,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 98,
+        "remainingHp": 93.6,
         "hits": 2,
-        "damageTaken": 46,
-        "reflections": 1
+        "damageTaken": 50.4,
+        "reflections": 0
       },
       {
         "seed": 523,
@@ -2731,13 +3278,13 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 14.1,
+        "seconds": 16.2,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 86.5,
+        "remainingHp": 93.6,
         "hits": 2,
-        "damageTaken": 57.5,
-        "reflections": 1
+        "damageTaken": 50.4,
+        "reflections": 0
       }
     ],
     "errors": []
@@ -2757,17 +3304,17 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 10.44,
+        "seconds": 8.7,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
-        "hits": 7,
-        "damage": 189,
+        "hits": 4,
+        "damage": 211.7,
         "echoes": 0,
         "casts": [
+          "ground",
           "beam",
-          "bloom",
-          "ground"
+          "bloom"
         ]
       },
       {
@@ -2782,16 +3329,16 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 10.94,
+        "seconds": 9.46,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
-        "hits": 8,
+        "hits": 4,
         "damage": 189,
         "echoes": 0,
         "casts": [
-          "ground",
           "bloom",
+          "ground",
           "beam"
         ]
       },
@@ -2807,11 +3354,11 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 10.52,
+        "seconds": 9.46,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
-        "hits": 8,
+        "hits": 4,
         "damage": 189,
         "echoes": 0,
         "casts": [
@@ -2831,23 +3378,25 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 95.1,
-        "seconds": 34.24,
+        "remainingHp": 92.6,
+        "seconds": 60,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 4,
-        "damage": 116.5,
+        "hits": 3,
+        "damage": 141.8,
         "echoes": 0,
         "casts": [
+          "ground",
           "beam",
           "bloom",
-          "ground",
+          "rallyThread",
+          "cinderStitch",
           "fury",
-          "volley",
-          "reflect",
-          "ricochet",
           "crossfire",
+          "rollingFurnace",
+          "slagAnchors",
+          "volley",
           "summon"
         ]
       },
@@ -2862,26 +3411,26 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 115.8,
-        "seconds": 38.7,
+        "remainingHp": 189,
+        "seconds": 55.1,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 3,
-        "damage": 73.3,
+        "hits": 0,
+        "damage": 0,
         "echoes": 0,
         "casts": [
-          "ground",
           "bloom",
+          "ground",
           "beam",
-          "volley",
-          "fury",
           "charge",
-          "shield",
-          "reflect",
+          "rallyThread",
+          "fury",
+          "furnaceVents",
           "cleave",
-          "summon",
-          "crossfire"
+          "crossfire",
+          "cinderStitch",
+          "forgeHammers"
         ]
       },
       {
@@ -2895,22 +3444,21 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 54.1,
-        "seconds": 35.76,
+        "remainingHp": 158.8,
+        "seconds": 52.78,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 5,
-        "damage": 134.9,
+        "hits": 2,
+        "damage": 75.6,
         "echoes": 0,
         "casts": [
           "beam",
           "ground",
           "bloom",
-          "volley",
-          "cleave",
+          "rallyThread",
+          "cinderStitch",
           "fury",
-          "reflect",
           "crossfire",
           "summon"
         ]
@@ -2927,13 +3475,13 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 5.22,
+        "seconds": 5.2,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
         "hits": 6,
         "damage": 189,
-        "echoes": 0,
+        "echoes": 1,
         "casts": [
           "gravePulse"
         ]
@@ -2950,7 +3498,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 4.84,
+        "seconds": 4.66,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
@@ -2971,7 +3519,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 5.48,
+        "seconds": 5.6,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
@@ -2993,24 +3541,31 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 0,
-        "seconds": 105.5,
-        "status": "dead",
-        "phase": 1,
-        "clearedOpeningGuardian": false,
-        "hits": 5,
-        "damage": 198.4,
-        "echoes": 7,
+        "remainingHp": 189,
+        "seconds": 157.5,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 1,
+        "damage": 37.8,
+        "echoes": 10,
         "casts": [
           "ground",
+          "soulLantern",
           "mend",
+          "coffinPress",
           "ricochet",
+          "turningBulwark",
           "summon",
           "gravePulse",
+          "beam",
+          "boneLoom",
+          "fury",
           "reflect",
           "crossfire",
-          "cleave",
-          "charge"
+          "shield",
+          "hauntedFootsteps",
+          "cleave"
         ]
       },
       {
@@ -3024,14 +3579,14 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 143.2,
-        "seconds": 83.14,
+        "remainingHp": 157.5,
+        "seconds": 134.4,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
         "hits": 2,
-        "damage": 68.5,
-        "echoes": 7,
+        "damage": 42.3,
+        "echoes": 10,
         "casts": [
           "beam",
           "fury",
@@ -3039,10 +3594,16 @@
           "ricochet",
           "bloom",
           "gravePulse",
+          "ground",
+          "boneLoom",
+          "soulLantern",
+          "mend",
+          "hauntedFootsteps",
           "crossfire",
-          "cleave",
+          "coffinPress",
+          "shield",
           "summon",
-          "charge"
+          "turningBulwark"
         ]
       },
       {
@@ -3056,24 +3617,32 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 0,
-        "seconds": 95.52,
-        "status": "dead",
-        "phase": 1,
-        "clearedOpeningGuardian": false,
-        "hits": 4,
-        "damage": 195.5,
-        "echoes": 7,
+        "remainingHp": 122.5,
+        "seconds": 139.54,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 3,
+        "damage": 80.9,
+        "echoes": 10,
         "casts": [
-          "ground",
-          "mend",
-          "ricochet",
-          "summon",
           "gravePulse",
+          "boneLoom",
           "reflect",
-          "crossfire",
+          "hauntedFootsteps",
+          "charge",
           "cleave",
-          "charge"
+          "ground",
+          "beam",
+          "coffinPress",
+          "fury",
+          "mend",
+          "turningBulwark",
+          "ricochet",
+          "shield",
+          "crossfire",
+          "bloom",
+          "summon"
         ]
       }
     ]

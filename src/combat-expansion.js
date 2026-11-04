@@ -23,11 +23,11 @@ const EXPANDED_ABILITIES={
  eruptionTrail:{name:'Ruinous Rush',seconds:1.5,hint:'Violet charge leaves a burning trail'}
 };
 function combatTheme(type){return COMBAT_LANGUAGE[type]||COMBAT_LANGUAGE.danger;}
-function castLanguage(type){return ['cleave','charge','eruptionTrail','ground','beam','crossfire','pincer','ringchain','gravePulse'].includes(type)?'friendly':['reflect','reversal'].includes(type)?'reflect':['mend','fury'].includes(type)?'safe':type==='shield'||type==='bastion'?'shield':'danger';}
+function castLanguage(type){if(themedAbility(type))return themedAbility(type).language;return ['cleave','charge','eruptionTrail','ground','beam','crossfire','pincer','ringchain','gravePulse'].includes(type)?'friendly':['reflect','reversal'].includes(type)?'reflect':['mend','fury'].includes(type)?'safe':type==='shield'||type==='bastion'?'shield':'danger';}
 function enemyBody(enemy){
  if(enemy.totem)return {x:enemy.x,top:enemy.y-42,bottom:enemy.y+4,r:18};
- if(!enemy.boss&&!enemy.elite)return {x:enemy.x,top:enemy.y-4,bottom:enemy.y,r:enemy.rad};
- const h=enemy.champion?environmentMobSize(enemy).height*1.17:enemy.elite?(enemy.bossIndex===2?118:94):enemy.bossIndex===2?185:enemy.bossIndex===1?140:124,r=Math.max(enemy.rad,h*.16),foot=enemy.y+enemy.rad*.65;
+ if(!enemy.boss&&!enemy.elite&&!enemy.uncommon)return {x:enemy.x,top:enemy.y-4,bottom:enemy.y,r:enemy.rad};
+ const h=enemy.uncommon?Math.min(78,environmentMobSize(enemy).height*1.12):enemy.champion?environmentMobSize(enemy).height*1.17:enemy.elite?(enemy.bossIndex===2?118:94):enemy.bossIndex===2?185:enemy.bossIndex===1?140:124,r=Math.max(enemy.rad,h*.16),foot=enemy.y+enemy.rad*.65;
  return {x:enemy.x,top:foot-h*.80+r,bottom:foot-r-4,r};
 }
 function bodyPoint(enemy,x,y){const body=enemyBody(enemy);return {x:body.x,y:clamp(y,Math.min(body.top,body.bottom),Math.max(body.top,body.bottom)),r:body.r};}
@@ -60,6 +60,7 @@ function ringRefugePoint(enemy,cast){
  return null;
 }
 function expandedCastSetup(enemy,cast){
+ if(themedAbility(cast.type))return setupThemedCast(enemy,cast);
  const type=cast.type,def=EXPANDED_ABILITIES[type];if(!def)return;
  cast.label=def.name;cast.hint=def.hint;cast.total=cast.windup=def.seconds;cast.arena=['sunder','ringchain'].includes(type)?enlargedAttackArena(expandedArena()):expandedArena();cast.shapes=[];
  const r=cast.arena,cx=(r.left+r.right)/2,cy=(r.top+r.bottom)/2;
@@ -94,6 +95,7 @@ function expandedContains(actor,shape){
 }
 function addExpandedHazard(owner,cast,shape,damage,delay=0){(game.hazards||(game.hazards=[])).push({...shape,type:'expanded',abilityType:cast.type,owner,enemyHits:cast.enemyHits,language:castLanguage(cast.type),biome:owner.biome,life:.65+delay,total:.65,delay,damage,age:0});}
 function resolveExpandedCast(enemy,cast,damage){
+ if(themedAbility(cast.type))return resolveThemedCast(enemy,cast);
  if(cast.type==='gravePulse'){addGravePulses(enemy,cast,damage);return true;}
  const type=cast.type;if(!EXPANDED_ABILITIES[type]||type==='reversal')return false;
  if(cast.shapes.length&&type!=='tether')for(const shape of cast.shapes)addExpandedHazard(enemy,cast,shape,damage*1.15,shape.delay||0);
@@ -157,7 +159,7 @@ function totemsDisabled(){return eliteBoonActive('silence');}
 function enemyMovementFactor(){return activeEliteBoons().reduce((n,b)=>n*(ELITE_BOONS[b.id]?.enemyMovement||1),1);}
 function secondaryDamage(enemy,damage,sourceStyle=combatStyle(),origin=null){
  if(!enemy||enemy.hp<=0)return;if(enemy.totem){damageTotem(enemy,damage);return;}
- if(!game.enemies.includes(enemy))return;enemy.hp-=damage*enemyShieldMultiplier(enemy);enemy.lastDamageStyle=sourceStyle;enemy.lastHitAt=game.frame;
+ if(!game.enemies.includes(enemy))return;enemy.hp-=damage*enemyShieldMultiplier(enemy,origin||game.player);enemy.lastDamageStyle=sourceStyle;enemy.lastHitAt=game.frame;
  if(origin)game.arcs.push({x:origin.x,y:origin.y,tx:enemy.x,ty:enemy.y,life:.18,color:'#b4eaff'});
  if(enemy.hp<=0)onKill(enemy);
 }
@@ -227,6 +229,7 @@ function paintExpandedShape(shape,theme,progress=1,active=false){
  }else if(shape.shape==='cone')paintEnemyCleave(shape,theme,progress,active);
 }
 function paintExpandedWarning(enemy,cast,progress){
+ if(cast.themed)return paintThemedWarning(enemy,cast);
  if(!EXPANDED_ABILITIES[cast.type]||cast.type==='reversal')return false;
  const theme=combatTheme(castLanguage(cast.type));for(const shape of cast.shapes||[])paintExpandedShape(shape,theme,progress);
  if(cast.point)paintWarningCircle(cast.point.x,cast.point.y,30,progress,theme);
@@ -254,7 +257,7 @@ function paintSummonTotem(t){
  if((t.bumpFlashUntil||0)>game.frame)paintWarningCircle(foot.x,foot.y,31,1,combatTheme('safe'));
  if(t.spawnPoint){paintWarningCircle(t.spawnPoint.x,t.spawnPoint.y,22,1-t.spawnWarn/1.3,theme);encounterLabel('SUMMON',t.spawnPoint.x,t.spawnPoint.y-27,theme.hot,8);}
 }
-function combatGuideHtml(){return codexParagraph('Move, dash and attack automatically. Each warning uses both a color and a shape or label. Threats lock their aim when the warning appears.')+codexRuleList([['Red · danger','Hurts you only. Leave the marked area.'],['Violet · friendly fire','Hurts you and other enemies. Lure monsters into sweeps, charges, beams, eruptions and rebounding rings.'],['Gold / white · reflect','Touch the gold center to counter immediately. Enter jaws through their teal opening; a rune under your feet requires stepping out and returning. Casters keep moving. Missing any timer costs 8% maximum health before defenses; Hungry Mirrors also heal their caster.'],['Teal · refuge / benefit','Protected spaces for the marked attack, or a stream redirected to you. Grave Pulse is one continuously expanding ring with no teal center. Dash through its rim; running cannot outpace it.'],['Totem beams · follow the symbol','Green crosses carry healing; red swords carry damage boosts. These support streams do not deal contact damage. Blue chevrons identify attack-speed effects. A disabled stream is muted and stops sending symbols.'],['Blue · shield','Break guards or a shield source to expose the protected target. Shielding elites can protect summoning spires; impact damage always retains full strength.'],['Spire · bump to break','Walk into an ordinary spire once, or a crowned spire twice. Step clear of its base before another walking bump, or use a fresh dash. Each dash through the base counts once, including when already touching it. A teal spire can be bumped without retaliation; a red, surging spire retaliates for 8% / 12% maximum health before defenses. Dash through or wait for teal to avoid that damage. Weapons cannot target or damage summoning spires. They keep summoning after their caster dies; clear them and their surviving summons to finish the encounter. Healing and power totems remain stream interceptions.'],['Reinforcements','Summoned monsters and guards drop no rewards and do not count toward the wave.']])+codexParagraph('Bosses change patterns at health thresholds. Rebounding rings arrive in three waves; growing shots widen; returning blades come back to their caster. Zone 2 frequently uses growing stars that travel far before returning; its cleaves leave short-lived fire. Its final floor has more elites and rares. Zone 3 starts above Zone 2’s final-floor health, with pursuing death echoes and expanding grave pulses. Watch their shape as well as their color.');}
+function combatGuideHtml(){return codexParagraph('Move, dash and attack automatically. Each warning uses both a color and a shape or label. Most attacks lock their aim when the warning appears; a tracking root settles before it strikes.')+codexRuleList([['Red · danger','Hurts you only. Leave the marked area.'],['Violet · friendly fire','Hurts you and other enemies. Lure monsters into sweeps, charges, beams, eruptions and rebounding rings.'],['Gold / white · reflect','Touch the gold center to counter immediately. Enter jaws through their teal opening; a rune under your feet requires stepping out and returning. Casters keep moving. Missing any timer costs 15% maximum health before defenses; Hungry Mirrors also heal their caster.'],['Teal · refuge / benefit','Protected spaces for the marked attack, or a stream redirected to you. Grave Pulse is one continuously expanding ring with no teal center. Dash through its rim; running cannot outpace it.'],['Totem beams · follow the symbol','Green crosses carry healing; red swords carry damage boosts. These support streams do not deal contact damage. Blue chevrons identify attack-speed effects. A disabled stream is muted and stops sending symbols.'],['Blue · shield','Break guards or a shield source to expose the protected target. Shielding elites can protect summoning spires; impact damage always retains full strength.'],['Spire · bump to break','Walk into an ordinary spire once, or a crowned spire twice. Step clear of its base before another walking bump, or use a fresh dash. Each dash through the base counts once, including when already touching it. A teal spire can be bumped without retaliation; a red, surging spire retaliates for 8% / 12% maximum health before defenses. Dash through or wait for teal to avoid that damage. Weapons cannot target or damage summoning spires. They keep summoning after their caster dies; clear them and their surviving summons to finish the encounter. Healing and power streams can still be intercepted.'],['Reinforcements','Summoned monsters and guards drop no rewards and do not count toward the wave.']])+codexParagraph('Bosses change patterns at health thresholds. Rebounding rings arrive in three waves; growing shots widen; returning blades come back to their caster. Zone 2 frequently uses growing stars that travel far before returning; its cleaves leave short-lived fire. Its final floor has more elites and rares. Zone 3 starts above Zone 2’s final-floor health, with pursuing death echoes and expanding grave pulses. Watch their shape as well as their color.');}
 
 function announceWeaponUpgradeTip(){
  if(data.weaponUpgradeTipSeen)return;data.weaponUpgradeTipSeen=true;toast('Strengthen your new weapon','Refine it at its crafting bench, then visit Warding to enchant it. Both improvements are permanent.');

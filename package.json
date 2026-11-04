@@ -1,11 +1,11 @@
 {
   "name": "idle-or-dungeoneer",
-  "version": "11.7.1",
+  "version": "11.8.0",
   "private": true,
   "description": "A standalone fantasy RPG with a minimal runestone HUD, linked crafting and a readable Codex.",
   "scripts": {
     "start": "python3 -m http.server 8000 --bind 0.0.0.0",
-    "test": "node tests/smoke.cjs && node tests/combat.cjs && node tests/quality.cjs && node tests/systems.cjs && node tests/gestures.cjs && node tests/native-gestures.cjs && node tests/arena.cjs && node tests/dungeoneering.cjs && node tests/tiers.cjs && node tests/presentation.cjs && node tests/revision.cjs && node tests/zone-shop.cjs && node tests/testing-speed.cjs && node tests/environments.cjs && node tests/encounters.cjs && node tests/mobile.cjs && node tests/loading.cjs && node tests/ammunition.cjs && node tests/workshop.cjs && node tests/restoration.cjs && node tests/delve-travel.cjs && node tests/rare-elites.cjs && node tests/zone-depths.cjs && node tests/player-rig.cjs && node tests/skilling-bonuses.cjs && node tests/spire-collisions.cjs && node tests/dungeon-combat.cjs && node tests/journey.cjs && node tests/ability-effects.cjs && node tests/speed-controls.cjs && node tests/progression-update.cjs && node tests/ground-loot.cjs && node tests/delve-options.cjs && node tests/reflect-wards.cjs && node tests/zone-pressure.cjs && node tests/workshop-update.cjs && node tests/specific-vouchers.cjs && node tests/blessing-store.cjs && node tests/spire-persistence.cjs && node tests/zone-challenge.cjs && node tests/skill-tier-progression.cjs && node tests/encounter-health.cjs && node tests/combat-cues.cjs && node tests/refinement-economy.cjs && node tests/grave-pulse.cjs",
+    "test": "node tests/smoke.cjs && node tests/combat.cjs && node tests/quality.cjs && node tests/systems.cjs && node tests/gestures.cjs && node tests/native-gestures.cjs && node tests/arena.cjs && node tests/dungeoneering.cjs && node tests/tiers.cjs && node tests/presentation.cjs && node tests/revision.cjs && node tests/zone-shop.cjs && node tests/testing-speed.cjs && node tests/environments.cjs && node tests/encounters.cjs && node tests/mobile.cjs && node tests/loading.cjs && node tests/ammunition.cjs && node tests/workshop.cjs && node tests/restoration.cjs && node tests/delve-travel.cjs && node tests/rare-elites.cjs && node tests/zone-depths.cjs && node tests/player-rig.cjs && node tests/skilling-bonuses.cjs && node tests/spire-collisions.cjs && node tests/dungeon-combat.cjs && node tests/journey.cjs && node tests/ability-effects.cjs && node tests/speed-controls.cjs && node tests/progression-update.cjs && node tests/ground-loot.cjs && node tests/delve-options.cjs && node tests/reflect-wards.cjs && node tests/zone-pressure.cjs && node tests/workshop-update.cjs && node tests/specific-vouchers.cjs && node tests/blessing-store.cjs && node tests/spire-persistence.cjs && node tests/zone-challenge.cjs && node tests/skill-tier-progression.cjs && node tests/encounter-health.cjs && node tests/combat-cues.cjs && node tests/refinement-economy.cjs && node tests/grave-pulse.cjs && node tests/themed-encounters.cjs && node tests/encounter-pressure.cjs",
     "build": "node scripts/sync-systems.cjs",
     "report:balance": "node scripts/report-tier-balance.cjs",
     "review:ui": "node scripts/presentation-review.cjs",
@@ -46,7 +46,9 @@
     "art:tier-three": "node scripts/export-tier-three-resources.cjs",
     "review:skill-tiers": "node scripts/review-skill-tiers.cjs",
     "review:combat-cues": "node scripts/review-combat-cues.cjs",
-    "report:skills": "node scripts/report-skill-economy.cjs"
+    "report:skills": "node scripts/report-skill-economy.cjs",
+    "art:themed-effects": "python3 scripts/export-themed-effects.py",
+    "review:themed": "node scripts/review-themed-encounters.cjs"
   },
   "devDependencies": {
     "acorn": "8.19.0",

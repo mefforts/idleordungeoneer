@@ -126,7 +126,7 @@ function nextPhase(){
   if(game.phase>=6){clearFloor();return;}
   game.phaseTarget=zoneBalance().targets[game.phase];prepareEliteWave();game.hazards=[];
   const phase=game.phase;
-  if(phase%2===1){const b=biome();const bossIndex=Math.floor(phase/2);let hp=zoneEnemyHp(true,bossIndex);const enemy=spawnEnemy(true,bossIndex);enemy.hp=enemy.maxHp=hp;enemy.name=b.boss[bossIndex];game.boss=enemy;data.seenElites[biomeIndex()][bossIndex]=true;codexDiscover('boss_'+biomeIndex()+'_'+bossIndex);announce(bossIndex===2?'OVERLORD APPROACHES':b.boss[bossIndex],2.1)}
+  if(phase%2===1){const b=biome();const bossIndex=Math.floor(phase/2);let hp=zoneEnemyHp(true,bossIndex);const enemy=spawnEnemy(true,bossIndex);enemy.hp=enemy.maxHp=hp;enemy.name=b.boss[bossIndex];game.boss=enemy;if(bossIndex<2)spawnInterludePack(enemy);data.seenElites[biomeIndex()][bossIndex]=true;codexDiscover('boss_'+biomeIndex()+'_'+bossIndex);announce(bossIndex===2?'OVERLORD APPROACHES':b.boss[bossIndex],2.1)}
   else announce(PHASES[phase],1.7);
   refreshUI();
 }

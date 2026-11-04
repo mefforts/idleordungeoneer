@@ -16,7 +16,7 @@ const {createRuntime}=require('./runtime.cjs'),{encounterFixture}=require('./enc
   for(const type of ['mend','fury']){
    const r=await p.evaluate(type=>__encounterTest.streams(type),type);
    if(type==='mend'){assert.equal(r.unblocked.hp,504);assert.equal(r.blocked.hp,504);assert.equal(r.blocked.player,503.5);assert.equal(r.resumed.hp,508);assert.equal(r.resumed.player,503.5);}
-   else{assert.ok(Math.abs(r.unblocked.damage-r.base*1.12)<1e-8);assert.equal(r.blocked.damage,r.base);assert.equal(r.blocked.rally,5);assert.equal(r.resumed.damage,r.base*1.12);}
+   else{assert.ok(Math.abs(r.unblocked.damage-r.base*1.12)<1e-8);assert.equal(r.blocked.damage,r.base);assert.equal(r.blocked.rally,5);assert.ok(Math.abs(r.resumed.damage-r.base*1.12)<1e-8);}
    assert.equal(r.blocked.blocked,true);assert.deepEqual(r.expired,{rally:0,nodes:0,damage:r.base});assert.equal(r.kills,1);
   }
   const edges=await p.evaluate(()=>__encounterTest.healingEdges());assert.deepEqual(edges,{capped:1000,double:501.75,single:503.5});
