@@ -4,6 +4,14 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.9.0** gives Rally Thread and Orbit Transfer a visible teleport that separates their enemy pair, with at least **220 world units** of space and a clear dash crossing. Briar Leash gets the same spacing for its anchor. Movement keeps these links open until they break or expire; thread/leash cuts also work while forming.
+
+**Warband Resolve** grants elites, rares, bosses and guardian Echoes **10% damage reduction per other special enemy**, capped at **50%** in every Zone. A small shield percentage shows the boon. Stunned enemies lose it and stop protecting their allies until recovery. Ordinary monsters and uncommons do not contribute. Existing Royal Guard and directional shields retain their separate effects.
+
+Common **charge widths, cleave reach, ground-mark radii, beam widths and nova radii are 25% larger**, with matching warnings. **Hungry Siphon** attaches a red chain that breaks when you dash away; **Knotted Siphon** instead requires a dash through its teal knot. Both use a light, rapid drain with a short grace period and bounded caster healing, with no final damage burst. [Combat rules and validation](BALANCE.md).
+
+[Separated Rally Thread](preview-rally-thread-mobile.png) · [Shared protection and a stunned ally](preview-warband-resolve-mobile.png) · [Dash-away siphon](preview-siphon-escape-mobile.png) · [Siphon cut point](preview-siphon-knot-mobile.png).
+
 **Build 11.8.2** adds **75% HP to regular elites** and **25% to bosses and guardian Echoes** in **Zones 1–2 only**, on top of v11.8.1. Royal Guards and summoned elites use the regular-elite increase. Rares, uncommons and ordinary monsters retain their current health, as do enemies from Zone 3 onward. [Balance and pacing](BALANCE.md).
 
 **Build 11.8.1** gives healing motes a **12-combat-second lifetime**, including while at full health, with a fade over the last three seconds. Menus, pauses and skilling freeze their timer. Elites and rares now independently roll **25% for blessing spoils** and **50% for a 12% health mote**. Ordinary monsters keep their 2% chance of a 3% heal. Other ground loot retains its persistence. The **Zone 1 Floor 5 boss** now opens with Walking Hedge and repeats it between his other normal-rotation attacks.

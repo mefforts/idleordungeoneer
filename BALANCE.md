@@ -1,5 +1,13 @@
 # Dungeon progression and balance
 
+Build 11.9.0 separates linked enemy pairs with a visible teleport and a 220-unit minimum span; Briar Leash anchors share the clear crossing rule. Rally/Leash cuts work during formation and activity, including swept final-frame dashes. Link movement restrictions end on sever, expiry, owner/partner defeat or encounter cleanup. Blocked placements defer without teleporting enemies.
+
+Warband Resolve grants each elite, rare, boss or guardian Echo 10% damage reduction per other living, unstunned special enemy, capped at 50%, in all Zones. Stunned recipients lose the boon and stop contributing to allies; ordinary/uncommon monsters and totems do not participate. The small shield percentage updates immediately. Royal Guard and directional shields remain separate multiplicative effects.
+
+Common charge widths, cleave reach, ground-mark radii, beam widths and nova radii grow by 25%, with the warning and collision using the same dimensions.
+
+Hungry Siphon breaks on an outward dash; Knotted Siphon breaks on a dash through its reachable teal knot. Channels allow at least four combat seconds and dash recharge, give 0.8s before the drain begins, then use 2% maximum-HP DoT ticks through the shared fire cap. Caster healing is at most 0.2% per actual damaging tick and 2% per channel. Walking does not sever a siphon, and expiration has no final burst. Enemy HP, calibration, equipment, rewards and spawn cadence retain v11.8.2 rules.
+
 Build 11.8.2 adds 75% regular-elite HP and 25% boss/guardian-Echo HP in Zones 1–2, measured against v11.8.1. Royal Guards and summoned elites count as regular elites. Rares, uncommons, ordinary monsters, spires and all enemies from Zone 3 onward retain their previous health. These multipliers apply once after the existing health calibration; player damage, incoming damage, rewards and spawn cadence keep their current rules.
 
 Build 11.8.1 gives health motes a 12-combat-second lifetime, including at full health, and a three-second fade. Elites/rares independently roll 25% for blessing spoils and 50% for health; ordinary health drop frequency and all healing amounts remain. Other ground loot keeps its persistence. Zone 1’s Floor 5 overlord opens with Walking Hedge and repeats it between normal-rotation attacks, retaining his full attack variety and the major-attack budget.
@@ -196,21 +204,21 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 4 | ~254 min | 240.0 |
 | 5 | ~135 min | 480.0 |
 
-- Live Zone 1: **13.6 min**, 413 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **23.1 min**, 648 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **181.7 min**, 938 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **189.0 min**, 1118 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **133.2 min**, 1118 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **131.2 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 1: **15.4 min**, 413 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **26.5 min**, 648 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **229.2 min**, 938 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **238.1 min**, 1118 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **163.7 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **159.3 min**, 1118 rewarded defeats, 480.0 reference DPS.
 
 | Zone | v11.8.1 live reference | Current live reference |
 | --- | ---: | ---: |
-| 1 | 12.2 min | 13.6 min |
-| 2 | 20.8 min | 23.1 min |
+| 1 | 12.2 min | 15.4 min |
+| 2 | 20.8 min | 26.5 min |
 
 This comparison uses the same invulnerable full-Zone controller and reference equipment. It measures combat pacing with counters, spires and guards; it does not measure human survival or difficulty.
 
-The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
+The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage without the shared Resolve boon; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
 Boss health retains the earlier 1.12× baseline adjustment, followed by the 1.5× health experiment, then either the additional 1.25× in Zones 1–2 or the existing 6× step from Zone 3. Bosses change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
 
@@ -222,7 +230,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with one continuously expanding Grave Pulse ring. Dash through it: it has no fixed lifetime or travel limit and always moves faster than running, including movement buffs. Pulse casts cannot overlap, and the next warning allows dash recharge before impact. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 8.5–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 80.3–189 HP remained in the finale trials and 64.4–160.7 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 7.5–10s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 5 of 6 trials: 69.9–171 HP remained in the finale trials and 0–123.1 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
@@ -272,7 +280,7 @@ Selected mechanics use 156 authored SVG props/medallions, shared warning/collisi
 - **Royal Guard**: Blue shield · defeat both guards.
 - **Hungry Mirror**: Touch the gold rune; step out first if it appears under you · missing hurts and heals the boss.
 - **Marked Ground**: Red marks lock on cast · step between them.
-- **Siphon Tether**: Break the red tether · move beyond the ring.
+- **Siphon Tether**: Dash away from the caster or through the teal knot.
 - **Orbital Blades**: Red blades orbit then fly outward.
 - **Ruinous Rush**: Violet charge leaves a burning trail.
 

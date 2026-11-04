@@ -9,7 +9,7 @@ function promoteUncommon(enemy,roll=Math.random()){
 function resolveUncommonAttack(enemy,cast){
  const damage=hostileDamage(enemy,cast.type==='ground'?UNCOMMON_ENEMIES.ground:cast.type==='charge'?UNCOMMON_ENEMIES.charge:UNCOMMON_ENEMIES.projectile);
  if(cast.type==='charge')resolveEliteSpecial(enemy,cast,damage);
- else if(cast.type==='ground')game.hazards.push({x:cast.target.x,y:cast.target.y,r:34,type:'ground',singleHit:true,language:'friendly',owner:enemy,enemyHits:new Set(),biome:enemy.biome,life:.6,total:.6,damage,age:0});
+ else if(cast.type==='ground')game.hazards.push({x:cast.target.x,y:cast.target.y,r:cast.targets[0].r,type:'ground',singleHit:true,language:'friendly',owner:enemy,enemyHits:new Set(),biome:enemy.biome,life:.6,total:.6,damage,age:0});
  else{const angle=cast.angle;game.hostileShots.push({x:enemy.x,y:enemy.y,vx:Math.cos(angle)*155,vy:Math.sin(angle)*155,rad:6,life:4,biome:enemy.biome,damage,owner:enemy,language:'danger'});}
 }
 function paintUncommonWarning(enemy,cast,progress){

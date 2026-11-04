@@ -47,9 +47,45 @@ const THEMED_GROUPS=[
  [['astralSlingshot','gravityWell','stargateVolley'],['orbitTransfer','constellationCage','collapsingNova'],['riftScissors','prismRelay','cometLadder','gravityWell']]
 ];
 const themedEffectImages=new Map();
+const THEMED_LINK={minimum:220,preferred:260,crossing:70,landing:70};
 function themedAbility(type){return THEMED_MECHANICS[type];}
 function themedKind(owner,type){return THEMED_MECHANICS[type].biome<0?(owner.biome??biomeIndex()):THEMED_MECHANICS[type].biome;}
-function themedPartner(owner){return game.enemies.filter(e=>e!==owner&&e.hp>0&&!e.totem&&Math.hypot(e.x-owner.x,e.y-owner.y)<360).sort((a,b)=>Number(!!b.elite)-Number(!!a.elite))[0]||null;}
+function themedPartner(owner){return game.enemies.filter(e=>e!==owner&&e.hp>0&&!e.totem&&!e.charge&&!e.cast&&Math.hypot(e.x-owner.x,e.y-owner.y)<360).sort((a,b)=>Number(!!b.elite)-Number(!!a.elite))[0]||null;}
+function themedLinkEnd(e){return e.partner||e.anchor;}
+function themedLinkCrossing(start,end,arena){
+ const dx=end.x-start.x,dy=end.y-start.y,d=Math.hypot(dx,dy);if(d<THEMED_LINK.minimum-1e-7)return null;
+ const mid={x:(start.x+end.x)/2,y:(start.y+end.y)/2},normal={x:-dy/d,y:dx/d};
+ for(const u of [.25,.5,.75])if(!encounterClear(start.x+dx*u,start.y+dy*u,18))return null;
+ for(let offset=-THEMED_LINK.crossing;offset<=THEMED_LINK.crossing;offset+=20){const q={x:mid.x+normal.x*offset,y:mid.y+normal.y*offset};if(!insideRect(q,arena,-16)||!encounterClear(q.x,q.y,14)||!encounterClear(q.x,q.y+13,12))return null;}
+ return {mid,normal};
+}
+function themedLinkDestination(owner,partner,arena){
+ const p=game.player,r=partner?.rad||24,margin=r+10,preferred=Math.atan2(p.y-owner.y,p.x-owner.x);let best=null,score=Infinity;
+ const accepts=q=>insideRect(q,arena,-margin)&&encounterClear(q.x,q.y,r)&&Math.hypot(q.x-p.x,q.y-p.y)>=Math.max(THEMED_LINK.landing,r+35)&&game.enemies.every(e=>e===owner||e===partner||e.hp<=0||Math.hypot(e.x-q.x,e.y-q.y)>=r+e.rad+24)&&(game.totems||[]).every(t=>Math.hypot(t.x-q.x,t.y+18-q.y)>=r+40)&&themedLinkCrossing(owner,q,arena);
+ if(!insideRect(owner,arena,-Math.min(40,(owner.rad||20)+8)))return null;
+ if(partner&&accepts(partner))return {x:partner.x,y:partner.y};
+ for(const distance of [THEMED_LINK.preferred,300,THEMED_LINK.minimum])for(let i=0;i<32;i++){
+  const angle=preferred+i*Math.PI/16,q={x:owner.x+Math.cos(angle)*distance,y:owner.y+Math.sin(angle)*distance};if(!accepts(q))continue;
+  const candidate=Math.abs(distance-THEMED_LINK.preferred)+Math.hypot((q.x+owner.x)/2-p.x,(q.y+owner.y)/2-p.y)*.2+(partner?Math.hypot(q.x-partner.x,q.y-partner.y)*.06:0);
+  if(candidate<score){score=candidate;best=q;}
+ }
+ return best;
+}
+function liveThemedLink(e){return !e.done&&e.owner.hp>0&&game.enemies.includes(e.owner)&&themedLinkEnd(e)&&(!e.partner||e.partner.hp>0&&game.enemies.includes(e.partner));}
+function themedLinkStep(enemy,dx,dy){
+ if(!dx&&!dy)return {x:0,y:0};
+ let link=(game.themedEvents||[]).find(e=>liveThemedLink(e)&&(e.owner===enemy||e.partner===enemy));
+ if(!link)for(const owner of game.enemies){const e=owner.cast?.themed;if(e&&liveThemedLink(e)&&(e.owner===enemy||e.partner===enemy)){link=e;break;}}
+ if(!link)return {x:dx,y:dy};
+ const point={x:enemy.x+dx,y:enemy.y+dy},start=link.owner===enemy?point:link.owner,end=link.partner===enemy?point:themedLinkEnd(link);
+ if(!insideRect(point,link.arena,-Math.min(40,(enemy.rad||20)+8))||!encounterClear(point.x,point.y,enemy.rad||20)||!themedLinkCrossing(start,end,link.arena))return {x:0,y:0};
+ return {x:dx,y:dy};
+}
+function snapThemedLink(e,from,dashing){
+ if(!dashing||!['briarLeash','rallyThread'].includes(e.type)||!liveThemedLink(e))return false;
+ const end=themedLinkEnd(e),p=game.player;if(segmentsDistance(from.x,from.y,p.x,p.y,e.owner.x,e.owner.y,end.x,end.y)>=17)return false;
+ e.solved=e.done=true;burst(p.x,p.y,12,combatTheme('safe').color);return true;
+}
 function bossPlan(e){
  if(e.uncommon)return [e.uncommonAttack||uncommonPattern(e)];
  const base=standardBossPlan(e),kind=e.biome??biomeIndex(),groups=THEMED_GROUPS[kind],band=zoneVisualBand(),family=e.champion?(e.visualType||0)%3:(e.bossIndex||0);
@@ -108,13 +144,18 @@ function setupThemedCast(owner,cast){
   let exit=null;for(const offset of [0,.5,-.5,1,-1,1.5,-1.5,2,-2]){const angle=cast.angle+offset,q={x:cx+Math.cos(angle)*145,y:cy+Math.sin(angle)*145};if(!insideRect(q,a,-16)||!encounterClear(q.x,q.y,16)||game.enemies.some(e=>Math.hypot(e.x-q.x,e.y-q.y)<e.rad+42))continue;const route=Array.from({length:8},(_,i)=>(i+1)/8);if(route.some(v=>!encounterClear(p.x+(q.x-p.x)*v,p.y+(q.y-p.y)*v,12)))continue;exit=angle;break;}if(exit===null)return false;event.exitAngle=exit;
  }
  if(cast.type==='graftedSwap'){const q=point(cx+(serial%2?80:-80),cy-100,24,true);if(!q)return false;event.points=[q];}
- if(cast.type==='orbitTransfer'||cast.type==='rallyThread'){event.partner=themedPartner(owner);if(!event.partner)return false;}
+ if(['orbitTransfer','rallyThread','briarLeash'].includes(cast.type)){
+  const partner=cast.type==='briarLeash'?null:themedPartner(owner);if(cast.type!=='briarLeash'&&!partner)return false;
+  const destination=themedLinkDestination(owner,partner,a);if(!destination)return false;
+  if(partner){event.partner=partner;if(Math.hypot(destination.x-partner.x,destination.y-partner.y)>1){event.relocation={from:{x:partner.x,y:partner.y},to:{...destination}};partner.x=destination.x;partner.y=destination.y;burst(partner.x,partner.y,12,abilityMaterial(kind).accent);}}
+  else event.anchor=destination;
+ }
  if(cast.type==='burrowingBriar')event.target={x:p.x,y:p.y};
  if(cast.type==='clingingSeeds')event.state.attachedAt=null;
  cast.total=cast.windup=cast.total===undefined?def.seconds:Math.max(cast.total,def.seconds);cast.label=def.name;cast.hint='';cast.shapes=[];cast.arena=a;cast.themed=event;return true;
 }
 function resolveThemedCast(owner,cast){
- const event=cast.themed;if(!event)return false;event.age=0;event.damage=bossAttackDamage(owner,cast.type);(game.themedEvents||(game.themedEvents=[])).push(event);return true;
+ const event=cast.themed;if(!event)return false;if(event.done||event.partner&&(!game.enemies.includes(event.partner)||event.partner.hp<=0))return true;event.age=0;event.damage=bossAttackDamage(owner,cast.type);(game.themedEvents||(game.themedEvents=[])).push(event);return true;
 }
 function tickThemedWindup(owner,cast,dt){
  if(cast.type==='burrowingBriar'&&cast.windup>.65)cast.themed.target={x:game.player.x,y:game.player.y};
@@ -188,9 +229,9 @@ function tickThemedEvent(e,dt,from,dashing){
  for(const shot of themedProjectileShapes(e))if(e.type!=='clingingSeeds')themedToken(e,shot,shot.r,shot.key,shot.factor);
  switch(e.type){
  case 'briarLeash':case 'rallyThread':{
-  const end=e.type==='rallyThread'?e.partner:{x:a.left+(a.right-a.left)*.8,y:t.y+70},start=e.owner;
-  if(!end||e.type==='rallyThread'&&!game.enemies.includes(end)){e.done=true;break;}
-  if(dashing&&segmentsDistance(from.x,from.y,p.x,p.y,start.x,start.y,end.x,end.y)<17){e.solved=e.done=true;burst(p.x,p.y,12,combatTheme('safe').color);}
+  const end=themedLinkEnd(e);
+  if(!liveThemedLink(e)){e.done=true;break;}
+  if(snapThemedLink(e,from,dashing))break;
   else if(e.type==='briarLeash'&&age>=e.total-.05&&!s.pulled){s.pulled=true;themedPull(end,65);hurt(e.damage*.6);}
   break;}
  case 'clingingSeeds':{
@@ -234,11 +275,14 @@ function themedPortalShot(e,age){const first={x:e.arena.left+45,y:e.target.y-70}
 function themedPull(point,amount,radius=Infinity){const p=game.player,dx=point.x-p.x,dy=point.y-p.y,d=Math.hypot(dx,dy);if(d>radius||d<1)return;p.x+=dx/d*Math.min(amount,d);p.y+=dy/d*Math.min(amount,d);resolveWorldCollisions(p);}
 function tickThemedMechanics(dt,from=game.player,dashing=false){
  const p=game.player,history=game.themedHistory||(game.themedHistory=[]);if(!history.length||game.frame-history[history.length-1].time>=.09){history.push({x:p.x,y:p.y,time:game.frame});if(history.length>32)history.shift();}
+ for(const owner of game.enemies){const e=owner.cast?.themed;if(e&&snapThemedLink(e,from,dashing)){owner.cast=null;owner.castCooldown=owner.boss?2.5:3.1;}}
  game.themedEvents=(game.themedEvents||[]).filter(e=>{if(e.done||!game.enemies.includes(e.owner)||e.owner.hp<=0||game.status!=='running')return false;e.age+=dt;tickThemedEvent(e,dt,from,dashing);return !e.done&&e.age<e.total&&game.status==='running'&&game.transition<=0;});
 }
 function themedShieldMultiplier(enemy,from=game.player){const e=(game.themedEvents||[]).find(e=>e.type==='turningBulwark'&&e.owner===enemy&&!e.done);if(!e)return 1;const angle=e.angle+e.age*.5,delta=Math.atan2(from.y-enemy.y,from.x-enemy.x)-angle;return Math.abs(Math.atan2(Math.sin(delta),Math.cos(delta)))<1.05?.3:1;}
 function themedRallyMultiplier(enemy){return (game.themedEvents||[]).some(e=>e.type==='rallyThread'&&!e.done&&(e.owner===enemy||e.partner===enemy))?1.18:1;}
 function installThemedEncounters(){
+ SVG_FILES['codex-siphon_tethers.svg']=encounterBoonIcon('siphon');CODEX_ITEMS.push({id:'siphon_tethers',cat:'Enemies',name:'Siphon Tethers',desc:'A red chain drains small rapid health ticks. Hungry Siphon breaks when you dash away from its caster; Knotted Siphon breaks when you dash through its teal knot. Walking alone does not sever either channel.'});
+ SVG_FILES['codex-warband_resolve.svg']=encounterBoonIcon('resolve');CODEX_ITEMS.push({id:'warband_resolve',cat:'Enemies',name:'Warband Resolve',desc:'Each other elite, rare, boss or guardian Echo grants 10% damage reduction, up to 50%. Stunned enemies lose this protection and stop granting it to allies until they recover.'});
  SVG_FILES['codex-uncommon_creatures.svg']=THEMED_EFFECT_ART['icon-uncommon'];
  CODEX_ITEMS.push({id:'uncommon_creatures',cat:'Enemies',name:'Uncommon creatures',desc:'Twice ordinary health, one ranged attack and a small active cap that grows by Zone. Ordinary loot.'});
  for(const [id,d]of Object.entries(THEMED_MECHANICS)){CODEX_ITEMS.push({id:'mechanic_'+id,cat:'Enemies',name:d.name,desc:d.guide});SVG_FILES['codex-mechanic_'+id+'.svg']=THEMED_EFFECT_ART['icon-'+id];}

@@ -29,7 +29,7 @@ function rareEliteFixture(){
    const outside=spawnEnemy();outside.x=350;outside.y=-40;outside.hp=outside.maxHp=100;outside.speed=0;outside.contact=1e9;
    const other=spawnEnemy();other.elite=true;other.x=0;other.y=-50;other.hp=other.maxHp=100;
    data.trinkets=['leech'];data.equippedRings=['leech'];data.enchant=4;game.player.hp=500;game.player.invuln=1e9;
-   const cast={type,resolved:false,origin:{x:0,y:-120},angle:Math.PI/2,reach:170,halfAngle:Math.PI/3,targets:[{x:0,y:-40,r:44},{x:0,y:-40,r:44}],enemyHits:new Set()};
+   const cast={type,resolved:false,origin:{x:0,y:-120},angle:Math.PI/2,reach:212.5,halfAngle:Math.PI/3,beamWidth:60,targets:[{x:0,y:-40,r:55},{x:0,y:-40,r:55}],enemyHits:new Set()};
    const before=state();resolveBossCast(owner,cast);if(type!=='cleave')for(let i=0;i<8;i++)tickDungeonHazards(.02);const afterFirst=normal.hp;
    resolveBossCast(owner,cast);if(type!=='cleave')tickDungeonHazards(.02);return {afterFirst,afterRepeated:normal.hp,outside:outside.hp,elite:other.hp,owner:owner.hp,hp:game.player.hp,kills:game.runKills-before.kills,arcs:game.arcs.length,burn:normal.burn||0,alive:game.enemies.includes(normal),points:masteryFor().points};
   },

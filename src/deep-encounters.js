@@ -33,6 +33,7 @@ function linkedShieldMultiplier(enemy){
  return game.enemies.some(source=>source.hp>0&&source.shieldLink?.target===enemy&&source.shieldLink.life>0&&!shieldRecipient(source))?.65:1;
 }
 function tickEliteLinks(dt){
+ if(game.enemies.some(e=>enemyResolveReduction(e)>0))codexDiscover('warband_resolve');
  for(const source of game.enemies){const link=source.shieldLink;if(!link)continue;link.life-=dt;if(link.life<=0||!shieldTargetAlive(link.target)||link.target.hp<=0||link.target.shieldLink||link.target.cast?.type==='shield'||Math.hypot(link.target.x-source.x,link.target.y-source.y)>450)source.shieldLink=null;}
 }
 function ricochetPoints(owner){
@@ -46,7 +47,7 @@ function ricochetPoints(owner){
 }
 function resolveEliteSpecial(enemy,cast,damage){
  if(cast.type==='charge'){
-  const distance=Math.min(340,Math.max(100,Math.hypot(cast.target.x-cast.origin.x,cast.target.y-cast.origin.y)+65));enemy.charge={angle:cast.angle,remaining:distance,hitPlayer:false,enemyHits:new Set()};return true;
+  const distance=enemyChargeLength(cast);enemy.charge={angle:cast.angle,remaining:distance,hitPlayer:false,enemyHits:new Set()};return true;
  }
  if(cast.type==='shield'){
   const target=cast.shieldTarget;if(target&&shieldTargetAlive(target)&&!target.shieldLink&&target.cast?.type!=='shield'&&!shieldRecipient(enemy)&&!shieldRecipient(target))enemy.shieldLink={target,life:8};return true;
@@ -62,8 +63,8 @@ function tickEnemyCharge(enemy,dt){
  const charge=enemy.charge;if(!charge)return false;const distance=Math.min(charge.remaining,460*dt*enemyMovementFactor()),x=enemy.x+Math.cos(charge.angle)*distance,y=enemy.y+Math.sin(charge.angle)*distance;
  if(!encounterClear(x,y+enemy.rad*.65,Math.max(10,enemy.rad*.7))){enemy.charge=null;burst(enemy.x,enemy.y,7,combatTheme('friendly').color);return true;}
  const oldX=enemy.x,oldY=enemy.y;enemy.x=x;enemy.y=y;charge.remaining-=distance;
- if(!charge.hitPlayer&&segmentDistance(game.player.x,game.player.y,oldX,oldY,x,y)<enemy.rad+17){charge.hitPlayer=true;hurt(bossAttackDamage(enemy,'charge'));enemy.contact=.8;}
- damageMonstersInAttack(enemy,charge,other=>segmentDistance(other.x,other.y,oldX,oldY,x,y)<enemy.rad+other.rad+9);
+ if(!charge.hitPlayer&&segmentDistance(game.player.x,game.player.y,oldX,oldY,x,y)<enemyChargeHalfWidth(enemy)+9){charge.hitPlayer=true;hurt(bossAttackDamage(enemy,'charge'));enemy.contact=.8;}
+ damageMonstersInAttack(enemy,charge,other=>segmentDistance(other.x,other.y,oldX,oldY,x,y)<enemyChargeHalfWidth(enemy)+other.rad+1);
  if(charge.trail){charge.trailClock-=dt;if(charge.trailClock<=0){charge.trailClock=.18;game.hazards.push({type:'ground',language:'friendly',lingering:true,x:oldX,y:oldY,r:28,life:1.3,total:1.3,age:0,owner:enemy,enemyHits:charge.enemyHits,damage:bossAttackDamage(enemy,'charge')*.7,biome:enemy.biome});}}
  if(charge.remaining<=0)enemy.charge=null;return true;
 }
@@ -79,7 +80,7 @@ function paintRicochetBank(point,theme,alpha=1){
 }
 function paintEliteSpecialWarning(enemy,cast,theme,progress){
  if(cast.type==='charge'){
-  const x=cast.origin.x,y=cast.origin.y,length=Math.min(340,Math.hypot(cast.target.x-x,cast.target.y-y)+65),dx=Math.cos(cast.angle),dy=Math.sin(cast.angle),half=enemy.rad+8;
+  const x=cast.origin.x,y=cast.origin.y,length=enemyChargeLength(cast),dx=Math.cos(cast.angle),dy=Math.sin(cast.angle),half=enemyChargeHalfWidth(enemy);
   ctx.save();ctx.fillStyle=theme.color+'1c';ctx.strokeStyle=theme.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x-dy*half,y+dx*half);ctx.lineTo(x+dx*length-dy*half,y+dy*length+dx*half);ctx.lineTo(x+dx*length+dy*half,y+dy*length-dx*half);ctx.lineTo(x+dy*half,y-dx*half);ctx.closePath();ctx.fill();ctx.stroke();line(x,y,x+dx*length*progress,y+dy*length*progress,2.5,theme.hot);ctx.restore();paintWarningCircle(cast.target.x,cast.target.y,18,progress,theme);return true;
  }
  if(cast.type==='ricochet'){

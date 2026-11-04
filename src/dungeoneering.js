@@ -70,7 +70,7 @@ function paintThreatTelegraphs(){
   else if(cast.type==='cleave')paintEnemyCleave(cast,theme,progress);
   else if(cast.type==='ground')for(const t of cast.targets)paintWarningCircle(t.x,t.y,t.r,progress,theme);
   else if(cast.type==='beam'){
-   const dx=Math.cos(cast.angle),dy=Math.sin(cast.angle),x=cast.origin.x,y=cast.origin.y,half=24;ctx.save();ctx.fillStyle=theme.color+'25';ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-dy*half,y+dx*half);ctx.lineTo(x+dx*540-dy*half,y+dy*540+dx*half);ctx.lineTo(x+dx*540+dy*half,y+dy*540-dx*half);ctx.lineTo(x+dy*half,y-dx*half);ctx.closePath();ctx.fill();ctx.stroke();line(x,y,x+dx*540*progress,y+dy*540*progress,2.5,theme.hot);ctx.restore();
+   const dx=Math.cos(cast.angle),dy=Math.sin(cast.angle),x=cast.origin.x,y=cast.origin.y,half=cast.beamWidth/2;ctx.save();ctx.fillStyle=theme.color+'25';ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-dy*half,y+dx*half);ctx.lineTo(x+dx*540-dy*half,y+dy*540+dx*half);ctx.lineTo(x+dx*540+dy*half,y+dy*540-dx*half);ctx.lineTo(x+dy*half,y-dx*half);ctx.closePath();ctx.fill();ctx.stroke();line(x,y,x+dx*540*progress,y+dy*540*progress,2.5,theme.hot);ctx.restore();
   }else if(cast.type==='volley'){
    paintWarningCircle(cast.origin.x,cast.origin.y,e.rad+27,progress,theme);const count=e.bossIndex===2?18:10,offset=(e.mechanicIndex||0)*.39;for(let i=0;i<count;i++){if(i%5===0)continue;const a=i*Math.PI*2/count+offset;line(cast.origin.x+Math.cos(a)*40,cast.origin.y+Math.sin(a)*40,cast.origin.x+Math.cos(a)*135,cast.origin.y+Math.sin(a)*135,1.2,theme.color+'88');}
   }
@@ -143,9 +143,9 @@ function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFr
    e.frozen=Math.max(0,(e.frozen||0)-dt);
    e.wobble+=dt*3;e.contact-=dt;
    const vx=p.x-e.x,vy=p.y-e.y,dist=Math.hypot(vx,vy)||1;
-   if(e.boss||e.elite||e.uncommon)tickBossSpecial(e,dt,playerFrom);
+   if(e.boss||e.elite||e.uncommon)tickBossSpecial(e,dt,playerFrom,dashing);
    if(!game.enemies.includes(e)||game.status!=='running')continue;
-   const walk=e.cast&&!isReflectCast(e.cast)||e.charge||e.stagger>0?0:e.uncommon&&dist<175?-.5:e.uncommon&&dist<280?0:(game.totems||[]).some(t=>t.owner===e)?.20:1;e.x+=vx/dist*e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);e.y+=vy/dist*e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1);
+   const walk=e.cast&&!isReflectCast(e.cast)||e.charge||e.stagger>0?0:e.uncommon&&dist<175?-.5:e.uncommon&&dist<280?0:(game.totems||[]).some(t=>t.owner===e)?.20:1,step=e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1),move=themedLinkStep(e,vx/dist*step,vy/dist*step);e.x+=move.x;e.y+=move.y;
    if(!(e.stagger>0)&&dist<e.rad+17&&e.contact<=0){hurt(e.boss||e.elite?hostileDamage(e,ENCOUNTER_DAMAGE.contact):(10+combatDepth()*1.5)*(e.furyLinked?1.12:1));e.contact=e.boss?.7:.60}
  }
  tickDungeonHazards(dt,{x:playerFrom.x,y:playerFrom.y-13});tickHealthDrops(dt);tickGroundLoot(dt);

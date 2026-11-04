@@ -18,7 +18,7 @@ const EXPANDED_ABILITIES={
  bastion:{name:'Royal Guard',seconds:2,hint:'Blue shield · defeat both guards'},
  reversal:{name:'Hungry Mirror',seconds:3,hint:'Touch the gold rune; step out first if it appears under you · missing hurts and heals the boss'},
  minefield:{name:'Marked Ground',seconds:1.8,hint:'Red marks lock on cast · step between them'},
- tether:{name:'Siphon Tether',seconds:2.6,hint:'Break the red tether · move beyond the ring'},
+ tether:{name:'Siphon Tether',seconds:4,hint:'Dash away from the caster or through the teal knot'},
  orbit:{name:'Orbital Blades',seconds:1.8,hint:'Red blades orbit then fly outward'},
  eruptionTrail:{name:'Ruinous Rush',seconds:1.5,hint:'Violet charge leaves a burning trail'}
 };
@@ -75,10 +75,10 @@ function expandedCastSetup(enemy,cast){
   const point=ringRefugePoint(enemy,cast);if(!point)return false;
   cast.shapes=[{shape:'ring',...point,r:270,refuge:true}];
   cast.total=cast.windup=Math.max(def.seconds,Math.max(0,Math.hypot(game.player.x-point.x,game.player.y-point.y)-(point.inner-13))/175+.8);
- }else if(type==='nova')cast.shapes=[{shape:'ring',x:cast.origin.x,y:cast.origin.y,inner:0,r:120}];
+ }else if(type==='nova')cast.shapes=[{shape:'ring',x:cast.origin.x,y:cast.origin.y,inner:0,r:120*ENCOUNTER_AREA.common}];
  else if(type==='pincer')cast.shapes=[-.92,.92].map(a=>({shape:'cone',origin:cast.origin,angle:cast.angle+a,reach:300,halfAngle:.62}));
  else if(type==='minefield')for(let i=0;i<7;i++){const a=i*2.4;cast.shapes.push({shape:'circle',x:cast.target.x+Math.cos(a)*(i?90:0),y:cast.target.y+Math.sin(a)*(i?90:0),r:32});}
- else if(type==='tether'){cast.shapes=[{shape:'circle',x:cast.origin.x,y:cast.origin.y,r:180}];const travel=Math.max(0,180-Math.hypot(game.player.x-cast.origin.x,game.player.y-cast.origin.y));cast.total=cast.windup=Math.max(2.2,travel/175+.9);}
+ else if(type==='tether'&&setupSiphonTether(enemy,cast)===false)return false;
  else if(type==='reversal'){cast.point.inner=34;}
  else if(type==='summon'||type==='eliteSummon'){cast.point=encounterPoint(enemy,'summon');}
  else if(type==='bastion'){cast.guards=[-.9,.9].map(a=>{const angle=cast.angle+a;return summonPoint(enemy,enemy.x+Math.cos(angle)*150,enemy.y+Math.sin(angle)*150);}).filter(Boolean);}
@@ -99,9 +99,8 @@ function resolveExpandedCast(enemy,cast,damage){
  if(cast.type==='gravePulse'){addGravePulses(enemy,cast,damage);return true;}
  const type=cast.type;if(!EXPANDED_ABILITIES[type]||type==='reversal')return false;
  if(cast.shapes.length&&type!=='tether')for(const shape of cast.shapes)addExpandedHazard(enemy,cast,shape,damage*1.15,shape.delay||0);
- if(type==='tether'){
-  if(expandedContains(game.player,cast.shapes[0])){hurt(damage);enemy.hp=Math.min(enemy.maxHp,enemy.hp+enemy.maxHp*.025);encounterLabel('SIPHON',enemy.x,enemy.y-60,combatTheme('danger').hot);}
- }else if(type==='summon'||type==='eliteSummon')createSummonTotem(enemy,cast.point,type==='eliteSummon');
+ if(type==='tether')return true;
+ if(type==='summon'||type==='eliteSummon')createSummonTotem(enemy,cast.point,type==='eliteSummon');
  else if(type==='bastion'){
   for(const point of cast.guards||[])spawnSummonedEnemy(enemy,point,true,true);
   enemy.guardIds=game.enemies.filter(e=>e.summonedBy===enemy&&e.bastionGuard);
@@ -110,7 +109,7 @@ function resolveExpandedCast(enemy,cast,damage){
   const bursts=type==='ringchain'?3:type==='spiral'?5:1;
   for(let i=0;i<bursts;i++)(game.bossBursts||(game.bossBursts=[])).push({owner:enemy,cast,type,delay:i*(type==='spiral'?.32:.6),index:i,damage});
  }else if(type==='eruptionTrail'){
-  enemy.charge={angle:cast.angle,remaining:Math.min(340,Math.hypot(cast.target.x-cast.origin.x,cast.target.y-cast.origin.y)+65),hitPlayer:false,enemyHits:cast.enemyHits,trail:true,trailClock:0};
+  enemy.charge={angle:cast.angle,remaining:enemyChargeLength(cast),hitPlayer:false,enemyHits:cast.enemyHits,trail:true,trailClock:0};
  }
  return true;
 }
@@ -236,7 +235,6 @@ function paintExpandedWarning(enemy,cast,progress){
  for(const point of cast.guards||[])paintWarningCircle(point.x,point.y,28,progress,theme);
  if(['ringchain','spiral','bloom','return','orbit'].includes(cast.type)){paintWarningCircle(cast.origin.x,cast.origin.y,enemy.rad+25,progress,theme);const count=['spiral','orbit'].includes(cast.type)?8:16,offset=(enemy.mechanicIndex||0)*.28;for(let i=0;i<count;i++){if(cast.type!=='orbit'&&i%4===0)continue;const a=i*Math.PI*2/count+offset;line(enemy.x+Math.cos(a)*50,enemy.y+Math.sin(a)*50,enemy.x+Math.cos(a)*140,enemy.y+Math.sin(a)*140,1.5,theme.color+'a0');}}
  if(cast.type==='eruptionTrail')paintEliteSpecialWarning(enemy,{...cast,type:'charge'},theme,progress);
- if(cast.type==='tether')line(enemy.x,enemy.y-20,game.player.x,game.player.y-18,2,theme.color);
  if(!game.boss&&game.enemies.find(e=>e.cast)===enemy)encounterLabel(cast.hint,game.camX,game.camY+game.viewHeight/2-100,theme.hot,game.viewWidth<600?9:11);return true;
 }
 function paintSummonTotem(t){

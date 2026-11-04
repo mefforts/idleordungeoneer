@@ -69,11 +69,12 @@ function paintThemedField(e,f,warning=false){
 function paintThemedSpecial(e,warning=false){
  const t=e.target,a=e.arena,s=e.state,age=warning?0:e.age,time=abilityEffectTime(),def=THEMED_MECHANICS[e.type],theme=combatTheme(def.language),gold=combatTheme('reflect'),teal=combatTheme('safe');
  const timer=(q,r,p,color)=>themedArc(q.x,q.y,r,p,color,2.2),prop=(art,q,size=45,angle=0,alpha=1)=>themedSprite(art,e.kind,q.x,q.y,size,angle,alpha);
+ if(e.relocation&&(warning||age<.5)){const alpha=warning?.65:Math.max(0,1-age/.5);for(const q of [e.relocation.from,e.relocation.to]){prop('portal',q,58,0,alpha);themedArc(q.x,q.y,25,1,theme.color,2);}}
  if(e.path.length>1&&['backdraft','hauntedFootsteps'].includes(e.type)){for(let i=0;i<e.path.length-1;i++){const q=e.path[i];themedLine(q,e.path[i+1],2,theme.color+'99');themedArrow(q.x,q.y,Math.atan2(e.path[i+1].y-q.y,e.path[i+1].x-q.x),theme.hot,5);}if(e.type==='hauntedFootsteps'&&warning)for(const u of [.15,.65])prop('ghost',themedPathPoint(e.path,u),46,0,.35);}
  switch(e.type){
  case 'burrowingBriar':for(let i=0;i<9;i++){const u=i/8,q={x:e.origin.x+(t.x-e.origin.x)*u,y:e.origin.y+(t.y-e.origin.y)*u};prop('root',q,20+i*2,Math.sin(i)*.15,.4+.6*u);}break;
  case 'briarLeash':case 'rallyThread':{
-  const end=e.type==='rallyThread'?e.partner:{x:a.left+(a.right-a.left)*.8,y:t.y+70};if(!end)break;const start=e.owner,signal=e.type==='rallyThread'?TOTEM_SIGNALS.fury:theme;
+  const end=themedLinkEnd(e);if(!end)break;const start=e.owner,signal=e.type==='rallyThread'?TOTEM_SIGNALS.fury:theme;
   for(let i=0;i<16;i++){const u=i/15,x=start.x+(end.x-start.x)*u,y=start.y+(end.y-start.y)*u;prop(e.kind===0?'root':e.kind===2?'rib':'blade',{x,y},18,Math.atan2(end.y-start.y,end.x-start.x)+Math.PI/2);}
   themedLine(start,end,2,signal.color);for(const q of [start,end]){prop(e.type==='rallyThread'?'banner':'sapling',q,48);paintAbilityEmblem(e.type==='rallyThread'?'damage':'portal',q.x,q.y-30,9,signal);}
   const mid={x:(start.x+end.x)/2,y:(start.y+end.y)/2};themedArrow(mid.x,mid.y,Math.atan2(end.y-start.y,end.x-start.x)+Math.PI/2,teal.hot,10);timer(mid,16,1-age/e.total,teal.color);break;}

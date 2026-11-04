@@ -150,12 +150,12 @@ function paintAbilityBeam(origin,angle,length,width,kind,theme,progress,active=f
 }
 function paintAbilityGroundArt(){
  for(const enemy of game.enemies){
-  if(enemy.charge){const theme=combatTheme('friendly'),m=abilityMaterial(enemy.biome);ctx.save();ctx.translate(enemy.x,enemy.y);ctx.rotate(enemy.charge.angle);glow(0,0,enemy.rad*1.5,theme.color+'30');for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(-45,side*10);ctx.quadraticCurveTo(-15,side*(enemy.rad+8),12,side*enemy.rad*.6);ctx.strokeStyle=m.accent+'c0';ctx.lineWidth=3;ctx.stroke();}ctx.restore();}
+  if(enemy.charge){const theme=combatTheme('friendly'),m=abilityMaterial(enemy.biome),half=enemyChargeHalfWidth(enemy);ctx.save();ctx.translate(enemy.x,enemy.y);ctx.rotate(enemy.charge.angle);glow(0,0,half*1.5,theme.color+'30');for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(-45,side*half*.6);ctx.quadraticCurveTo(-15,side*half,12,side*half*.6);ctx.strokeStyle=m.accent+'c0';ctx.lineWidth=3;ctx.stroke();}ctx.restore();}
   const c=enemy.cast;if(!c)continue;const kind=enemy.biome??biomeIndex(),theme=combatTheme(castLanguage(c.type)),p=clamp(1-c.windup/c.total,0,1);
   for(const shape of c.shapes||[])if(c.type!=='tether')paintAbilityField(shape,c.type,kind,theme,p);
   if(c.type==='ground')for(const target of c.targets)paintAbilityField({...target,shape:'circle'},'ground',kind,theme,p);
   if(c.type==='cleave')paintAbilityField({...c,shape:'cone'},'cleave',kind,theme,p);
-  if(c.type==='beam')paintAbilityBeam(c.origin,c.angle,540,48,kind,theme,p);
+  if(c.type==='beam')paintAbilityBeam(c.origin,c.angle,540,c.beamWidth,kind,theme,p);
   if(c.type==='shield'&&c.shieldTarget)paintAbilityShield(c.shieldTarget.x,c.shieldTarget.y-25,17,combatTheme('shield'));
   if(c.type==='ricochet')for(const point of c.ricochetPoints||[])paintAbilityEmblem('mirror',point.x,point.y,12,theme);
   if(c.type==='mend'||c.type==='fury'){const signal=totemSignal(c);paintAbilityEmblem(signal.symbol,c.point.x,c.point.y-7,13,signal);}
@@ -166,7 +166,7 @@ function paintAbilityGroundArt(){
    for(let i=0;i<count;i++){if(c.type!=='orbit'&&i%(c.type==='volley'?5:4)===0)continue;const a=i*Math.PI*2/count+offset;paintAbilityProjectile({x:enemy.x+Math.cos(a)*radius,y:enemy.y+Math.sin(a)*radius,vx:Math.cos(a),vy:Math.sin(a),rad:5,biome:kind,language:castLanguage(c.type),abilityType:c.type,preview:true});}
   }
   if(c.type==='charge'||c.type==='eruptionTrail'){
-   const length=Math.min(340,Math.hypot(c.target.x-c.origin.x,c.target.y-c.origin.y)+65);ctx.save();ctx.translate(c.origin.x,c.origin.y);ctx.rotate(c.angle);for(let x=45;x<length;x+=55)paintAbilityBlade(x,0,12,0,theme,kind);ctx.restore();
+   const length=enemyChargeLength(c);ctx.save();ctx.translate(c.origin.x,c.origin.y);ctx.rotate(c.angle);for(let x=45;x<length;x+=55)paintAbilityBlade(x,0,12,0,theme,kind);ctx.restore();
   }
  }
  for(const h of game.hazards||[]){const theme=combatTheme(h.language||'friendly'),p=clamp(h.life/h.total,0,1),active=!(h.delay>0),kind=h.biome??biomeIndex();
@@ -207,9 +207,20 @@ function paintAbilityStream(t,a,end,caster){
  if(t.blocked&&!t.disabled){ctx.strokeStyle=combatTheme('safe').color;ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(end.x,end.y,15,0,Math.PI*2);ctx.stroke();}
  ctx.restore();
 }
+function encounterBoonIcon(kind){
+ const resolve=kind==='resolve',title=resolve?'Warband Resolve':'Siphon Tethers',art=resolve?'<path d="M29 35L64 22L99 35L94 72Q86 96 64 107Q42 96 34 72Z" fill="url(#metal)" stroke="#bbdbed" stroke-width="3"/><path d="M39 42L64 32L89 42L85 70Q79 86 64 96Q49 86 43 70Z" fill="#253f60" stroke="#95c9ef" stroke-width="2"/><path d="M49 58L64 46L79 58L74 77L54 77Z" fill="#70b6ed" stroke="#e7f4ff" stroke-width="2"/><path d="M20 29L64 15L108 29" fill="none" stroke="#accfe9" stroke-width="3"/><g fill="#ebd397" stroke="#705838" stroke-width="2"><circle cx="20" cy="29" r="7"/><circle cx="64" cy="15" r="7"/><circle cx="108" cy="29" r="7"/></g>':'<path d="M25 27L100 101" stroke="#351e2c" stroke-width="13"/><path d="M25 27L100 101" stroke="#f3978d" stroke-width="4"/><g fill="none" stroke="#c4a89f" stroke-width="3"><ellipse cx="36" cy="38" rx="9" ry="6" transform="rotate(45 36 38)"/><ellipse cx="51" cy="53" rx="9" ry="6" transform="rotate(45 51 53)"/><ellipse cx="78" cy="80" rx="9" ry="6" transform="rotate(45 78 80)"/><ellipse cx="94" cy="96" rx="9" ry="6" transform="rotate(45 94 96)"/></g><circle cx="65" cy="66" r="18" fill="#193f3d" stroke="#85e2c5" stroke-width="3"/><path d="M57 60L72 74M72 60L57 74M18 76L34 76L29 70M34 76L29 82M92 27L108 27L103 21M108 27L103 33" fill="none" stroke="#bbf5df" stroke-width="3"/>';
+ return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><title>'+title+'</title><defs><radialGradient id="bg"><stop stop-color="#344958"/><stop offset="1" stop-color="#17242b"/></radialGradient><linearGradient id="metal" x2="1" y2="1"><stop stop-color="#a5cde3"/><stop offset=".5" stop-color="#4477a5"/><stop offset="1" stop-color="#25344d"/></linearGradient></defs><circle cx="64" cy="64" r="60" fill="url(#bg)" stroke="#b8a574" stroke-width="2"/>'+art+'</svg>');
+}
 function paintAbilityTether(enemy,cast){
- const a={x:enemy.x,y:enemy.y-20},b={x:game.player.x,y:game.player.y-18},distance=Math.hypot(b.x-a.x,b.y-a.y),angle=Math.atan2(b.y-a.y,b.x-a.x),theme=combatTheme('danger'),time=abilityEffectTime(),count=Math.min(25,Math.floor(distance/12));
- ctx.save();for(let i=1;i<count;i++){const u=i/count,x=a.x+(b.x-a.x)*u,y=a.y+(b.y-a.y)*u;ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.strokeStyle=i%2?'#bcaaa0':theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,6,i%2?2:4,0,0,Math.PI*2);ctx.stroke();ctx.restore();}paintAbilityEmblem('mirror',a.x,a.y,12,theme);const u=reducedMotion()?.5:(time*.8)%1;disc(a.x+(b.x-a.x)*u,a.y+(b.y-a.y)*u,3.5,theme.hot);ctx.restore();
+ const a={x:enemy.x,y:enemy.y-20},b={x:game.player.x,y:game.player.y-18},s=cast.siphon,points=s?.cut?[a,s.cut,b]:[a,b],theme=combatTheme('danger'),teal=combatTheme('safe'),time=abilityEffectTime();ctx.save();
+ for(let n=0;n<points.length-1;n++){const start=points[n],end=points[n+1],distance=Math.hypot(end.x-start.x,end.y-start.y),angle=Math.atan2(end.y-start.y,end.x-start.x),count=Math.max(3,Math.min(30,Math.floor(distance/12)));themedLine(start,end,6,theme.color+'35');
+  for(let i=1;i<count;i++){const u=i/count,x=start.x+(end.x-start.x)*u,y=start.y+(end.y-start.y)*u;ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.strokeStyle=i%2?'#bcaaa0':theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,6,i%2?2:4,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
+  for(let i=0;i<3;i++){const u=reducedMotion()?(i+.5)/3:1-((time*.7+i/3)%1);disc(start.x+(end.x-start.x)*u,start.y+(end.y-start.y)*u,3,theme.hot);}
+ }
+ paintAbilityEmblem('mirror',a.x,a.y,12,theme);themedArc(b.x,b.y,19,cast.windup/cast.total,theme.color,2);
+ if(s?.cut){const q=s.cut;glow(q.x,q.y,38,teal.color+'35');paintAbilityEmblem('portal',q.x,q.y,18,teal);themedArc(q.x,q.y,SIPHON_TETHER.cutRadius,cast.windup/cast.total,teal.hot,2.5);for(const side of [-1,1])themedArrow(q.x+side*39,q.y,side<0?0:Math.PI,teal.hot,9);}
+ else{const angle=Math.atan2(b.y-a.y,b.x-a.x);for(const distance of [35,60,85])themedArrow(b.x+Math.cos(angle)*distance,b.y+Math.sin(angle)*distance,angle,teal.hot,8);}
+ ctx.restore();
 }
 function paintAbilityShield(x,y,size,theme){
  ctx.save();ctx.globalAlpha*=.9;glow(x,y,size*1.7,theme.color+'35');paintAbilityEmblem('shield',x,y,size,theme);ctx.restore();
