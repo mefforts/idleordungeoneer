@@ -165,9 +165,9 @@ function zoneBalance(index=zoneNumber()){
  const model={index,minutes,seconds:minutes*60,floors,weaponRank,speedRank,proficiency:1,gearTier,shopRanks:{},crit,hit,cooldown,dps,targets,swarmCount,spawnSeconds:minutes*60*.55/swarmCount,hpScale:1};
  const forecast=(scale,health=false)=>{let seconds=floors*6*.72;for(let floor=0;floor<floors;floor++)for(let phase=0;phase<6;phase++){
   const boss=phase%2===1,progress=2*floor/Math.max(1,floors-1),baseHp=boss?[160,230,360][Math.floor(phase/2)]*(phase===5?(floor===floors-1?3.2:1.75):1):30+phase*4,hp=baseHp*Math.pow(1.14,progress)*scale;
-  if(boss)seconds+=expectedAttacks(hp*(health?ENCOUNTER_HEALTH.boss:1),hit,crit)*cooldown+1.5;
+  if(boss)seconds+=expectedAttacks(hp*(health?ENCOUNTER_HEALTH.boss*regionalEncounterHealthMultiplier({boss:true},index):1),hit,crit)*cooldown+1.5;
   else{const echoes=index===1&&floor===floors-1?6:floor===0?(phase===0?0:1):zoneVisualBand(index,floor+1),eligible=Math.max(0,targets[phase]-3-echoes),rare=expectedRareCount(eligible,rareEliteSpawnChance(index,floor+1),rareEliteQuota(index,floor+1)),regular=Math.max(0,targets[phase]-echoes-rare);let attacks=0;
-   for(let sample=0;sample<21;sample++)attacks+=(regular*expectedAttacks(hp*(.9+sample*.01),hit,crit)+echoes*expectedAttacks(hp*(.9+sample*.01)*2.8*(health?ENCOUNTER_HEALTH.bossElite:1),hit,crit)+rare*expectedAttacks(hp*(.9+sample*.01)*3.5*(health?ENCOUNTER_HEALTH.rare:1),hit,crit))/21;
+   for(let sample=0;sample<21;sample++)attacks+=(regular*expectedAttacks(hp*(.9+sample*.01)*(health?regionalEncounterHealthMultiplier({},index):1),hit,crit)+echoes*expectedAttacks(hp*(.9+sample*.01)*2.8*(health?ENCOUNTER_HEALTH.bossElite*regionalEncounterHealthMultiplier({bossElite:true},index):1),hit,crit)+rare*expectedAttacks(hp*(.9+sample*.01)*3.5*(health?ENCOUNTER_HEALTH.rare*regionalEncounterHealthMultiplier({champion:true},index):1),hit,crit))/21;
    seconds+=Math.max(attacks*cooldown,(targets[phase]-1)*model.spawnSeconds+1.5);
   }
  }return seconds;};

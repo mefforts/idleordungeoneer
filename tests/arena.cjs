@@ -112,11 +112,12 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
     const models=await p.evaluate(()=>Array.from({length:15},(_,i)=>__deepwell.zoneBalance(i)));
     assert.deepEqual(models.slice(0,2).map(m=>m.previousTargetSeconds),[600,1200]);assert.ok(models[2].hpScale>=models[1].hpScale*Math.pow(1.14,2)*1.25-1e-8,'Crypt entry health exceeds the Embervault finale');
     assert.ok(models.slice(2,4).every(m=>m.baseForecastSeconds/60>=40&&m.baseForecastSeconds/60<=60)&&models.slice(4).every(m=>m.baseForecastSeconds/60>=35&&m.baseForecastSeconds/60<=60&&m.gearTier===3&&Math.abs(m.dps-240)<1e-7));
-    assert.ok(models.every(m=>Math.abs(m.forecastSeconds-m.seconds)<m.seconds*.02&&m.forecastSeconds>m.baseForecastSeconds&&m.forecastSeconds<=m.baseForecastSeconds*1.75));
+    assert.ok(models.every(m=>Math.abs(m.forecastSeconds-m.seconds)<m.seconds*.02&&m.forecastSeconds>m.baseForecastSeconds&&m.forecastSeconds<=m.baseForecastSeconds*(m.index>=2?10.5:1.75)));
     const simulated=[];
     for(const i of [0,1,2,3,8,14]){
       const sim=await p.evaluate(i=>__arenaTest.simulate(i),i);simulated.push(sim);
-      assert.ok(Math.abs(sim.seconds-sim.targetSeconds)<sim.targetSeconds*.12,'Actual zone '+(i+1)+' combat remains near target: '+sim.seconds);
+      if(i<2)assert.ok(Math.abs(sim.seconds-sim.targetSeconds)<sim.targetSeconds*.12,'Actual zone '+(i+1)+' combat remains near forecast: '+sim.seconds);
+      else assert.ok(sim.seconds<sim.targetSeconds*1.12&&sim.seconds>models[i].baseForecastSeconds*2,'Zone '+(i+1)+' keeps a material health jump under percent-health counters: '+sim.seconds+'s; raw-DPS forecast '+sim.targetSeconds+'s');
       assert.equal(sim.kills,models[i].swarmCount+3*models[i].floors);
     }
     fs.writeFileSync(path.join(resultsDir,'zone-pacing.json'),JSON.stringify({models,simulated},null,2));

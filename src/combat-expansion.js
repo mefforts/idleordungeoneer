@@ -2,7 +2,7 @@
 const COMBAT_LANGUAGE={danger:{color:'#f16d68',hot:'#ffe2d8',dark:'#52272a'},friendly:{color:'#c887ff',hot:'#f3ddff',dark:'#432756'},reflect:{color:'#edcb76',hot:'#fff5d5',dark:'#51452c'},safe:{color:'#6ce0bc',hot:'#d4fff0',dark:'#214940'},shield:{color:'#79bdff',hot:'#e4f3ff',dark:'#233e63'}};
 const SUMMON_BUMPS=Object.freeze({dashRadius:38,dashRise:16,normal:1,royal:2,radius:28,releaseRadius:40,normalBacklash:.08,royalBacklash:.12});
 const EXPANDED_ABILITIES={
- gravePulse:{name:'Grave Pulse',seconds:1.7,hint:'Expanding bone rings · dash across the rims'},
+ gravePulse:{name:'Grave Pulse',seconds:1.7,hint:'Expanding bone rings · dash through or outrun the rims'},
  ringchain:{name:'Rebounding Barrage',seconds:1.6,hint:'Three rings · gaps rotate · violet shots rebound'},
  bloom:{name:'Growing Stars',seconds:1.5,hint:'Projectiles grow · leave a wider gap'},
  return:{name:'Homeward Blades',seconds:1.5,hint:'Red blades turn home · watch the return path'},
@@ -10,7 +10,7 @@ const EXPANDED_ABILITIES={
  spiral:{name:'Spiral Barrage',seconds:1.6,hint:'Rotating gaps · keep moving'},
  sunder:{name:'Threefold Ruin',seconds:2.8,hint:'Three red quarters · enter the teal quarter'},
  gauntlet:{name:'Marching Ruin',seconds:1.7,hint:'Red lanes strike in numbered order'},
- donut:{name:'Outer Ruin',seconds:1.8,hint:'Teal center · red outer ring'},
+ donut:{name:'Outer Ruin',seconds:1.8,hint:'Enter the teal circle · avoid the red ring'},
  nova:{name:'Inner Ruin',seconds:1.6,hint:'Red center · move outside'},
  pincer:{name:'Closing Jaws',seconds:1.8,hint:'Two violet sweeps · use the gap'},
  summon:{name:'Calling Spire',seconds:1.7,hint:'Bump once to break · dash or wait while red'},
@@ -43,18 +43,38 @@ function expandedArena(){
 }
 function arenaQuarter(rect,index){const x=(rect.left+rect.right)/2,y=(rect.top+rect.bottom)/2;return {left:index%2?x:rect.left,right:index%2?rect.right:x,top:index<2?rect.top:y,bottom:index<2?y:rect.bottom};}
 function insideRect(actor,r,margin=0){return actor.x>=r.left-margin&&actor.x<=r.right+margin&&actor.y>=r.top-margin&&actor.y<=r.bottom+margin;}
+function ringRefugePoint(enemy,cast){
+ const arena=cast.arena,p=game.player,away=Math.atan2(p.y-enemy.y,p.x-enemy.x),maximum=Math.floor(Math.min(82,(arena.right-arena.left-20)/2,(arena.bottom-arena.top-20)/2));
+ for(const inner of [...new Set([maximum,64,48].filter(n=>n>=36&&n<=maximum))]){
+  let best=null,bestScore=Infinity;
+  for(const distance of [180,220,260])for(let i=0;i<24;i++){
+   const angle=away+i*Math.PI/12,x=clamp(enemy.x+Math.cos(angle)*distance,arena.left+inner+10,arena.right-inner-10),y=clamp(enemy.y+Math.sin(angle)*distance,arena.top+inner+10,arena.bottom-inner-10),gap=Math.hypot(x-enemy.x,y-enemy.y),travel=Math.hypot(x-p.x,y-p.y),score=travel*.5+Math.abs(gap-180);
+   if(gap<inner+enemy.rad+29||travel>330||score>=bestScore)continue;
+   if(game.enemies.some(e=>e!==enemy&&e.hp>0&&Math.hypot(e.x-x,e.y-y)<inner+e.rad+29)||(game.totems||[]).some(t=>t.destructible&&Math.hypot(t.x-x,t.y+18-y)<inner+38)||!encounterClear(x,y,inner+9))continue;
+   const steps=Math.max(1,Math.ceil(travel/24));let blocked=false;
+   for(let step=1;step<=steps;step++)if(!encounterClear(p.x+(x-p.x)*step/steps,p.y+(y-p.y)*step/steps,12)){blocked=true;break;}
+   if(blocked)continue;best={x,y,inner};bestScore=score;
+  }
+  if(best)return best;
+ }
+ return null;
+}
 function expandedCastSetup(enemy,cast){
  const type=cast.type,def=EXPANDED_ABILITIES[type];if(!def)return;
  cast.label=def.name;cast.hint=def.hint;cast.total=cast.windup=def.seconds;cast.arena=['sunder','ringchain'].includes(type)?enlargedAttackArena(expandedArena()):expandedArena();cast.shapes=[];
  const r=cast.arena,cx=(r.left+r.right)/2,cy=(r.top+r.bottom)/2;
- if(type==='gravePulse'){cast.shapes=[{shape:'ring',x:cast.origin.x,y:cast.origin.y,inner:25,r:47}];}
+ if(type==='gravePulse'){cast.shapes=[{shape:'ring',x:cast.origin.x,y:cast.origin.y,inner:25,r:47,wave:true}];}
  else if(type==='sunder'){
   const index=((enemy.mechanicIndex||0)+(enemy.biome||0))%4;cast.safe=arenaQuarter(r,index);
   cast.shapes=[{shape:'quarters',rect:r,safe:cast.safe}];const px=clamp(game.player.x,cast.safe.left+18,cast.safe.right-18),py=clamp(game.player.y,cast.safe.top+18,cast.safe.bottom-18);
   cast.total=cast.windup=Math.max(2.4,Math.hypot(game.player.x-px,game.player.y-py)/175+.8);
  }else if(type==='crossfire')cast.shapes=[{shape:'rect',rect:{left:r.left,right:r.right,top:cy-24,bottom:cy+24}},{shape:'rect',rect:{left:cx-24,right:cx+24,top:r.top,bottom:r.bottom}}];
  else if(type==='gauntlet')for(let i=0;i<4;i++){const width=(r.right-r.left)/4;cast.shapes.push({shape:'rect',rect:{left:r.left+i*width+5,right:r.left+(i+1)*width-5,top:r.top,bottom:r.bottom},delay:i*.7,order:i+1});}
- else if(type==='donut'||type==='nova')cast.shapes=[{shape:'ring',x:cast.origin.x,y:cast.origin.y,inner:type==='donut'?82:0,r:type==='donut'?270:120}];
+ else if(type==='donut'){
+  const point=ringRefugePoint(enemy,cast);if(!point)return false;
+  cast.shapes=[{shape:'ring',...point,r:270,refuge:true}];
+  cast.total=cast.windup=Math.max(def.seconds,Math.max(0,Math.hypot(game.player.x-point.x,game.player.y-point.y)-(point.inner-13))/175+.8);
+ }else if(type==='nova')cast.shapes=[{shape:'ring',x:cast.origin.x,y:cast.origin.y,inner:0,r:120}];
  else if(type==='pincer')cast.shapes=[-.92,.92].map(a=>({shape:'cone',origin:cast.origin,angle:cast.angle+a,reach:300,halfAngle:.62}));
  else if(type==='minefield')for(let i=0;i<7;i++){const a=i*2.4;cast.shapes.push({shape:'circle',x:cast.target.x+Math.cos(a)*(i?90:0),y:cast.target.y+Math.sin(a)*(i?90:0),r:32});}
  else if(type==='tether'){cast.shapes=[{shape:'circle',x:cast.origin.x,y:cast.origin.y,r:180}];const travel=Math.max(0,180-Math.hypot(game.player.x-cast.origin.x,game.player.y-cast.origin.y));cast.total=cast.windup=Math.max(2.2,travel/175+.9);}
@@ -97,7 +117,7 @@ function summonPoint(owner,x,y){
 }
 function createSummonTotem(owner,point,elite=false){
  if(!point||(game.totems||[]).filter(t=>t.destructible).length>=2)return null;
- const hp=Math.max(40,zoneEnemyHp(false,0)*(elite?1.6:1));
+ const hp=Math.max(40,zoneEnemyHp(false,0,1,{totem:true})*(elite?1.6:1));
  const t={totem:true,destructible:true,type:elite?'eliteSummon':'summon',eliteSummon:elite,biome:owner.biome,owner,x:point.x,y:point.y-18,rad:18,hp,maxHp:hp,age:0,spawnClock:2.4,spawnWarn:0,summonCount:0};
  (game.totems||(game.totems=[])).push(t);return t;
 }
@@ -121,7 +141,7 @@ function bumpSummonTotem(t,from=encounterFoot(game.player),dashing=false){
 function spawnSummonedEnemy(owner,point,elite=false,guard=false,totem=null){
  if(!point||!game.enemies.includes(owner)&&!(totem&&(game.totems||[]).includes(totem)&&totem.hp>0)||game.enemies.filter(e=>e.summoned).length>=8||elite&&game.enemies.filter(e=>e.summoned&&e.elite).length>=3)return null;
  const e=spawnBaseEnemy(false,0);Object.assign(e,{x:point.x,y:point.y,biome:owner.biome,summoned:true,summonedBy:owner,summonTotem:totem,bastionGuard:guard,castCooldown:2,mechanicIndex:0,mechanicsUsed:[]});
- if(elite){e.elite=true;e.bossIndex=(owner.bossIndex||0)%3;e.rad=21;e.hp=e.maxHp=zoneEnemyHp(false,0)*1.7*encounterHealthMultiplier(e);e.speed*=.85;e.name=guard?'Royal Guard':'Summoned Elite';}else e.name='Summoned '+e.name;
+ if(elite){e.elite=true;e.bossIndex=(owner.bossIndex||0)%3;e.rad=21;e.hp=e.maxHp=zoneEnemyHp(false,0,1,e)*1.7*encounterHealthMultiplier(e);e.speed*=.85;e.name=guard?'Royal Guard':'Summoned Elite';}else e.name='Summoned '+e.name;
  assignEnemyAppearance(e);burst(e.x,e.y,8,combatTheme('shield').color);return e;
 }
 function tickSummonTotem(t,dt){
@@ -198,7 +218,12 @@ function paintExpandedShape(shape,theme,progress=1,active=false){
   if(shape.order)encounterLabel(String(shape.order),(r.left+r.right)/2,(r.top+r.bottom)/2,theme.hot,20);
  }else if(shape.shape==='circle')paintWarningCircle(shape.x,shape.y,shape.r,progress,theme,active);
  else if(shape.shape==='ring'){
-  ctx.save();ctx.beginPath();ctx.arc(shape.x,shape.y,shape.r,0,Math.PI*2);if(shape.inner)ctx.arc(shape.x,shape.y,shape.inner,0,Math.PI*2,true);ctx.fillStyle=theme.color+(active?'1c':'22');ctx.fill();ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.stroke();ctx.restore();if(shape.inner){paintWarningCircle(shape.x,shape.y,shape.inner,progress,combatTheme('safe'));encounterLabel('◇ SAFE',shape.x,shape.y,combatTheme('safe').hot);}
+  ctx.save();ctx.beginPath();ctx.arc(shape.x,shape.y,shape.r,0,Math.PI*2);if(shape.inner)ctx.arc(shape.x,shape.y,shape.inner,0,Math.PI*2,true);ctx.fillStyle=theme.color+(active?'1c':'22');ctx.fill();ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.stroke();ctx.restore();
+  if(shape.refuge&&shape.inner){
+   const teal=combatTheme('safe'),r=Math.min(22,shape.inner*.28);paintWarningCircle(shape.x,shape.y,shape.inner,progress,teal);
+   ctx.save();ctx.strokeStyle=teal.hot;ctx.lineWidth=2;for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(shape.x,shape.y,r,i*Math.PI/2+.2,(i+1)*Math.PI/2-.2);ctx.stroke();}poly([shape.x,shape.y-10,shape.x+7,shape.y,shape.x,shape.y+10,shape.x-7,shape.y],teal.color+'30',teal.hot,1.5);ctx.restore();
+  }
+  if(shape.wave)for(let i=0;i<4;i++){const a=i*Math.PI/2,r=(shape.inner+shape.r)/2,x=shape.x+Math.cos(a)*r,y=shape.y+Math.sin(a)*r;for(const side of [-1,1])line(x+Math.cos(a)*4,y+Math.sin(a)*4,x-Math.cos(a)*3+Math.cos(a+Math.PI/2)*side*4,y-Math.sin(a)*3+Math.sin(a+Math.PI/2)*side*4,1.8,theme.hot);}
  }else if(shape.shape==='cone')paintEnemyCleave(shape,theme,progress,active);
 }
 function paintExpandedWarning(enemy,cast,progress){
@@ -229,7 +254,7 @@ function paintSummonTotem(t){
  if((t.bumpFlashUntil||0)>game.frame)paintWarningCircle(foot.x,foot.y,31,1,combatTheme('safe'));
  if(t.spawnPoint){paintWarningCircle(t.spawnPoint.x,t.spawnPoint.y,22,1-t.spawnWarn/1.3,theme);encounterLabel('SUMMON',t.spawnPoint.x,t.spawnPoint.y-27,theme.hot,8);}
 }
-function combatGuideHtml(){return codexParagraph('Move, dash and attack automatically. Each warning uses both a color and a shape or label. Threats lock their aim when the warning appears.')+codexRuleList([['Red · danger','Hurts you only. Leave the marked area.'],['Violet · friendly fire','Hurts you and other enemies. Lure monsters into sweeps, charges, beams, eruptions and rebounding rings.'],['Gold / white · reflect','Touch the gold center to counter immediately. Enter jaws through their teal opening; a rune under your feet requires stepping out and returning. Casters keep moving. Missing any timer costs 8% maximum health before defenses; Hungry Mirrors also heal their caster.'],['Teal · safe / benefit','Safe quarters and circles, or the ring around a stream redirected to you.'],['Totem beams · follow the symbol','Green crosses carry healing; red swords carry damage boosts. These support streams do not deal contact damage. Blue chevrons identify attack-speed effects. A disabled stream is muted and stops sending symbols.'],['Blue · shield','Break guards or a shield source to expose the protected target. Shielding elites can protect summoning spires; impact damage always retains full strength.'],['Spire · bump to break','Walk into an ordinary spire once, or a crowned spire twice. Step clear of its base before another walking bump, or use a fresh dash. Each dash through the base counts once, including when already touching it. Teal is safe; a red, surging spire retaliates for 8% / 12% maximum health before defenses. Dash through or wait for teal to avoid that damage. Weapons cannot target or damage summoning spires. They keep summoning after their caster dies; clear them and their surviving summons to finish the encounter. Healing and power totems remain stream interceptions.'],['Reinforcements','Summoned monsters and guards drop no rewards and do not count toward the wave.']])+codexParagraph('Bosses change patterns at health thresholds. Rebounding rings arrive in three waves; growing shots widen; returning blades come back to their caster. Zone 2 frequently uses growing stars that travel far before returning; its cleaves leave short-lived fire. Its final floor has more elites and rares. Zone 3 starts above Zone 2’s final-floor health, with pursuing death echoes and expanding grave pulses. Watch their shape as well as their color.');}
+function combatGuideHtml(){return codexParagraph('Move, dash and attack automatically. Each warning uses both a color and a shape or label. Threats lock their aim when the warning appears.')+codexRuleList([['Red · danger','Hurts you only. Leave the marked area.'],['Violet · friendly fire','Hurts you and other enemies. Lure monsters into sweeps, charges, beams, eruptions and rebounding rings.'],['Gold / white · reflect','Touch the gold center to counter immediately. Enter jaws through their teal opening; a rune under your feet requires stepping out and returning. Casters keep moving. Missing any timer costs 8% maximum health before defenses; Hungry Mirrors also heal their caster.'],['Teal · refuge / benefit','Protected spaces for the marked attack, or a stream redirected to you. Moving pulse rims have no teal center: dash through or outrun them.'],['Totem beams · follow the symbol','Green crosses carry healing; red swords carry damage boosts. These support streams do not deal contact damage. Blue chevrons identify attack-speed effects. A disabled stream is muted and stops sending symbols.'],['Blue · shield','Break guards or a shield source to expose the protected target. Shielding elites can protect summoning spires; impact damage always retains full strength.'],['Spire · bump to break','Walk into an ordinary spire once, or a crowned spire twice. Step clear of its base before another walking bump, or use a fresh dash. Each dash through the base counts once, including when already touching it. A teal spire can be bumped without retaliation; a red, surging spire retaliates for 8% / 12% maximum health before defenses. Dash through or wait for teal to avoid that damage. Weapons cannot target or damage summoning spires. They keep summoning after their caster dies; clear them and their surviving summons to finish the encounter. Healing and power totems remain stream interceptions.'],['Reinforcements','Summoned monsters and guards drop no rewards and do not count toward the wave.']])+codexParagraph('Bosses change patterns at health thresholds. Rebounding rings arrive in three waves; growing shots widen; returning blades come back to their caster. Zone 2 frequently uses growing stars that travel far before returning; its cleaves leave short-lived fire. Its final floor has more elites and rares. Zone 3 starts above Zone 2’s final-floor health, with pursuing death echoes and expanding grave pulses. Watch their shape as well as their color.');}
 
 function announceWeaponUpgradeTip(){
  if(data.weaponUpgradeTipSeen)return;data.weaponUpgradeTipSeen=true;toast('Strengthen your new weapon','Refine it at its crafting bench, then visit Warding to enchant it. Both improvements are permanent.');

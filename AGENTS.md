@@ -12,3 +12,7 @@ Deliver completed builds through `https://github.com/mefforts/idleordungeoneer` 
 Public GitHub Pages hosting for this game at `https://mefforts.github.io/idleordungeoneer/` is authorized, including publishing the current build and automatically updating the website from future builds on `main`. Serve the standalone root `index.html` as a static site. Routine build pushes may trigger this deployment; do not ask for confirmation again.
 
 This authorization does not include publishing cloud environment drafts, deploying other websites, or changing repository visibility. Keep machine-specific setup and private runtime details out of this public repository.
+
+# Combat communication
+
+Do not display the word "SAFE" in in-game mechanic labels or explanations. Use teal and clear symbols for protected areas or beneficial interactions. Moving pulse rims must not advertise their center as a refuge. Stationary ring refuges must be reachable, clear of terrain and separated from the caster's contact range.

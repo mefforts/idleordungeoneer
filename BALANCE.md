@@ -88,7 +88,7 @@ The Dungeon Shop has a Long blessings sub-store. Most effects cost 60 interchang
 
 ## Encounter health experiment
 
-Compared with the previous build, regular elites have 75% more health. Rares, guardian Echoes (boss elites), and full bosses have 50% more. Rare and boss-elite flags take precedence, so a rare is not multiplied again as an elite. Ordinary monsters and summoning spires retain their health; bump counts remain one or two. These multipliers apply after the existing health-scale calibration: player damage, rewards, spawn counts and cadence are preserved. Forecast times below include the extra durability.
+Build 11.6 retains +75% regular elite health and +50% rare, guardian Echo (boss elite) and boss health. Build 11.6.1 adds a further step from Zone 3 onward: 2× ordinary minion health and 6× health for all special enemies, measured against v11.6.0. The 6× applies once; special enemies do not also receive the minion 2×. Zones 1–2 keep their current health. Rare and boss-elite flags retain their category precedence. Summoning-spire health and one/two-impact rules remain unchanged. All multipliers apply after the existing health-scale calibration: player damage, incoming damage, rewards, spawn counts and cadence are preserved. Forecast times below include the added durability.
 
 ## Equipment ceilings
 
@@ -184,20 +184,20 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | --- | --- | ---: |
 | 1 | ~12 min | 80.0 |
 | 2 | ~24 min | 160.0 |
-| 3 | ~55 min | 160.0 |
-| 4 | ~61 min | 160.0 |
-| 5 | ~44 min | 240.0 |
+| 3 | ~229 min | 160.0 |
+| 4 | ~241 min | 160.0 |
+| 5 | ~167 min | 240.0 |
 
-- Live Zone 1: **11.0 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 1: **10.7 min**, 375 rewarded defeats, 80.0 reference DPS.
 - Live Zone 2: **23.7 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **56.4 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **61.7 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **50.7 min**, 960 rewarded defeats, 240.0 reference DPS.
-- Live Zone 15: **51.1 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **201.9 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **209.6 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **174.3 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 15: **173.3 min**, 960 rewarded defeats, 240.0 reference DPS.
 
-The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Menus, mistakes and preparation can extend them.
+The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
-Boss health retains the earlier 1.12× baseline adjustment, followed by this build’s 1.5× health experiment. Bosses change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
+Boss health retains the earlier 1.12× baseline adjustment, followed by the 1.5× health experiment and, from Zone 3, the additional 6× step. Bosses change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
 
 Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon or damage bonuses. Each bump removes one full impact segment from the existing health bar; weapons cannot target or damage them through any primary or secondary path. Contact uses a 28-unit ground radius and re-arms after leaving 40 units. A red summoning surge retaliates for 8% / 12% player maximum HP before regional damage scaling, normal defenses and invulnerability. Idle, disabled and silenced spires are safe to bump; dashing is always safe. Each accepted dash uses swept contact across the visible base, counts once per spire, bypasses existing walking contact and retains a full impact through shields. Shielding elites can link summoning spires within 340 units. Their shields do not block bump/dash impacts and disappear with either endpoint. Spires keep summoning after their caster dies; the phase waits for the remaining spires and their minions, with no additional rewards from either. Retry, defeat and phase transitions clear transient encounter state. A fast pass counts once, and destroying a spire cancels its pending arrival. Existing minions remain. Spires grant no rewards or wave progress.
 
@@ -205,18 +205,22 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. Existing 80/160 equipment ceilings and earned DPS are retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with two expanding Grave Pulse rims; dash across or outrun them. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.7s on Zone 2’s finale and 8.4–9.3s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 130.9–189 HP remained in the finale trials and 79.4–189 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.7s on Zone 2’s finale and 5.7–6.4s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 3 of 6 trials: 130.9–189 HP remained in the finale trials and 0 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+
+In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
 Codex is nested inside Inventory (C still opens it). Defeat can open the last available skill directly without reviving or restarting the floor; returning to Delve offers the regular retry. All ten chosen blessings stack through the normal picker, multiply or add according to their effect, retain independent saved timers and show combined strength; chain chance retains its 85% cap and Silence lasts while any copy remains.
 
 ## Warning language and ability library
+
+Grave Pulse keeps its expanding violet rims: dash through or outrun them. Moving rings have no teal center. Stationary Outer Ruin refuges are placed clear of the caster, terrain and other enemies, remain inside the visible arena and include time to reach the circle. Crowded arenas defer the cast when no reachable refuge fits. The teal circle and sanctuary symbol remain fixed through impact. Mechanic labels and the combat guide omit the word SAFE.
 
 | Color | Meaning |
 | --- | --- |
 | Red | Dangerous to the player only |
 | Violet | Dangerous to player and other monsters |
 | Gold / white center | Touch the center to reflect immediately |
-| Teal | Safe area or an intercepted benefit |
+| Teal | Protected area or an intercepted benefit |
 | Blue | Shield; remove its source / Royal Guards |
 
 Build 11.2 adds illustrated, animated roots, molten eruptions, bone hands, crystal ruptures, physical projectiles, chains, shield emblems and summoning portals. Threefold Ruin now grows full-height roots, lava, bone hands or crystals through the three dangerous quarters, with connected ground fissures. The empty teal quarter has a sanctuary symbol instead of a SAFE text label. Threat rims retain their existing geometry and colors. Artwork stays outside safe quarters and ring centers. Decorative motion uses the paused combat clock, with steady reduced-motion appearances. Totem streams use green crosses for healing and red swords for damage; the attack-speed palette uses blue chevrons. Stream colors persist through interception; disabled links are muted. This presentation pass does not change damage, collision, durations or rewards.
@@ -225,7 +229,7 @@ Instruction labels fade in, fade out and recur on a real-time clock; changing in
 
 The encounter library now has 29 patterns: the ten original attacks plus nineteen expanded patterns. Final guardians use a broad rotation and forced phase attacks.
 
-- **Grave Pulse**: Expanding bone rings · dash across the rims.
+- **Grave Pulse**: Expanding bone rings · dash through or outrun the rims.
 - **Rebounding Barrage**: Three rings · gaps rotate · violet shots rebound.
 - **Growing Stars**: Projectiles grow · leave a wider gap.
 - **Homeward Blades**: Red blades turn home · watch the return path.
@@ -233,7 +237,7 @@ The encounter library now has 29 patterns: the ten original attacks plus ninetee
 - **Spiral Barrage**: Rotating gaps · keep moving.
 - **Threefold Ruin**: Three red quarters · enter the teal quarter.
 - **Marching Ruin**: Red lanes strike in numbered order.
-- **Outer Ruin**: Teal center · red outer ring.
+- **Outer Ruin**: Enter the teal circle · avoid the red ring.
 - **Inner Ruin**: Red center · move outside.
 - **Closing Jaws**: Two violet sweeps · use the gap.
 - **Calling Spire**: Bump once to break · dash or wait while red.

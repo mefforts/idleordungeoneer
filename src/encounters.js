@@ -88,11 +88,11 @@ function beginBossCast(e){
   const count=e.elite?1:e.bossIndex===2?4:2;cast.targets.push({x:game.player.x,y:game.player.y,r:e.boss&&isZoneFinal()?54:44});
   for(let i=1;i<count;i++){const a=i*Math.PI*2/count+(e.mechanicIndex||0)*.75;cast.targets.push({x:game.player.x+Math.cos(a)*105,y:game.player.y+Math.sin(a)*105,r:44});}
  }
- expandedCastSetup(e,cast);if(isReflectCast(cast))configureReflectWard(e,cast);
+ if(expandedCastSetup(e,cast)===false)return false;if(isReflectCast(cast))configureReflectWard(e,cast);
  if(['summon','eliteSummon'].includes(type)&&!cast.point)return false;
  if(type==='bastion'&&!cast.guards.length)return false;
  if(e.phaseQueue?.[0]===type)e.phaseQueue.shift();else e.mechanicIndex=(e.mechanicIndex||0)+1;
- e.cast=cast;codexDiscover('combat_language');if(!data.combatLanguageTipSeen){data.combatLanguageTipSeen=true;toast('Read the warnings','Red hurts you. Violet also hurts enemies. Gold centers reflect. Teal marks safety and benefits. Blue marks shields. See the Codex for more.');}e.mechanicsUsed=e.mechanicsUsed||[];if(!e.mechanicsUsed.includes(type))e.mechanicsUsed.push(type);return true;
+ e.cast=cast;codexDiscover('combat_language');if(!data.combatLanguageTipSeen){data.combatLanguageTipSeen=true;toast('Read the warnings','Red hurts you. Violet also hurts enemies. Gold centers reflect. Teal marks refuges and benefits. Blue marks shields. See the Codex for more.');}e.mechanicsUsed=e.mechanicsUsed||[];if(!e.mechanicsUsed.includes(type))e.mechanicsUsed.push(type);return true;
 }
 function bossAttackDamage(e){return (e.elite?14+zoneNumber()*2:e.bossIndex===2?(isZoneFinal()?36+combatDepth()*1.4:27+combatDepth()*1.2):19+combatDepth())*(e.furyLinked?1.12:1);}
 function resolveBossCast(e,cast){
@@ -165,7 +165,7 @@ function spawnEnemy(boss=false,bossIndex=0){
   const known=(data.seenElites[biomeIndex()]||[]).map((seen,i)=>seen?i:-1).filter(i=>i>=0);
   if(known.length){
    const unused=known.filter(i=>!(game.eliteKinds||[]).includes(i)),pool=unused.length?unused:known;
-   e.elite=e.bossElite=true;e.bossIndex=pool[Math.floor(Math.random()*pool.length)];e.name=biome().boss[e.bossIndex]+' Echo';e.rad=23;e.hp=e.maxHp=zoneEnemyHp(false,0)*2.8*encounterHealthMultiplier(e);e.speed*=.82;e.castCooldown=.7+count*.7;
+   e.elite=e.bossElite=true;e.bossIndex=pool[Math.floor(Math.random()*pool.length)];e.name=biome().boss[e.bossIndex]+' Echo';e.rad=23;e.hp=e.maxHp=zoneEnemyHp(false,0,1,e)*2.8*encounterHealthMultiplier(e);e.speed*=.82;e.castCooldown=.7+count*.7;
    game.eliteCount=count+1;(game.eliteKinds||(game.eliteKinds=[])).push(e.bossIndex);game.waveEliteSpawned=true;
   }
  }
