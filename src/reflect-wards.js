@@ -1,5 +1,5 @@
 /* Moving casters leave readable counter windows with an immediate trigger. */
-const REFLECT_WARDS={variants:['jaw','rebound','rune'],seconds:3,reboundSeconds:3.4,inner:34,gapHalf:.70,failure:.15,wallDamage:.04};
+const REFLECT_WARDS={variants:['jaw','rebound','rune'],seconds:3,reboundSeconds:3.4,inner:34,gapHalf:.70,failure:.15,wallDamage:.125};
 function isReflectCast(cast){return !!cast&&['reflect','reversal'].includes(cast.type);}
 function reflectVariantFor(owner){return REFLECT_WARDS.variants[((owner.reflectSerial||0)+(owner.bossIndex||0)+data.floor-1)%REFLECT_WARDS.variants.length];}
 function configureReflectWard(owner,cast){
@@ -24,7 +24,7 @@ function tickReflectWard(owner,cast,dt,from=encounterFoot(game.player)){
  const point=cast.point,to=encounterFoot(game.player),left=cast.windup,fraction=dt>0?Math.min(1,Math.max(0,left/dt)):1,end={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction};
  cast.windup=Math.max(0,left-dt);
  const entry=point.armed?reflectEntryFraction(from,end,point):null;
- if(reflectJawContact(point,from,entry===null?end:{x:from.x+(end.x-from.x)*entry,y:from.y+(end.y-from.y)*entry})&&game.frame>=(cast.wallReadyAt||0)){cast.wallReadyAt=game.frame+.65;hurt(game.player.maxHp*REFLECT_WARDS.wallDamage/incomingDamageScale());if(game.status!=='running')return;}
+ if(reflectJawContact(point,from,entry===null?end:{x:from.x+(end.x-from.x)*entry,y:from.y+(end.y-from.y)*entry})&&game.frame>=(cast.wallReadyAt||0)){cast.wallReadyAt=game.frame+.65;hurtEncounter(owner,cast,game.player.maxHp*REFLECT_WARDS.wallDamage/incomingDamageScale());if(game.status!=='running')return;}
  if(entry!==null){cast.reflected=true;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?(owner.combatPhase>=2?1.8:2.5):3.1;return;}
  if(!point.armed&&Math.hypot(end.x-point.x,end.y-point.y)>point.inner+14){point.armed=true;cast.hint='Return to the gold rune · touch it before time runs out';}
  if(cast.windup<=0){cast.expired=true;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?(owner.combatPhase>=2?1.8:2.5):3.1;}
@@ -37,7 +37,7 @@ function resolveReflectWard(owner,cast){
   const amount=owner.maxHp*(.12+.015*waveRank('prism'));owner.hp-=amount;owner.stagger=1.6+.15*waveRank('prism');for(const t of game.totems||[])if(t.owner===owner)t.disabledUntil=game.frame+waveRank('prism');owner.lastDamageStyle=combatStyle();floater(owner.x,owner.y-42,'Reflected · '+Math.round(amount),combatTheme('reflect').hot);burst(owner.x,owner.y,10,combatTheme('reflect').color);if(owner.hp<=0)onKill(owner);
  }else{
   if(cast.type==='reversal'){const healed=Math.min(owner.maxHp-owner.hp,owner.maxHp*.05);owner.hp+=healed;floater(owner.x,owner.y-48,'MISSED MIRROR · +'+Math.round(healed)+' HP',combatTheme('danger').hot);}
-  hurt(game.player.maxHp*REFLECT_WARDS.failure/incomingDamageScale());floater(p.x,p.y-36,'WARD MISSED',combatTheme('danger').hot);
+  hurtEncounter(owner,cast.failureHit||(cast.failureHit={}),game.player.maxHp*REFLECT_WARDS.failure/incomingDamageScale());floater(p.x,p.y-36,'WARD MISSED',combatTheme('danger').hot);
  }
 }
 function paintReflectWardArt(point,progress,kind,active=false){

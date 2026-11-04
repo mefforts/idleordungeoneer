@@ -4,7 +4,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['rootGates',2,0,'Root Gates',2.1,4.4,'root','Cross the two offset openings',2],
  ['walkingHedge',3,0,'Walking Hedge',2,4.4,'thorns','Cross the offset teal openings; hedges keep travelling and do not refund dash',3],
  ['seedChain',4,0,'Seed Chain',1.8,3.8,'pod','Read the next swelling seed',1],
- ['briarLeash',5,0,'Briar Leash',2,4.2,'root','Dash across the tether to cut it',2],
+ ['briarLeash',5,0,'Briar Leash',2,14,'root','Dash across the tether to cut it',2],
  ['sporeFan',6,0,'Spore Fan',1.8,5.4,'mushroom','Step between spores and their clouds',1],
  ['pollenTide',7,0,'Pollen Tide',1.8,4.2,'seed','Move sideways through the debris',2],
  ['clingingSeeds',8,0,'Clinging Seeds',1.8,5.6,'seed','A dash shakes off attached seeds',2],
@@ -16,11 +16,11 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['coolingIslands',14,1,'Cooling Islands',2.4,6.6,'stone','Move to the next cooling island',3],
  ['cinderStitch',16,1,'Cinder Stitch',1.8,5.8,'needle','Cross before the stitched trail ignites',2],
  ['moltenDroplets',17,1,'Molten Droplets',2,4.4,'droplet','Splash marks include the smaller bursts',2],
- ['slagAnchors',18,1,'Slag Anchors',2.1,5.4,'anchor','Dash through an anchor to tear the fire curtain',2],
+ ['slagAnchors',18,1,'Slag Anchors',2.1,14,'anchor','Dash through an anchor to tear the fire curtain',2],
  ['backdraft',19,1,'Backdraft',1.9,4.4,'vent','Your older footprints ignite first',3],
  ['emberCatch',20,1,'Ember Catch',2.1,4.2,'droplet','Touch the gold ember to return a violet blast',2],
  ['boneLoom',21,2,'Bone Loom',2.1,4.6,'rib','Thread the wide corridor between the ribs',1],
- ['soulLantern',22,2,'Soul Lantern',2,6.4,'lantern','Intercept healing souls or dash through the lantern',1],
+ ['soulLantern',22,2,'Soul Lantern',2,14,'lantern','Intercept healing souls or dash through the lantern',1],
  ['coffinPress',23,2,'Coffin Press',2.1,3.8,'coffin','Leave through the open ends',1],
  ['hauntedFootsteps',24,2,'Haunted Footsteps',1.9,3.6,'ghost','The ghost repeats the marked route',1],
  ['graveClock',25,2,'Grave Clock',2.1,4.2,'clock','Use the broken hand; it reverses after a pause',2],
@@ -30,7 +30,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['borrowedBreath',30,2,'Borrowed Breath',2.2,4.6,'wisp','Visit a teal stone before the curse closes',3],
  ['astralSlingshot',31,3,'Astral Slingshot',2,5.2,'lens','Shots curve around the lens',1],
  ['gravityWell',32,3,'Gravity Well',2,4.2,'lens','Escape the pull before its burst',1],
- ['orbitTransfer',33,3,'Orbit Transfer',2,5.4,'blade','Watch the bridge and the blade’s next owner',2],
+ ['orbitTransfer',33,3,'Orbit Transfer',2,14,'blade','Watch the bridge and the blade’s next owner',2],
  ['stargateVolley',34,3,'Stargate Volley',2,4.6,'portal','The second portal previews the exit direction',1],
  ['constellationCage',35,3,'Constellation Cage',2,1.6,'star','Leave the outlined triangle before it connects',1],
  ['riftScissors',36,3,'Rift Scissors',2.1,3.8,'rift','Use the openings beyond the crescent tips',2],
@@ -38,7 +38,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['prismRelay',39,3,'Prism Relay',2.1,4.2,'prism','Read the beam’s route through both crystals',2],
  ['cometLadder',40,3,'Comet Ladder',2,4.2,'comet','Zigzag between alternating comet lanes',3],
  ['turningBulwark',41,-1,'Turning Bulwark',1.8,5.8,'shield','Circle behind the rotating front shield',1],
- ['rallyThread',46,-1,'Rally Thread',1.8,5.4,'banner','Dash across the enemy buff thread',2]
+ ['rallyThread',46,-1,'Rally Thread',1.8,14,'banner','Dash across the enemy buff thread',2]
 ].map(([id,proposal,biome,name,seconds,duration,art,guide,band])=>[id,{id,proposal,biome,name,seconds,duration,art,guide,band,lifetime:['walkingHedge','rollingFurnace'].includes(id)?'passes-encounter':'timed',language:id==='turningBulwark'?'shield':['seedChain','fallingCanopy','rollingFurnace','moltenDroplets','backdraft','emberCatch','hauntedFootsteps','hollowChorus','gravityWell','prismRelay'].includes(id)?'friendly':'danger',dash:['briarLeash','clingingSeeds','slagAnchors','soulLantern','rallyThread','collapsingNova'].includes(id)}]));
 const THEMED_GROUPS=[
  [['burrowingBriar','seedChain','sporeFan','clingingSeeds'],['rootGates','briarLeash','pollenTide','graftedSwap'],['walkingHedge','fallingCanopy','rootGates','seedChain']],
@@ -209,7 +209,7 @@ function themedContains(actor,f){
  return false;
 }
 function themedHit(e,key,contains,factor=.8,cooldown=0){
- if(contains(game.player)&&(e.playerHits.get(key)??-Infinity)<=e.age){hurt(Math.min(e.damage*factor,game.player.maxHp*.5/incomingDamageScale()));e.playerHits.set(key,cooldown?e.age+cooldown:Infinity);}
+ if(contains(game.player)&&(e.playerHits.get(key)??-Infinity)<=e.age){hurtEncounter(e.owner,e,Math.min(e.damage*factor,game.player.maxHp*.5/incomingDamageScale()));e.playerHits.set(key,cooldown?e.age+cooldown:Infinity);}
  if(THEMED_MECHANICS[e.type].language==='friendly')damageMonstersInAttack(e.owner,e,contains);
 }
 function themedCounter(e,point,fraction=.12){
@@ -237,11 +237,11 @@ function tickThemedEvent(e,dt,from,dashing){
   const end=themedLinkEnd(e);
   if(!liveThemedLink(e)){e.done=true;break;}
   if(snapThemedLink(e,from,dashing))break;
-  else if(e.type==='briarLeash'&&age>=e.total-.05&&!s.pulled){s.pulled=true;themedPull(end,65);hurt(e.damage*.6);}
+  else if(e.type==='briarLeash'&&age>=e.total-.05&&!s.pulled){s.pulled=true;themedPull(end,65);hurtEncounter(e.owner,e,e.damage*.6);}
   break;}
  case 'clingingSeeds':{
-  if(s.attachedAt===null){const position=v=>({x:e.origin.x+(t.x-e.origin.x)*clamp(v/.85,0,1),y:e.origin.y+(t.y-e.origin.y)*clamp(v/.85,0,1)}),q=position(age),old=position(oldAge);if(segmentsDistance(old.x,old.y,q.x,q.y,from.x,from.y,p.x,p.y)<26){if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else{s.attachedAt=age;hurt(e.damage*.4);}}if(age>1&&s.attachedAt===null)e.done=true;}
-  else if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else if(age-s.attachedAt>3.5){hurt(e.damage);e.done=true;}
+  if(s.attachedAt===null){const position=v=>({x:e.origin.x+(t.x-e.origin.x)*clamp(v/.85,0,1),y:e.origin.y+(t.y-e.origin.y)*clamp(v/.85,0,1)}),q=position(age),old=position(oldAge);if(segmentsDistance(old.x,old.y,q.x,q.y,from.x,from.y,p.x,p.y)<26){if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else{s.attachedAt=age;hurtEncounter(e.owner,e,e.damage*.4);}}if(age>1&&s.attachedAt===null)e.done=true;}
+  else if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else if(age-s.attachedAt>3.5){hurtEncounter(e.owner,e,e.damage);e.done=true;}
   break;}
  case 'graftedSwap':if(!s.swapped&&age>=.6){s.swapped=true;s.previous={x:e.owner.x,y:e.owner.y};e.owner.x=e.points[0].x;e.owner.y=e.points[0].y;burst(e.owner.x,e.owner.y,10,'#8ebc67');}break;
  case 'pollenTide':{
@@ -251,19 +251,19 @@ function tickThemedEvent(e,dt,from,dashing){
   for(let i=0;i<12;i++){if(i%4===3)continue;const q={x:e.origin.x+Math.cos(e.angle)*(i+1)*28,y:e.origin.y+Math.sin(e.angle)*(i+1)*28};if(age>=i*.13+1&&age<i*.13+3)tickCombatDot(e,'stitch'+i,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<18,.02);}
   break;}
  case 'slagAnchors':for(let i=0;i<2;i++){const q=e.points[i];if(!s['anchor'+i]&&dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<36){s['anchor'+i]=true;e.solved=true;refundCounterDash();burst(q.x,q.y,16,'#ffb471');}}break;
- case 'emberCatch':{const q=e.points[0];if(themedCounterContact(e,q,from,dt)){damageMonstersInAttack(e.owner,e,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<145);themedCounter(e,q,.10);}else if(age>=e.total-.05){hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
+ case 'emberCatch':{const q=e.points[0];if(themedCounterContact(e,q,from,dt)){damageMonstersInAttack(e.owner,e,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<145);themedCounter(e,q,.10);}else if(age>=e.total-.05){hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
  case 'soulLantern':{
   const q=e.points[0];if(dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<37){e.solved=e.done=true;refundCounterDash();burst(q.x,q.y,12,'#70e4a2');break;}
   const launched=Math.floor(age/1.15);for(let i=0;i<=launched;i++){const progress=(age-i*1.15)/1.5;if(progress<0||progress>1.1||s['soul'+i])continue;const soul={x:q.x+(e.owner.x-q.x)*Math.min(1,progress),y:q.y+(e.owner.y-q.y)*Math.min(1,progress)};if(Math.hypot(p.x-soul.x,p.y-soul.y)<24){s['soul'+i]=true;e.solved=true;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.0035);}else if(progress>=1){s['soul'+i]=true;e.owner.hp=Math.min(e.owner.maxHp,e.owner.hp+e.owner.maxHp*.004);}}
   break;}
- case 'returningSigil':{const index=s.stage||0,q=e.points[index],start=index?(s.stageAt||0)+.6:0;if(themedCounterContact(e,q,from,dt,start,start+3.6)){if(index===0){s.stage=1;s.stageAt=age;e.solved=true;themedReturnHalf(e,q);}else themedCounter(e,q,.06);}else if(age>=start+3.6){hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
- case 'borrowedBreath':if(e.points.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<30)){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,10,combatTheme('safe').color);}else if(age>=e.total-.05){hurt(p.maxHp*.15/incomingDamageScale());e.done=true;}break;
+ case 'returningSigil':{const index=s.stage||0,q=e.points[index],start=index?(s.stageAt||0)+.6:0;if(themedCounterContact(e,q,from,dt,start,start+3.6)){if(index===0){s.stage=1;s.stageAt=age;e.solved=true;themedReturnHalf(e,q);}else themedCounter(e,q,.06);}else if(age>=start+3.6){hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
+ case 'borrowedBreath':if(e.points.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<30)){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,10,combatTheme('safe').color);}else if(age>=e.total-.05){hurtEncounter(e.owner,e,p.maxHp*.15/incomingDamageScale());e.done=true;}break;
  case 'gravityWell':if(age<2.7)themedPull(t,(25+age*18)*dt,170);break;
  case 'orbitTransfer':{if(!game.enemies.includes(e.partner)){e.done=true;break;}break;}
  case 'collapsingNova':{
   const q=e.points[0],radius=Math.max(30,180-age*62);
   if(oldAge<2.5){if(themedCounterContact(e,q,from,dt,0,2.5)){themedCounter(e,q,.12);break;}themedHit(e,'inward',actor=>Math.abs(Math.hypot(actor.x-q.x,actor.y-q.y)-radius)<23,.65);}
-  if(age>=2.5&&!s.missed){s.missed=true;hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());}
+  if(age>=2.5&&!s.missed){s.missed=true;hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());}
   if(age>=6&&!s.launched){s.launched=true;addGravePulses(e.owner,{origin:q,enemyHits:e.enemyHits,pulseCount:1},e.damage/.85);}
   break;}
  }

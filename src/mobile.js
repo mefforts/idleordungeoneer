@@ -61,6 +61,14 @@ function navigationIcon(id,art,label){
  image.src=iconAsset(art);image.draggable=false;image.classList.add('navigation-art');button.dataset.navArt=art;
  if(label){button.setAttribute('aria-label',label);button.dataset.tooltip=label;const text=button.querySelector('.nav-label');if(text)text.textContent=label;}
 }
+function refreshNavigationArcs(){
+ const labels={delveNav:'Delve',quickGear:'Inventory',quickSkills:'Skills',quickShop:'Shop',quickSettings:'Settings',quickPause:game.scene==='combat'&&game.status==='running'&&game.manualPaused?'Play':'Pause',speedToggle:'Speed'};
+ for(const [id,label]of Object.entries(labels)){
+  const button=$(id);if(!button)continue;let arc=button.querySelector('.nav-arc');
+  if(!arc){const path='nav-arc-'+id;button.insertAdjacentHTML('beforeend','<svg class="nav-arc" viewBox="0 0 72 78" aria-hidden="true" focusable="false"><defs><path id="'+path+'" d="M8 35 A29 29 0 0 1 64 35"/></defs><text><textPath href="#'+path+'" startOffset="50%" text-anchor="middle"></textPath></text></svg>');arc=button.querySelector('.nav-arc');}
+  const text=arc.querySelector('textPath');if(text.textContent!==label)text.textContent=label;
+ }
+}
 function installMobileUI(){
  if(mobileInstalled)return;mobileInstalled=true;
  installGameplaySelectionGuard();
@@ -93,6 +101,7 @@ function installMobileUI(){
 }
 function refreshMobileUI(){
  if(!mobileInstalled)return;
+ refreshNavigationArcs();
  if(arenaTouch&&!movementDashAllowed())resetArenaTouch();
  if(drawerKind==='gear')$('drawerTitle').textContent='Inventory';
  normalizeFirstWeaponHint();$('firstWeaponHint').classList.toggle('hidden',game.scene!=='combat'||data.firstWeaponCrafted);$('skillsNudge')?.classList.add('hidden');
@@ -109,14 +118,15 @@ function renderMaterialInventory(){
  const rows=inventoryRows(),signature=JSON.stringify([rows,data.gold,data.essence,data.lootHistory]);if(host.dataset.state===signature)return;host.dataset.state=signature;
  const structure=JSON.stringify([rows.map(({count,...row})=>row),data.lootHistory]);
  if(host.dataset.structure===structure){
-  for(const row of rows){const button=host.querySelector('[data-inventory-key="'+row.key+'"]');button.querySelector('small').textContent=format(row.count);button.setAttribute('aria-label',row.name+' · '+format(row.count)+(row.source?' · View source':' · Read in Codex'));}
+  for(const row of rows){const button=host.querySelector('[data-inventory-key="'+row.key+'"]');button.querySelector('small').textContent=format(row.count);button.setAttribute('aria-label',row.name+' · '+format(row.count)+(row.key.startsWith('voucher_')?' · View voucher':row.source?' · View source':' · Read in Codex'));}
   for(const key of ['gold','essence']){const el=host.querySelector('[data-inventory-currency="'+key+'"]');el.querySelector('b').textContent=uiCompact(data[key]);el.setAttribute('aria-label',format(data[key])+' '+RESOURCE_LABEL[key]);}
   return;
  }
  host.dataset.structure=structure;
- host.innerHTML='<div class="inventory-currencies">'+[['gold','coins'],['essence','essence']].map(([key,art])=>'<span data-inventory-currency="'+key+'" aria-label="'+format(data[key])+' '+RESOURCE_LABEL[key]+'">'+artHTML(art)+'<b>'+uiCompact(data[key])+'</b></span>').join('')+'</div>'+(rows.length?'<div class="inventory-materials">'+rows.map(row=>'<button type="button" class="inventory-material" data-inventory-key="'+row.key+'" '+(row.source?'data-source="'+row.source+'"':'data-codex-entry="'+row.codex+'"')+' aria-label="'+escapeHTML(row.name+' · '+format(row.count)+(row.source?' · View source':' · Read in Codex'))+'">'+artHTML(row.art)+'<span><b>'+row.name+'</b><small>'+format(row.count)+'</small></span>'+uiIcon(row.source?'chevron':'book')+'</button>').join('')+'</div>':'<div class="empty-loadout">'+uiIcon('bag')+'<p>No materials</p><button type="button" class="inventory-skills">Skills '+uiIcon('arrow')+'</button></div>');
+ host.innerHTML='<div class="inventory-currencies">'+[['gold','coins'],['essence','essence']].map(([key,art])=>'<span data-inventory-currency="'+key+'" aria-label="'+format(data[key])+' '+RESOURCE_LABEL[key]+'">'+artHTML(art)+'<b>'+uiCompact(data[key])+'</b></span>').join('')+'</div>'+(rows.length?'<div class="inventory-materials">'+rows.map(row=>'<button type="button" class="inventory-material" data-inventory-key="'+row.key+'" '+(row.key.startsWith('voucher_')?'data-open-voucher="'+row.key.slice(8)+'"':row.source?'data-source="'+row.source+'"':'data-codex-entry="'+row.codex+'"')+' aria-label="'+escapeHTML(row.name+' · '+format(row.count)+(row.key.startsWith('voucher_')?' · View voucher':row.source?' · View source':' · Read in Codex'))+'">'+artHTML(row.art)+'<span><b>'+row.name+'</b><small>'+format(row.count)+'</small></span>'+uiIcon(row.source?'chevron':'book')+'</button>').join('')+'</div>':'<div class="empty-loadout">'+uiIcon('bag')+'<p>No materials</p><button type="button" class="inventory-skills">Skills '+uiIcon('arrow')+'</button></div>');
  host.insertAdjacentHTML('beforeend',lootHistoryHtml());
  host.querySelectorAll('[data-source]').forEach(button=>button.onclick=()=>goToSource(button.dataset.source));
+ host.querySelectorAll('[data-open-voucher]').forEach(button=>button.onclick=()=>openVoucherGuide(button.dataset.openVoucher));
  host.querySelector('.inventory-skills')?.addEventListener('click',()=>openDrawer('skills'));
  host.querySelectorAll('button').forEach(bindTouchNavigation);
 }
@@ -128,6 +138,7 @@ function updatePauseHud(){
  $('pauseCaption').textContent=manuallyPaused?'RESUME':'PAUSE';
  banner.classList.toggle('hidden',!manuallyPaused||$('app').classList.contains('drawer-open')||!$('overlay').classList.contains('hidden')||tourIndex>=0);
  $('stageWrap').classList.toggle('delve-is-paused',manuallyPaused);if(manuallyPaused)resetArenaTouch(true);
+ refreshNavigationArcs();
 }
 
 function showOverlay(markup,kind=''){

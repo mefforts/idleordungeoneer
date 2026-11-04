@@ -4,9 +4,9 @@ const {createRuntime}=require('./runtime.cjs'),{mobileFixture}=require('./mobile
  const runtime=await createRuntime(),passed=[],errors=[];
  try{
   const html=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8').replace('resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);','('+mobileFixture.toString()+')();resize();resetRun();refreshUI();intro();requestAnimationFrame(frame);');
-  const p=await runtime.browser.newPage({viewport:{width:390,height:844},hasTouch:true,isMobile:true});p.on('pageerror',e=>errors.push(e.message));await p.route(runtime.baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));await p.goto(runtime.baseURL);
+  const p=await runtime.browser.newPage({viewport:{width:390,height:844},hasTouch:true,isMobile:true});p.on('pageerror',e=>errors.push(e.message));await p.route(runtime.baseURL+'/**',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:html}));await p.goto(runtime.baseURL);await p.waitForFunction(()=>window.__mobileTest&&!document.documentElement.classList.contains('game-loading'));
   await p.locator('#introCodex').waitFor({state:'visible'});
-  assert.equal(await p.locator('#introCodex').innerText(),'Codex');assert.equal(await p.locator('#introDelve img').getAttribute('src'),await p.locator('#delveNav img').getAttribute('src'));await p.tap('#introCodex');assert.ok(await p.locator('#codexEntries').isVisible());await p.tap('#codexClose');assert.ok(await p.locator('#introDelve').isVisible());
+  assert.equal(await p.locator('#introCodex').innerText(),'Codex');assert.equal(await p.locator('#introDelve img').getAttribute('src'),await p.locator('#delveNav img').getAttribute('src'));await p.tap('#introCodex');await p.locator('#codexEntries').waitFor({state:'visible'});assert.ok(await p.locator('#codexEntries').isVisible());await p.tap('#codexClose');assert.ok(await p.locator('#introDelve').isVisible());
   await p.evaluate(()=>__mobileTest.fresh());const cdp=await p.context().newCDPSession(p);let anchor={x:280,y:610,id:1},dragged={x:240,y:610,id:1};
   const touch=(type,touchPoints)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints});
   const motion=()=>p.evaluate(()=>__mobileTest.motion());

@@ -39,7 +39,9 @@ function instrumentation(){
             else if(stream){const from=encounterFoot(stream.owner),to=encounterFoot(stream),distance=Math.hypot(to.x-from.x,to.y-from.y),fraction=Math.min(.5,55/Math.max(1,distance));target={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction-13};}
             else if(nearest&&bodyDistance(nearest,p.x,p.y)>attackReach()*.65)target=bodyPoint(nearest,p.x,p.y);
             const dx=target?target.x-p.x:0,dy=target?target.y-p.y:0;game.joystick.pointer=-1;game.joystick.x=Math.hypot(dx,dy)>6?dx:0;game.joystick.y=Math.hypot(dx,dy)>6?dy:0;
-            tickCombat(.04);
+            // This is a pacing benchmark. DoTs intentionally bypass ordinary
+            // immunity, so replenish HP as well; survival is tested separately.
+            p.hp=p.maxHp;tickCombat(.04);
           }
           if(game.status!=='clear')throw Error('Simulation did not clear: '+game.status);
           total+=game.runSeconds;kills+=game.runKills;

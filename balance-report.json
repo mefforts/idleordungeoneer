@@ -1,5 +1,5 @@
 {
-  "version": "11.11.2",
+  "version": "11.12.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -684,9 +684,9 @@
       },
       "collected": {
         "seconds": 300,
-        "bars": 252,
-        "bonusBars": 82,
-        "oreSpent": 504,
+        "bars": 249,
+        "bonusBars": 80,
+        "oreSpent": 498,
         "pickups": 72
       }
     }
@@ -1429,7 +1429,7 @@
     "eliteTasks": {
       "initial": 6,
       "cooldown": 15,
-      "travelSeconds": 5.5,
+      "travelSeconds": 12,
       "interruptHits": 3,
       "interruptHealth": 0.12,
       "interruptStun": 0.8,
@@ -1444,20 +1444,27 @@
         2
       ],
       "ascend": {
-        "seconds": 5.5,
+        "seconds": 12,
         "healRate": 0.0035,
-        "healCap": 0.02,
+        "healCap": 0.04,
         "duration": 14,
         "damage": 1.35,
         "tempo": 1.25
       },
       "empower": {
-        "seconds": 6
+        "seconds": 14
       },
       "conduit": {
         "first": 2.8,
         "interval": 5.5,
         "warning": 1.2
+      },
+      "siege": {
+        "first": 1,
+        "interval": 2.8,
+        "warning": 1.2,
+        "projectile": 0.125,
+        "mark": 0.18
       },
       "eligible": "Natural elites, rares and guardian Echoes; full bosses and summons excluded",
       "summonRewards": false,
@@ -1482,7 +1489,7 @@
       "landing": 70
     },
     "siphon": {
-      "seconds": 4,
+      "seconds": 12,
       "grace": 0.8,
       "drain": 0.02,
       "healPerTick": 0.002,
@@ -1525,7 +1532,7 @@
       "inner": 34,
       "gapHalf": 0.7,
       "failure": 0.15,
-      "wallDamage": 0.04
+      "wallDamage": 0.125
     },
     "movingReflectCasters": true,
     "zoneTwoIncomingDamage": 1.25,
@@ -1725,7 +1732,7 @@
         "biome": 0,
         "name": "Briar Leash",
         "seconds": 2,
-        "duration": 4.2,
+        "duration": 14,
         "art": "root",
         "guide": "Dash across the tether to cut it",
         "band": 2,
@@ -1893,7 +1900,7 @@
         "biome": 1,
         "name": "Slag Anchors",
         "seconds": 2.1,
-        "duration": 5.4,
+        "duration": 14,
         "art": "anchor",
         "guide": "Dash through an anchor to tear the fire curtain",
         "band": 2,
@@ -1949,7 +1956,7 @@
         "biome": 2,
         "name": "Soul Lantern",
         "seconds": 2,
-        "duration": 6.4,
+        "duration": 14,
         "art": "lantern",
         "guide": "Intercept healing souls or dash through the lantern",
         "band": 1,
@@ -2089,7 +2096,7 @@
         "biome": 3,
         "name": "Orbit Transfer",
         "seconds": 2,
-        "duration": 5.4,
+        "duration": 14,
         "art": "blade",
         "guide": "Watch the bridge and the blade’s next owner",
         "band": 2,
@@ -2201,7 +2208,7 @@
         "biome": -1,
         "name": "Rally Thread",
         "seconds": 1.8,
-        "duration": 5.4,
+        "duration": 14,
         "art": "banner",
         "guide": "Dash across the enemy buff thread",
         "band": 2,
@@ -2211,14 +2218,16 @@
       }
     },
     "damage": {
-      "projectile": 0.1,
+      "minimum": 0.125,
+      "projectile": 0.125,
       "contact": 0.15,
       "standard": 0.18,
       "heavy": 0.25,
       "major": 0.5,
       "reflect": 0.15,
       "dot": 0.025,
-      "dotInterval": 0.35
+      "dotInterval": 0.35,
+      "hitWindow": 0.47
     },
     "uncommons": {
       "chance": 0.07,
@@ -2297,8 +2306,8 @@
         "royal": 2,
         "radius": 28,
         "releaseRadius": 40,
-        "normalBacklash": 0.08,
-        "royalBacklash": 0.12
+        "normalBacklash": 0.125,
+        "royalBacklash": 0.15
       },
       "walkingRequiresExit": true,
       "dashRequiresExit": false,
@@ -3191,7 +3200,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 966.6399999999812,
+      "seconds": 952.6799999999819,
       "kills": 413,
       "referenceDps": 80,
       "targetSeconds": 905
@@ -3199,7 +3208,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1670.8400000000147,
+      "seconds": 1586.6800000000271,
       "kills": 648,
       "referenceDps": 240,
       "targetSeconds": 1423
@@ -3207,7 +3216,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 14830.99999999811,
+      "seconds": 13504.159999999318,
       "kills": 938,
       "referenceDps": 240,
       "targetSeconds": 14296
@@ -3215,7 +3224,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 16203.31999999686,
+      "seconds": 15061.359999997901,
       "kills": 1118,
       "referenceDps": 240,
       "targetSeconds": 15207
@@ -3223,7 +3232,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 10929.200000000847,
+      "seconds": 10107.080000001239,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3231,7 +3240,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 10798.120000000657,
+      "seconds": 10131.840000001137,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3241,13 +3250,13 @@
     {
       "zone": 1,
       "beforeSeconds": 734.8800000000224,
-      "afterSeconds": 966.6399999999812,
+      "afterSeconds": 952.6799999999819,
       "referenceDps": 80
     },
     {
       "zone": 2,
       "beforeSeconds": 1245.7600000000634,
-      "afterSeconds": 1670.8400000000147,
+      "afterSeconds": 1586.6800000000271,
       "referenceDps": 240
     }
   ],
@@ -3264,11 +3273,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 9.48,
+        "seconds": 6.62,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 8,
+        "hits": 7,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3282,11 +3291,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 9.48,
+        "seconds": 6.62,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 8,
+        "hits": 7,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3300,12 +3309,12 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 17.26,
+        "seconds": 16.12,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 93.6,
-        "hits": 2,
-        "damageTaken": 50.4,
+        "remainingHp": 72,
+        "hits": 3,
+        "damageTaken": 72,
         "reflections": 0
       },
       {
@@ -3318,12 +3327,12 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 17.26,
+        "seconds": 16.12,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 93.6,
-        "hits": 2,
-        "damageTaken": 50.4,
+        "remainingHp": 72,
+        "hits": 3,
+        "damageTaken": 72,
         "reflections": 0
       },
       {
@@ -3336,11 +3345,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 9.38,
+        "seconds": 5.94,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 9,
+        "hits": 7,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3354,11 +3363,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 9.38,
+        "seconds": 5.94,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 9,
+        "hits": 7,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3375,9 +3384,9 @@
         "seconds": 18.2,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 129.6,
+        "remainingHp": 126,
         "hits": 1,
-        "damageTaken": 14.4,
+        "damageTaken": 18,
         "reflections": 0
       },
       {
@@ -3393,9 +3402,9 @@
         "seconds": 18.2,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 129.6,
+        "remainingHp": 126,
         "hits": 1,
-        "damageTaken": 14.4,
+        "damageTaken": 18,
         "reflections": 0
       },
       {
@@ -3408,11 +3417,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 9.38,
+        "seconds": 5.94,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 9,
+        "hits": 7,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3426,11 +3435,11 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 9.38,
+        "seconds": 5.94,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 9,
+        "hits": 7,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3447,9 +3456,9 @@
         "seconds": 19.26,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 129.6,
+        "remainingHp": 126,
         "hits": 1,
-        "damageTaken": 14.4,
+        "damageTaken": 18,
         "reflections": 0
       },
       {
@@ -3465,9 +3474,9 @@
         "seconds": 19.26,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 129.6,
+        "remainingHp": 126,
         "hits": 1,
-        "damageTaken": 14.4,
+        "damageTaken": 18,
         "reflections": 0
       }
     ],
@@ -3561,30 +3570,27 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 113.4,
-        "seconds": 109.18,
+        "remainingHp": 104,
+        "seconds": 108.3,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 2,
-        "damage": 75.6,
+        "hits": 3,
+        "damage": 85,
         "echoes": 0,
         "casts": [
           "ground",
           "beam",
           "bloom",
           "cinderStitch",
+          "rallyThread",
           "volley",
           "fury",
-          "emberCatch",
-          "backdraft",
+          "coolingIslands",
           "crossfire",
-          "summon",
-          "slagAnchors",
-          "rallyThread",
-          "rollingFurnace",
-          "turningBulwark",
-          "moltenDroplets"
+          "emberCatch",
+          "reflect",
+          "summon"
         ]
       },
       {
@@ -3598,13 +3604,13 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 103.9,
-        "seconds": 98.16,
+        "remainingHp": 46.3,
+        "seconds": 98.64,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
         "hits": 5,
-        "damage": 104,
+        "damage": 165.4,
         "echoes": 0,
         "casts": [
           "bloom",
@@ -3615,12 +3621,11 @@
           "coolingIslands",
           "reflect",
           "crossfire",
-          "volley",
           "cinderStitch",
-          "slagAnchors",
-          "summon",
           "emberCatch",
-          "forgeHammers"
+          "volley",
+          "slagAnchors",
+          "moltenDroplets"
         ]
       },
       {
@@ -3634,13 +3639,13 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 89.8,
-        "seconds": 119.88,
+        "remainingHp": 113.4,
+        "seconds": 111.76,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 5,
-        "damage": 99.2,
+        "hits": 3,
+        "damage": 75.6,
         "echoes": 0,
         "casts": [
           "beam",
@@ -3655,10 +3660,8 @@
           "turningBulwark",
           "crossfire",
           "rallyThread",
-          "summon",
-          "coolingIslands",
           "moltenDroplets",
-          "reflect"
+          "backdraft"
         ]
       },
       {
@@ -3740,13 +3743,13 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 187.8,
+        "seconds": 169.72,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
         "hits": 6,
-        "damage": 196.5,
-        "echoes": 7,
+        "damage": 189,
+        "echoes": 8,
         "casts": [
           "ground",
           "soulLantern",
@@ -3758,9 +3761,10 @@
           "gravePulse",
           "beam",
           "boneLoom",
+          "fury",
           "reflect",
-          "hauntedFootsteps",
           "crossfire",
+          "hauntedFootsteps",
           "volley",
           "charge"
         ]
@@ -3777,7 +3781,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 169.1,
+        "seconds": 161.92,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
@@ -3812,11 +3816,11 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 102.26,
+        "seconds": 145.32,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 5,
+        "hits": 6,
         "damage": 189,
         "echoes": 7,
         "casts": [
@@ -3830,7 +3834,9 @@
           "fury",
           "crossfire",
           "volley",
-          "summon"
+          "summon",
+          "ricochet",
+          "bloom"
         ]
       }
     ]

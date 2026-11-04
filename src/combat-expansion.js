@@ -1,6 +1,6 @@
 /* Shared combat language and reusable, geometry-driven encounter patterns. */
 const COMBAT_LANGUAGE={interrupt:{color:'#ffe16b',hot:'#fff7c7',dark:'#54421e'},danger:{color:'#f16d68',hot:'#ffe2d8',dark:'#52272a'},friendly:{color:'#c887ff',hot:'#f3ddff',dark:'#432756'},reflect:{color:'#edcb76',hot:'#fff5d5',dark:'#51452c'},safe:{color:'#6ce0bc',hot:'#d4fff0',dark:'#214940'},shield:{color:'#79bdff',hot:'#e4f3ff',dark:'#233e63'}};
-const SUMMON_BUMPS=Object.freeze({dashRadius:38,dashRise:16,normal:1,royal:2,radius:28,releaseRadius:40,normalBacklash:.08,royalBacklash:.12});
+const SUMMON_BUMPS=Object.freeze({dashRadius:38,dashRise:16,normal:1,royal:2,radius:28,releaseRadius:40,normalBacklash:.125,royalBacklash:.15});
 const EXPANDED_ABILITIES={
  gravePulse:{name:'Grave Pulse',seconds:1.7,hint:'Expanding bone ring · dash through the rim'},
  ringchain:{name:'Rebounding Barrage',seconds:1.6,hint:'Three rings · gaps rotate · violet shots rebound'},
@@ -138,7 +138,7 @@ function bumpSummonTotem(t,from=encounterFoot(game.player),dashing=false){
  const surging=!!t.spawnPoint&&!t.disabled&&!totemsDisabled();if(!damageTotem(t,summonBumpDamage(t),true))return false;
  t.bumpContact=true;if(dashing)t.lastBumpDash=dashId;t.bumpFlashUntil=game.frame+.2;burst(foot.x,foot.y-12,8,combatTheme('safe').color);
  if(dashing)refundCounterDash();
- if(surging&&!dashing)hurt(game.player.maxHp*(t.eliteSummon?SUMMON_BUMPS.royalBacklash:SUMMON_BUMPS.normalBacklash));return true;
+ if(surging&&!dashing)hurtEncounter(t.owner,t,game.player.maxHp*(t.eliteSummon?SUMMON_BUMPS.royalBacklash:SUMMON_BUMPS.normalBacklash));return true;
 }
 function spawnSummonedEnemy(owner,point,elite=false,guard=false,totem=null){
  if(!point||!game.enemies.includes(owner)&&!(totem&&(game.totems||[]).includes(totem)&&totem.hp>0)||game.enemies.filter(e=>e.summoned).length>=8||elite&&game.enemies.filter(e=>e.summoned&&e.elite).length>=3)return null;

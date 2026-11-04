@@ -1311,6 +1311,10 @@ body.codex-modal-open .stage-wrap,body.mastery-modal-open .stage-wrap{z-index:20
 .player-ui .hud-actions.icon-rail .hud-icon.active,.player-ui .hud-actions.icon-rail .hud-icon.paused{filter:brightness(1.13) drop-shadow(0 0 2px #d8b460);outline:1px solid #ecd093;outline-offset:1px}
 .player-ui .hud-actions.icon-rail .hud-icon:focus-visible{outline:2px solid #b5e8e6;outline-offset:3px}
 .player-ui .hud-actions.icon-rail .speed-badge{bottom:3px;padding:0 2px;background:#171c20c9;border-radius:2px;font:700 9px/1.1 system-ui;text-shadow:0 1px 2px #000;pointer-events:none}
+.player-ui .hud-actions.icon-rail{gap:15px}
+.player-ui .hud-actions.icon-rail .nav-arc,.player-ui .hud-actions.icon-rail #speedToggle .nav-arc{position:absolute;left:-9px;top:-15px;width:calc(100% + 18px);height:calc(100% + 24px);margin:0;overflow:visible;pointer-events:none}
+.nav-arc text{font:600 10px Georgia,serif;letter-spacing:.55px;fill:#f3dfae;stroke:#151a18;stroke-width:3px;paint-order:stroke;stroke-linejoin:round}
+@media(max-height:600px) and (min-width:600px){.player-ui .hud-actions.icon-rail{gap:12px}.nav-arc text{font-size:10.5px;letter-spacing:.2px}}
 .player-ui #joystickZone{display:none!important}
 .arena-touch-guide{position:absolute;z-index:6;width:74px;height:74px;margin:-37px;pointer-events:none;border:1px solid #e7d5ac75;border-radius:50%;background:#12191417;box-shadow:0 1px 3px #0003;contain:layout paint}
 .arena-touch-guide>i{position:absolute;left:26px;top:26px;width:20px;height:20px;border:1px solid #f0e4c4a0;border-radius:50%;background:#e7d5ac26;box-shadow:0 1px 3px #0004}
@@ -1330,6 +1334,7 @@ body.codex-modal-open .stage-wrap,body.mastery-modal-open .stage-wrap{z-index:20
 .player-ui .zone-shop-tabs{gap:4px;margin-bottom:12px}.player-ui .zone-shop-tabs>button{min-width:65px;min-height:38px;padding:7px 5px;font-size:10px;gap:4px}.player-ui .zone-shop-heading h3{font-size:22px}.player-ui .zone-wallet{padding:7px 0 13px}.player-ui .zone-wallet strong{font-size:25px}.player-ui .zone-upgrade{grid-template-columns:38px minmax(0,1fr) 65px;gap:8px;padding:12px 0}.player-ui .zone-upgrade-art,.player-ui .zone-upgrade-art img{width:38px;height:38px}.player-ui .zone-upgrade h4{font-size:18px}.player-ui .shop-rank{font-size:9px;margin:4px 0}.player-ui .shop-effect{font-size:11px;line-height:1.5}.player-ui .shop-effect>small{font-size:10px}.player-ui .shop-buy{font-size:10px;min-height:44px;padding:8px 4px}.player-ui .shop-buy img{width:21px;height:21px}
 @media(max-width:760px){.player-ui .weapon-option>.weapon-equip{padding-left:0;gap:7px}.player-ui .loadout-tabs{gap:4px}.player-ui .loadout-tabs>button{min-width:0;min-height:44px;padding:8px 4px;font-size:10px;gap:4px}.player-ui .loadout-tabs .ui-glyph{display:none}.inventory-materials{column-gap:10px}.inventory-material>img{width:32px;height:32px;flex-basis:32px}.inventory-material b{font-size:14px}}
 @media(hover:none){.player-ui .icon-rail [data-tooltip]:after{display:none}}
+.voucher-guide-art{display:flex;justify-content:center}.voucher-guide-art img{width:64px;height:64px;object-fit:contain}.voucher-guide-actions{display:grid;gap:8px;margin:18px 0}.voucher-guide-actions button{display:flex;justify-content:space-between;align-items:center;min-height:44px;text-align:left;gap:12px}.voucher-guide-actions .ui-glyph{width:16px;height:16px}.voucher-guide-back{min-height:44px}.overlay-card.voucher-guide{max-width:480px}
 
 .resource-hud{position:absolute;z-index:13;top:72px;right:20px;display:flex;align-items:center;gap:14px;max-width:calc(100% - 40px)}
 .player-ui .resource-hud #zoneCurrencyHud,.player-ui .resource-hud #ammoNotice{position:static!important;inset:auto!important;display:flex;align-items:center;gap:5px;min-height:30px;margin:0;padding:0;border:0;background:none;white-space:nowrap;color:#efdbad;font:600 12px system-ui;text-shadow:0 1px 3px #000}
@@ -2460,7 +2465,7 @@ let bestiaryInstalled=false;
 
 const COMBAT_LANGUAGE={interrupt:{color:'#ffe16b',hot:'#fff7c7',dark:'#54421e'},danger:{color:'#f16d68',hot:'#ffe2d8',dark:'#52272a'},friendly:{color:'#c887ff',hot:'#f3ddff',dark:'#432756'},reflect:{color:'#edcb76',hot:'#fff5d5',dark:'#51452c'},safe:{color:'#6ce0bc',hot:'#d4fff0',dark:'#214940'},shield:{color:'#79bdff',hot:'#e4f3ff',dark:'#233e63'}};
 
-const SUMMON_BUMPS=Object.freeze({dashRadius:38,dashRise:16,normal:1,royal:2,radius:28,releaseRadius:40,normalBacklash:.08,royalBacklash:.12});
+const SUMMON_BUMPS=Object.freeze({dashRadius:38,dashRise:16,normal:1,royal:2,radius:28,releaseRadius:40,normalBacklash:.125,royalBacklash:.15});
 
 const EXPANDED_ABILITIES={
  gravePulse:{name:'Grave Pulse',seconds:1.7,hint:'Expanding bone ring · dash through the rim'},
@@ -2513,7 +2518,7 @@ const GROUND_LOOT_RESOURCES=new Set(['gold','essence','ore','bars','logs','arrow
 
 const ZONE_TWO_DAMAGE=1.25;
 
-const REFLECT_WARDS={variants:['jaw','rebound','rune'],seconds:3,reboundSeconds:3.4,inner:34,gapHalf:.70,failure:.15,wallDamage:.04};
+const REFLECT_WARDS={variants:['jaw','rebound','rune'],seconds:3,reboundSeconds:3.4,inner:34,gapHalf:.70,failure:.15,wallDamage:.125};
 
 const JEWELRY_REFINEMENT={maximum:50,relativeStep:.0025,xp:80};
 
@@ -2546,7 +2551,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['rootGates',2,0,'Root Gates',2.1,4.4,'root','Cross the two offset openings',2],
  ['walkingHedge',3,0,'Walking Hedge',2,4.4,'thorns','Cross the offset teal openings; hedges keep travelling and do not refund dash',3],
  ['seedChain',4,0,'Seed Chain',1.8,3.8,'pod','Read the next swelling seed',1],
- ['briarLeash',5,0,'Briar Leash',2,4.2,'root','Dash across the tether to cut it',2],
+ ['briarLeash',5,0,'Briar Leash',2,14,'root','Dash across the tether to cut it',2],
  ['sporeFan',6,0,'Spore Fan',1.8,5.4,'mushroom','Step between spores and their clouds',1],
  ['pollenTide',7,0,'Pollen Tide',1.8,4.2,'seed','Move sideways through the debris',2],
  ['clingingSeeds',8,0,'Clinging Seeds',1.8,5.6,'seed','A dash shakes off attached seeds',2],
@@ -2558,11 +2563,11 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['coolingIslands',14,1,'Cooling Islands',2.4,6.6,'stone','Move to the next cooling island',3],
  ['cinderStitch',16,1,'Cinder Stitch',1.8,5.8,'needle','Cross before the stitched trail ignites',2],
  ['moltenDroplets',17,1,'Molten Droplets',2,4.4,'droplet','Splash marks include the smaller bursts',2],
- ['slagAnchors',18,1,'Slag Anchors',2.1,5.4,'anchor','Dash through an anchor to tear the fire curtain',2],
+ ['slagAnchors',18,1,'Slag Anchors',2.1,14,'anchor','Dash through an anchor to tear the fire curtain',2],
  ['backdraft',19,1,'Backdraft',1.9,4.4,'vent','Your older footprints ignite first',3],
  ['emberCatch',20,1,'Ember Catch',2.1,4.2,'droplet','Touch the gold ember to return a violet blast',2],
  ['boneLoom',21,2,'Bone Loom',2.1,4.6,'rib','Thread the wide corridor between the ribs',1],
- ['soulLantern',22,2,'Soul Lantern',2,6.4,'lantern','Intercept healing souls or dash through the lantern',1],
+ ['soulLantern',22,2,'Soul Lantern',2,14,'lantern','Intercept healing souls or dash through the lantern',1],
  ['coffinPress',23,2,'Coffin Press',2.1,3.8,'coffin','Leave through the open ends',1],
  ['hauntedFootsteps',24,2,'Haunted Footsteps',1.9,3.6,'ghost','The ghost repeats the marked route',1],
  ['graveClock',25,2,'Grave Clock',2.1,4.2,'clock','Use the broken hand; it reverses after a pause',2],
@@ -2572,7 +2577,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['borrowedBreath',30,2,'Borrowed Breath',2.2,4.6,'wisp','Visit a teal stone before the curse closes',3],
  ['astralSlingshot',31,3,'Astral Slingshot',2,5.2,'lens','Shots curve around the lens',1],
  ['gravityWell',32,3,'Gravity Well',2,4.2,'lens','Escape the pull before its burst',1],
- ['orbitTransfer',33,3,'Orbit Transfer',2,5.4,'blade','Watch the bridge and the blade’s next owner',2],
+ ['orbitTransfer',33,3,'Orbit Transfer',2,14,'blade','Watch the bridge and the blade’s next owner',2],
  ['stargateVolley',34,3,'Stargate Volley',2,4.6,'portal','The second portal previews the exit direction',1],
  ['constellationCage',35,3,'Constellation Cage',2,1.6,'star','Leave the outlined triangle before it connects',1],
  ['riftScissors',36,3,'Rift Scissors',2.1,3.8,'rift','Use the openings beyond the crescent tips',2],
@@ -2580,7 +2585,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['prismRelay',39,3,'Prism Relay',2.1,4.2,'prism','Read the beam’s route through both crystals',2],
  ['cometLadder',40,3,'Comet Ladder',2,4.2,'comet','Zigzag between alternating comet lanes',3],
  ['turningBulwark',41,-1,'Turning Bulwark',1.8,5.8,'shield','Circle behind the rotating front shield',1],
- ['rallyThread',46,-1,'Rally Thread',1.8,5.4,'banner','Dash across the enemy buff thread',2]
+ ['rallyThread',46,-1,'Rally Thread',1.8,14,'banner','Dash across the enemy buff thread',2]
 ].map(([id,proposal,biome,name,seconds,duration,art,guide,band])=>[id,{id,proposal,biome,name,seconds,duration,art,guide,band,lifetime:['walkingHedge','rollingFurnace'].includes(id)?'passes-encounter':'timed',language:id==='turningBulwark'?'shield':['seedChain','fallingCanopy','rollingFurnace','moltenDroplets','backdraft','emberCatch','hauntedFootsteps','hollowChorus','gravityWell','prismRelay'].includes(id)?'friendly':'danger',dash:['briarLeash','clingingSeeds','slagAnchors','soulLantern','rallyThread','collapsingNova'].includes(id)}]));
 
 const THEMED_GROUPS=[
@@ -2594,7 +2599,7 @@ const themedEffectImages=new Map();
 
 const THEMED_LINK={minimum:220,preferred:260,crossing:70,landing:70};
 
-const ENCOUNTER_DAMAGE={projectile:.10,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35};
+const ENCOUNTER_DAMAGE={minimum:.125,projectile:.125,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35,hitWindow:.47};
 
 const ENEMY_RESOLVE={perAlly:.10,maximum:.50,dashLockout:10};
 
@@ -2602,13 +2607,13 @@ const ENCOUNTER_AREA={common:1.25};
 
 const UNCOMMON_ENEMIES={chance:.07,health:2,caps:[1,2,3,4],projectile:.06,ground:.08,charge:.10};
 
-const SIPHON_TETHER={seconds:4,grace:.8,drain:.02,healPerTick:.002,healCap:.02,awayDistance:24,cutRadius:28};
+const SIPHON_TETHER={seconds:12,grace:.8,drain:.02,healPerTick:.002,healCap:.02,awayDistance:24,cutRadius:28};
 
 const DASH_COUNTERS={stun:.65,guard:.35};
 
-const ELITE_TASKS={initial:6,cooldown:15,travelSeconds:5.5,interruptHits:3,interruptHealth:.12,interruptStun:.8,cap:[1,1,2],promotions:[1,1,2],ascend:{seconds:5.5,healRate:.0035,healCap:.02,duration:14,damage:1.35,tempo:1.25},empower:{seconds:6},conduit:{first:2.8,interval:5.5,warning:1.2}};
+const ELITE_TASKS={initial:6,cooldown:15,travelSeconds:12,interruptHits:3,interruptHealth:.12,interruptStun:.8,cap:[1,1,2],promotions:[1,1,2],ascend:{seconds:12,healRate:.0035,healCap:.04,duration:14,damage:1.35,tempo:1.25},empower:{seconds:14},conduit:{first:2.8,interval:5.5,warning:1.2},siege:{first:1,interval:2.8,warning:1.2,projectile:.125,mark:.18}};
 
-const ELITE_TASK_NAMES={ascend:'Ascendance',empower:'Rare Awakening',conduit:'Living Conduit'};
+const ELITE_TASK_NAMES={ascend:'Ascendance',empower:'Rare Awakening',conduit:'Living Conduit',siege:'Siege Channel'};
 
 const WALKING_HEDGE={speed:245,runningFactor:1.3,width:26,gap:100,lead:220,interval:1.5,maximum:3};
 
@@ -3138,7 +3143,7 @@ function tickDungeonHazards(dt,playerFrom=game.player){
   if(h.wave){h.inner+=h.waveSpeed*step;h.r+=h.waveSpeed*step;}if(h.life<=0)return false;
   const contains=actor=>h.wave?expandingWaveContains(actor,h,previous,actor===p?from:actor):h.type==='expanded'?expandedContains(actor,h):h.type==='ground'?Math.hypot(actor.x-h.x,actor.y-h.y)<h.r+(actor.rad||10):segmentDistance(actor.x,actor.y,h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length)<h.width/2+(actor.rad||10);
   if(pulse)pulseDashCounter(h,previous,from,contains(p));
-  if(h.lingering)tickCombatDot(h,'fire',contains);else if(contains(p)&&!((h.type==='expanded'||h.singleHit)&&h.playerHit)){hurt(h.damage);if(h.type==='expanded'||h.singleHit)h.playerHit=true;}if(h.language==='friendly'||['ground','beam'].includes(h.type))damageMonstersInAttack(h.owner,h,contains);return game.status==='running'&&game.transition<=0&&(!pulse||!gravePulseFinished(h));
+  if(h.lingering)tickCombatDot(h,'fire',contains);else if(contains(p)&&!((h.type==='expanded'||h.singleHit)&&h.playerHit)){hurtEncounter(h.owner,h.attack||h.enemyHits||h,h.damage);if(h.type==='expanded'||h.singleHit)h.playerHit=true;}if(h.language==='friendly'||['ground','beam'].includes(h.type))damageMonstersInAttack(h.owner,h,contains);return game.status==='running'&&game.transition<=0&&(!pulse||!gravePulseFinished(h));
  });
 }
 
@@ -3961,7 +3966,7 @@ function clearEncounterState(){
  game.themedEvents=[];game.themedHistory=[];game.hazards=[];
  game.eliteRecruits=new Map();game.elitePromotionCount=0;game.dashSweep=null;
  game.phaseCleanupPending=false;game.graveEchoes=[];game.totems=[];game.counterEffects=[];game.counterRequest=null;game.reflectCooldown=0;game.disruptReadyAt=0;game.bossBursts=[];
- if(game.player){game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
+ if(game.player){game.player.hitInvuln=0;game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
  for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;e.resolveDisabledUntil=0;}
 }
 
@@ -4039,7 +4044,8 @@ function beginBossCast(e){
  if(type==='gravePulse'&&!gravePulseCanCast())return false;
  if(themedAbility(type)&&!canBeginThemedCast(e,type))return false;
  if(active.some(other=>themedAbility(other.cast.type))||(game.themedEvents||[]).some(event=>!event.done)&&!['volley','ricochet','shield','mend','fury'].includes(type))return false;
- if(reflect||active.some(other=>major.includes(other.cast.type)))return false;
+ const minor=['volley','ricochet','shield','mend','fury'].includes(type);
+ if(reflect||active.some(other=>major.includes(other.cast.type)&&!(other.cast.siphon&&minor)))return false;
  if(game.counterRequest&&!game.enemies.includes(game.counterRequest))game.counterRequest=null;
  if(['reflect','reversal'].includes(type)){
   if((game.reflectCooldown||0)>0)return false;if(!game.counterRequest)game.counterRequest=e;
@@ -4074,10 +4080,10 @@ function resolveBossCast(e,cast){
   if(!game.enemies.includes(e)||(game.totems||[]).filter(t=>!t.destructible).length>=2)return;
   (game.totems||(game.totems=[])).push({totem:true,type:cast.type,biome:theme,owner:e,x:cast.point.x,y:cast.point.y-18,rad:16,age:0,blocked:false,healReserve:game.player.maxHp*.15});return;
  }
- if(cast.type==='cleave'){addEmberCleave(e,cast,damage);if(cleaveContains(game.player,cast))hurt(damage);damageMonstersInAttack(e,cast,enemy=>cleaveContains(enemy,cast));(game.counterEffects||(game.counterEffects=[])).push({type:'cleave',cast,biome:theme,life:.35,total:.35});return;}
+ if(cast.type==='cleave'){addEmberCleave(e,cast,damage);if(cleaveContains(game.player,cast))hurtEncounter(e,cast,damage);damageMonstersInAttack(e,cast,enemy=>cleaveContains(enemy,cast));(game.counterEffects||(game.counterEffects=[])).push({type:'cleave',cast,biome:theme,life:.35,total:.35});return;}
  if(cast.type==='volley'){
   const count=e.bossIndex===2?18:10,offset=(e.mechanicIndex||0)*.39;
-  for(let i=0;i<count;i++){if(i%5===0)continue;const a=i*Math.PI*2/count+offset,speed=e.elite?145:e.bossIndex===2?182:158;game.hostileShots.push({x:cast.origin.x,y:cast.origin.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,rad:e.bossIndex===2?8:6,life:5,biome:theme,damage,owner:e,language:'danger'});}
+  for(let i=0;i<count;i++){if(i%5===0)continue;const a=i*Math.PI*2/count+offset,speed=e.elite?145:e.bossIndex===2?182:158;game.hostileShots.push({x:cast.origin.x,y:cast.origin.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,rad:e.bossIndex===2?8:6,life:5,biome:theme,damage,owner:e,attack:cast,language:'danger'});}
  }else if(cast.type==='ground')for(const target of cast.targets)(game.hazards||(game.hazards=[])).push({...target,type:'ground',language:'friendly',owner:e,enemyHits:cast.enemyHits,biome:theme,life:1.6,total:1.6,damage,age:0});
  else (game.hazards||(game.hazards=[])).push({type:'beam',language:'friendly',owner:e,enemyHits:cast.enemyHits,x:cast.origin.x,y:cast.origin.y,angle:cast.angle,width:cast.beamWidth,length:540,life:.55,total:.55,biome:theme,damage:damage*1.3,age:0});
 }
@@ -4263,6 +4269,15 @@ function navigationIcon(id,art,label){
  if(label){button.setAttribute('aria-label',label);button.dataset.tooltip=label;const text=button.querySelector('.nav-label');if(text)text.textContent=label;}
 }
 
+function refreshNavigationArcs(){
+ const labels={delveNav:'Delve',quickGear:'Inventory',quickSkills:'Skills',quickShop:'Shop',quickSettings:'Settings',quickPause:game.scene==='combat'&&game.status==='running'&&game.manualPaused?'Play':'Pause',speedToggle:'Speed'};
+ for(const [id,label]of Object.entries(labels)){
+  const button=$(id);if(!button)continue;let arc=button.querySelector('.nav-arc');
+  if(!arc){const path='nav-arc-'+id;button.insertAdjacentHTML('beforeend','<svg class="nav-arc" viewBox="0 0 72 78" aria-hidden="true" focusable="false"><defs><path id="'+path+'" d="M8 35 A29 29 0 0 1 64 35"/></defs><text><textPath href="#'+path+'" startOffset="50%" text-anchor="middle"></textPath></text></svg>');arc=button.querySelector('.nav-arc');}
+  const text=arc.querySelector('textPath');if(text.textContent!==label)text.textContent=label;
+ }
+}
+
 function installMobileUI(){
  if(mobileInstalled)return;mobileInstalled=true;
  installGameplaySelectionGuard();
@@ -4296,6 +4311,7 @@ function installMobileUI(){
 
 function refreshMobileUI(){
  if(!mobileInstalled)return;
+ refreshNavigationArcs();
  if(arenaTouch&&!movementDashAllowed())resetArenaTouch();
  if(drawerKind==='gear')$('drawerTitle').textContent='Inventory';
  normalizeFirstWeaponHint();$('firstWeaponHint').classList.toggle('hidden',game.scene!=='combat'||data.firstWeaponCrafted);$('skillsNudge')?.classList.add('hidden');
@@ -4315,14 +4331,15 @@ function renderMaterialInventory(){
  const rows=inventoryRows(),signature=JSON.stringify([rows,data.gold,data.essence,data.lootHistory]);if(host.dataset.state===signature)return;host.dataset.state=signature;
  const structure=JSON.stringify([rows.map(({count,...row})=>row),data.lootHistory]);
  if(host.dataset.structure===structure){
-  for(const row of rows){const button=host.querySelector('[data-inventory-key="'+row.key+'"]');button.querySelector('small').textContent=format(row.count);button.setAttribute('aria-label',row.name+' · '+format(row.count)+(row.source?' · View source':' · Read in Codex'));}
+  for(const row of rows){const button=host.querySelector('[data-inventory-key="'+row.key+'"]');button.querySelector('small').textContent=format(row.count);button.setAttribute('aria-label',row.name+' · '+format(row.count)+(row.key.startsWith('voucher_')?' · View voucher':row.source?' · View source':' · Read in Codex'));}
   for(const key of ['gold','essence']){const el=host.querySelector('[data-inventory-currency="'+key+'"]');el.querySelector('b').textContent=uiCompact(data[key]);el.setAttribute('aria-label',format(data[key])+' '+RESOURCE_LABEL[key]);}
   return;
  }
  host.dataset.structure=structure;
- host.innerHTML='<div class="inventory-currencies">'+[['gold','coins'],['essence','essence']].map(([key,art])=>'<span data-inventory-currency="'+key+'" aria-label="'+format(data[key])+' '+RESOURCE_LABEL[key]+'">'+artHTML(art)+'<b>'+uiCompact(data[key])+'</b></span>').join('')+'</div>'+(rows.length?'<div class="inventory-materials">'+rows.map(row=>'<button type="button" class="inventory-material" data-inventory-key="'+row.key+'" '+(row.source?'data-source="'+row.source+'"':'data-codex-entry="'+row.codex+'"')+' aria-label="'+escapeHTML(row.name+' · '+format(row.count)+(row.source?' · View source':' · Read in Codex'))+'">'+artHTML(row.art)+'<span><b>'+row.name+'</b><small>'+format(row.count)+'</small></span>'+uiIcon(row.source?'chevron':'book')+'</button>').join('')+'</div>':'<div class="empty-loadout">'+uiIcon('bag')+'<p>No materials</p><button type="button" class="inventory-skills">Skills '+uiIcon('arrow')+'</button></div>');
+ host.innerHTML='<div class="inventory-currencies">'+[['gold','coins'],['essence','essence']].map(([key,art])=>'<span data-inventory-currency="'+key+'" aria-label="'+format(data[key])+' '+RESOURCE_LABEL[key]+'">'+artHTML(art)+'<b>'+uiCompact(data[key])+'</b></span>').join('')+'</div>'+(rows.length?'<div class="inventory-materials">'+rows.map(row=>'<button type="button" class="inventory-material" data-inventory-key="'+row.key+'" '+(row.key.startsWith('voucher_')?'data-open-voucher="'+row.key.slice(8)+'"':row.source?'data-source="'+row.source+'"':'data-codex-entry="'+row.codex+'"')+' aria-label="'+escapeHTML(row.name+' · '+format(row.count)+(row.key.startsWith('voucher_')?' · View voucher':row.source?' · View source':' · Read in Codex'))+'">'+artHTML(row.art)+'<span><b>'+row.name+'</b><small>'+format(row.count)+'</small></span>'+uiIcon(row.source?'chevron':'book')+'</button>').join('')+'</div>':'<div class="empty-loadout">'+uiIcon('bag')+'<p>No materials</p><button type="button" class="inventory-skills">Skills '+uiIcon('arrow')+'</button></div>');
  host.insertAdjacentHTML('beforeend',lootHistoryHtml());
  host.querySelectorAll('[data-source]').forEach(button=>button.onclick=()=>goToSource(button.dataset.source));
+ host.querySelectorAll('[data-open-voucher]').forEach(button=>button.onclick=()=>openVoucherGuide(button.dataset.openVoucher));
  host.querySelector('.inventory-skills')?.addEventListener('click',()=>openDrawer('skills'));
  host.querySelectorAll('button').forEach(bindTouchNavigation);
 }
@@ -4877,7 +4894,7 @@ function resolveEliteSpecial(enemy,cast,damage){
  }
  if(cast.type==='ricochet'){
   const points=cast.ricochetPoints;if(!points?.length)return true;const angle=Math.atan2(points[0].y-enemy.y,points[0].x-enemy.x),speed=185;
-  game.hostileShots.push({x:enemy.x,y:enemy.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rad:7,life:6,biome:enemy.biome,damage:damage*.85,owner:enemy,ricochet:true,waypoints:points.map(point=>({...point})),waypoint:0,speed});
+  game.hostileShots.push({x:enemy.x,y:enemy.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,rad:7,life:6,biome:enemy.biome,damage:damage*.85,owner:enemy,attack:cast,ricochet:true,waypoints:points.map(point=>({...point})),waypoint:0,speed});
   game.counterEffects.push({type:'ricochet',points:points.slice(0,-1),biome:enemy.biome,life:6,total:6});return true;
  }
  return false;
@@ -4887,7 +4904,7 @@ function tickEnemyCharge(enemy,dt){
  const charge=enemy.charge;if(!charge)return false;const distance=Math.min(charge.remaining,460*dt*enemyMovementFactor()),x=enemy.x+Math.cos(charge.angle)*distance,y=enemy.y+Math.sin(charge.angle)*distance;
  if(!encounterClear(x,y+enemy.rad*.65,Math.max(10,enemy.rad*.7))){enemy.charge=null;burst(enemy.x,enemy.y,7,combatTheme('friendly').color);return true;}
  const oldX=enemy.x,oldY=enemy.y;enemy.x=x;enemy.y=y;charge.remaining-=distance;
- if(!charge.hitPlayer&&segmentDistance(game.player.x,game.player.y,oldX,oldY,x,y)<enemyChargeHalfWidth(enemy)+9){charge.hitPlayer=true;hurt(bossAttackDamage(enemy,'charge'));enemy.contact=.8;}
+ if(!charge.hitPlayer&&segmentDistance(game.player.x,game.player.y,oldX,oldY,x,y)<enemyChargeHalfWidth(enemy)+9){charge.hitPlayer=true;hurtEncounter(enemy,charge,bossAttackDamage(enemy,'charge'));enemy.contact=.8;}
  damageMonstersInAttack(enemy,charge,other=>segmentDistance(other.x,other.y,oldX,oldY,x,y)<enemyChargeHalfWidth(enemy)+other.rad+1);
  if(charge.trail){charge.trailClock-=dt;if(charge.trailClock<=0){charge.trailClock=.18;game.hazards.push({type:'ground',language:'friendly',lingering:true,x:oldX,y:oldY,r:28,life:1.3,total:1.3,age:0,owner:enemy,enemyHits:charge.enemyHits,damage:bossAttackDamage(enemy,'charge')*.7,biome:enemy.biome});}}
  if(charge.remaining<=0)enemy.charge=null;return true;
@@ -5060,7 +5077,7 @@ function bumpSummonTotem(t,from=encounterFoot(game.player),dashing=false){
  const surging=!!t.spawnPoint&&!t.disabled&&!totemsDisabled();if(!damageTotem(t,summonBumpDamage(t),true))return false;
  t.bumpContact=true;if(dashing)t.lastBumpDash=dashId;t.bumpFlashUntil=game.frame+.2;burst(foot.x,foot.y-12,8,combatTheme('safe').color);
  if(dashing)refundCounterDash();
- if(surging&&!dashing)hurt(game.player.maxHp*(t.eliteSummon?SUMMON_BUMPS.royalBacklash:SUMMON_BUMPS.normalBacklash));return true;
+ if(surging&&!dashing)hurtEncounter(t.owner,t,game.player.maxHp*(t.eliteSummon?SUMMON_BUMPS.royalBacklash:SUMMON_BUMPS.normalBacklash));return true;
 }
 
 function spawnSummonedEnemy(owner,point,elite=false,guard=false,totem=null){
@@ -5874,6 +5891,8 @@ function enchantmentGuideStyle(){
 }
 
 function progressionGuide(){
+ const voucher=(data.voucherGuideQueue||[]).find(key=>data.specificVouchers?.[key]>0)||(!data.voucherIntroSeen?Object.keys(data.specificVouchers||{}).find(key=>data.specificVouchers[key]>0):null);
+ if(voucher)return {id:'voucher',key:voucher,title:data.voucherIntroSeen?'Upgrade voucher received':'Your first upgrade voucher',body:voucherLootName('voucher_'+voucher)+'. '+(data.voucherIntroSeen?'View your voucher and matching upgrades.':'Pays for one matching rank on gear you own, a tool or a station. Open it, choose an upgrade, then press Use voucher in Skills.'),action:'View voucher',art:'codex-upgrade_vouchers'};
  if(data.cleared>=1&&dungeoneeringJourney().level===0&&!data.firstMasteryTipSeen)return {id:'mastery',title:'Your first Mastery point',body:'Clear all five Zone 1 floors to reach Zone 2. Choose faster Delving or faster Skilling, including idle.',action:'View delve route',art:'mastery-points'};
  const style=enchantmentGuideStyle();
  if(style&&!data.essenceEnchantTipSeen)return {id:'enchant',style,title:'Put your essence to work',body:'You have enough essence for your first '+STYLE_DEFS[style].name+' enchantment. Warding → Equipment shows the bars and cut gem needed too.',action:'View enchantment',art:'essence'};
@@ -5881,14 +5900,14 @@ function progressionGuide(){
 }
 
 function dismissProgressionGuide(guide){
- if(!guide)return;if(guide.id==='mastery')data.firstMasteryTipSeen=true;else data.essenceEnchantTipSeen=true;save();refreshProgressionGuide();
+ if(!guide)return;if(guide.id==='voucher'){data.voucherIntroSeen=true;data.voucherGuideQueue=(data.voucherGuideQueue||[]).filter(key=>key!==guide.key);}else if(guide.id==='mastery')data.firstMasteryTipSeen=true;else data.essenceEnchantTipSeen=true;save();refreshProgressionGuide();
 }
 
 function refreshProgressionGuide(){
- const host=$('progressionGuide');if(!host)return;const guide=progressionGuide(),visible=!!guide&&!drawerKind&&$('overlay').classList.contains('hidden')&&tourIndex<0&&!game.boss&&!game.manualPaused&&!game.holdSkill&&$('idleUnlockNudge').classList.contains('hidden')&&$('temporaryBuffs').classList.contains('hidden');
+ const host=$('progressionGuide');if(!host)return;const guide=progressionGuide(),visible=!!guide&&!drawerKind&&$('overlay').classList.contains('hidden')&&tourIndex<0&&!(game.boss?.hp>0)&&(guide.id==='voucher'||!game.manualPaused)&&!game.holdSkill&&$('idleUnlockNudge').classList.contains('hidden')&&(guide.id==='voucher'||$('temporaryBuffs').classList.contains('hidden'));
  host.classList.toggle('hidden',!visible);if(!visible)return;
- if(host.dataset.guide!==guide.id+':'+(guide.style||'')){
-  host.dataset.guide=guide.id+':'+(guide.style||'');host.querySelector('strong').textContent=guide.title;host.querySelector('p').textContent=guide.body;$('progressionGuideOpen').textContent=guide.action+' ›';
+ if(host.dataset.guide!==guide.id+':'+(guide.key||guide.style||'')){
+  host.dataset.guide=guide.id+':'+(guide.key||guide.style||'');host.querySelector('strong').textContent=guide.title;host.querySelector('p').textContent=guide.body;$('progressionGuideOpen').textContent=guide.action+' ›';
  }
  $('skillsNudge').classList.add('hidden');$('quickSkills').classList.remove('skills-suggested');
 }
@@ -5897,8 +5916,26 @@ function installProgressionGuidance(){
  if($('progressionGuide'))return;
  $('noticeColumn').insertAdjacentHTML('afterbegin','<aside id="progressionGuide" class="skills-nudge progression-guide hidden" aria-label="Progression tip"><div><strong></strong><p></p><button type="button" id="progressionGuideOpen"></button></div><button type="button" id="progressionGuideDismiss" aria-label="Dismiss progression tip">×</button></aside>');
  $('progressionGuideDismiss').onclick=()=>dismissProgressionGuide(progressionGuide());
- $('progressionGuideOpen').onclick=()=>{const guide=progressionGuide();if(!guide)return;dismissProgressionGuide(guide);if(guide.id==='mastery'){openDelveTravel();return;}styleBench=guide.style;openWorkshop('warding','equipment');const card=$('consolidatedSkills').querySelector('[data-style-upgrade="'+guide.style+':enchant"]')?.closest('article');card?.scrollIntoView({block:'center',behavior:'instant'});card?.querySelector('.codex-link')?.focus({preventScroll:true});};
+ $('progressionGuideOpen').onclick=()=>{const guide=progressionGuide();if(!guide)return;dismissProgressionGuide(guide);if(guide.id==='voucher'){openVoucherGuide(guide.key);return;}if(guide.id==='mastery'){openDelveTravel();return;}styleBench=guide.style;openWorkshop('warding','equipment');const card=$('consolidatedSkills').querySelector('[data-style-upgrade="'+guide.style+':enchant"]')?.closest('article');card?.scrollIntoView({block:'center',behavior:'instant'});card?.querySelector('.codex-link')?.focus({preventScroll:true});};
  $('progressionGuide').querySelectorAll('button').forEach(bindTouchNavigation);
+}
+
+function voucherUpgradeActions(key){
+ const [tier,kind]=String(key).split('_'),actions=[...Object.keys(STYLE_DEFS).map(style=>'upgrade:'+style+':'+kind),...Object.keys(TRINKETS).map(id=>'jewelry:'+id),...Object.keys(TOOL_DEFS).map(id=>'tool-upgrade:'+id),...Object.keys(DISCIPLINES).map(id=>'station:'+id)];
+ return actions.filter(action=>workshopVoucherOffer(action)?.kind===kind&&canRedeemWorkshopVoucher(action,tier));
+}
+
+function openVoucherGuide(key){
+ if(!(data.specificVouchers?.[key]>0))return false;equipmentTab='materials';if(drawerKind)closeDrawer();
+ const name=voucherLootName('voucher_'+key),actions=voucherUpgradeActions(key);
+ showOverlay('<div class="voucher-guide-art">'+artHTML('codex-upgrade_vouchers')+'</div><h2>'+escapeHTML(name)+'</h2><p>'+uiCompact(data.specificVouchers[key])+' owned · Pays for one matching upgrade rank, including its material and gold costs.</p><p>Choose an owned item or named station, then use its voucher button in Skills. Crafting new gear and tier promotions still require materials.</p><div class="voucher-guide-actions">'+(actions.length?actions.map(action=>'<button type="button" data-voucher-action="'+action+'">'+escapeHTML(workshopVoucherOffer(action).name)+' '+uiIcon('arrow')+'</button>').join(''):'<p>Keep this voucher until you own a matching item with an available upgrade. It stays in Inventory → Materials.</p>')+'</div><button type="button" class="voucher-guide-back">Back to vouchers</button>','voucher-guide');
+ $('overlayCard').querySelectorAll('[data-voucher-action]').forEach(button=>{button.onclick=()=>openVoucherRecipe(button.dataset.voucherAction,key);bindTouchNavigation(button);});
+ const back=$('overlayCard').querySelector('.voucher-guide-back');back.onclick=()=>{hideOverlay();openDrawer('gear');renderEquipmentTab();const row=$('loadoutMaterials').querySelector('[data-inventory-key="voucher_'+key+'"]');row?.scrollIntoView({block:'center'});row?.focus({preventScroll:true});};bindTouchNavigation(back);return true;
+}
+
+function openVoucherRecipe(action,key){
+ const [type,id,kind]=action.split(':'),group=type==='upgrade'?(kind==='enchant'?'warding':STYLE_DEFS[id].group):type==='station'?id:type==='jewelry'?'artisan':TOOL_DEFS[id].group||'blacksmithing';
+ if(type==='upgrade')styleBench=id;hideOverlay();openWorkshop(group,'equipment');const button=document.querySelector('[data-redeem-voucher="'+action+'"][data-voucher-tier="'+key.split('_')[0]+'"]');button?.scrollIntoView({block:'center',behavior:'instant'});button?.focus({preventScroll:true});
 }
 
 function normalizeZoneMaterials(){
@@ -6018,7 +6055,7 @@ function tickReflectWard(owner,cast,dt,from=encounterFoot(game.player)){
  const point=cast.point,to=encounterFoot(game.player),left=cast.windup,fraction=dt>0?Math.min(1,Math.max(0,left/dt)):1,end={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction};
  cast.windup=Math.max(0,left-dt);
  const entry=point.armed?reflectEntryFraction(from,end,point):null;
- if(reflectJawContact(point,from,entry===null?end:{x:from.x+(end.x-from.x)*entry,y:from.y+(end.y-from.y)*entry})&&game.frame>=(cast.wallReadyAt||0)){cast.wallReadyAt=game.frame+.65;hurt(game.player.maxHp*REFLECT_WARDS.wallDamage/incomingDamageScale());if(game.status!=='running')return;}
+ if(reflectJawContact(point,from,entry===null?end:{x:from.x+(end.x-from.x)*entry,y:from.y+(end.y-from.y)*entry})&&game.frame>=(cast.wallReadyAt||0)){cast.wallReadyAt=game.frame+.65;hurtEncounter(owner,cast,game.player.maxHp*REFLECT_WARDS.wallDamage/incomingDamageScale());if(game.status!=='running')return;}
  if(entry!==null){cast.reflected=true;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?(owner.combatPhase>=2?1.8:2.5):3.1;return;}
  if(!point.armed&&Math.hypot(end.x-point.x,end.y-point.y)>point.inner+14){point.armed=true;cast.hint='Return to the gold rune · touch it before time runs out';}
  if(cast.windup<=0){cast.expired=true;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?(owner.combatPhase>=2?1.8:2.5):3.1;}
@@ -6032,7 +6069,7 @@ function resolveReflectWard(owner,cast){
   const amount=owner.maxHp*(.12+.015*waveRank('prism'));owner.hp-=amount;owner.stagger=1.6+.15*waveRank('prism');for(const t of game.totems||[])if(t.owner===owner)t.disabledUntil=game.frame+waveRank('prism');owner.lastDamageStyle=combatStyle();floater(owner.x,owner.y-42,'Reflected · '+Math.round(amount),combatTheme('reflect').hot);burst(owner.x,owner.y,10,combatTheme('reflect').color);if(owner.hp<=0)onKill(owner);
  }else{
   if(cast.type==='reversal'){const healed=Math.min(owner.maxHp-owner.hp,owner.maxHp*.05);owner.hp+=healed;floater(owner.x,owner.y-48,'MISSED MIRROR · +'+Math.round(healed)+' HP',combatTheme('danger').hot);}
-  hurt(game.player.maxHp*REFLECT_WARDS.failure/incomingDamageScale());floater(p.x,p.y-36,'WARD MISSED',combatTheme('danger').hot);
+  hurtEncounter(owner,cast.failureHit||(cast.failureHit={}),game.player.maxHp*REFLECT_WARDS.failure/incomingDamageScale());floater(p.x,p.y-36,'WARD MISSED',combatTheme('danger').hot);
  }
 }
 
@@ -6141,11 +6178,12 @@ function normalizeSpecificVouchers(){
  const old=data.specificVouchers||{};data.specificVouchers=Object.fromEntries(['iron','steel','mithril'].flatMap(tier=>voucherKinds(tier).map(kind=>{const key=tier+'_'+kind;return [key,Math.max(0,Math.min(1e12,Math.floor(Number(old[key])||0)))];})));
  for(const tier of ['iron','steel','mithril'])for(const item of splitLegacyVouchers(tier,data.upgradeVouchers?.[tier]))data.specificVouchers[item.key.slice(8)]+=item.amount;
  data.upgradeVouchers={iron:0,steel:0};
+ data.voucherIntroSeen=!!data.voucherIntroSeen;data.voucherGuideQueue=Array.isArray(data.voucherGuideQueue)?[...new Set(data.voucherGuideQueue.filter(key=>validVoucherLootKey('voucher_'+key)&&data.specificVouchers[key]>0))].slice(-32):[];
 }
 
 function normalizeVoucherLootItems(items){return items.flatMap(item=>/^voucher_(iron|steel|mithril)$/.test(item.key)?splitLegacyVouchers(item.key.slice(8),item.amount):[item]);}
 
-function grantSpecificVoucherLoot(key,amount){for(const item of normalizeVoucherLootItems([{key,amount}]))if(validVoucherLootKey(item.key))data.specificVouchers[item.key.slice(8)]=(data.specificVouchers[item.key.slice(8)]||0)+item.amount;}
+function grantSpecificVoucherLoot(key,amount){for(const item of normalizeVoucherLootItems([{key,amount}]))if(validVoucherLootKey(item.key)){const id=item.key.slice(8);data.specificVouchers[id]=(data.specificVouchers[id]||0)+item.amount;if(item.amount>0){data.voucherGuideQueue=[...(data.voucherGuideQueue||[]).filter(key=>key!==id),id].slice(-32);refreshProgressionGuide();}}}
 
 function dropVoucherKinds(tier){
  const limit=TIER_LIMITS[tier==='iron'?1:tier==='steel'?2:3],styles=Object.keys(STYLE_DEFS).filter(style=>data.unlockedWeapons.some(id=>styleForWeapon(id)===style));
@@ -6529,7 +6567,7 @@ function themedContains(actor,f){
 }
 
 function themedHit(e,key,contains,factor=.8,cooldown=0){
- if(contains(game.player)&&(e.playerHits.get(key)??-Infinity)<=e.age){hurt(Math.min(e.damage*factor,game.player.maxHp*.5/incomingDamageScale()));e.playerHits.set(key,cooldown?e.age+cooldown:Infinity);}
+ if(contains(game.player)&&(e.playerHits.get(key)??-Infinity)<=e.age){hurtEncounter(e.owner,e,Math.min(e.damage*factor,game.player.maxHp*.5/incomingDamageScale()));e.playerHits.set(key,cooldown?e.age+cooldown:Infinity);}
  if(THEMED_MECHANICS[e.type].language==='friendly')damageMonstersInAttack(e.owner,e,contains);
 }
 
@@ -6562,11 +6600,11 @@ function tickThemedEvent(e,dt,from,dashing){
   const end=themedLinkEnd(e);
   if(!liveThemedLink(e)){e.done=true;break;}
   if(snapThemedLink(e,from,dashing))break;
-  else if(e.type==='briarLeash'&&age>=e.total-.05&&!s.pulled){s.pulled=true;themedPull(end,65);hurt(e.damage*.6);}
+  else if(e.type==='briarLeash'&&age>=e.total-.05&&!s.pulled){s.pulled=true;themedPull(end,65);hurtEncounter(e.owner,e,e.damage*.6);}
   break;}
  case 'clingingSeeds':{
-  if(s.attachedAt===null){const position=v=>({x:e.origin.x+(t.x-e.origin.x)*clamp(v/.85,0,1),y:e.origin.y+(t.y-e.origin.y)*clamp(v/.85,0,1)}),q=position(age),old=position(oldAge);if(segmentsDistance(old.x,old.y,q.x,q.y,from.x,from.y,p.x,p.y)<26){if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else{s.attachedAt=age;hurt(e.damage*.4);}}if(age>1&&s.attachedAt===null)e.done=true;}
-  else if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else if(age-s.attachedAt>3.5){hurt(e.damage);e.done=true;}
+  if(s.attachedAt===null){const position=v=>({x:e.origin.x+(t.x-e.origin.x)*clamp(v/.85,0,1),y:e.origin.y+(t.y-e.origin.y)*clamp(v/.85,0,1)}),q=position(age),old=position(oldAge);if(segmentsDistance(old.x,old.y,q.x,q.y,from.x,from.y,p.x,p.y)<26){if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else{s.attachedAt=age;hurtEncounter(e.owner,e,e.damage*.4);}}if(age>1&&s.attachedAt===null)e.done=true;}
+  else if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else if(age-s.attachedAt>3.5){hurtEncounter(e.owner,e,e.damage);e.done=true;}
   break;}
  case 'graftedSwap':if(!s.swapped&&age>=.6){s.swapped=true;s.previous={x:e.owner.x,y:e.owner.y};e.owner.x=e.points[0].x;e.owner.y=e.points[0].y;burst(e.owner.x,e.owner.y,10,'#8ebc67');}break;
  case 'pollenTide':{
@@ -6576,19 +6614,19 @@ function tickThemedEvent(e,dt,from,dashing){
   for(let i=0;i<12;i++){if(i%4===3)continue;const q={x:e.origin.x+Math.cos(e.angle)*(i+1)*28,y:e.origin.y+Math.sin(e.angle)*(i+1)*28};if(age>=i*.13+1&&age<i*.13+3)tickCombatDot(e,'stitch'+i,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<18,.02);}
   break;}
  case 'slagAnchors':for(let i=0;i<2;i++){const q=e.points[i];if(!s['anchor'+i]&&dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<36){s['anchor'+i]=true;e.solved=true;refundCounterDash();burst(q.x,q.y,16,'#ffb471');}}break;
- case 'emberCatch':{const q=e.points[0];if(themedCounterContact(e,q,from,dt)){damageMonstersInAttack(e.owner,e,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<145);themedCounter(e,q,.10);}else if(age>=e.total-.05){hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
+ case 'emberCatch':{const q=e.points[0];if(themedCounterContact(e,q,from,dt)){damageMonstersInAttack(e.owner,e,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<145);themedCounter(e,q,.10);}else if(age>=e.total-.05){hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
  case 'soulLantern':{
   const q=e.points[0];if(dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<37){e.solved=e.done=true;refundCounterDash();burst(q.x,q.y,12,'#70e4a2');break;}
   const launched=Math.floor(age/1.15);for(let i=0;i<=launched;i++){const progress=(age-i*1.15)/1.5;if(progress<0||progress>1.1||s['soul'+i])continue;const soul={x:q.x+(e.owner.x-q.x)*Math.min(1,progress),y:q.y+(e.owner.y-q.y)*Math.min(1,progress)};if(Math.hypot(p.x-soul.x,p.y-soul.y)<24){s['soul'+i]=true;e.solved=true;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.0035);}else if(progress>=1){s['soul'+i]=true;e.owner.hp=Math.min(e.owner.maxHp,e.owner.hp+e.owner.maxHp*.004);}}
   break;}
- case 'returningSigil':{const index=s.stage||0,q=e.points[index],start=index?(s.stageAt||0)+.6:0;if(themedCounterContact(e,q,from,dt,start,start+3.6)){if(index===0){s.stage=1;s.stageAt=age;e.solved=true;themedReturnHalf(e,q);}else themedCounter(e,q,.06);}else if(age>=start+3.6){hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
- case 'borrowedBreath':if(e.points.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<30)){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,10,combatTheme('safe').color);}else if(age>=e.total-.05){hurt(p.maxHp*.15/incomingDamageScale());e.done=true;}break;
+ case 'returningSigil':{const index=s.stage||0,q=e.points[index],start=index?(s.stageAt||0)+.6:0;if(themedCounterContact(e,q,from,dt,start,start+3.6)){if(index===0){s.stage=1;s.stageAt=age;e.solved=true;themedReturnHalf(e,q);}else themedCounter(e,q,.06);}else if(age>=start+3.6){hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
+ case 'borrowedBreath':if(e.points.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<30)){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,10,combatTheme('safe').color);}else if(age>=e.total-.05){hurtEncounter(e.owner,e,p.maxHp*.15/incomingDamageScale());e.done=true;}break;
  case 'gravityWell':if(age<2.7)themedPull(t,(25+age*18)*dt,170);break;
  case 'orbitTransfer':{if(!game.enemies.includes(e.partner)){e.done=true;break;}break;}
  case 'collapsingNova':{
   const q=e.points[0],radius=Math.max(30,180-age*62);
   if(oldAge<2.5){if(themedCounterContact(e,q,from,dt,0,2.5)){themedCounter(e,q,.12);break;}themedHit(e,'inward',actor=>Math.abs(Math.hypot(actor.x-q.x,actor.y-q.y)-radius)<23,.65);}
-  if(age>=2.5&&!s.missed){s.missed=true;hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());}
+  if(age>=2.5&&!s.missed){s.missed=true;hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());}
   if(age>=6&&!s.launched){s.launched=true;addGravePulses(e.owner,{origin:q,enemyHits:e.enemyHits,pulseCount:1},e.damage/.85);}
   break;}
  }
@@ -6775,6 +6813,11 @@ function paintEnemyResolve(enemy){
 
 function hostileDamage(owner,fraction){const boost=(owner?.furyLinked?1.12:1)*themedRallyMultiplier(owner)*(owner?.ascendance>0?ELITE_TASKS.ascend.damage:1);return game.player.maxHp*Math.min(.5,fraction*boost)/incomingDamageScale();}
 
+function hurtEncounter(owner,attack,amount){
+ const special=owner&&!owner.uncommon&&(owner.boss||owner.elite||owner.bossElite||owner.champion);
+ return hurt(special?Math.max(amount,game.player.maxHp*ENCOUNTER_DAMAGE.minimum/incomingDamageScale()):amount,special?{eliteHit:attack||owner}:{});
+}
+
 function bossAttackDamage(owner,type=owner.cast?.type){
  if(owner.uncommon)return hostileDamage(owner,type==='ground'?.08:type==='charge'||owner.charge?.10:.06);
  if(themedAbility(type))return hostileDamage(owner,ENCOUNTER_DAMAGE.heavy);
@@ -6901,7 +6944,7 @@ function elitePromotionCap(){return ELITE_TASKS.promotions[Math.min(2,zoneNumber
 function initializeEliteBehavior(e){
  if(!eliteBehaviorEligible(e)||e.eliteBehavior)return;
  const slot=game.enemies.filter(eliteBehaviorEligible).indexOf(e),family=e.champion?{charge:0,shield:1,ricochet:2}[rareEliteRole(e)]:(e.bossIndex||0)%3;
- e.eliteBehavior={slot,family,nextTaskAt:game.frame+ELITE_TASKS.initial+(slot%3)*1.25,taskIndex:family};
+ e.eliteBehavior={slot,family,nextTaskAt:game.frame+ELITE_TASKS.initial+(slot%3)*1.25,taskIndex:family+(slot%2)};
 }
 
 function eliteRecruitEligible(e){return e&&e.hp>0&&!e.boss&&!e.elite&&!e.uncommon&&!e.totem&&!e.summoned&&!e.cast;}
@@ -6938,7 +6981,7 @@ function startEliteTask(owner,kind){
  if(kind==='ascend'&&owner.ascendance>0||kind==='conduit'&&(totemsDisabled()||game.enemies.filter(e=>e.summoned).length>=8))return false;
  const target=kind==='empower'?eliteRecruit(owner):null;if(kind==='empower'&&!target)return false;
  const site=eliteTaskSite(owner,target);if(!site)return false;
- initializeEliteBehavior(owner);owner.eliteTask={kind,target,...site,phase:'travel',travelLeft:ELITE_TASKS.travelSeconds,age:0,total:ELITE_TASKS[kind].seconds||0,hits:0,pressure:0,lastHit:-Infinity,healed:0,spawnClock:ELITE_TASKS.conduit.first,pending:null};
+ initializeEliteBehavior(owner);owner.eliteTask={kind,target,...site,phase:'travel',travelLeft:ELITE_TASKS.travelSeconds,age:0,total:ELITE_TASKS[kind].seconds||0,hits:0,pressure:0,lastHit:-Infinity,healed:0,spawnClock:kind==='siege'?ELITE_TASKS.siege.first:ELITE_TASKS.conduit.first,variant:owner.eliteBehavior.family%2?'marks':'volley',pending:null};
  owner.tasksUsed=[...new Set([...(owner.tasksUsed||[]),kind])];codexDiscover('elite_tasks');return true;
 }
 
@@ -6969,6 +7012,7 @@ function tickEliteTask(owner,dt){
   return;
  }
  const previous=task.age;task.age+=dt;
+ if(task.kind==='siege'){tickEliteSiege(owner,task,dt);return;}
  if(task.kind==='ascend'){
   const elapsed=Math.max(0,Math.min(task.age,task.total)-previous),heal=Math.max(0,Math.min(owner.maxHp-owner.hp,owner.maxHp*ELITE_TASKS.ascend.healRate*elapsed,owner.maxHp*ELITE_TASKS.ascend.healCap-task.healed));owner.hp+=heal;task.healed+=heal;
   if(task.age>=task.total){owner.ascendance=ELITE_TASKS.ascend.duration;finishEliteTask(owner);burst(owner.x,owner.y-25,18,TOTEM_SIGNALS.fury.color);}
@@ -6987,9 +7031,19 @@ function tickEliteTasks(dt){
   owner.ascendance=Math.max(0,(owner.ascendance||0)-dt);initializeEliteBehavior(owner);
   if(owner.eliteTask){tickEliteTask(owner,dt);continue;}
   const behavior=owner.eliteBehavior;if(!eliteBehaviorEligible(owner)||!behavior||game.frame<behavior.nextTaskAt||owner.cast||owner.charge||owner.stagger>0||owner.phaseQueue?.length)continue;
-  for(let n=0;n<3;n++){const kind=['ascend','empower','conduit'][behavior.taskIndex++%3];if(startEliteTask(owner,kind))break;}
+  for(let n=0;n<4;n++){const kind=['ascend','empower','conduit','siege'][behavior.taskIndex++%4];if(startEliteTask(owner,kind))break;}
   if(!owner.eliteTask)behavior.nextTaskAt=game.frame+2;
  }
+}
+
+function tickEliteSiege(owner,task,dt){
+ const config=ELITE_TASKS.siege;
+ if(task.pending){task.warn-=dt;if(task.warn>0)return;const q=task.pending,attack={},damage=hostileDamage(owner,task.variant==='marks'?config.mark:config.projectile);
+  if(task.variant==='marks')game.hazards.push({...q,type:'ground',owner,attack,biome:owner.biome,language:'danger',r:52,life:.4,total:.4,age:0,singleHit:true,damage});
+  else for(const offset of [-.2,0,.2]){const angle=q.angle+offset;game.hostileShots.push({x:owner.x,y:owner.y-22,vx:Math.cos(angle)*175,vy:Math.sin(angle)*175,rad:7,life:6,age:0,owner,attack,biome:owner.biome,language:'danger',damage,abilityType:'volley'});}
+  task.pending=null;task.spawnClock=config.interval;return;
+ }
+ task.spawnClock-=dt;if(task.spawnClock<=0){const p=game.player;task.pending={x:p.x,y:p.y,angle:Math.atan2(p.y-owner.y+22,p.x-owner.x)};task.warn=config.warning;}
 }
 
 function eliteBehaviorStep(enemy,dx,dy,step){
@@ -7008,21 +7062,25 @@ function eliteBehaviorStep(enemy,dx,dy,step){
 
 function eliteTaskGuideIcon(){return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><title>Elite intentions</title><defs><radialGradient id="b"><stop stop-color="#485549"/><stop offset="1" stop-color="#18252a"/></radialGradient></defs><circle cx="64" cy="64" r="60" fill="url(#b)" stroke="#b8a574" stroke-width="2"/><path d="M64 29L30 88H98Z" fill="none" stroke="#c8b88d" stroke-width="4"/><g stroke="#edd9a9" stroke-width="2"><circle cx="64" cy="29" r="19" fill="#345c46"/><circle cx="30" cy="88" r="19" fill="#684d39"/><circle cx="98" cy="88" r="19" fill="#414c68"/></g><path d="M64 16V42M51 29H77" stroke="#9ce2af" stroke-width="6"/><path d="M17 91L15 76L25 83L30 74L35 83L45 76L43 91Z" fill="#efd28a"/><path d="M98 73Q79 81 89 97Q104 109 111 94Q117 79 98 73M98 81Q89 88 97 96Q105 99 106 90Q104 84 98 87" fill="none" stroke="#adc7f0" stroke-width="3"/></svg>');}
 
-function installEliteTaskGuide(){SVG_FILES['codex-elite_tasks.svg']=eliteTaskGuideIcon();CODEX_ITEMS.push({id:'elite_tasks',cat:'Enemies',name:'Elite intentions',desc:'Elites and rares spread out, then sometimes leave the chase for a task. Ascendance slowly heals and grants a strong temporary damage/cadence buff if finished. Rare Awakening turns an ordinary monster into a rare; killing that recruit stops it. Living Conduit summons a bounded army until interrupted. Dash through the channeler, stun it, land three focused weapon hits, or remove 12% of its maximum health to interrupt. A successful dash interrupt refunds dash. Summoned enemies cannot perform these tasks or be promoted.'});}
+function installEliteTaskGuide(){SVG_FILES['codex-elite_tasks.svg']=eliteTaskGuideIcon();CODEX_ITEMS.push({id:'elite_tasks',cat:'Enemies',name:'Elite intentions',desc:'Elites and rares spread out, then sometimes leave the chase for a task. Ascendance slowly heals and grants a strong temporary damage/cadence buff if finished. Rare Awakening turns an ordinary monster into a rare; killing that recruit stops it. Living Conduit summons a bounded army until interrupted. Siege Channel moves into position and keeps firing warned volleys or marking ground until interrupted. Dash through the channeler, stun it, land three focused weapon hits, or remove 12% of its maximum health to interrupt. A successful dash interrupt refunds dash. Summoned enemies cannot perform these tasks or be promoted.'});}
 
-function eliteTaskSymbol(kind){return kind==='ascend'?'damage':kind==='empower'?'mirror':'portal';}
+function eliteTaskSymbol(kind){return kind==='ascend'?'damage':kind==='empower'?'mirror':kind==='siege'?'cross':'portal';}
 
 function paintEliteTaskGround(){
  const gold=combatTheme('interrupt'),teal=combatTheme('safe'),time=abilityEffectTime();
  for(const owner of game.enemies){const task=owner.eliteTask;if(!task)continue;const kind=owner.biome??biomeIndex(),q=task.phase==='travel'?task.point:owner;
-  ctx.save();const progress=task.phase==='travel'?1:task.total?1-task.age/task.total:task.pending?task.warn/ELITE_TASKS.conduit.warning:task.spawnClock/ELITE_TASKS.conduit.interval;
+  ctx.save();const cycle=task.kind==='siege'?ELITE_TASKS.siege:ELITE_TASKS.conduit,progress=task.phase==='travel'?1:task.total?1-task.age/task.total:task.pending?task.warn/cycle.warning:task.spawnClock/cycle.interval;
   ellipse(q.x,q.y+14,43,15,'#10191e66');themedArc(q.x,q.y+12,39,clamp(progress,0,1),gold.color,2.5);paintAbilityEmblem(eliteTaskSymbol(task.kind),q.x,q.y+13,13,gold);
   for(const side of [-1,1])themedArrow(owner.x+side*51,owner.y+12,side<0?0:Math.PI,teal.hot,9);
   if(task.phase==='travel'){ctx.setLineDash([4,7]);themedLine(owner,task.point,1.5,gold.color+'88');ctx.setLineDash([]);}
   else{
    const prop=task.kind==='conduit'?['root','vent','rib','prism'][kind]:task.kind==='ascend'?['sapling','droplet','lantern','star'][kind]:'prism';
    for(let i=0;i<3;i++){const angle=i*Math.PI*2/3+(reducedMotion()?0:time*.35),x=owner.x+Math.cos(angle)*34,y=owner.y+15+Math.sin(angle)*12;themedSprite(prop,kind,x,y,task.kind==='conduit'?42:28,0,.85);}
-   if(task.pending){themedSprite('portal',kind,task.pending.x,task.pending.y+15,56);themedArc(task.pending.x,task.pending.y,26,1-task.warn/ELITE_TASKS.conduit.warning,gold.color,2);themedSprite('wisp',kind,task.pending.x,task.pending.y-12,28,0,.6);}
+   if(task.pending&&task.kind==='siege'){
+    const red=combatTheme('danger'),point=task.pending;
+    if(task.variant==='marks'){themedArc(point.x,point.y,52,1,red.hot,2);themedArc(point.x,point.y,46,1-task.warn/cycle.warning,red.color,4);themedSprite(['root','vent','rib','prism'][kind],kind,point.x,point.y+12,48,0,.65);}
+    else for(const offset of [-.2,0,.2]){const angle=point.angle+offset;themedLine({x:owner.x,y:owner.y-22},{x:owner.x+Math.cos(angle)*210,y:owner.y-22+Math.sin(angle)*210},2,red.color+'b0');themedArrow(owner.x+Math.cos(angle)*90,owner.y-22+Math.sin(angle)*90,angle,red.hot,8);}
+   }else if(task.pending){themedSprite('portal',kind,task.pending.x,task.pending.y+15,56);themedArc(task.pending.x,task.pending.y,26,1-task.warn/cycle.warning,gold.color,2);themedSprite('wisp',kind,task.pending.x,task.pending.y-12,28,0,.6);}
   }
   if(task.target){const target=task.target;themedArc(task.recruit.x,task.recruit.y+12,25,1,gold.color+'88',1.5);themedSprite('star',kind,target.x,target.y-25,32,0,.65);}
   ctx.restore();
@@ -7139,7 +7197,7 @@ function tickRollingFurnace(e,dt,from){
   const path=furnacePath(e,roller),splitAt=roller.delay+path.bounce;
   if(e.furnace.variant==='split'&&oldAge<splitAt&&e.age>=splitAt)shapes.push({...furnacePart(e,roller,splitAt-1e-8,0),lastAt:splitAt});
   for(const shot of shapes){const contains=actor=>furnaceSweptContains(e,roller,shot,actor,actor===game.player?from:actor,oldAge,e.age);
-   if(contains(game.player)&&!e.playerHits.has(shot.key)){hurt(e.damage*shot.factor);e.playerHits.set(shot.key,Infinity);}
+   if(contains(game.player)&&!e.playerHits.has(shot.key)){hurtEncounter(e.owner,shot,e.damage*shot.factor);e.playerHits.set(shot.key,Infinity);}
    const attack={enemyHits:roller.hits};damageMonstersInAttack(e.owner,attack,contains);
   }
   if(e.age>=splitAt&&shapes.filter(q=>q.lastAt===undefined).every(furnacePartPassed))roller.retired=true;
@@ -7463,9 +7521,12 @@ function gainXp(amount){if(!Number.isFinite(amount)||amount<=0)return;data.dunge
 function showUpgrade(){game.pendingLevels=0;if(game.status==='upgrade')game.status='running';return false;}
 function selectUpgrade(){return false;}
 function hurt(amount,options={}){
- const p=game.player;const dashProtected=p.dashTime>0||p.dashGuard>0||p.dashCooldown>2.85&&p.invuln>0;if(game.status!=='running'||p.invuln>0&&(!options.dot||dashProtected))return;
+ const p=game.player,dashProtected=p.dashTime>0||p.dashGuard>0||p.dashCooldown>2.85&&p.invuln>0,ownHitWindow=options.eliteHit&&p.invuln<=(p.hitInvuln||0)+1e-8;
+ if(game.status!=='running'||dashProtected||p.invuln>0&&!options.dot&&!ownHitWindow)return false;
+ if(options.eliteHit&&(options.eliteHit.playerHurtUntil??-Infinity)>game.frame)return false;
+ if(options.eliteHit)options.eliteHit.playerHurtUntil=game.frame+ENCOUNTER_DAMAGE.hitWindow;
  const damage=amount*incomingDamageScale()*(1-styleStats().guardPercent/100)*(1-trinketBonus('guard'))*(1-.02*waveRank('ward'))*(data.weaponType==='shield'?.72:1)*eliteBoonValue('protection');
- p.hp-=damage;if(!options.dot){p.hitPose=.26;p.invuln=.47;game.shake=6;floater(p.x,p.y-31,'-'+Math.ceil(damage),'#ffb5a5');burst(p.x,p.y,5,'#fa8b87');}else{p.dotDamage=(p.dotDamage||0)+damage;if(game.frame>=(p.dotDisplayAt||0)){floater(p.x,p.y-31,'-'+Math.ceil(p.dotDamage),'#ffc184');p.dotDamage=0;p.dotDisplayAt=game.frame+.6;burst(p.x,p.y,2,'#e79762');}}if(p.hp<=0){p.hp=0;die();}
+ p.hp-=damage;if(!options.dot){p.hitPose=.26;p.invuln=Math.max(p.invuln,ENCOUNTER_DAMAGE.hitWindow);p.hitInvuln=ENCOUNTER_DAMAGE.hitWindow;game.shake=6;floater(p.x,p.y-31,'-'+Math.ceil(damage),'#ffb5a5');burst(p.x,p.y,5,'#fa8b87');}else{p.dotDamage=(p.dotDamage||0)+damage;if(game.frame>=(p.dotDisplayAt||0)){floater(p.x,p.y-31,'-'+Math.ceil(p.dotDamage),'#ffc184');p.dotDamage=0;p.dotDisplayAt=game.frame+.6;burst(p.x,p.y,2,'#e79762');}}if(p.hp<=0){p.hp=0;die();}return true;
 }
 function onKill(e){
  if(!game.enemies.includes(e))return;spawnGraveEcho(e);clearOwnerMechanics(e);flushBurnDamage(e);game.enemies.splice(game.enemies.indexOf(e),1);if(e.summoned){burst(e.x,e.y,6,combatTheme('shield').color);completeSummonCleanup();return;}
@@ -7538,7 +7599,7 @@ function dash(){
  const p=game.player;if(game.status!=='running'||p.dashCooldown>0)return;let x=p.vx,y=p.vy;if(!x&&!y){x=1;y=0;}
  p.dashSerial=(p.dashSerial||0)+1;p.dashTime=.22;p.dashCooldown=3.2;p.dashGuard=DASH_COUNTERS.guard;p.invuln=Math.max(p.invuln,DASH_COUNTERS.guard);p.dashDX=x;p.dashDY=y;burst(p.x,p.y,12,'#a6dfbf');
 }
-function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFrom=encounterFoot(p),dashing=p.dashTime>0;game.frame+=dt;game.phaseTime+=dt;game.runSeconds+=dt;p.invuln=Math.max(0,p.invuln-dt);p.dashCooldown=Math.max(0,p.dashCooldown-dt);p.dashGuard=Math.max(0,(p.dashGuard||0)-dt);
+function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFrom=encounterFoot(p),dashing=p.dashTime>0;game.frame+=dt;game.phaseTime+=dt;game.runSeconds+=dt;p.invuln=Math.max(0,p.invuln-dt);p.hitInvuln=Math.max(0,(p.hitInvuln||0)-dt);p.dashCooldown=Math.max(0,p.dashCooldown-dt);p.dashGuard=Math.max(0,(p.dashGuard||0)-dt);
  tickEliteBoon(dt);tickEliteLinks(dt);p.attackPose=Math.max(0,p.attackPose-dt);p.hitPose=Math.max(0,p.hitPose-dt);let dx=(game.keys.KeyD||game.keys.ArrowRight?1:0)-(game.keys.KeyA||game.keys.ArrowLeft?1:0),dy=(game.keys.KeyS||game.keys.ArrowDown?1:0)-(game.keys.KeyW||game.keys.ArrowUp?1:0);
  if(game.joystick.pointer!==null){dx=game.joystick.x;dy=game.joystick.y;}else if(game.mouseMove.active){dx=game.mouseMove.x;dy=game.mouseMove.y}
  const norm=Math.hypot(dx,dy)||1;dx/=norm;dy/=norm;p.vx=dx;p.vy=dy;if(Math.abs(dx)>.15)p.facing=dx<0?-1:1;const spd=playerMoveSpeed();if(p.dashTime>0){p.x+=p.dashDX*650*dt;p.y+=p.dashDY*650*dt;p.dashTime-=dt;burst(p.x,p.y,1,'#a4e2b2')}else{p.x+=dx*spd*dt;p.y+=dy*spd*dt}
@@ -7566,7 +7627,7 @@ function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFr
    if(e.boss||e.elite||e.uncommon)tickBossSpecial(e,dt,playerFrom,dashing);
    if(!game.enemies.includes(e)||game.status!=='running')continue;
    const walk=e.cast&&!isReflectCast(e.cast)||e.charge||e.stagger>0?0:e.uncommon&&dist<175?-.5:e.uncommon&&dist<280?0:(game.totems||[]).some(t=>t.owner===e)?.20:1,step=e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1),intent=eliteBehaviorStep(e,vx/dist*step,vy/dist*step,step),move=themedLinkStep(e,intent.x,intent.y);e.x+=move.x;e.y+=move.y;
-   if(!(e.stagger>0)&&dist<e.rad+17&&e.contact<=0){hurt(e.boss||e.elite?hostileDamage(e,ENCOUNTER_DAMAGE.contact):(10+combatDepth()*1.5)*(e.furyLinked?1.12:1));e.contact=e.boss?.7:.60}
+   if(!(e.stagger>0)&&dist<e.rad+17&&e.contact<=0){hurtEncounter(e,e, e.boss||e.elite?hostileDamage(e,ENCOUNTER_DAMAGE.contact):(10+combatDepth()*1.5)*(e.furyLinked?1.12:1));e.contact=e.boss?.7:.60}
  }
  tickDungeonHazards(dt,{x:playerFrom.x,y:playerFrom.y-13});tickHealthDrops(dt);tickGroundLoot(dt);
  for(let i=game.shots.length-1;i>=0;i--){
@@ -7584,7 +7645,7 @@ function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFr
   const s=game.hostileShots[i];if(!s)continue;s.oldX=s.x;s.oldY=s.y;advanceExpandedShot(s,dt);s.life-=dt;
   if(s.life<=0||reflectAbsorbsShot(s)){const at=game.hostileShots.indexOf(s);if(at>=0)game.hostileShots.splice(at,1);continue;}
   if(s.language==='friendly')damageMonstersInAttack(s.owner,s,e=>shotHitsBody(s,e,s.oldX,s.oldY));
-  if(segmentDistance(p.x,p.y,s.oldX,s.oldY,s.x,s.y)<s.rad+12){hurt(s.damage||11+combatDepth());const at=game.hostileShots.indexOf(s);if(at>=0)game.hostileShots.splice(at,1);}
+  if(segmentDistance(p.x,p.y,s.oldX,s.oldY,s.x,s.y)<s.rad+12){hurtEncounter(s.owner,s.attack||s.enemyHits||s,s.damage||11+combatDepth());const at=game.hostileShots.indexOf(s);if(at>=0)game.hostileShots.splice(at,1);}
  }
  for(let i=game.gems.length-1;i>=0;i--){const g=game.gems[i],d=Math.hypot(g.x-p.x,g.y-p.y),magnet=68+waveRank('vortex')*8+trinketBonus('pickup');if(d<magnet*2){const speed=d<magnet?500:165;g.x+=(p.x-g.x)/Math.max(1,d)*speed*dt;g.y+=(p.y-g.y)/Math.max(1,d)*speed*dt}if(d<20){game.gems.splice(i,1);gainXp(g.value);if(game.status==='upgrade')break}}
  if(game.transition>0){game.transition-=dt;if(game.transition<=0&&game.status==='running')nextPhase()}
@@ -8204,6 +8265,7 @@ function updatePauseHud(){
  $('pauseCaption').textContent=manuallyPaused?'RESUME':'PAUSE';
  banner.classList.toggle('hidden',!manuallyPaused||$('app').classList.contains('drawer-open')||!$('overlay').classList.contains('hidden')||tourIndex>=0);
  $('stageWrap').classList.toggle('delve-is-paused',manuallyPaused);if(manuallyPaused)resetArenaTouch(true);
+ refreshNavigationArcs();
 }
 function openMasteryFromHud(){if(!masteryUnlocked())return;closeDrawer();game.menuPaused=true;game.keys={};showMastery();}
 function toggleManualPause(){

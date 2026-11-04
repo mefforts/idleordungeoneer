@@ -1,5 +1,5 @@
 /* The two channels share a light drain; their yellow counter cues differ. */
-const SIPHON_TETHER={seconds:4,grace:.8,drain:.02,healPerTick:.002,healCap:.02,awayDistance:24,cutRadius:28};
+const SIPHON_TETHER={seconds:12,grace:.8,drain:.02,healPerTick:.002,healCap:.02,awayDistance:24,cutRadius:28};
 function canBeginSiphonCast(){return !(game.themedEvents||[]).some(e=>!e.done)&&!(game.hazards||[]).some(h=>h.wave||h.type==='expanded'&&!h.lingering)&&!(game.bossBursts||[]).length;}
 function setupSiphonTether(owner,cast){
  const p=game.player,variant=((owner.siphonSerial||0)+(owner.bossIndex||0))%2?'knot':'escape',arena=expandedArena();let cut=null;

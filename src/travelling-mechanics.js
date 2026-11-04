@@ -85,7 +85,7 @@ function tickRollingFurnace(e,dt,from){
   const path=furnacePath(e,roller),splitAt=roller.delay+path.bounce;
   if(e.furnace.variant==='split'&&oldAge<splitAt&&e.age>=splitAt)shapes.push({...furnacePart(e,roller,splitAt-1e-8,0),lastAt:splitAt});
   for(const shot of shapes){const contains=actor=>furnaceSweptContains(e,roller,shot,actor,actor===game.player?from:actor,oldAge,e.age);
-   if(contains(game.player)&&!e.playerHits.has(shot.key)){hurt(e.damage*shot.factor);e.playerHits.set(shot.key,Infinity);}
+   if(contains(game.player)&&!e.playerHits.has(shot.key)){hurtEncounter(e.owner,shot,e.damage*shot.factor);e.playerHits.set(shot.key,Infinity);}
    const attack={enemyHits:roller.hits};damageMonstersInAttack(e.owner,attack,contains);
   }
   if(e.age>=splitAt&&shapes.filter(q=>q.lastAt===undefined).every(furnacePartPassed))roller.retired=true;

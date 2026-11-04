@@ -15,9 +15,10 @@ function normalizeSpecificVouchers(){
  const old=data.specificVouchers||{};data.specificVouchers=Object.fromEntries(['iron','steel','mithril'].flatMap(tier=>voucherKinds(tier).map(kind=>{const key=tier+'_'+kind;return [key,Math.max(0,Math.min(1e12,Math.floor(Number(old[key])||0)))];})));
  for(const tier of ['iron','steel','mithril'])for(const item of splitLegacyVouchers(tier,data.upgradeVouchers?.[tier]))data.specificVouchers[item.key.slice(8)]+=item.amount;
  data.upgradeVouchers={iron:0,steel:0};
+ data.voucherIntroSeen=!!data.voucherIntroSeen;data.voucherGuideQueue=Array.isArray(data.voucherGuideQueue)?[...new Set(data.voucherGuideQueue.filter(key=>validVoucherLootKey('voucher_'+key)&&data.specificVouchers[key]>0))].slice(-32):[];
 }
 function normalizeVoucherLootItems(items){return items.flatMap(item=>/^voucher_(iron|steel|mithril)$/.test(item.key)?splitLegacyVouchers(item.key.slice(8),item.amount):[item]);}
-function grantSpecificVoucherLoot(key,amount){for(const item of normalizeVoucherLootItems([{key,amount}]))if(validVoucherLootKey(item.key))data.specificVouchers[item.key.slice(8)]=(data.specificVouchers[item.key.slice(8)]||0)+item.amount;}
+function grantSpecificVoucherLoot(key,amount){for(const item of normalizeVoucherLootItems([{key,amount}]))if(validVoucherLootKey(item.key)){const id=item.key.slice(8);data.specificVouchers[id]=(data.specificVouchers[id]||0)+item.amount;if(item.amount>0){data.voucherGuideQueue=[...(data.voucherGuideQueue||[]).filter(key=>key!==id),id].slice(-32);refreshProgressionGuide();}}}
 function dropVoucherKinds(tier){
  const limit=TIER_LIMITS[tier==='iron'?1:tier==='steel'?2:3],styles=Object.keys(STYLE_DEFS).filter(style=>data.unlockedWeapons.some(id=>styleForWeapon(id)===style));
  const kinds=voucherKinds(tier).filter(kind=>{

@@ -1,13 +1,13 @@
 /* Elite intentions are transient; ordinary waves and equipment keep their budgets. */
-const ELITE_TASKS={initial:6,cooldown:15,travelSeconds:5.5,interruptHits:3,interruptHealth:.12,interruptStun:.8,cap:[1,1,2],promotions:[1,1,2],ascend:{seconds:5.5,healRate:.0035,healCap:.02,duration:14,damage:1.35,tempo:1.25},empower:{seconds:6},conduit:{first:2.8,interval:5.5,warning:1.2}};
-const ELITE_TASK_NAMES={ascend:'Ascendance',empower:'Rare Awakening',conduit:'Living Conduit'};
+const ELITE_TASKS={initial:6,cooldown:15,travelSeconds:12,interruptHits:3,interruptHealth:.12,interruptStun:.8,cap:[1,1,2],promotions:[1,1,2],ascend:{seconds:12,healRate:.0035,healCap:.04,duration:14,damage:1.35,tempo:1.25},empower:{seconds:14},conduit:{first:2.8,interval:5.5,warning:1.2},siege:{first:1,interval:2.8,warning:1.2,projectile:.125,mark:.18}};
+const ELITE_TASK_NAMES={ascend:'Ascendance',empower:'Rare Awakening',conduit:'Living Conduit',siege:'Siege Channel'};
 function eliteBehaviorEligible(e){return !!e&&e.hp>0&&e.elite&&!e.boss&&!e.summoned&&!e.uncommon&&!e.totem&&e.speed>0;}
 function eliteTaskCap(){return ELITE_TASKS.cap[Math.min(2,zoneNumber())];}
 function elitePromotionCap(){return ELITE_TASKS.promotions[Math.min(2,zoneNumber())];}
 function initializeEliteBehavior(e){
  if(!eliteBehaviorEligible(e)||e.eliteBehavior)return;
  const slot=game.enemies.filter(eliteBehaviorEligible).indexOf(e),family=e.champion?{charge:0,shield:1,ricochet:2}[rareEliteRole(e)]:(e.bossIndex||0)%3;
- e.eliteBehavior={slot,family,nextTaskAt:game.frame+ELITE_TASKS.initial+(slot%3)*1.25,taskIndex:family};
+ e.eliteBehavior={slot,family,nextTaskAt:game.frame+ELITE_TASKS.initial+(slot%3)*1.25,taskIndex:family+(slot%2)};
 }
 function eliteRecruitEligible(e){return e&&e.hp>0&&!e.boss&&!e.elite&&!e.uncommon&&!e.totem&&!e.summoned&&!e.cast;}
 function eliteTaskLinked(e){return (game.themedEvents||[]).some(t=>!t.done&&(t.owner===e||t.partner===e))||game.enemies.some(other=>other.cast?.themed&&(other===e||other.cast.themed.partner===e));}
@@ -38,7 +38,7 @@ function startEliteTask(owner,kind){
  if(kind==='ascend'&&owner.ascendance>0||kind==='conduit'&&(totemsDisabled()||game.enemies.filter(e=>e.summoned).length>=8))return false;
  const target=kind==='empower'?eliteRecruit(owner):null;if(kind==='empower'&&!target)return false;
  const site=eliteTaskSite(owner,target);if(!site)return false;
- initializeEliteBehavior(owner);owner.eliteTask={kind,target,...site,phase:'travel',travelLeft:ELITE_TASKS.travelSeconds,age:0,total:ELITE_TASKS[kind].seconds||0,hits:0,pressure:0,lastHit:-Infinity,healed:0,spawnClock:ELITE_TASKS.conduit.first,pending:null};
+ initializeEliteBehavior(owner);owner.eliteTask={kind,target,...site,phase:'travel',travelLeft:ELITE_TASKS.travelSeconds,age:0,total:ELITE_TASKS[kind].seconds||0,hits:0,pressure:0,lastHit:-Infinity,healed:0,spawnClock:kind==='siege'?ELITE_TASKS.siege.first:ELITE_TASKS.conduit.first,variant:owner.eliteBehavior.family%2?'marks':'volley',pending:null};
  owner.tasksUsed=[...new Set([...(owner.tasksUsed||[]),kind])];codexDiscover('elite_tasks');return true;
 }
 function clearEliteTask(owner){const task=owner.eliteTask;if(task?.target)game.eliteRecruits?.delete(task.target);owner.eliteTask=null;}
@@ -64,6 +64,7 @@ function tickEliteTask(owner,dt){
   return;
  }
  const previous=task.age;task.age+=dt;
+ if(task.kind==='siege'){tickEliteSiege(owner,task,dt);return;}
  if(task.kind==='ascend'){
   const elapsed=Math.max(0,Math.min(task.age,task.total)-previous),heal=Math.max(0,Math.min(owner.maxHp-owner.hp,owner.maxHp*ELITE_TASKS.ascend.healRate*elapsed,owner.maxHp*ELITE_TASKS.ascend.healCap-task.healed));owner.hp+=heal;task.healed+=heal;
   if(task.age>=task.total){owner.ascendance=ELITE_TASKS.ascend.duration;finishEliteTask(owner);burst(owner.x,owner.y-25,18,TOTEM_SIGNALS.fury.color);}
@@ -81,9 +82,18 @@ function tickEliteTasks(dt){
   owner.ascendance=Math.max(0,(owner.ascendance||0)-dt);initializeEliteBehavior(owner);
   if(owner.eliteTask){tickEliteTask(owner,dt);continue;}
   const behavior=owner.eliteBehavior;if(!eliteBehaviorEligible(owner)||!behavior||game.frame<behavior.nextTaskAt||owner.cast||owner.charge||owner.stagger>0||owner.phaseQueue?.length)continue;
-  for(let n=0;n<3;n++){const kind=['ascend','empower','conduit'][behavior.taskIndex++%3];if(startEliteTask(owner,kind))break;}
+  for(let n=0;n<4;n++){const kind=['ascend','empower','conduit','siege'][behavior.taskIndex++%4];if(startEliteTask(owner,kind))break;}
   if(!owner.eliteTask)behavior.nextTaskAt=game.frame+2;
  }
+}
+function tickEliteSiege(owner,task,dt){
+ const config=ELITE_TASKS.siege;
+ if(task.pending){task.warn-=dt;if(task.warn>0)return;const q=task.pending,attack={},damage=hostileDamage(owner,task.variant==='marks'?config.mark:config.projectile);
+  if(task.variant==='marks')game.hazards.push({...q,type:'ground',owner,attack,biome:owner.biome,language:'danger',r:52,life:.4,total:.4,age:0,singleHit:true,damage});
+  else for(const offset of [-.2,0,.2]){const angle=q.angle+offset;game.hostileShots.push({x:owner.x,y:owner.y-22,vx:Math.cos(angle)*175,vy:Math.sin(angle)*175,rad:7,life:6,age:0,owner,attack,biome:owner.biome,language:'danger',damage,abilityType:'volley'});}
+  task.pending=null;task.spawnClock=config.interval;return;
+ }
+ task.spawnClock-=dt;if(task.spawnClock<=0){const p=game.player;task.pending={x:p.x,y:p.y,angle:Math.atan2(p.y-owner.y+22,p.x-owner.x)};task.warn=config.warning;}
 }
 function eliteBehaviorStep(enemy,dx,dy,step){
  const task=enemy.eliteTask,source=game.eliteRecruits?.get(enemy),recruit=source?.eliteTask?.target===enemy?source.eliteTask.recruit:null;
@@ -99,4 +109,4 @@ function eliteBehaviorStep(enemy,dx,dy,step){
  if(encounterClear(enemy.x+move.x,enemy.y+13,12))return {x:move.x,y:0};if(encounterClear(enemy.x,enemy.y+move.y+13,12))return {x:0,y:move.y};return {x:0,y:0};
 }
 function eliteTaskGuideIcon(){return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><title>Elite intentions</title><defs><radialGradient id="b"><stop stop-color="#485549"/><stop offset="1" stop-color="#18252a"/></radialGradient></defs><circle cx="64" cy="64" r="60" fill="url(#b)" stroke="#b8a574" stroke-width="2"/><path d="M64 29L30 88H98Z" fill="none" stroke="#c8b88d" stroke-width="4"/><g stroke="#edd9a9" stroke-width="2"><circle cx="64" cy="29" r="19" fill="#345c46"/><circle cx="30" cy="88" r="19" fill="#684d39"/><circle cx="98" cy="88" r="19" fill="#414c68"/></g><path d="M64 16V42M51 29H77" stroke="#9ce2af" stroke-width="6"/><path d="M17 91L15 76L25 83L30 74L35 83L45 76L43 91Z" fill="#efd28a"/><path d="M98 73Q79 81 89 97Q104 109 111 94Q117 79 98 73M98 81Q89 88 97 96Q105 99 106 90Q104 84 98 87" fill="none" stroke="#adc7f0" stroke-width="3"/></svg>');}
-function installEliteTaskGuide(){SVG_FILES['codex-elite_tasks.svg']=eliteTaskGuideIcon();CODEX_ITEMS.push({id:'elite_tasks',cat:'Enemies',name:'Elite intentions',desc:'Elites and rares spread out, then sometimes leave the chase for a task. Ascendance slowly heals and grants a strong temporary damage/cadence buff if finished. Rare Awakening turns an ordinary monster into a rare; killing that recruit stops it. Living Conduit summons a bounded army until interrupted. Dash through the channeler, stun it, land three focused weapon hits, or remove 12% of its maximum health to interrupt. A successful dash interrupt refunds dash. Summoned enemies cannot perform these tasks or be promoted.'});}
+function installEliteTaskGuide(){SVG_FILES['codex-elite_tasks.svg']=eliteTaskGuideIcon();CODEX_ITEMS.push({id:'elite_tasks',cat:'Enemies',name:'Elite intentions',desc:'Elites and rares spread out, then sometimes leave the chase for a task. Ascendance slowly heals and grants a strong temporary damage/cadence buff if finished. Rare Awakening turns an ordinary monster into a rare; killing that recruit stops it. Living Conduit summons a bounded army until interrupted. Siege Channel moves into position and keeps firing warned volleys or marking ground until interrupted. Dash through the channeler, stun it, land three focused weapon hits, or remove 12% of its maximum health to interrupt. A successful dash interrupt refunds dash. Summoned enemies cannot perform these tasks or be promoted.'});}

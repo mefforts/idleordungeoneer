@@ -9,7 +9,7 @@ function clearEncounterState(){
  game.themedEvents=[];game.themedHistory=[];game.hazards=[];
  game.eliteRecruits=new Map();game.elitePromotionCount=0;game.dashSweep=null;
  game.phaseCleanupPending=false;game.graveEchoes=[];game.totems=[];game.counterEffects=[];game.counterRequest=null;game.reflectCooldown=0;game.disruptReadyAt=0;game.bossBursts=[];
- if(game.player){game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
+ if(game.player){game.player.hitInvuln=0;game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
  for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;e.resolveDisabledUntil=0;}
 }
 function clearOwnerMechanics(owner){
@@ -79,7 +79,8 @@ function beginBossCast(e){
  if(type==='gravePulse'&&!gravePulseCanCast())return false;
  if(themedAbility(type)&&!canBeginThemedCast(e,type))return false;
  if(active.some(other=>themedAbility(other.cast.type))||(game.themedEvents||[]).some(event=>!event.done)&&!['volley','ricochet','shield','mend','fury'].includes(type))return false;
- if(reflect||active.some(other=>major.includes(other.cast.type)))return false;
+ const minor=['volley','ricochet','shield','mend','fury'].includes(type);
+ if(reflect||active.some(other=>major.includes(other.cast.type)&&!(other.cast.siphon&&minor)))return false;
  if(game.counterRequest&&!game.enemies.includes(game.counterRequest))game.counterRequest=null;
  if(['reflect','reversal'].includes(type)){
   if((game.reflectCooldown||0)>0)return false;if(!game.counterRequest)game.counterRequest=e;
@@ -113,10 +114,10 @@ function resolveBossCast(e,cast){
   if(!game.enemies.includes(e)||(game.totems||[]).filter(t=>!t.destructible).length>=2)return;
   (game.totems||(game.totems=[])).push({totem:true,type:cast.type,biome:theme,owner:e,x:cast.point.x,y:cast.point.y-18,rad:16,age:0,blocked:false,healReserve:game.player.maxHp*.15});return;
  }
- if(cast.type==='cleave'){addEmberCleave(e,cast,damage);if(cleaveContains(game.player,cast))hurt(damage);damageMonstersInAttack(e,cast,enemy=>cleaveContains(enemy,cast));(game.counterEffects||(game.counterEffects=[])).push({type:'cleave',cast,biome:theme,life:.35,total:.35});return;}
+ if(cast.type==='cleave'){addEmberCleave(e,cast,damage);if(cleaveContains(game.player,cast))hurtEncounter(e,cast,damage);damageMonstersInAttack(e,cast,enemy=>cleaveContains(enemy,cast));(game.counterEffects||(game.counterEffects=[])).push({type:'cleave',cast,biome:theme,life:.35,total:.35});return;}
  if(cast.type==='volley'){
   const count=e.bossIndex===2?18:10,offset=(e.mechanicIndex||0)*.39;
-  for(let i=0;i<count;i++){if(i%5===0)continue;const a=i*Math.PI*2/count+offset,speed=e.elite?145:e.bossIndex===2?182:158;game.hostileShots.push({x:cast.origin.x,y:cast.origin.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,rad:e.bossIndex===2?8:6,life:5,biome:theme,damage,owner:e,language:'danger'});}
+  for(let i=0;i<count;i++){if(i%5===0)continue;const a=i*Math.PI*2/count+offset,speed=e.elite?145:e.bossIndex===2?182:158;game.hostileShots.push({x:cast.origin.x,y:cast.origin.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,rad:e.bossIndex===2?8:6,life:5,biome:theme,damage,owner:e,attack:cast,language:'danger'});}
  }else if(cast.type==='ground')for(const target of cast.targets)(game.hazards||(game.hazards=[])).push({...target,type:'ground',language:'friendly',owner:e,enemyHits:cast.enemyHits,biome:theme,life:1.6,total:1.6,damage,age:0});
  else (game.hazards||(game.hazards=[])).push({type:'beam',language:'friendly',owner:e,enemyHits:cast.enemyHits,x:cast.origin.x,y:cast.origin.y,angle:cast.angle,width:cast.beamWidth,length:540,life:.55,total:.55,biome:theme,damage:damage*1.3,age:0});
 }

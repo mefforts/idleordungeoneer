@@ -17,13 +17,13 @@ const {createRuntime}=require('./runtime.cjs'),{dungeonCombatFixture}=require('.
  }
  passed.push('Crowned spires require two separate impacts; camping and boundary jitter never count as repeated hits, even with damage perks');
  await setup({royal:true});const pass=await p.evaluate(()=>__spireTest.dashPass());assert.equal(pass.first.source.bumps,1);assert.equal(pass.after.source.bumps,1);assert.equal(pass.after.source.exists,true,'A fast exit is not a second collision in the same dash');await p.evaluate(()=>__spireTest.advance(.10));await at();assert.equal((await step()).source.exists,false);
- for(const [royal,fraction]of [[false,.08],[true,.12]]){
+ for(const [royal,fraction]of [[false,.125],[true,.15]]){
   const before=await setup({royal,mode:'surging'});await at();const s=await step();assert.ok(Math.abs((before.hp-s.hp)/before.maxHp-fraction)<1e-8);assert.equal(s.source.exists,royal);
  }
- const shield=await setup({mode:'surging',weapon:'shield'});await at();assert.ok(Math.abs((shield.hp-(await step()).hp)/shield.maxHp-.08*.72)<1e-8);
+ const shield=await setup({mode:'surging',weapon:'shield'});await at();assert.ok(Math.abs((shield.hp-(await step()).hp)/shield.maxHp-.125*.72)<1e-8);
  for(const mode of ['disabled','silenced']){const before=await setup({royal:true,mode});await at();const s=await step();assert.equal(s.source.bumps,1);assert.equal(s.hp,before.hp);assert.equal(s.source.disabled,true);assert.equal(s.summons,0);}
  for(const royal of [false,true]){const before=await setup({royal,mode:'surging'});const s=await p.evaluate(()=>__spireTest.dashSweep());assert.equal(s.source.exists,royal);assert.equal(s.hp,before.hp,'A swept dash remains safe even on its final frame with no other invulnerability');}
- passed.push('Red summoning windows retaliate once for 8% / 12% health before defenses; shields, disabled/silenced spires and fast or ending dashes behave correctly');
+ passed.push('Red summoning windows retaliate once for 12.5% / 15% health before defenses; shields, disabled/silenced spires and fast or ending dashes behave correctly');
  await setup();await at(0,-60);assert.equal((await step()).source.exists,true,'Overlapping the illustrated upper spire is not a ground-level impact');
  await setup();await p.evaluate(()=>__spireTest.overlap());await at();assert.equal((await step()).nodes,0,'Destroying one overlapping spire cannot skip the next in the collection');
  await setup();await p.evaluate(()=>__spireTest.pendingArrival());await at();let s=await step();assert.equal(s.source.exists,false);assert.equal(s.summons,0,'Destroying a spire cancels even an imminent queued arrival');

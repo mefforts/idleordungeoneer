@@ -1,5 +1,5 @@
 /* Fractions are base maximum-health damage; protection still mitigates them. */
-const ENCOUNTER_DAMAGE={projectile:.10,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35};
+const ENCOUNTER_DAMAGE={minimum:.125,projectile:.125,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35,hitWindow:.47};
 const ENEMY_RESOLVE={perAlly:.10,maximum:.50,dashLockout:10};
 const ENCOUNTER_AREA={common:1.25};
 function resolveEnemy(enemy){return !!enemy&&enemy.hp>0&&!enemy.totem&&!enemy.uncommon&&!!(enemy.boss||enemy.elite||enemy.bossElite||enemy.champion);}
@@ -21,6 +21,10 @@ function paintEnemyResolve(enemy){
  textAt(Math.round(reduction*100)+'%',x,y+19,'700 10px system-ui',theme.hot);ctx.restore();
 }
 function hostileDamage(owner,fraction){const boost=(owner?.furyLinked?1.12:1)*themedRallyMultiplier(owner)*(owner?.ascendance>0?ELITE_TASKS.ascend.damage:1);return game.player.maxHp*Math.min(.5,fraction*boost)/incomingDamageScale();}
+function hurtEncounter(owner,attack,amount){
+ const special=owner&&!owner.uncommon&&(owner.boss||owner.elite||owner.bossElite||owner.champion);
+ return hurt(special?Math.max(amount,game.player.maxHp*ENCOUNTER_DAMAGE.minimum/incomingDamageScale()):amount,special?{eliteHit:attack||owner}:{});
+}
 function bossAttackDamage(owner,type=owner.cast?.type){
  if(owner.uncommon)return hostileDamage(owner,type==='ground'?.08:type==='charge'||owner.charge?.10:.06);
  if(themedAbility(type))return hostileDamage(owner,ENCOUNTER_DAMAGE.heavy);
