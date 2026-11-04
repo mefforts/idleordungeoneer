@@ -1,6 +1,6 @@
 {
   "name": "idle-or-dungeoneer",
-  "version": "11.6.2",
+  "version": "11.6.3",
   "private": true,
   "description": "A standalone fantasy RPG with a minimal runestone HUD, linked crafting and a readable Codex.",
   "scripts": {
@@ -18,6 +18,8 @@
     "art:zone-abilities": "python3 scripts/export-zone-abilities.py",
     "review:mobile": "node scripts/review-mobile.cjs",
     "art:workshop": "python3 scripts/export-workshop.py",
+    "art:skilling-backgrounds": "python3 scripts/export-skilling-backgrounds.py",
+    "review:skilling-art": "node scripts/review-skilling-art.cjs",
     "art:restoration": "python3 scripts/export-restoration.py",
     "review:workshop": "node scripts/review-workshop.cjs",
     "review:delve": "node scripts/review-delve.cjs",

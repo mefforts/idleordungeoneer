@@ -13,6 +13,10 @@ for(const n of incomingAst.body){const code=incoming.slice(n.start,n.end);if(n.t
 for(const [name,{code}] of overrides){if(functions.has(name)){const old=functions.get(name);patches.push({start:old.start,end:old.end,code});}else helpers.push(code)}
 const artFile=path.join(root,'src/equipment-art.json');
 const icons={...JSON.parse(fs.readFileSync(path.join(root,'src/systems-icons.json'),'utf8')),...(fs.existsSync(artFile)?JSON.parse(fs.readFileSync(artFile,'utf8')):{}),...JSON.parse(fs.readFileSync(path.join(root,'src/zone2-art.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/painted-icons.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/navigation-icons.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/zone-ability-icons.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/restoration-art.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/elite-boon-icons.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/player-icons.json'),'utf8')),...JSON.parse(fs.readFileSync(path.join(root,'src/tier-three-icons.json'),'utf8'))};
+const skillingBackground=name=>'data:image/webp;base64,'+fs.readFileSync(path.join(root,'assets/skilling/'+name+'.webp')).toString('base64');
+const campSheets=['outdoor','workshops'].map(skillingBackground);
+icons['zone2-gathering.svg']=skillingBackground('advanced');
+walk(ast,n=>{if(n.type==='VariableDeclarator'&&n.id.name==='CAMP_SHEETS')patches.push({start:n.init.start,end:n.init.end,code:JSON.stringify(campSheets)});});
 icons['action-relicClean.svg']=icons['rough-opal.svg'];
 let originalIcons={};walk(ast,n=>{if(n.type==='VariableDeclarator'&&n.id.name==='SVG_FILES')originalIcons=JSON.parse(source.slice(n.init.start,n.init.end));});
 const retiredArmorRenderers=['paintEquipmentBody','paintEquipmentArm','paintEquipmentLeg','paintEquipmentHead','paintEquipmentWorkLeg','paintRigSegment','paintEquipmentLegStrip'];

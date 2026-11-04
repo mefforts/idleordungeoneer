@@ -182,3 +182,27 @@ function drawProceduralWorkstation(w,h,key){
  // Local ambient motes are few, slow, and never cover the action bar.
  if(!reducedMotion())for(let i=0;i<12;i++){const px=rng(i,83,key.length)*w,py=top+((rng(i,84)*available+t*(2+i%3))%available);ctx.globalAlpha=.14;disc(px,py,1,'#ecdbb2');}ctx.globalAlpha=1;
 }
+
+function drawWorkstationScene(w,h,key){
+ const base=SKILLS[key].scene||key,advanced={coal:[0,0],willow:[1,0],ancientScavenge:[0,1],cleanAncient:[0,1],garnetSearch:[1,1],garnetCut:[1,1]}[key];
+ const [sheet,oldCol,oldRow]=CAMP_PANELS[base]||[0,0,0],useAdvanced=advanced&&zone2CampImage?.complete&&zone2CampImage.naturalWidth,col=useAdvanced?advanced[0]:oldCol,row=useAdvanced?advanced[1]:oldRow,im=useAdvanced?zone2CampImage:campArt[sheet];
+ if(!im?.complete||!im.naturalWidth){drawProceduralWorkstation(w,h,key);return}
+ const sw=im.naturalWidth/2,sh=im.naturalHeight/2,sx=col*sw,sy=row*sh,portrait=w/h<.94,t=reducedMotion()?0:game.activeClockMs/1000;
+ const focus={wood:.665,mine:.625,silverMine:.625,forge:.68,silverSmelt:.68,fletch:.675,ward:.65,rune:.65,polish:.66,scavenge:.695}[base]||.62;
+ const dw=Math.max(w,h*sw/sh),dh=dw*sh/sw,dx=portrait?w*.5-dw*focus:(w-dw)/2,dy=(h-dh)/2;
+ ctx.drawImage(im,sx,sy,sw,sh,dx,dy,dw,dh);
+ const activeWorking=game.holdSkill===key&&!$('skillHold').disabled,working=activeWorking||(data.idleJobs.includes(key)&&hasIngredients(skillCost(key)));
+ const heroPosition={wood:.60,mine:.53,silverMine:.53,forge:.61,silverSmelt:.61,fletch:.60,ward:.57,rune:.57,polish:.57,scavenge:.59};
+ const heroFraction=useAdvanced?(base==='wood'?.64:.62):heroPosition[base];
+ const feet=Math.min(dy+dh*.81,game.workAreaBottom??h-(innerWidth<=760?304:230)),bounds=workshopBounds(key),leftMargin=16+(data.hudLayout.side==='left'?52:0),rightMargin=16+(data.hudLayout.side==='right'?52:0);
+ const scale=Math.min(clamp(dw/sw*1.15,1.05,2.65),Math.max(.85,(feet-96*(w/innerWidth))/100),(w-leftMargin-rightMargin)/(bounds.right-bounds.left));
+ const heroX=clamp(dx+dw*heroFraction,leftMargin-bounds.left*scale,Math.max(leftMargin-bounds.left*scale,w-rightMargin-bounds.right*scale));
+ const frame=workshopAnimation(key,activeWorking,working),anchor={x:heroX,y:feet,scale,height:scale*100};
+ paintWorkshopSceneEffects(frame,anchor,'back');DeepwellAvatar.render(ctx,{...frame,x:heroX,y:feet,scale,paintWorkpiece:frame.pose==='ward'?(c,rig)=>paintWorkshopWorkpiece(frame,rig,c):undefined});paintWorkshopSceneEffects(frame,anchor,'front');paintWorkshopReward(anchor);
+
+ if(!reducedMotion()){
+  const warm=['forge','silverSmelt'].includes(base),points=warm?8:6;
+  for(let i=0;i<points;i++){const a=i*2.39+t*.25,px=warm?dx+dw*.25+Math.sin(a)*dw*.035:w*rng(i,83,key.length),py=warm?dy+dh*.48-((t*9+i*22)%(dh*.19)):dy+dh*(.15+rng(i,84)*.5)+Math.sin(t*.3+i)*8;
+   ctx.globalAlpha=warm?.30:.18;disc(px,py,warm?1.3:.9,warm?'#ffe0a3':'#fff0c9');}ctx.globalAlpha=1;
+ }
+}

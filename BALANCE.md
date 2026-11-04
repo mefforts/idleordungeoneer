@@ -188,16 +188,18 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 4 | ~279 min | 160.0 |
 | 5 | ~193 min | 240.0 |
 
-- Live Zone 1: **10.7 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 1: **10.5 min**, 375 rewarded defeats, 80.0 reference DPS.
 - Live Zone 2: **23.5 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **206.2 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **213.8 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **176.0 min**, 960 rewarded defeats, 240.0 reference DPS.
-- Live Zone 15: **178.2 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **205.7 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **214.1 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **175.9 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 15: **179.2 min**, 960 rewarded defeats, 240.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
 Boss health retains the earlier 1.12× baseline adjustment, followed by the 1.5× health experiment and, from Zone 3, the additional 6× step. Bosses change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
+
+Build 11.6.3 allows a dash through a healing or power totem’s base to destroy it without a text prompt or reward. The collision sweeps the same base capsule used by summoning-spire dashes, including final-frame crossings, edge grazes and disabled totems. Walking still intercepts streams and weapons cannot damage them. Destruction stops the stream before that tick’s healing or buff delivery; an already-earned Rally keeps its normal remaining duration. Summoning-spire bump counts, enemy health, damage and reward rules are unchanged.
 
 Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon or damage bonuses. Each bump removes one full impact segment from the existing health bar; weapons cannot target or damage them through any primary or secondary path. Contact uses a 28-unit ground radius and re-arms after leaving 40 units. A red summoning surge retaliates for 8% / 12% player maximum HP before regional damage scaling, normal defenses and invulnerability. Idle, disabled and silenced spires are safe to bump; dashing is always safe. Each accepted dash uses swept contact across the visible base, counts once per spire, bypasses existing walking contact and retains a full impact through shields. Shielding elites can link summoning spires within 340 units. Their shields do not block bump/dash impacts and disappear with either endpoint. Spires keep summoning after their caster dies; the phase waits for the remaining spires and their minions, with no additional rewards from either. Retry, defeat and phase transitions clear transient encounter state. A fast pass counts once, and destroying a spire cancels its pending arrival. Existing minions remain. Spires grant no rewards or wave progress.
 

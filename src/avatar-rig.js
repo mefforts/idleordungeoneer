@@ -139,7 +139,7 @@ function poseRig(options={}){
   legs.push({side,hip:joint.shoulder,knee:joint.elbow,ankle:joint.hand,footAngle:kneeling?-.3:walking?side*walk*.08:0});
  }
  const point=(x,y)=>({x:main.x+x*Math.cos(angle)-y*Math.sin(angle),y:main.y+x*Math.sin(angle)+y*Math.cos(angle)}),tip=tool?point(0,-tool.height*tool.grip[1]):null;
- const backGesture=activity?(pose==='scavenge'?'plant':['ward','cast'].includes(pose)?'reach':offset||blend>.5&&['mine','wood','fletch','rune','polish','clean'].includes(pose)?'grip':'rest'):weapon==='staff'&&(pose==='combat'||pose==='attack')?'reach':offset?'grip':'rest';
+ const backGesture=activity?(pose==='scavenge'?'plant':['ward','cast'].includes(pose)?'pinch':offset||blend>.5&&['mine','wood','fletch','rune','polish','clean'].includes(pose)?'grip':'rest'):weapon==='staff'&&(pose==='combat'||pose==='attack')?'reach':offset?'grip':'rest';
  return {weapon,activity,walking,backpedal,walk,stroke:Math.sin(attack*Math.PI),angle,main,back,body,head,kneeling,phase,frontArm,backArm,legs,neck:headBase,bowUpper:point(-12,-25),bowLower:point(-12,25),arrowTip:point(27,0),toolTip:tip,tool:tool||null,gripOffset:offset,workPiece,contact:contact&&blend>.95,backGesture};
 }
 const INK='#293337';
@@ -220,6 +220,11 @@ function paintHand(c,point,angle,side,kit,look,handPose='rest'){
  const p=paletteFor(kit,'gloves',look),bare=p.style==='travel',color=bare?look.skinColor:p.style==='melee'&&(kit.pieces.gloves.endsWith('_2')||kit.pieces.gloves.endsWith('_3'))?p.mid:p.leather,light=shade(color,1.20),dark=shade(color,.72);
  c.save();c.translate(point.x,point.y);c.rotate(handPose==='plant'?0:angle);if(side>0)c.scale(-1,1);
  if(handPose==='plant'){path(c,[-4,-3,2,-3,3,-.5,7,0,7.5,1.5,4.6,2.3,0,2.1,-3,1.3,-4.5,-.5],color,INK,.8);line(c,-2,-1.7,2,-1.5,light,.8);}
+ else if(handPose==='pinch'){
+  // A compact folded-finger grip keeps the cloth edge readable at phone size.
+  c.beginPath();c.moveTo(-3.2,-4.4);c.lineTo(2.6,-4.4);c.quadraticCurveTo(3.8,-2.7,3.2,-.2);c.quadraticCurveTo(5.8,-1,6.3,.5);c.quadraticCurveTo(6.7,2.2,4,2.6);c.lineTo(2.4,2.9);c.quadraticCurveTo(1.2,5,-1.4,4.7);c.quadraticCurveTo(-4,4.3,-4.2,1.7);c.lineTo(-4,-1.4);c.closePath();c.fillStyle=color;c.fill();c.strokeStyle=INK;c.lineWidth=.85;c.stroke();
+  line(c,-2.1,-2.8,1.5,-2.8,light,.85);line(c,-2,1.7,.8,2,dark,.65);line(c,2.5,.3,3.8,1.1,dark,.65);
+ }
  else if(handPose==='reach'){
   path(c,[-3,-4.2,2.2,-4.2,3.6,-.2,6.8,-1.3,7.5,.0,3.2,3.2,1.4,6.0,-.1,5.7,-1.6,3.3,-2.1,6.4,-3.6,6.1,-3.9,2.9,-5.3,5.0,-6.5,4.1,-5.5,.0],color,INK,.85);line(c,-2.7,-2.5,1.3,-2.5,light,.8);
  }else{c.beginPath();c.moveTo(-3.3,-4.7);c.lineTo(2.9,-4.7);c.quadraticCurveTo(4.7,-.9,4.0,2.6);c.quadraticCurveTo(2.0,5.1,-1.7,4.2);c.quadraticCurveTo(-4.5,3.0,-4.2,-.2);c.closePath();c.fillStyle=color;c.fill();c.strokeStyle=INK;c.lineWidth=.9;c.stroke();path(c,[-2.6,-3.2,.8,-3.6,2.3,-.3,.6,1.2,-2.6,.8],light,'',0);if(handPose==='grip'){path(c,[2.4,-2.0,4.2,-1.3,3.2,1.4,1.1,1.9,.2,.8],color,INK,.7);line(c,-2.7,1.8,.0,2.2,dark,.7);}else line(c,-1.1,1.1,-1.3,3.3,dark,.7);}

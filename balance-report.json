@@ -1,5 +1,5 @@
 {
-  "version": "11.6.2",
+  "version": "11.6.3",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1565,6 +1565,13 @@
       "persistAfterCasterDeath": true,
       "phaseWaitsForSpiresAndSummons": true
     },
+    "supportTotems": {
+      "dashDestruction": true,
+      "walkingInterception": true,
+      "weaponDamage": false,
+      "rewards": false,
+      "textPrompt": false
+    },
     "healing": {
       "chance": 0.02,
       "ordinary": 0.03,
@@ -2437,7 +2444,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 642.3600000000306,
+      "seconds": 629.0400000000313,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 684
@@ -2445,7 +2452,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1409.52000000006,
+      "seconds": 1412.240000000062,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1416
@@ -2453,7 +2460,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 12374.800000000345,
+      "seconds": 12340.080000000376,
       "kills": 780,
       "referenceDps": 160,
       "targetSeconds": 15419
@@ -2461,7 +2468,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 12828.47999999993,
+      "seconds": 12846.839999999915,
       "kills": 960,
       "referenceDps": 160,
       "targetSeconds": 16681
@@ -2469,7 +2476,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 10559.200000001862,
+      "seconds": 10551.120000001938,
       "kills": 960,
       "referenceDps": 240,
       "targetSeconds": 13165
@@ -2477,7 +2484,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 10690.760000001757,
+      "seconds": 10750.280000001736,
       "kills": 960,
       "referenceDps": 240,
       "targetSeconds": 13165

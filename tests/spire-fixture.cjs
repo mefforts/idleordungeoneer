@@ -29,6 +29,15 @@ function spireFixture(){
   pendingArrival(){source.spawnWarn=.001;source.spawnClock=0;source.spawnPoint={x:source.x+65,y:source.y+18};},
   overlap(){const t=createSummonTotem(owner,encounterFoot(source),false);t.spawnClock=1000;},
   support(type){source={totem:true,type,biome:owner.biome,owner,x:source.x,y:source.y,rad:16,age:0,healReserve:150};game.totems=[source];return state();},
+  supportSweep(angle=0,offset=0,dashing=true){
+   const foot=encounterFoot(source),dx=Math.cos(angle),dy=Math.sin(angle),p=game.player;
+   const from={x:foot.x-dx*120-dy*offset,y:foot.y-dy*120+dx*offset};
+   p.x=foot.x+dx*120-dy*offset;p.y=foot.y+dy*120+dx*offset-13;p.dashTime=0;
+   const before=ledger(),particles=game.particles.length,floaters=game.floaters.length;
+   tickEncounterObjects(.02,from,dashing);
+   return {before,after:state(),particles:game.particles.length-particles,floaters:game.floaters.length-floaters};
+  },
+  dashInPlace(){game.player.dashTime=.22;game.player.dashDX=1;game.player.dashDY=0;},
   spawned(){spawnSummonedEnemy(owner,{x:source.x+160,y:source.y+100},false,false,source);},
   killOwner(){onKill(owner);return state();},
   freeze(kind){

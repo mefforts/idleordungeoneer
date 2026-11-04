@@ -125,6 +125,13 @@ function totemInterception(t){
  const totem=encounterFoot(t),caster=encounterFoot(t.owner),player=encounterFoot(game.player);
  return Math.hypot(player.x-totem.x,player.y-totem.y)<Math.hypot(caster.x-totem.x,caster.y-totem.y);
 }
+function dashSupportTotem(t,from=encounterFoot(game.player),dashing=false){
+ if(!dashing||t.destructible||!['mend','fury'].includes(t.type)||!(game.totems||[]).includes(t))return false;
+ const foot=encounterFoot(t),player=encounterFoot(game.player);
+ if(segmentsDistance(from.x,from.y,player.x,player.y,foot.x,foot.y-SUMMON_BUMPS.dashRise,foot.x,foot.y+4)>SUMMON_BUMPS.dashRadius)return false;
+ game.totems.splice(game.totems.indexOf(t),1);t.blocked=false;
+ burst(foot.x,foot.y-14,18,totemSignal(t).color);return true;
+}
 function tickEncounterObjects(dt,playerFrom=encounterFoot(game.player),dashing=game.player.dashTime>0){
  const p=game.player;p.rallyTime=Math.max(0,(p.rallyTime||0)-dt);p.mending=false;game.reflectCooldown=Math.max(0,(game.reflectCooldown||0)-dt);
  game.counterEffects=(game.counterEffects||[]).filter(fx=>{fx.life-=dt;return fx.life>0;});for(const e of game.enemies)e.furyLinked=false;
@@ -134,6 +141,7 @@ function tickEncounterObjects(dt,playerFrom=encounterFoot(game.player),dashing=g
   if(!game.totems.includes(t))continue;
   t.age+=dt;t.disabled=totemsDisabled()||(t.disabledUntil||0)>game.frame;
   if(t.destructible){bumpSummonTotem(t,playerFrom,dashing);if(game.status==='dead')return;if(!game.totems.includes(t))continue;}
+  else if(dashSupportTotem(t,playerFrom,dashing))continue;
   if(t.disabled){t.blocked=false;continue;}
   if(t.destructible){tickSummonTotem(t,dt);tickSummonArrival(t,dt);continue;}
   t.blocked=totemInterception(t);const disrupt=waveRank('disrupt'),power=Math.max(.4,1-.15*disrupt);
