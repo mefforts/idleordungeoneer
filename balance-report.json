@@ -1,5 +1,5 @@
 {
-  "version": "11.10.0",
+  "version": "11.11.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1388,6 +1388,37 @@
     ]
   },
   "encounters": {
+    "travelling": {
+      "hedge": {
+        "speed": 245,
+        "runningFactor": 1.3,
+        "width": 26,
+        "gap": 100,
+        "lead": 220,
+        "interval": 1.5,
+        "maximum": 3,
+        "minimumWaves": 2,
+        "lifetime": "Passed player, enemies and viewport",
+        "dashRefund": false,
+        "infiniteAcross": true
+      },
+      "furnace": {
+        "speed": 230,
+        "radius": 24,
+        "interval": 0.95,
+        "maximum": 3,
+        "splitAngle": 0.48,
+        "variants": [
+          "train",
+          "split",
+          "cross"
+        ],
+        "splitFragments": 2,
+        "lifetime": "All cores passed player, enemies and viewport",
+        "dashRefund": false
+      },
+      "artAssets": 7
+    },
     "dashCounters": {
       "stun": 0.65,
       "guard": 0.35,
@@ -1511,7 +1542,12 @@
       "runningFactor": 1.25,
       "width": 32,
       "dashReadyLead": 0.4,
-      "rings": 1,
+      "interval": 1.2,
+      "maximum": 3,
+      "openingRings": 1,
+      "maximumRings": 3,
+      "perRingRefund": true,
+      "refundRequiresCrossing": true,
       "fixedExpiry": false,
       "offscreenCleanup": true,
       "serialCasts": true
@@ -1636,6 +1672,7 @@
         "art": "root",
         "guide": "Move after the root stops tracking",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1649,6 +1686,7 @@
         "art": "root",
         "guide": "Cross the two offset openings",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1660,8 +1698,9 @@
         "seconds": 2,
         "duration": 4.4,
         "art": "thorns",
-        "guide": "Follow the opening in the moving hedge",
+        "guide": "Cross the offset teal openings; hedges keep travelling and do not refund dash",
         "band": 3,
+        "lifetime": "passes-encounter",
         "language": "danger",
         "dash": false
       },
@@ -1675,6 +1714,7 @@
         "art": "pod",
         "guide": "Read the next swelling seed",
         "band": 1,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -1688,6 +1728,7 @@
         "art": "root",
         "guide": "Dash across the tether to cut it",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": true
       },
@@ -1701,6 +1742,7 @@
         "art": "mushroom",
         "guide": "Step between spores and their clouds",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1714,6 +1756,7 @@
         "art": "seed",
         "guide": "Move sideways through the debris",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1727,6 +1770,7 @@
         "art": "seed",
         "guide": "A dash shakes off attached seeds",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": true
       },
@@ -1740,6 +1784,7 @@
         "art": "sapling",
         "guide": "Both root portals preview the swap",
         "band": 3,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1753,6 +1798,7 @@
         "art": "branch",
         "guide": "Leave each falling branch shadow",
         "band": 3,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -1764,8 +1810,9 @@
         "seconds": 1.9,
         "duration": 4.6,
         "art": "boulder",
-        "guide": "The cracked boulder rebounds once",
+        "guide": "Read the bank marks: repeated rollers, splitting cores or crossing bankshots",
         "band": 1,
+        "lifetime": "passes-encounter",
         "language": "friendly",
         "dash": false
       },
@@ -1779,6 +1826,7 @@
         "art": "hammer",
         "guide": "The raised hammer strikes next",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1792,6 +1840,7 @@
         "art": "vent",
         "guide": "Follow the grates lighting in order",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1805,6 +1854,7 @@
         "art": "stone",
         "guide": "Move to the next cooling island",
         "band": 3,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1818,6 +1868,7 @@
         "art": "needle",
         "guide": "Cross before the stitched trail ignites",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1831,6 +1882,7 @@
         "art": "droplet",
         "guide": "Splash marks include the smaller bursts",
         "band": 2,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -1844,6 +1896,7 @@
         "art": "anchor",
         "guide": "Dash through an anchor to tear the fire curtain",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": true
       },
@@ -1857,6 +1910,7 @@
         "art": "vent",
         "guide": "Your older footprints ignite first",
         "band": 3,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -1870,6 +1924,7 @@
         "art": "droplet",
         "guide": "Touch the gold ember to return a violet blast",
         "band": 2,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -1883,6 +1938,7 @@
         "art": "rib",
         "guide": "Thread the wide corridor between the ribs",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1896,6 +1952,7 @@
         "art": "lantern",
         "guide": "Intercept healing souls or dash through the lantern",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": true
       },
@@ -1909,6 +1966,7 @@
         "art": "coffin",
         "guide": "Leave through the open ends",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1922,6 +1980,7 @@
         "art": "ghost",
         "guide": "The ghost repeats the marked route",
         "band": 1,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -1935,6 +1994,7 @@
         "art": "clock",
         "guide": "Use the broken hand; it reverses after a pause",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1948,6 +2008,7 @@
         "art": "lantern",
         "guide": "Touch each gold rune before its arc runs out",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1961,6 +2022,7 @@
         "art": "rib",
         "guide": "Leave through the opening before the ribs collapse",
         "band": 3,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -1974,6 +2036,7 @@
         "art": "ghost",
         "guide": "Raised lanterns show the order of the waves",
         "band": 2,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -1987,6 +2050,7 @@
         "art": "wisp",
         "guide": "Visit a teal stone before the curse closes",
         "band": 3,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -2000,6 +2064,7 @@
         "art": "lens",
         "guide": "Shots curve around the lens",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -2013,6 +2078,7 @@
         "art": "lens",
         "guide": "Escape the pull before its burst",
         "band": 1,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -2026,6 +2092,7 @@
         "art": "blade",
         "guide": "Watch the bridge and the blade’s next owner",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -2039,6 +2106,7 @@
         "art": "portal",
         "guide": "The second portal previews the exit direction",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -2052,6 +2120,7 @@
         "art": "star",
         "guide": "Leave the outlined triangle before it connects",
         "band": 1,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -2065,6 +2134,7 @@
         "art": "rift",
         "guide": "Use the openings beyond the crescent tips",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -2078,6 +2148,7 @@
         "art": "star",
         "guide": "Counter the gold rune or cross the delayed pulse",
         "band": 3,
+        "lifetime": "timed",
         "language": "danger",
         "dash": true
       },
@@ -2091,6 +2162,7 @@
         "art": "prism",
         "guide": "Read the beam’s route through both crystals",
         "band": 2,
+        "lifetime": "timed",
         "language": "friendly",
         "dash": false
       },
@@ -2104,6 +2176,7 @@
         "art": "comet",
         "guide": "Zigzag between alternating comet lanes",
         "band": 3,
+        "lifetime": "timed",
         "language": "danger",
         "dash": false
       },
@@ -2117,6 +2190,7 @@
         "art": "shield",
         "guide": "Circle behind the rotating front shield",
         "band": 1,
+        "lifetime": "timed",
         "language": "shield",
         "dash": false
       },
@@ -2130,6 +2204,7 @@
         "art": "banner",
         "guide": "Dash across the enemy buff thread",
         "band": 2,
+        "lifetime": "timed",
         "language": "danger",
         "dash": true
       }
@@ -2162,12 +2237,17 @@
       "middle": 5,
       "deep": 6
     },
-    "effectAssets": 156,
+    "effectAssets": 163,
     "zoneOneFinale": {
       "opening": "walkingHedge",
       "betweenNormalAttacks": true
     },
     "colors": {
+      "interrupt": {
+        "color": "#ffe16b",
+        "hot": "#fff7c7",
+        "dark": "#54421e"
+      },
       "danger": {
         "color": "#f16d68",
         "hot": "#ffe2d8",
@@ -3110,7 +3190,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 1010.2799999999829,
+      "seconds": 966.6399999999812,
       "kills": 413,
       "referenceDps": 80,
       "targetSeconds": 905
@@ -3118,7 +3198,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1654.5600000000122,
+      "seconds": 1670.8400000000147,
       "kills": 648,
       "referenceDps": 240,
       "targetSeconds": 1423
@@ -3126,7 +3206,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 15319.959999997665,
+      "seconds": 14830.99999999811,
       "kills": 938,
       "referenceDps": 240,
       "targetSeconds": 14296
@@ -3134,7 +3214,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 16161.799999996896,
+      "seconds": 16203.31999999686,
       "kills": 1118,
       "referenceDps": 240,
       "targetSeconds": 15207
@@ -3142,7 +3222,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 10829.600000000843,
+      "seconds": 10929.200000000847,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3150,7 +3230,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 10751.560000000678,
+      "seconds": 10798.120000000657,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3160,13 +3240,13 @@
     {
       "zone": 1,
       "beforeSeconds": 734.8800000000224,
-      "afterSeconds": 1010.2799999999829,
+      "afterSeconds": 966.6399999999812,
       "referenceDps": 80
     },
     {
       "zone": 2,
       "beforeSeconds": 1245.7600000000634,
-      "afterSeconds": 1654.5600000000122,
+      "afterSeconds": 1670.8400000000147,
       "referenceDps": 240
     }
   ],
@@ -3219,7 +3299,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 17.24,
+        "seconds": 17.26,
         "status": "running",
         "bossDefeated": true,
         "remainingHp": 93.6,
@@ -3237,7 +3317,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 17.24,
+        "seconds": 17.26,
         "status": "running",
         "bossDefeated": true,
         "remainingHp": 93.6,
@@ -3291,7 +3371,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 18.26,
+        "seconds": 18.2,
         "status": "running",
         "bossDefeated": true,
         "remainingHp": 129.6,
@@ -3309,7 +3389,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 18.26,
+        "seconds": 18.2,
         "status": "running",
         "bossDefeated": true,
         "remainingHp": 129.6,
@@ -3363,7 +3443,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 19.34,
+        "seconds": 19.26,
         "status": "running",
         "bossDefeated": true,
         "remainingHp": 129.6,
@@ -3381,7 +3461,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 19.34,
+        "seconds": 19.26,
         "status": "running",
         "bossDefeated": true,
         "remainingHp": 129.6,
@@ -3480,13 +3560,13 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 87.9,
-        "seconds": 110.1,
+        "remainingHp": 113.4,
+        "seconds": 109.18,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 3,
-        "damage": 101.1,
+        "hits": 2,
+        "damage": 75.6,
         "echoes": 0,
         "casts": [
           "ground",
@@ -3502,9 +3582,8 @@
           "slagAnchors",
           "rallyThread",
           "rollingFurnace",
-          "reflect",
-          "moltenDroplets",
-          "turningBulwark"
+          "turningBulwark",
+          "moltenDroplets"
         ]
       },
       {
@@ -3732,11 +3811,11 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 83.98,
+        "seconds": 102.26,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 6,
+        "hits": 5,
         "damage": 189,
         "echoes": 7,
         "casts": [
@@ -3747,8 +3826,10 @@
           "charge",
           "ground",
           "beam",
+          "fury",
           "crossfire",
-          "volley"
+          "volley",
+          "summon"
         ]
       }
     ]

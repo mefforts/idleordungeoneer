@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -64 128 128"><title>Rib Wave</title><defs>
+<linearGradient id="iron" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#8f9294"/><stop offset=".38" stop-color="#4d535c"/><stop offset="1" stop-color="#222735"/></linearGradient>
+<radialGradient id="heat" cx=".35" cy=".32"><stop stop-color="#fff5b1"/><stop offset=".38" stop-color="#ffc75d"/><stop offset=".72" stop-color="#f47e35"/><stop offset="1" stop-color="#9d382a"/></radialGradient>
+<linearGradient id="wood" x2=".35" y2="1"><stop stop-color="#b49162"/><stop offset=".45" stop-color="#766044"/><stop offset="1" stop-color="#3d3a2c"/></linearGradient>
+<linearGradient id="leaf" x2=".6" y2="1"><stop stop-color="#a4b86a"/><stop offset=".4" stop-color="#627f40"/><stop offset="1" stop-color="#304d31"/></linearGradient>
+<linearGradient id="bone" x2=".6" y2="1"><stop stop-color="#fff4d7"/><stop offset=".45" stop-color="#d8cbaa"/><stop offset="1" stop-color="#8d8494"/></linearGradient>
+</defs><path d="M-54 16Q-43-32-1-31Q40-31 55 14L43 18Q30-17 0-17Q-32-17-42 20Z" fill="url(#bone)" stroke="#443c54" stroke-width="3.5"/>
+<path d="M-41 13Q-29-16 0-17Q30-17 42 12" fill="none" stroke="#fff7df" stroke-width="3"/>
+<path d="M-2-26L-1-10L7-7M-29-13L-34-22M25-16L31-24" fill="none" stroke="#8c7e8b" stroke-width="2"/>
+<ellipse cx="-48" cy="17" rx="10" ry="7" fill="url(#bone)" stroke="#443c54" stroke-width="2.3"/>
+<ellipse cx="49" cy="16" rx="10" ry="7" fill="url(#bone)" stroke="#443c54" stroke-width="2.3"/>
+<path d="M-18 3L-23 23L-12 36L-6 18L6 21L18 5" fill="#ac79d7" opacity=".65"/>
+<path d="M-7 7L-9 24L-4 31L2 15" fill="#e5c6ff" opacity=".85"/></svg>

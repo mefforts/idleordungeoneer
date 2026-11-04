@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -64 128 128"><title>Furnace Shard</title><defs>
+<linearGradient id="iron" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#8f9294"/><stop offset=".38" stop-color="#4d535c"/><stop offset="1" stop-color="#222735"/></linearGradient>
+<radialGradient id="heat" cx=".35" cy=".32"><stop stop-color="#fff5b1"/><stop offset=".38" stop-color="#ffc75d"/><stop offset=".72" stop-color="#f47e35"/><stop offset="1" stop-color="#9d382a"/></radialGradient>
+<linearGradient id="wood" x2=".35" y2="1"><stop stop-color="#b49162"/><stop offset=".45" stop-color="#766044"/><stop offset="1" stop-color="#3d3a2c"/></linearGradient>
+<linearGradient id="leaf" x2=".6" y2="1"><stop stop-color="#a4b86a"/><stop offset=".4" stop-color="#627f40"/><stop offset="1" stop-color="#304d31"/></linearGradient>
+<linearGradient id="bone" x2=".6" y2="1"><stop stop-color="#fff4d7"/><stop offset=".45" stop-color="#d8cbaa"/><stop offset="1" stop-color="#8d8494"/></linearGradient>
+</defs><path d="M-47 22L-34-28L4-50L43-13L31 37L-6 49Z" fill="url(#heat)" stroke="#232633" stroke-width="4"/>
+<path d="M-34-25L0-46L9-24L-19-5L-44 17Z M13-32L40-12L29 14L14 3Z M30 25L24 37L-5 45L-14 22L5 14Z" fill="url(#iron)" stroke="#242b38" stroke-width="3"/>
+<path d="M-43 16L26-22L35-9L-39 29Z" fill="url(#iron)" stroke="#252b36" stroke-width="3"/>
+<path d="M-30-20L-3-38M-33 18L-12 7M1 26L16 21" stroke="#b8b19f" stroke-width="2"/>
+<circle cx="-25" cy="12" r="3.4" fill="#242a36" stroke="#b6aa8d" stroke-width="1.2"/>
+<path d="M-12-18L-5-11L4-22M11 10L19 16L22 5" fill="none" stroke="#ffe9a5" stroke-width="2.5"/></svg>

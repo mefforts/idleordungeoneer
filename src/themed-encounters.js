@@ -2,7 +2,7 @@
 const THEMED_MECHANICS=Object.fromEntries([
  ['burrowingBriar',1,0,'Burrowing Briar',1.8,1.2,'root','Move after the root stops tracking',1],
  ['rootGates',2,0,'Root Gates',2.1,4.4,'root','Cross the two offset openings',2],
- ['walkingHedge',3,0,'Walking Hedge',2,4.4,'thorns','Follow the opening in the moving hedge',3],
+ ['walkingHedge',3,0,'Walking Hedge',2,4.4,'thorns','Cross the offset teal openings; hedges keep travelling and do not refund dash',3],
  ['seedChain',4,0,'Seed Chain',1.8,3.8,'pod','Read the next swelling seed',1],
  ['briarLeash',5,0,'Briar Leash',2,4.2,'root','Dash across the tether to cut it',2],
  ['sporeFan',6,0,'Spore Fan',1.8,5.4,'mushroom','Step between spores and their clouds',1],
@@ -10,7 +10,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['clingingSeeds',8,0,'Clinging Seeds',1.8,5.6,'seed','A dash shakes off attached seeds',2],
  ['graftedSwap',9,0,'Grafted Swap',2.1,1.8,'sapling','Both root portals preview the swap',3],
  ['fallingCanopy',10,0,'Falling Canopy',2,3.8,'branch','Leave each falling branch shadow',3],
- ['rollingFurnace',11,1,'Rolling Furnace',1.9,4.6,'boulder','The cracked boulder rebounds once',1],
+ ['rollingFurnace',11,1,'Rolling Furnace',1.9,4.6,'boulder','Read the bank marks: repeated rollers, splitting cores or crossing bankshots',1],
  ['forgeHammers',12,1,'Forge Hammers',2,3.8,'hammer','The raised hammer strikes next',1],
  ['furnaceVents',13,1,'Furnace Vents',1.9,4.2,'vent','Follow the grates lighting in order',1],
  ['coolingIslands',14,1,'Cooling Islands',2.4,6.6,'stone','Move to the next cooling island',3],
@@ -39,7 +39,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['cometLadder',40,3,'Comet Ladder',2,4.2,'comet','Zigzag between alternating comet lanes',3],
  ['turningBulwark',41,-1,'Turning Bulwark',1.8,5.8,'shield','Circle behind the rotating front shield',1],
  ['rallyThread',46,-1,'Rally Thread',1.8,5.4,'banner','Dash across the enemy buff thread',2]
-].map(([id,proposal,biome,name,seconds,duration,art,guide,band])=>[id,{id,proposal,biome,name,seconds,duration,art,guide,band,language:id==='turningBulwark'?'shield':['seedChain','fallingCanopy','rollingFurnace','moltenDroplets','backdraft','emberCatch','hauntedFootsteps','hollowChorus','gravityWell','prismRelay'].includes(id)?'friendly':'danger',dash:['briarLeash','clingingSeeds','slagAnchors','soulLantern','rallyThread','collapsingNova'].includes(id)}]));
+].map(([id,proposal,biome,name,seconds,duration,art,guide,band])=>[id,{id,proposal,biome,name,seconds,duration,art,guide,band,lifetime:['walkingHedge','rollingFurnace'].includes(id)?'passes-encounter':'timed',language:id==='turningBulwark'?'shield':['seedChain','fallingCanopy','rollingFurnace','moltenDroplets','backdraft','emberCatch','hauntedFootsteps','hollowChorus','gravityWell','prismRelay'].includes(id)?'friendly':'danger',dash:['briarLeash','clingingSeeds','slagAnchors','soulLantern','rallyThread','collapsingNova'].includes(id)}]));
 const THEMED_GROUPS=[
  [['burrowingBriar','seedChain','sporeFan','clingingSeeds'],['rootGates','briarLeash','pollenTide','graftedSwap'],['walkingHedge','fallingCanopy','rootGates','seedChain']],
  [['rollingFurnace','cinderStitch','emberCatch'],['forgeHammers','furnaceVents','slagAnchors'],['coolingIslands','moltenDroplets','backdraft','emberCatch']],
@@ -131,7 +131,9 @@ function setupThemedCast(owner,cast){
   if(event.points.length<(cast.type==='coolingIslands'?3:count||1))return false;
   const travel=Math.max(...event.points.map(q=>Math.hypot(q.x-p.x,q.y-p.y)))/175;cast.total=cast.windup=Math.max(def.seconds,travel+.8);
  }
- if(['rootGates','walkingHedge','boneLoom','ribcageRise'].includes(cast.type)){
+ if(cast.type==='walkingHedge'&&!setupWalkingHedge(event))return false;
+ if(cast.type==='rollingFurnace')setupRollingFurnace(event);
+ if(['rootGates','boneLoom','ribcageRise'].includes(cast.type)){
   const q=point(cx+(cast.type==='walkingHedge'?(serial%3-1)*80:0),cy,32,true)||point(cx,cy,22);if(!q)return false;event.opening=q;
  }
  if(cast.type==='rootGates'){
@@ -171,7 +173,7 @@ function themedFields(e,age=e.age){
  case 'sporeFan':for(let fan=0;fan<3;fan++)for(let i=0;i<4;i++){const angle=e.angle+(i-1.5)*.42+(fan-1)*.22;circle(e.origin.x+(fan-1)*42+Math.cos(angle)*2.2*118,e.origin.y+Math.sin(angle)*2.2*118,30,{start:fan*.6+2.2,end:fan*.6+3.4,key:'cloud'+fan+'-'+i,dot:.015,art:'sporeCloud',reveal:fan*.6+1.3});}break;
  case 'burrowingBriar':circle(t.x,t.y,57,{start:.08,end:.65,art:'root'});break;
  case 'rootGates':for(let i=0;i<2;i++)fields.push(themedGate(a,true,t.y+(i-.5)*110,clamp(e.opening.x+(i?48:-48),a.left+48,a.right-48),96,{start:i*1.7,end:i*1.7+2,key:'gate'+i,art:'root'}));break;
- case 'walkingHedge':fields.push(themedGate(a,true,a.top+30+(h-60)*u,e.opening.x,110,{end:e.total,key:'hedge',art:'thorns'}));break;
+ case 'walkingHedge':fields.push(...walkingHedgeFields(e,age));break;
  case 'seedChain':for(let i=0;i<3;i++)circle(clamp(t.x+(i-1)*65,a.left+35,a.right-35),t.y+(i%2?65:-35),49,{start:i*1.15,end:i*1.15+.55,key:'seed'+i,factor:.6,art:'pod',reveal:i?i*1.15-.85:-10});break;
  case 'fallingCanopy':for(let i=0;i<3;i++)segment({x:t.x-70,y:t.y+(i-1)*80},{x:t.x+70,y:t.y+(i-1)*80},32,{start:i*1.1,end:i*1.1+.55,key:'branch'+i,factor:1,art:'branch'});break;
  case 'forgeHammers':for(let i=0;i<2;i++)circle(clamp(t.x+(i?62:-62),a.left+38,a.right-38),t.y,54,{start:i*1.65,end:i*1.65+.65,key:'hammer'+i,factor:1,art:'hammer'});break;
@@ -200,7 +202,7 @@ function themedContains(actor,f){
  if(f.shape==='circle')return Math.hypot(actor.x-f.x,actor.y-f.y)<f.r+radius;
  if(f.shape==='segment')return segmentDistance(actor.x,actor.y,f.a.x,f.a.y,f.b.x,f.b.y)<f.width/2+radius;
  if(f.shape==='rect')return insideRect(actor,f.rect,radius);
- if(f.shape==='gate'){const coordinate=f.horizontal?actor.y:actor.x,across=f.horizontal?actor.x:actor.y,lo=f.horizontal?f.arena.left:f.arena.top,hi=f.horizontal?f.arena.right:f.arena.bottom;return Math.abs(coordinate-f.at)<f.width/2+radius&&across>=lo-radius&&across<=hi+radius&&Math.abs(across-f.gap)>f.gapWidth/2-radius;}
+ if(f.shape==='gate'){const coordinate=f.horizontal?actor.y:actor.x,across=f.horizontal?actor.x:actor.y,lo=f.horizontal?f.arena.left:f.arena.top,hi=f.horizontal?f.arena.right:f.arena.bottom;return Math.abs(coordinate-f.at)<f.width/2+radius&&(f.infinite||across>=lo-radius&&across<=hi+radius)&&Math.abs(across-f.gap)>f.gapWidth/2-radius;}
  if(f.shape==='arc'){const d=Math.hypot(actor.x-f.x,actor.y-f.y),angle=Math.atan2(actor.y-f.y,actor.x-f.x)-f.gap;return Math.abs(d-f.r)<f.width/2+radius&&(f.r<20||Math.abs(Math.atan2(Math.sin(angle),Math.cos(angle)))>f.gapHalf);}
  if(f.shape==='flood')return insideRect(actor,f.arena,radius)&&!f.refuges.some(p=>Math.hypot(actor.x-p.x,actor.y-p.y)<=f.r-radius);
  if(f.shape==='triangle'){const [a,b,c]=f.points,sign=(p,q)=>(actor.x-q.x)*(p.y-q.y)-(p.x-q.x)*(actor.y-q.y),d=[sign(a,b),sign(b,c),sign(c,a)];return ! (d.some(n=>n<0)&&d.some(n=>n>0))||[0,1,2].some(i=>segmentDistance(actor.x,actor.y,f.points[i].x,f.points[i].y,f.points[(i+1)%3].x,f.points[(i+1)%3].y)<radius);}
@@ -226,6 +228,8 @@ function themedReturnHalf(e,point){
 function themedToken(e,point,r,key,factor=.6){let old=e.state.tokens?.[key]||point;if(old.portal!==point.portal)old=point;(e.state.tokens||(e.state.tokens={}))[key]=point;themedHit(e,key,actor=>segmentsDistance(old.x,old.y,point.x,point.y,actor.x,actor.y,actor.x,actor.y)<=r+(actor===game.player?9:Math.min(18,actor.rad||10)),Math.max(.4,factor));}
 function tickThemedEvent(e,dt,from,dashing){
  const p=game.player,s=e.state,t=e.target,a=e.arena,age=e.age,oldAge=age-dt;
+ if(e.type==='walkingHedge')return tickWalkingHedge(e,dt,from);
+ if(e.type==='rollingFurnace')return tickRollingFurnace(e,dt,from);
  for(const f of themedFields(e))if(age>=f.start&&oldAge<=f.end){const contains=actor=>themedContains(actor,f);if(f.dot){tickCombatDot(e,f.key,contains,f.dot);if(THEMED_MECHANICS[e.type].language==='friendly')damageMonstersInAttack(e.owner,e,contains);}else themedHit(e,f.key,contains,f.factor);}
  for(const shot of themedProjectileShapes(e))if(e.type!=='clingingSeeds')themedToken(e,shot,shot.r,shot.key,shot.factor);
  switch(e.type){
@@ -260,16 +264,12 @@ function tickThemedEvent(e,dt,from,dashing){
   const q=e.points[0],radius=Math.max(30,180-age*62);
   if(oldAge<2.5){if(themedCounterContact(e,q,from,dt,0,2.5)){themedCounter(e,q,.12);break;}themedHit(e,'inward',actor=>Math.abs(Math.hypot(actor.x-q.x,actor.y-q.y)-radius)<23,.65);}
   if(age>=2.5&&!s.missed){s.missed=true;hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());}
-  if(age>=6&&!s.launched){s.launched=true;addGravePulses(e.owner,{origin:q,enemyHits:e.enemyHits},e.damage/.85);}
+  if(age>=6&&!s.launched){s.launched=true;addGravePulses(e.owner,{origin:q,enemyHits:e.enemyHits,pulseCount:1},e.damage/.85);}
   break;}
  }
 }
-function themedBoulder(e,age){
- const a=e.arena,r=24,start={x:clamp(e.origin.x,a.left+r,a.right-r),y:clamp(e.origin.y,a.top+r,a.bottom-r)},vx=Math.cos(e.angle)*230,vy=Math.sin(e.angle)*230;
- const tx=vx>0?(a.right-r-start.x)/vx:vx<0?(a.left+r-start.x)/vx:Infinity,ty=vy>0?(a.bottom-r-start.y)/vy:vy<0?(a.top+r-start.y)/vy:Infinity,bounce=Math.max(.12,Math.min(tx,ty));
- if(age<=bounce)return {x:start.x+vx*age,y:start.y+vy*age,bounce,angle:e.angle};const hit={x:start.x+vx*bounce,y:start.y+vy*bounce},nextX=tx<=ty?-vx:vx,nextY=ty<=tx?-vy:vy;
- const q={x:hit.x+nextX*(age-bounce),y:hit.y+nextY*(age-bounce),bounce,angle:Math.atan2(nextY,nextX)};return insideRect(q,a,r)?q:null;
-}
+function themedBoulder(e,age){return e.furnace?furnacePart(e,e.furnace.rollers[0],age,0):null;}
+
 function themedSlingshot(e,age,index){const lens={x:e.target.x-55,y:e.target.y-40},a=e.angle+age*2.6+index*.16;if(age<1.3)return {x:lens.x+Math.cos(a)*76,y:lens.y+Math.sin(a)*76};const end=e.angle+1.3*2.6+index*.16;return {x:lens.x+Math.cos(end)*76-Math.sin(end)*(age-1.3)*180,y:lens.y+Math.sin(end)*76+Math.cos(end)*(age-1.3)*180};}
 function themedOrbit(e,age){const a=e.angle+age*2.6,around=(owner,angle)=>({x:owner.x+Math.cos(angle)*70,y:owner.y+Math.sin(angle)*70});if(age<1.5)return around(e.owner,a);if(age<2.3){const t=(age-1.5)/.8,start=around(e.owner,e.angle+1.5*2.6),end=around(e.partner,e.angle+2.3*2.6);return {x:start.x+(end.x-start.x)*t,y:start.y+(end.y-start.y)*t};}return around(e.partner,a);}
 function themedPortalShot(e,age){const first={x:e.arena.left+45,y:e.target.y-70},second={x:e.arena.right-45,y:e.target.y+55};if(age<.8)return {x:e.origin.x+(first.x-e.origin.x)*age/.8,y:e.origin.y+(first.y-e.origin.y)*age/.8,portal:0};return {x:second.x+Math.cos(e.angle)*(age-.8)*185,y:second.y+Math.sin(e.angle)*(age-.8)*185,portal:1};}
@@ -277,13 +277,13 @@ function themedPull(point,amount,radius=Infinity){const p=game.player,dx=point.x
 function tickThemedMechanics(dt,from=game.player,dashing=false){
  const p=game.player,history=game.themedHistory||(game.themedHistory=[]);if(!history.length||game.frame-history[history.length-1].time>=.09){history.push({x:p.x,y:p.y,time:game.frame});if(history.length>32)history.shift();}
  for(const owner of game.enemies){const e=owner.cast?.themed;if(e&&snapThemedLink(e,from,dashing)){owner.cast=null;owner.castCooldown=owner.boss?2.5:3.1;}}
- game.themedEvents=(game.themedEvents||[]).filter(e=>{if(e.done||!game.enemies.includes(e.owner)||e.owner.hp<=0||game.status!=='running')return false;e.age+=dt;tickThemedEvent(e,dt,from,dashing);return !e.done&&e.age<e.total&&game.status==='running'&&game.transition<=0;});
+ game.themedEvents=(game.themedEvents||[]).filter(e=>{if(e.done||!game.enemies.includes(e.owner)||e.owner.hp<=0||game.status!=='running')return false;e.age+=dt;tickThemedEvent(e,dt,from,dashing);return !e.done&&(e.persistent||e.age<e.total)&&game.status==='running'&&game.transition<=0;});
 }
 function themedShieldMultiplier(enemy,from=game.player){const e=(game.themedEvents||[]).find(e=>e.type==='turningBulwark'&&e.owner===enemy&&!e.done);if(!e)return 1;const angle=e.angle+e.age*.5,delta=Math.atan2(from.y-enemy.y,from.x-enemy.x)-angle;return Math.abs(Math.atan2(Math.sin(delta),Math.cos(delta)))<1.05?.3:1;}
 function themedRallyMultiplier(enemy){return (game.themedEvents||[]).some(e=>e.type==='rallyThread'&&!e.done&&(e.owner===enemy||e.partner===enemy))?1.18:1;}
 function installThemedEncounters(){
- installEliteTaskGuide();
- SVG_FILES['codex-siphon_tethers.svg']=encounterBoonIcon('siphon');CODEX_ITEMS.push({id:'siphon_tethers',cat:'Enemies',name:'Siphon Tethers',desc:'A red chain drains small rapid health ticks. Hungry Siphon breaks when you dash away from its caster; Knotted Siphon breaks when you dash through its teal knot. Walking alone does not sever either channel.'});
+ installEliteTaskGuide();installTravellingArt();
+ SVG_FILES['codex-siphon_tethers.svg']=encounterBoonIcon('siphon');CODEX_ITEMS.push({id:'siphon_tethers',cat:'Enemies',name:'Siphon Tethers',desc:'A red chain drains small rapid health ticks. Hungry Siphon breaks when you dash away from its caster; Knotted Siphon breaks when you dash through its yellow cut point. Walking alone does not sever either channel.'});
  SVG_FILES['codex-warband_resolve.svg']=encounterBoonIcon('resolve');CODEX_ITEMS.push({id:'warband_resolve',cat:'Enemies',name:'Warband Resolve',desc:'Each other elite, rare, boss or guardian Echo grants 10% damage reduction, up to 50%. Stunned enemies lose this protection and stop granting it to allies until they recover.'});
  SVG_FILES['codex-uncommon_creatures.svg']=THEMED_EFFECT_ART['icon-uncommon'];
  CODEX_ITEMS.push({id:'uncommon_creatures',cat:'Enemies',name:'Uncommon creatures',desc:'Twice ordinary health, one ranged attack and a small active cap that grows by Zone. Ordinary loot.'});

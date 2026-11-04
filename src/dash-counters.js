@@ -6,7 +6,7 @@ function currentCounterDash(){
 }
 function refundCounterDash(){
  const p=game.player,serial=currentCounterDash();if(serial===null||game.status!=='running'||p.refundedDashSerial===serial)return false;
- p.refundedDashSerial=serial;p.dashCooldown=0;burst(p.x,p.y-12,9,combatTheme('safe').color);floater(p.x,p.y-42,'Dash ready',combatTheme('safe').hot);return true;
+ p.refundedDashSerial=serial;p.dashCooldown=0;burst(p.x,p.y-12,9,combatTheme('safe').color);p.refundFlashUntil=game.frame+.5;return true;
 }
 function tickDashStuns(from,dashing){
  if(!dashing)return;const p=game.player,serial=p.dashSerial||0;

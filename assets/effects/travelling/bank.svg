@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -64 128 128"><title>Bank</title><defs>
+<linearGradient id="iron" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#8f9294"/><stop offset=".38" stop-color="#4d535c"/><stop offset="1" stop-color="#222735"/></linearGradient>
+<radialGradient id="heat" cx=".35" cy=".32"><stop stop-color="#fff5b1"/><stop offset=".38" stop-color="#ffc75d"/><stop offset=".72" stop-color="#f47e35"/><stop offset="1" stop-color="#9d382a"/></radialGradient>
+<linearGradient id="wood" x2=".35" y2="1"><stop stop-color="#b49162"/><stop offset=".45" stop-color="#766044"/><stop offset="1" stop-color="#3d3a2c"/></linearGradient>
+<linearGradient id="leaf" x2=".6" y2="1"><stop stop-color="#a4b86a"/><stop offset=".4" stop-color="#627f40"/><stop offset="1" stop-color="#304d31"/></linearGradient>
+<linearGradient id="bone" x2=".6" y2="1"><stop stop-color="#fff4d7"/><stop offset=".45" stop-color="#d8cbaa"/><stop offset="1" stop-color="#8d8494"/></linearGradient>
+</defs><path d="M-51-28L-41-43L35-43L51-27L51 26L37 42L-35 42L-51 26Z" fill="url(#iron)" stroke="#212738" stroke-width="4"/>
+<path d="M-39-28L36-28L36 27L-38 27Z" fill="#353047" stroke="#b58cd8" stroke-width="2"/>
+<path d="M-25 16L8 16Q22 16 22 1Q22-13 8-13L-19-13M-7-25L-20-13L-7-1" fill="none" stroke="#ecd7ff" stroke-width="6" stroke-linejoin="round"/>
+<path d="M-42-34L-35-36M32 35L40 29" stroke="#b8a9bc" stroke-width="2"/>
+<circle cx="-42" cy="-28" r="3" fill="#c1a8c9"/><circle cx="42" cy="28" r="3" fill="#c1a8c9"/></svg>

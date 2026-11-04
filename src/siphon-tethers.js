@@ -1,4 +1,4 @@
-/* The two channels share a light drain; their teal counter cues differ. */
+/* The two channels share a light drain; their yellow counter cues differ. */
 const SIPHON_TETHER={seconds:4,grace:.8,drain:.02,healPerTick:.002,healCap:.02,awayDistance:24,cutRadius:28};
 function canBeginSiphonCast(){return !(game.themedEvents||[]).some(e=>!e.done)&&!(game.hazards||[]).some(h=>h.wave||h.type==='expanded'&&!h.lingering)&&!(game.bossBursts||[]).length;}
 function setupSiphonTether(owner,cast){

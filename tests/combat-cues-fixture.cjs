@@ -22,7 +22,7 @@ function combatCuesFixture(){
    e.contact=1e6;const before=p.hp;
    if(dashing){p.vx=-Math.cos(angle);p.vy=-Math.sin(angle);p.dashCooldown=0;dash();}
    for(let i=0;i<60;i++)tickCombat(.01);
-   return {before,after:p.hp,waves:game.hazards.filter(h=>h.wave).map(h=>({inner:h.inner,r:h.r,hit:!!h.playerHit})),distance:Math.hypot(p.x-e.x,p.y-e.y),dashCooldown:p.dashCooldown,warning:c.shapes[0],hint:c.hint};
+   return {before,after:p.hp,waves:game.hazards.filter(h=>h.wave).map(h=>({inner:h.inner,r:h.r,hit:!!h.playerHit,delay:h.delay,countered:!!h.dashCountered})),distance:Math.hypot(p.x-e.x,p.y-e.y),dashCooldown:p.dashCooldown,warning:c.shapes[0],hint:c.hint};
   },
   pixels(type='gravePulse',active=false,reduced=false){
    data.reducedMotion=reduced;const shape=type==='gravePulse'?{shape:'ring',x:180,y:180,inner:active?100:25,r:active?122:47,wave:true}:{shape:'ring',x:180,y:180,inner:82,r:160,refuge:true};

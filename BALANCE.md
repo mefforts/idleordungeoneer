@@ -1,5 +1,15 @@
 # Dungeon progression and balance
 
+Build 11.11.0 upgrades travelling attacks with seven layered physical assets and a consistent signal: teal openings, purple attacks that hit players and monsters, red player-only threats, yellow interrupt brackets and gold/white reflect centers. Channelers, cut links, lanterns, anchors, charging enemies and siphons use yellow marks; reflected/dash recovery uses a small reset symbol. Standard hazard rims gain stronger contrast without filling large opaque panels.
+
+Walking Hedge sends two or three parallel thorn walls, with offset 100-unit openings. Initial speed is at least 245 world units/second or 1.3 times player running speed, and only rises if movement buffs require it. Walls begin 220 units behind the player along their travel axis and are separated by 1.5 seconds of their initial speed; successive openings shift at most 100 units. Each clearing has a checked route and terrain corridor. Walls span the world across their travel axis, so walking around an end or waiting 4.4 seconds no longer works. Each wall retires only after passing the player, living enemies and visible screen. A direct dash over the thorns is protected but does not refund dash; a dash-then-opening route works at 10/40/80 ms simulation steps. Each wall can hurt a player once.
+
+Grave Pulse starts with one ring; the greater of floor band and combat phase selects up to three. Repeated rings launch 1.2 combat seconds apart, so the normal 3.2-second cooldown cannot solve the entire sequence. Crossing a rim completely during a dash immediately refunds it, once per ring; touching or skimming the same side does not. Pending and active rings share one sequence budget across casters. Every ring still expands faster than running, with swept collision and offscreen retirement after all actors are passed. Each ring has its own friendly-fire ledger, with normal caster immunity and category fractions. Collapsing Nova retains its separate single outgoing ring.
+
+Rolling Furnace progresses from repeated bankshots to splitting cores and paired crossing bankshots. Train/cross casts launch two or three cores 0.95 seconds apart; a split core forks into two smaller pieces at its marked bank. Shots travel at 230 units/second (fragments 1.12 times that), with a 24-unit core radius and 16-unit fragments. Every bank/fork is previewed and uses the same piecewise trajectory for rendering and moving swept collision. Rollers keep going beyond their former 4.6-second lifetime and the arena border until they pass the actors and viewport. Purple friendly fire hits each other enemy at most once per core; the caster is immune. These projectile dodges do not refund dash.
+
+Travelling attacks pause with combat. Owner defeat, player defeat, retry and phase changes clear their active and pending state; defeating a caster still cancels that caster’s attacks. Enemy HP, equipment, skilling and loot retain their prior calibration. Clear times below include the new repeated patterns.
+
 Build 11.10.0 gives elites, rares and guardian Echoes flanking/standoff movement and three interruptible priorities: Ascendance, Rare Awakening and Living Conduit. They walk to clear, separated channel sites; at most one task runs in Zones 1–2 and two from Zone 3 onward. Full bosses, summons and uncommons do not perform these tasks. Existing links retain their required separation.
 
 Ascendance channels for 5.5 seconds, heals 0.35% maximum HP per second (at most 2%), then grants 35% extra attack damage and 25% faster cooldown recovery for 14 seconds. Warnings retain their full duration and special-hit damage remains capped at 50% maximum HP. Rare Awakening channels for six seconds to promote an existing ordinary mob, preserving its health fraction and wave count; at most one promotion per early-Zone wave and two from Zone 3. Summons cannot be promoted. Living Conduit summons until interrupted, first after 2.8 seconds and then at 5.5-second intervals, with a 1.2-second warning and the shared eight-summon cap. These minions grant no loot, XP or kill credit.
@@ -214,17 +224,17 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 4 | ~254 min | 240.0 |
 | 5 | ~135 min | 480.0 |
 
-- Live Zone 1: **16.8 min**, 413 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **27.6 min**, 648 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **255.3 min**, 938 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **269.4 min**, 1118 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **180.5 min**, 1118 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **179.2 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 1: **16.1 min**, 413 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **27.8 min**, 648 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **247.2 min**, 938 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **270.1 min**, 1118 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **182.2 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **180.0 min**, 1118 rewarded defeats, 480.0 reference DPS.
 
 | Zone | v11.8.1 live reference | Current live reference |
 | --- | ---: | ---: |
-| 1 | 12.2 min | 16.8 min |
-| 2 | 20.8 min | 27.6 min |
+| 1 | 12.2 min | 16.1 min |
+| 2 | 20.8 min | 27.8 min |
 
 This comparison retains reference equipment and invulnerability. The current controller also recognizes task interrupts; movement and random encounters differ, so these times measure pacing rather than a matched human survival or difficulty trial.
 
@@ -240,7 +250,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with one continuously expanding Grave Pulse ring. Dash through it: it has no fixed lifetime or travel limit and always moves faster than running, including movement buffs. Pulse casts cannot overlap, and the next warning allows dash recharge before impact. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses about 150 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 7.5–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 3 of 6 trials: 87.9–103.9 HP remained in the finale trials and 0 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json. This ranged reference keeps its existing movement priorities instead of chasing every new channel. A separate task-chasing comparison survived less well, so these results do not establish the best human interruption strategy.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses about 150 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 7.5–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 3 of 6 trials: 89.8–113.4 HP remained in the finale trials and 0 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json. This ranged reference keeps its existing movement priorities instead of chasing every new channel. A separate task-chasing comparison survived less well, so these results do not establish the best human interruption strategy.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
@@ -248,12 +258,13 @@ Codex is nested inside Inventory (C still opens it). Defeat can open the last av
 
 ## Warning language and ability library
 
-Build 11.7.1 gives Grave Pulse one continuously expanding violet ring. Dash through its rim; it cannot be outwaited or outrun. The wave retires only after passing every actor and the visible screen; caster defeat and encounter cleanup retain their normal cancellation. Its launch covers the origin too. Swept collision catches fast crossings, and movement buffs cannot overtake the wave. Pulse warnings and active rings never overlap across casters. The next warning begins only when the remaining dash cooldown fits inside its 1.7-second windup with 0.4 seconds to spare. Moving rings have no teal center. Stationary Outer Ruin refuges are placed clear of the caster, terrain and other enemies, remain inside the visible arena and include time to reach the circle. Crowded arenas defer the cast when no reachable refuge fits. The teal circle and sanctuary symbol remain fixed through impact. Mechanic labels and the combat guide omit the word SAFE.
+Build 11.7.1 introduced one continuously expanding violet ring. Build 11.11 extends later casts to a two/three-ring sequence. Dash through each rim to refund dash; the rings cannot be outwaited or outrun. The wave retires only after passing every actor and the visible screen; caster defeat and encounter cleanup retain their normal cancellation. Its launch covers the origin too. Swept collision catches fast crossings, and movement buffs cannot overtake the wave. Separate pulse sequences never overlap across casters; their deliberate rings may overlap within one sequence. The next warning begins only when the remaining dash cooldown fits inside its 1.7-second windup with 0.4 seconds to spare. Moving rings have no teal center. Stationary Outer Ruin refuges are placed clear of the caster, terrain and other enemies, remain inside the visible arena and include time to reach the circle. Crowded arenas defer the cast when no reachable refuge fits. The teal circle and sanctuary symbol remain fixed through impact. Mechanic labels and the combat guide omit the word SAFE.
 
 | Color | Meaning |
 | --- | --- |
 | Red | Dangerous to the player only |
 | Violet | Dangerous to player and other monsters |
+| Yellow brackets | Interruptible channel or cut point |
 | Gold / white center | Touch the center to reflect immediately |
 | Teal | Protected area or an intercepted benefit |
 | Blue | Shield; remove its source / Royal Guards |
@@ -272,7 +283,7 @@ The two between-wave interludes now contain a lead guardian and three/four/five 
 
 Uncommons replace 7% of eligible ordinary spawns after the first four, excluding elites, rares, bosses, summons and interludes. Active caps are one in Zone 1, two in Zone 2, three in Zone 3 and four thereafter. They have twice ordinary HP, ordinary loot and one repeatable ranged ability, with staggered first casts and standoff movement. Forecasts approximate the chance-weighted extra durability before active-cap suppression.
 
-Selected mechanics use 156 authored SVG props/medallions, shared warning/collision geometry, timer arcs and teal/gold symbols, with the detailed rule in the Codex. Only one new major pattern runs at once; large existing attacks and Grave Pulse cannot overlap it. Mandatory dash warnings allow recharge. Decorative motion stops under reduced motion while essential hazard travel stays visible.
+Selected mechanics use 156 authored SVG props/medallions plus seven travelling-attack props, shared warning/collision geometry, timer arcs and teal/gold symbols, with the detailed rule in the Codex. Only one new major pattern runs at once; large existing attacks and Grave Pulse cannot overlap it. Mandatory dash warnings allow recharge. Decorative motion stops under reduced motion while essential hazard travel stays visible.
 
 - **Grave Pulse**: Expanding bone ring · dash through the rim.
 - **Rebounding Barrage**: Three rings · gaps rotate · violet shots rebound.
@@ -325,4 +336,4 @@ After Zone 1 Floor 1, the result and a saved, dismissible reminder explain that 
 
 Old Zone wallets and the full historical price of every purchased rank are refunded at 25 seals per Sigil. Fractional credit is retained and a versioned receipt prevents a second refund. Original Zone ledgers are archived in the save. Earlier progression first passes through the existing XP / Mastery migration. Gold, materials, equipment, cached XP and Mastery are preserved. A legacy active blessing becomes one entry in the stacking collection.
 
-Run npm test for the browser suites, including all 39 themed mechanics, elite priorities, swept dash stuns/refunds, proportional damage, DoT limits, interlude completion, capped uncommon spawns, 76 older-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.
+Run npm test for the browser suites, including all 39 themed mechanics, persistent/repeating barriers and bankshots, elite priorities, swept dash stuns/refunds, proportional damage, DoT limits, interlude completion, capped uncommon spawns, 76 older-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.

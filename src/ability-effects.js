@@ -80,6 +80,7 @@ function paintEmberFlame(x,y,size,phase){
  ctx.beginPath();ctx.moveTo(-5,0);ctx.quadraticCurveTo(-7,-9,0,-19-flicker);ctx.quadraticCurveTo(0,-11,5,-13);ctx.quadraticCurveTo(10,-4,5,0);ctx.closePath();ctx.fillStyle='#ffe39a';ctx.fill();ctx.restore();
 }
 function paintAbilityField(shape,type,kind,theme,progress=1,active=false){
+ if(shape.wave)return paintPulseCrest(shape,theme,progress,active);
  if(shape.shape==='quarters'){
   for(let i=0;i<4;i++){const rect=arenaQuarter(shape.rect,i);if(rect.left!==shape.safe.left||rect.top!==shape.safe.top)paintRuinQuarter(rect,kind,theme,progress,active);}return;
  }
@@ -208,18 +209,18 @@ function paintAbilityStream(t,a,end,caster){
  ctx.restore();
 }
 function encounterBoonIcon(kind){
- const resolve=kind==='resolve',title=resolve?'Warband Resolve':'Siphon Tethers',art=resolve?'<path d="M29 35L64 22L99 35L94 72Q86 96 64 107Q42 96 34 72Z" fill="url(#metal)" stroke="#bbdbed" stroke-width="3"/><path d="M39 42L64 32L89 42L85 70Q79 86 64 96Q49 86 43 70Z" fill="#253f60" stroke="#95c9ef" stroke-width="2"/><path d="M49 58L64 46L79 58L74 77L54 77Z" fill="#70b6ed" stroke="#e7f4ff" stroke-width="2"/><path d="M20 29L64 15L108 29" fill="none" stroke="#accfe9" stroke-width="3"/><g fill="#ebd397" stroke="#705838" stroke-width="2"><circle cx="20" cy="29" r="7"/><circle cx="64" cy="15" r="7"/><circle cx="108" cy="29" r="7"/></g>':'<path d="M25 27L100 101" stroke="#351e2c" stroke-width="13"/><path d="M25 27L100 101" stroke="#f3978d" stroke-width="4"/><g fill="none" stroke="#c4a89f" stroke-width="3"><ellipse cx="36" cy="38" rx="9" ry="6" transform="rotate(45 36 38)"/><ellipse cx="51" cy="53" rx="9" ry="6" transform="rotate(45 51 53)"/><ellipse cx="78" cy="80" rx="9" ry="6" transform="rotate(45 78 80)"/><ellipse cx="94" cy="96" rx="9" ry="6" transform="rotate(45 94 96)"/></g><circle cx="65" cy="66" r="18" fill="#193f3d" stroke="#85e2c5" stroke-width="3"/><path d="M57 60L72 74M72 60L57 74M18 76L34 76L29 70M34 76L29 82M92 27L108 27L103 21M108 27L103 33" fill="none" stroke="#bbf5df" stroke-width="3"/>';
+ const resolve=kind==='resolve',title=resolve?'Warband Resolve':'Siphon Tethers',art=resolve?'<path d="M29 35L64 22L99 35L94 72Q86 96 64 107Q42 96 34 72Z" fill="url(#metal)" stroke="#bbdbed" stroke-width="3"/><path d="M39 42L64 32L89 42L85 70Q79 86 64 96Q49 86 43 70Z" fill="#253f60" stroke="#95c9ef" stroke-width="2"/><path d="M49 58L64 46L79 58L74 77L54 77Z" fill="#70b6ed" stroke="#e7f4ff" stroke-width="2"/><path d="M20 29L64 15L108 29" fill="none" stroke="#accfe9" stroke-width="3"/><g fill="#ebd397" stroke="#705838" stroke-width="2"><circle cx="20" cy="29" r="7"/><circle cx="64" cy="15" r="7"/><circle cx="108" cy="29" r="7"/></g>':'<path d="M25 27L100 101" stroke="#351e2c" stroke-width="13"/><path d="M25 27L100 101" stroke="#f3978d" stroke-width="4"/><g fill="none" stroke="#c4a89f" stroke-width="3"><ellipse cx="36" cy="38" rx="9" ry="6" transform="rotate(45 36 38)"/><ellipse cx="51" cy="53" rx="9" ry="6" transform="rotate(45 51 53)"/><ellipse cx="78" cy="80" rx="9" ry="6" transform="rotate(45 78 80)"/><ellipse cx="94" cy="96" rx="9" ry="6" transform="rotate(45 94 96)"/></g><circle cx="65" cy="66" r="18" fill="#54421e" stroke="#ffe16b" stroke-width="3"/><path d="M57 60L72 74M72 60L57 74M18 76L34 76L29 70M34 76L29 82M92 27L108 27L103 21M108 27L103 33" fill="none" stroke="#fff7c7" stroke-width="3"/>';
  return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><title>'+title+'</title><defs><radialGradient id="bg"><stop stop-color="#344958"/><stop offset="1" stop-color="#17242b"/></radialGradient><linearGradient id="metal" x2="1" y2="1"><stop stop-color="#a5cde3"/><stop offset=".5" stop-color="#4477a5"/><stop offset="1" stop-color="#25344d"/></linearGradient></defs><circle cx="64" cy="64" r="60" fill="url(#bg)" stroke="#b8a574" stroke-width="2"/>'+art+'</svg>');
 }
 function paintAbilityTether(enemy,cast){
- const a={x:enemy.x,y:enemy.y-20},b={x:game.player.x,y:game.player.y-18},s=cast.siphon,points=s?.cut?[a,s.cut,b]:[a,b],theme=combatTheme('danger'),teal=combatTheme('safe'),time=abilityEffectTime();ctx.save();
+ const a={x:enemy.x,y:enemy.y-20},b={x:game.player.x,y:game.player.y-18},s=cast.siphon,points=s?.cut?[a,s.cut,b]:[a,b],theme=combatTheme('danger'),counter=combatTheme('interrupt'),time=abilityEffectTime();ctx.save();
  for(let n=0;n<points.length-1;n++){const start=points[n],end=points[n+1],distance=Math.hypot(end.x-start.x,end.y-start.y),angle=Math.atan2(end.y-start.y,end.x-start.x),count=Math.max(3,Math.min(30,Math.floor(distance/12)));themedLine(start,end,6,theme.color+'35');
   for(let i=1;i<count;i++){const u=i/count,x=start.x+(end.x-start.x)*u,y=start.y+(end.y-start.y)*u;ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.strokeStyle=i%2?'#bcaaa0':theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,6,i%2?2:4,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
   for(let i=0;i<3;i++){const u=reducedMotion()?(i+.5)/3:1-((time*.7+i/3)%1);disc(start.x+(end.x-start.x)*u,start.y+(end.y-start.y)*u,3,theme.hot);}
  }
  paintAbilityEmblem('mirror',a.x,a.y,12,theme);themedArc(b.x,b.y,19,cast.windup/cast.total,theme.color,2);
- if(s?.cut){const q=s.cut;glow(q.x,q.y,38,teal.color+'35');paintAbilityEmblem('portal',q.x,q.y,18,teal);themedArc(q.x,q.y,SIPHON_TETHER.cutRadius,cast.windup/cast.total,teal.hot,2.5);for(const side of [-1,1])themedArrow(q.x+side*39,q.y,side<0?0:Math.PI,teal.hot,9);}
- else{const angle=Math.atan2(b.y-a.y,b.x-a.x);for(const distance of [35,60,85])themedArrow(b.x+Math.cos(angle)*distance,b.y+Math.sin(angle)*distance,angle,teal.hot,8);}
+ if(s?.cut){const q=s.cut;glow(q.x,q.y,38,counter.color+'35');paintInterruptMark(q.x,q.y,22,cast.windup/cast.total);themedArc(q.x,q.y,SIPHON_TETHER.cutRadius,cast.windup/cast.total,counter.hot,2.5);for(const side of [-1,1])themedArrow(q.x+side*39,q.y,side<0?0:Math.PI,counter.hot,9);}
+ else{const angle=Math.atan2(b.y-a.y,b.x-a.x);for(const distance of [35,60,85])themedArrow(b.x+Math.cos(angle)*distance,b.y+Math.sin(angle)*distance,angle,counter.hot,8);}
  ctx.restore();
 }
 function paintAbilityShield(x,y,size,theme){

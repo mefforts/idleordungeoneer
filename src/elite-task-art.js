@@ -1,7 +1,7 @@
 /* Purpose props, channel arcs and teal dash cues keep intentions readable. */
 function eliteTaskSymbol(kind){return kind==='ascend'?'damage':kind==='empower'?'mirror':'portal';}
 function paintEliteTaskGround(){
- const gold=combatTheme('reflect'),teal=combatTheme('safe'),time=abilityEffectTime();
+ const gold=combatTheme('interrupt'),teal=combatTheme('safe'),time=abilityEffectTime();
  for(const owner of game.enemies){const task=owner.eliteTask;if(!task)continue;const kind=owner.biome??biomeIndex(),q=task.phase==='travel'?task.point:owner;
   ctx.save();const progress=task.phase==='travel'?1:task.total?1-task.age/task.total:task.pending?task.warn/ELITE_TASKS.conduit.warning:task.spawnClock/ELITE_TASKS.conduit.interval;
   ellipse(q.x,q.y+14,43,15,'#10191e66');themedArc(q.x,q.y+12,39,clamp(progress,0,1),gold.color,2.5);paintAbilityEmblem(eliteTaskSymbol(task.kind),q.x,q.y+13,13,gold);
@@ -17,9 +17,9 @@ function paintEliteTaskGround(){
  }
 }
 function paintEliteTaskAir(owner){
- const task=owner.eliteTask,kind=owner.biome??biomeIndex(),gold=combatTheme('reflect'),teal=combatTheme('safe'),time=abilityEffectTime();
+ const task=owner.eliteTask,kind=owner.biome??biomeIndex(),gold=combatTheme('interrupt'),teal=combatTheme('safe'),time=abilityEffectTime();
  if(task){
-  const body=enemyBody(owner),y=body.top-23;encounterLabel(ELITE_TASK_NAMES[task.kind],owner.x,y,gold.hot,10);
+  const body=enemyBody(owner),y=body.top-23;paintInterruptMark(owner.x,owner.y+12,37,task.total?1-task.age/task.total:1);encounterLabel(ELITE_TASK_NAMES[task.kind],owner.x,y,gold.hot,10);
   for(let i=0;i<ELITE_TASKS.interruptHits;i++)disc(owner.x+(i-1)*10,y+11,3,i<task.hits?'#47534e':gold.hot);
   if(task.phase==='channel'){
    if(task.kind==='empower'&&task.target){const a={x:owner.x,y:owner.y-28},b={x:task.target.x,y:task.target.y-20};themedLine(a,b,6,gold.color+'30');themedLine(a,b,2,gold.color);for(let i=0;i<3;i++){const u=reducedMotion()?(i+.5)/3:(time*.6+i/3)%1;themedSprite('star',kind,a.x+(b.x-a.x)*u,a.y+(b.y-a.y)*u,13,0,.8);}paintAbilityEmblem('damage',b.x,b.y-18,11,gold);}

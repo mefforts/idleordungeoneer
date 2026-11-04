@@ -8,11 +8,13 @@ Special enemies now share Warband Resolve: 10% damage reduction per other living
 
 Build 11.10 adds brief, damage-free dash stuns against elite-and-higher enemies. A successful dash counter refunds the cooldown; a plain body stun does not. Elites, rares and guardian Echoes also spread out and walk to interruptible Ascendance, Rare Awakening or Living Conduit tasks. Teal arrows show the dash-through interaction; three gold pips show the focused-hit alternative. The Codex explains their limits, and [BALANCE.md](BALANCE.md) records the timings, summon/promotion caps and tests.
 
+Build 11.11 makes Walking Hedge and Rolling Furnace travel until they pass the encounter. Hedge trains contain two or three offset openings and give no dash refund. Grave Pulse repeats later in a fight/floor, at 1.2-second intervals, and refunds each completed dash crossing. Furnace variants repeat cores, split at a bank or cross paired paths. Seven additional authored assets add physical thorns, iron/molten cores, fragments and bone crests. Yellow brackets identify interruptible targets, with teal openings, purple friendly fire and red player-only threats retained.
+
 | Idea # | Mechanic | Theme | Counterplay |
 | --- | --- | --- | --- |
 | 1 | Burrowing Briar | Overgrowth | Move after the root stops tracking |
 | 2 | Root Gates | Overgrowth | Cross the two offset openings |
-| 3 | Walking Hedge | Overgrowth | Follow the opening in the moving hedge |
+| 3 | Walking Hedge | Overgrowth | Cross the staggered teal openings; walls keep travelling and do not refund dash |
 | 4 | Seed Chain | Overgrowth | Read the next swelling seed |
 | 5 | Briar Leash | Overgrowth | Dash across the tether to cut it |
 | 6 | Spore Fan | Overgrowth | Step between spores and their clouds |
@@ -20,7 +22,7 @@ Build 11.10 adds brief, damage-free dash stuns against elite-and-higher enemies.
 | 8 | Clinging Seeds | Overgrowth | A dash shakes off attached seeds |
 | 9 | Grafted Swap | Overgrowth | Both root portals preview the swap |
 | 10 | Falling Canopy | Overgrowth | Leave each falling branch shadow |
-| 11 | Rolling Furnace | Embervault | The cracked boulder rebounds once |
+| 11 | Rolling Furnace | Embervault | Read the bank and fork paths of repeated, splitting or crossing rollers |
 | 12 | Forge Hammers | Embervault | The raised hammer strikes next |
 | 13 | Furnace Vents | Embervault | Follow the grates lighting in order |
 | 14 | Cooling Islands | Embervault | Move to the next cooling island |
@@ -60,8 +62,8 @@ Elite, rare and boss damage uses maximum-health fractions. Base projectiles star
 
 The 116 effect props and 40 Codex medallions are authored SVG assets in `assets/effects/`, exported by `npm run art:themed-effects` and embedded into the standalone build. Motion uses the combat clock. Essential hazard movement persists with reduced motion; decorative bobbing, spinning and flicker stop. Warning and active collision use the same geometric definitions.
 
-The previous Grave Pulse solve remains one continuous ring and one timed dash. Mandatory dash windows allow the normal recharge; new major mechanics cannot overlap each other or the large legacy arena attacks. Counters and props are transient: pause, defeat, retry, travel and caster cleanup cannot leave an invisible attack, buff or stuck encounter behind.
+Each Grave Pulse ring keeps expanding; later sequences require the refund from each completed crossing to dash through the next ring. The first warning allows the normal recharge; new major mechanics cannot overlap each other or the large legacy arena attacks. Counters and props are transient: pause, defeat, retry, travel and caster cleanup cannot leave an invisible attack, buff or stuck encounter behind.
 
 [Fifty new theme-neutral variations](THEME_NEUTRAL_IDEAS.md) are proposals only. Unselected original ideas are not added to live rotations.
 
-Validation covers 50 browser suites. Controlled combat tests cover all 39 selected mechanics, 156 effect assets, three additional Codex medallions, proportional damage, capped DoTs, pack completion, uncommon spawn limits, real-terrain phone/landscape placements, timed/swept counters and transient-state cleanup. The encounter-tuning suite adds Resolve stacking and stun windows, actual terrain-crossing dashes, minimum link separation, larger attack boundaries and both siphon variants. Full invulnerable combat benchmarks clear Zones 1–4 and later reference Zones; three-seed 150-DPS pressure comparisons use real health, damage and loot. These automated controllers are not human playtests. Exact results and limits are in [BALANCE.md](BALANCE.md).
+Validation covers 51 browser suites. Controlled combat tests cover all 39 selected mechanics, 156 themed effect assets, seven travelling-attack props, three additional Codex medallions, proportional damage, capped DoTs, pack completion, uncommon spawn limits, real-terrain phone/landscape placements, timed/swept counters and transient-state cleanup. The encounter-tuning suite adds Resolve stacking and stun windows, actual terrain-crossing dashes, minimum link separation, larger attack boundaries and both siphon variants. Full invulnerable combat benchmarks clear Zones 1–4 and later reference Zones; three-seed 150-DPS pressure comparisons use real health, damage and loot. These automated controllers are not human playtests. Exact results and limits are in [BALANCE.md](BALANCE.md).

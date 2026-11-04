@@ -6,10 +6,10 @@ function encounterImage(kind,type){
  return encounterImages.get(key);
 }
 function clearEncounterState(){
- game.themedEvents=[];game.themedHistory=[];
+ game.themedEvents=[];game.themedHistory=[];game.hazards=[];
  game.eliteRecruits=new Map();game.elitePromotionCount=0;game.dashSweep=null;
  game.phaseCleanupPending=false;game.graveEchoes=[];game.totems=[];game.counterEffects=[];game.counterRequest=null;game.reflectCooldown=0;game.disruptReadyAt=0;game.bossBursts=[];
- if(game.player){game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;}
+ if(game.player){game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
  for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;}
 }
 function clearOwnerMechanics(owner){
@@ -63,7 +63,7 @@ function standardBossPlan(e){
  return ['ringchain','sunder','reversal','summon','bloom','cleave','bastion','return','gauntlet','spiral','minefield','orbit','eliteSummon','donut','pincer','tether','eruptionTrail','crossfire'];
 }
 function bossMechanicHint(){
- const e=game.boss;if(!e)return '';if(e.stagger>0)return 'Reflected · staggered';
+ const e=game.boss;if(!e)return '';if(e.stagger>0)return 'Stunned';
  if(e.cast)return e.cast.hint||(['reflect','reversal'].includes(e.cast.type)?'Gold center · reflect':e.cast.type==='mend'?'Green healing stream · approach totem':e.cast.type==='fury'?'Red damage stream · approach totem':e.cast.label);
  if(e.guardIds?.some(g=>game.enemies.includes(g)&&g.hp>0))return 'Blue shield · defeat Royal Guards';
  const owned=(game.totems||[]).filter(t=>t.owner===e);return owned.length?(owned.some(t=>t.destructible)?'Spire · bump to break · dash while red':owned.some(t=>t.blocked)?'Stream redirected':'Totem · approach'):'';
@@ -102,7 +102,7 @@ function beginBossCast(e){
  if(['summon','eliteSummon'].includes(type)&&!cast.point)return false;
  if(type==='bastion'&&!cast.guards.length)return false;
  if(e.phaseQueue?.[0]===type)e.phaseQueue.shift();else e.mechanicIndex=(e.mechanicIndex||0)+1;
- e.cast=cast;if(themedAbility(type))codexDiscover('mechanic_'+type);codexDiscover('combat_language');if(!data.combatLanguageTipSeen){data.combatLanguageTipSeen=true;toast('Read the warnings','Red hurts you. Violet also hurts enemies. Gold centers reflect. Teal marks refuges and benefits. Blue marks shields. See the Codex for more.');}e.mechanicsUsed=e.mechanicsUsed||[];if(!e.mechanicsUsed.includes(type))e.mechanicsUsed.push(type);return true;
+ e.cast=cast;if(themedAbility(type))codexDiscover('mechanic_'+type);codexDiscover('combat_language');if(!data.combatLanguageTipSeen){data.combatLanguageTipSeen=true;toast('Read the warnings','Red hurts you. Violet also hurts enemies. Gold centers reflect. Yellow marks interrupts. Teal marks openings and benefits. Blue marks shields. See the Codex for more.');}e.mechanicsUsed=e.mechanicsUsed||[];if(!e.mechanicsUsed.includes(type))e.mechanicsUsed.push(type);return true;
 }
 function resolveBossCast(e,cast){
  const theme=e.biome??biomeIndex(),damage=bossAttackDamage(e,cast.type);if(cast.resolved)return;cast.resolved=true;
@@ -212,6 +212,7 @@ function paintTotem(t){
  paintAbilityTotemCrest(t);
 }
 function paintEncounterLinks(){
+ paintCounterReadiness();
  for(const t of game.totems||[]){
   if(t.destructible)continue;
   const a={x:t.x,y:t.y-22},b={x:t.owner.x,y:t.owner.y-22},p={x:game.player.x,y:game.player.y-18},theme=totemSignal(t),end=t.blocked?p:b;

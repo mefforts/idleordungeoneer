@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -64 128 128"><title>Skull Wave</title><defs>
+<linearGradient id="iron" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#8f9294"/><stop offset=".38" stop-color="#4d535c"/><stop offset="1" stop-color="#222735"/></linearGradient>
+<radialGradient id="heat" cx=".35" cy=".32"><stop stop-color="#fff5b1"/><stop offset=".38" stop-color="#ffc75d"/><stop offset=".72" stop-color="#f47e35"/><stop offset="1" stop-color="#9d382a"/></radialGradient>
+<linearGradient id="wood" x2=".35" y2="1"><stop stop-color="#b49162"/><stop offset=".45" stop-color="#766044"/><stop offset="1" stop-color="#3d3a2c"/></linearGradient>
+<linearGradient id="leaf" x2=".6" y2="1"><stop stop-color="#a4b86a"/><stop offset=".4" stop-color="#627f40"/><stop offset="1" stop-color="#304d31"/></linearGradient>
+<linearGradient id="bone" x2=".6" y2="1"><stop stop-color="#fff4d7"/><stop offset=".45" stop-color="#d8cbaa"/><stop offset="1" stop-color="#8d8494"/></linearGradient>
+</defs><path d="M-28 27Q-55 4-37-33L-24-22L-18-53L0-31L17-58L25-27L43-41Q55 10 31 29L17 18L0 44L-15 21Z" fill="#70449b" opacity=".7"/>
+<path d="M-24 13Q-43-7-28-28Q-16-47 9-39Q33-36 35-14Q39 3 23 14L20 33L-16 34L-20 14Z" fill="url(#bone)" stroke="#493c58" stroke-width="3.5"/>
+<path d="M-27-17Q-20-30-5-19L-6-5Q-22 1-27-17M8-19Q24-32 29-15Q27 0 10-5Z" fill="#44334f"/>
+<path d="M-17-17L-8-13M13-13L22-17" stroke="#cf9cf3" stroke-width="2.6"/>
+<path d="M0-2L-7 11L7 10Z" fill="#74616c"/>
+<path d="M-16 18Q0 22 20 17M-10 21L-10 30M0 22L0 32M10 21L10 31" fill="none" stroke="#7c7181" stroke-width="2"/>
+<path d="M-22-28L-8-35M-31-7L-26 3M20-28L25-22" stroke="#fff9df" stroke-width="2.3"/></svg>

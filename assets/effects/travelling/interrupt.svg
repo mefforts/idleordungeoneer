@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -64 128 128"><title>Interrupt</title><defs>
+<linearGradient id="iron" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#8f9294"/><stop offset=".38" stop-color="#4d535c"/><stop offset="1" stop-color="#222735"/></linearGradient>
+<radialGradient id="heat" cx=".35" cy=".32"><stop stop-color="#fff5b1"/><stop offset=".38" stop-color="#ffc75d"/><stop offset=".72" stop-color="#f47e35"/><stop offset="1" stop-color="#9d382a"/></radialGradient>
+<linearGradient id="wood" x2=".35" y2="1"><stop stop-color="#b49162"/><stop offset=".45" stop-color="#766044"/><stop offset="1" stop-color="#3d3a2c"/></linearGradient>
+<linearGradient id="leaf" x2=".6" y2="1"><stop stop-color="#a4b86a"/><stop offset=".4" stop-color="#627f40"/><stop offset="1" stop-color="#304d31"/></linearGradient>
+<linearGradient id="bone" x2=".6" y2="1"><stop stop-color="#fff4d7"/><stop offset=".45" stop-color="#d8cbaa"/><stop offset="1" stop-color="#8d8494"/></linearGradient>
+</defs><path d="M-27-41L-43-41L-43-15M27-41L43-41L43-15M-43 15L-43 41L-27 41M43 15L43 41L27 41" fill="none" stroke="#302b25" stroke-width="10" stroke-linecap="round"/>
+<path d="M-27-41L-43-41L-43-15M27-41L43-41L43-15M-43 15L-43 41L-27 41M43 15L43 41L27 41" fill="none" stroke="#ffe16b" stroke-width="5" stroke-linecap="round"/>
+<path d="M7-30L-22 6L-4 6L-9 31L23-6L4-6Z" fill="#fff5b4" stroke="#6a5429" stroke-width="2"/></svg>

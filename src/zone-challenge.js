@@ -1,6 +1,6 @@
 /* Zone 2's finale and the first steps into the Hollow Crypt. */
 const ZONE_THREE_DAMAGE=1.6;
-const GRAVE_PULSE={speed:320,runningFactor:1.25,width:32,dashReadyLead:.4};
+const GRAVE_PULSE={speed:320,runningFactor:1.25,width:32,dashReadyLead:.4,interval:1.2,maximum:3};
 function rareEliteQuota(index=zoneNumber(),stage=zoneStage()){return index===1&&stage===zoneFloorCount(index)?3:1;}
 function rareEliteSpawnChance(index=zoneNumber(),stage=zoneStage()){return index===1&&stage===zoneFloorCount(index)?.10:RARE_ELITE_CHANCE;}
 function expectedRareCount(trials,chance,cap=1){let probability=Math.pow(1-chance,trials),sum=0;for(let n=0;n<=trials;n++){sum+=Math.min(n,cap)*probability;probability*=((trials-n)/(n+1))*(chance/(1-chance));}return sum;}
@@ -31,8 +31,10 @@ function addEmberCleave(enemy,cast,damage){
  game.hazards.push({type:'expanded',shape:'cone',abilityType:'emberCleave',origin:{...cast.origin},angle:cast.angle,reach:cast.reach,halfAngle:cast.halfAngle,owner:null,biome:1,language:'danger',damage:damage*.25,life:3.2,total:3.2,age:0,lingering:true,enemyHits:new Set()});
 }
 function addGravePulses(enemy,cast,damage){
- game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:0,enemyHits:cast.enemyHits});
+ const count=cast.pulseCount??travellingWaveCount(enemy);
+ for(let i=0;i<count;i++)game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:i*GRAVE_PULSE.interval,sequenceIndex:i,sequenceCount:count,enemyHits:i===0?cast.enemyHits:new Set()});
 }
+
 function gravePulseCanCast(){
  return game.player.dashCooldown<=EXPANDED_ABILITIES.gravePulse.seconds-GRAVE_PULSE.dashReadyLead+1e-9&&
   !game.enemies.some(e=>e.cast?.type==='gravePulse')&&!(game.hazards||[]).some(h=>h.abilityType==='gravePulse');

@@ -1,0 +1,53 @@
+// Synthetic encounter controls are injected only into browser test responses.
+function travellingFixture(){
+ const scenery=worldScenery;let previewState=null;
+ function fresh(type='walkingHedge',band=3,terrain=false,side='right',offset=0){
+  const kind={walkingHedge:0,rollingFurnace:1,gravePulse:2}[type];__encounterTest.fresh(kind,band);worldScenery=terrain?scenery:()=>[];data.hudLayout.side=side;game.camX=game.camY=offset;game.enemies=[];game.boss=null;game.themedEvents=[];game.hazards=[];
+  Object.assign(game.player,{x:offset,y:offset+35,hp:1000,maxHp:1000,invuln:0,dashCooldown:0});data.equippedArmor='';data.equippedRings=[];data.equippedAmulet='';
+  const owner=__encounterTest.owner(2);Object.assign(owner,{x:offset-95,y:offset-150,hp:1e8,maxHp:1e8,visualType:0,mechanicIndex:0,contact:1e9,castCooldown:1e9});owner.phaseQueue=[type];
+  if(!beginBossCast(owner))return {started:false,owner};const cast=owner.cast;owner.cast=null;resolveBossCast(owner,cast);return {started:true,owner,cast,e:game.themedEvents[0],p:game.player};
+ }
+ function run(seconds,controller,dt=.02){for(let t=0;t<seconds-1e-8&&game.status==='running';t+=dt){controller?.(t);for(const e of game.enemies){e.castCooldown=1e9;e.contact=1e9;}tickCombat(Math.min(dt,seconds-t));}}
+ function hedgeMotion(z,horizontal=true){z.e.serial=horizontal?0:1;if(!setupWalkingHedge(z.e))z.e.hedge=null;const normal=q=>horizontal?q.y:q.x,across=q=>horizontal?q.x:q.y;return {normal,across,place:(n,t)=>Object.assign(z.p,horizontal?{x:t,y:n}:{x:n,y:t}),move:(n,t)=>{game.joystick.pointer=-1;game.joystick.x=horizontal?t:n;game.joystick.y=horizontal?n:t;}};}
+ function nextHedge(z,m){return walkingHedgeFields(z.e).filter(f=>f.at<m.normal(z.p)+f.width/2+10).sort((a,b)=>b.at-a.at)[0];}
+ function routeHedge(z,m,dashFirst=false){const f=nextHedge(z,m);if(!f){m.move(0,0);return;}if(dashFirst&&!z.dashed&&f.waveIndex===0&&m.normal(z.p)-f.at<60){z.p.vx=z.e.hedge.horizontal?0:-1;z.p.vy=z.e.hedge.horizontal?-1:0;dash();z.dashed=true;}const gap=f.gap-m.across(z.p);m.move(0,Math.abs(gap)<2?0:gap);}
+ function pulseController(z){const h=game.hazards.find(h=>h.wave&&h.delay<=0&&!h.dashCountered&&Math.hypot(z.p.x-h.x,z.p.y-h.y)>h.inner-9);if(!h||z.p.dashTime>0||z.p.dashCooldown>0)return;const dx=h.x-z.p.x,dy=h.y-z.p.y,d=Math.hypot(dx,dy)||1;if(d-h.r<58){z.p.vx=dx/d;z.p.vy=dy/d;dash();z.dashes=(z.dashes||0)+1;}}
+ window.__travelling={
+  async ready(){await __encounterTest.ready();await Promise.allSettled([...travellingArtImages.values()].map(i=>i.decode()));},
+  hedge(mode='run',dt=.02,boost=0,horizontal=true){const z=fresh(),m=hedgeMotion(z,horizontal),waves=z.e.hedge.waves;let firstHit=null,aliveAtFive=false,firstCooldown=null;
+   if(boost)data.eliteBoons=Array.from({length:boost},()=>({id:'windstep',remaining:40,dungeon:dungeonForZone().id}));
+   m.place(mode==='far'?2400:35,waves[0].gap+(mode==='gaps'?0:85));
+   run(mode==='far'?16:10,t=>{if(mode==='gaps'||mode==='mixed')routeHedge(z,m,mode==='mixed');else m.move(mode==='run'?1:0,0);if(t>=5&&t<5+dt)aliveAtFive=game.themedEvents.includes(z.e);if(firstHit===null&&z.p.hp<1000)firstHit=t;if(z.dashed&&firstCooldown===null&&z.p.dashTime<=0)firstCooldown=z.p.dashCooldown;},dt);
+   return {started:z.started,hp:z.p.hp,firstHit,aliveAtFive,count:waves.length,dashed:!!z.dashed,firstCooldown,refunded:z.p.refundedDashSerial,retired:waves.filter(w=>w.retired).length,speed:waves[0].speed,walk:playerMoveSpeed(),age:z.e.age,remaining:game.themedEvents.length,spacing:Math.abs(waves[1].start-waves[0].start),gapDifference:Math.max(...waves.slice(1).map((w,i)=>Math.abs(w.gap-waves[i].gap)))};
+  },
+  hedgeEdge(){const z=fresh(),m=hedgeMotion(z,true);m.place(35,8000);run(1.2);return {hp:z.p.hp,fields:walkingHedgeFields(z.e).length};},
+  hedgeSweep(dashing=false){const z=fresh(),m=hedgeMotion(z,true),f=walkingHedgeFields(z.e)[0];m.place(f.at+55,f.gap+100);if(dashing){z.p.vx=0;z.p.vy=-1;dash();run(.16);}else{const from={x:z.p.x,y:z.p.y};z.p.y=f.at-65;game.frame+=.08;tickThemedMechanics(.08,from,false);}return {hp:z.p.hp,cooldown:z.p.dashCooldown,refunded:z.p.refundedDashSerial};},
+  pulses(count=3,refund=true,dt=.02){const z=fresh('gravePulse',count);game.hazards=[];z.owner.x=z.owner.y=0;z.cast.origin={x:0,y:0};z.cast.pulseCount=count;addGravePulses(z.owner,z.cast,bossAttackDamage(z.owner,'gravePulse'));z.p.x=650;z.p.y=0;const waves=[...game.hazards],fn=refundCounterDash;z.dashes=0;let aliveAtFive=false;
+   try{if(!refund)refundCounterDash=()=>false;run(9,t=>{pulseController(z);if(t>=5&&t<5+dt)aliveAtFive=game.hazards.length>0;},dt);}finally{refundCounterDash=fn;}
+   return {count:waves.length,hp:z.p.hp,dashes:z.dashes,countered:waves.filter(h=>h.dashCountered).length,launches:waves.map(h=>h.sequenceIndex*GRAVE_PULSE.interval),cooldown:z.p.dashCooldown,remaining:game.hazards.length,aliveAtFive};
+  },
+  fatalPulse(){const z=fresh('gravePulse',3),h=game.hazards[0];z.p.x=h.x;z.p.y=h.y;z.p.hp=1;run(.02);return {status:game.status,hazards:game.hazards.length,events:game.themedEvents.length};},
+  pulseGlance(){const z=fresh('gravePulse',1),h=game.hazards[0];h.x=h.y=0;h.inner=100;h.r=132;z.p.x=150;z.p.y=0;z.p.vx=0;z.p.vy=1;dash();run(.2);return {cooldown:z.p.dashCooldown,countered:!!h.dashCountered,hp:z.p.hp};},
+  furnace(variant='train',miss=false){const z=fresh('rollingFurnace');z.e.serial={train:0,split:1,cross:2}[variant];setupRollingFurnace(z.e);const roller=z.e.furnace.rollers[0],path=furnacePath(z.e,roller),age=path.bounce+6,q=furnacePart(z.e,roller,age,variant==='split'?-1:0);z.p.x=q.x+(miss?-Math.sin(q.angle)*80:0);z.p.y=q.y+(miss?Math.cos(q.angle)*80:0);let aliveAtFive=false,firstHit=null;
+   run(age+.2,t=>{if(t>=5&&t<5.02)aliveAtFive=game.themedEvents.includes(z.e);if(firstHit===null&&z.p.hp<1000)firstHit=t;});
+   return {variant:z.e.furnace.variant,count:z.e.furnace.rollers.length,hp:z.p.hp,firstHit,aliveAtFive,age:z.e.age,remaining:game.themedEvents.length};
+  },
+  furnaceGeometry(variant='split'){const z=fresh('rollingFurnace');z.e.serial={train:0,split:1,cross:2}[variant];setupRollingFurnace(z.e);const roller=z.e.furnace.rollers[0],path=furnacePath(z.e,roller),at=roller.delay+path.bounce,before=furnacePart(z.e,roller,at-.001,0),after=rollingFurnaceShapes(z.e,at+.001),late=rollingFurnaceShapes(z.e,at+8);return {variant:z.e.furnace.variant,before,after:after.filter(s=>s.roller===0),late:late.filter(s=>s.roller===0),bank:path.point,delays:z.e.furnace.rollers.map(r=>r.delay)};},
+  friendly(type='rollingFurnace'){const z=fresh(type),p=z.p;p.x=5000;p.y=5000;let q;if(type==='rollingFurnace'){z.e.furnace.rollers.splice(1);q=furnacePart(z.e,z.e.furnace.rollers[0],.4,0);}else{const m=hedgeMotion(z,true),f=walkingHedgeFields(z.e,.4)[0];q={x:f.gap+85,y:f.at};}
+   const other=spawnEnemy();Object.assign(other,{boss:false,elite:false,x:q.x,y:q.y,hp:1000,maxHp:1000,speed:0,contact:1e9,castCooldown:1e9});const before=z.owner.hp;run(1.1);const once=other.hp;run(1);return {hp:other.hp,once,ownerBefore:before,ownerAfter:z.owner.hp};
+  },
+  cleanup(type='walkingHedge',mode='pause'){const z=fresh(type),snapshot=()=>JSON.stringify({age:z.e?.age,waves:game.hazards.map(h=>[h.delay,h.inner,h.r]),hedges:z.e?.hedge?.waves.map(w=>[w.start,w.speed,w.retired])});const before=snapshot();if(mode==='pause'){game.menuPaused=true;update(.5);return {same:before===snapshot()};}if(mode==='owner')clearOwnerMechanics(z.owner);else if(mode==='death')die();else if(mode==='phase')nextPhase();else resetRun();return {events:game.themedEvents.length,hazards:game.hazards.length};},
+  placement(horizontal=true,side='right',offset=0){const z=fresh('walkingHedge',3,true,side,offset);if(!z.started)return {started:false};const m=hedgeMotion(z,horizontal);if(!z.e.hedge)return {started:false};return {started:true,clear:z.e.hedge.waves.every(w=>[-48,-24,0,24,48].every(n=>{const q=horizontal?{x:w.gap,y:m.normal(z.p)+n}:{x:m.normal(z.p)+n,y:w.gap};return encounterClear(q.x,q.y+13,20);})),gaps:z.e.hedge.waves.map(w=>w.gap),count:z.e.hedge.waves.length};},
+  palette(){return {colors:COMBAT_LANGUAGE,images:[...travellingArtImages.values()].filter(i=>i.complete&&i.naturalWidth).length,guide:combatGuideHtml()};},
+  preview(type='walkingHedge',variant='train',reduced=false,warning=false){const z=fresh(type);if(!z.started)return {started:false};data.reducedMotion=reduced;z.p.invuln=1e9;data.idleNoticeSlots=2;game.phaseTarget=3;game.phaseSpawned=3;
+   if(type==='walkingHedge'){hedgeMotion(z,true);if(!warning)run(.85);}
+   if(type==='rollingFurnace'){z.e.serial={train:0,split:1,cross:2}[variant];setupRollingFurnace(z.e);if(!warning)run(variant==='split'?furnacePath(z.e,z.e.furnace.rollers[0]).bounce+.2:.55);}
+   if(type==='gravePulse'){z.owner.x=z.owner.y=0;game.hazards=[];z.cast.origin={x:0,y:0};z.cast.pulseCount=3;if(!warning){addGravePulses(z.owner,z.cast,bossAttackDamage(z.owner,'gravePulse'));z.p.x=95;z.p.y=125;run(.5);}else{z.cast.shapes=[{shape:'ring',x:0,y:0,inner:0,r:GRAVE_PULSE.width,wave:true,sequenceCount:3}];z.cast.pulseCount=3;}}
+   if(warning){game.themedEvents=[];z.owner.cast=z.cast;z.cast.windup=z.cast.total*.5;}previewState={z,type};game.menuPaused=true;game.camX=0;game.camY=type==='walkingHedge'?-30:0;if(type==='rollingFurnace'&&variant==='split'){const q=furnacePath(z.e,z.e.furnace.rollers[0]).point;game.camX=q.x;game.camY=q.y-85;z.p.x=q.x-70;z.p.y=q.y-70;}$('toastStack').replaceChildren();refreshUI();render();return {started:true};
+  },
+  motionStart(type,variant='train'){this.preview(type,variant);const s=previewState;if(type==='walkingHedge')s.z.e.age=0;if(type==='rollingFurnace'){const z=fresh(type);z.e.serial={train:0,split:1,cross:2}[variant];setupRollingFurnace(z.e);z.p.invuln=1e9;s.z=z;const bank=furnacePath(z.e,z.e.furnace.rollers[0]).point;game.camX=bank.x*.5;game.camY=bank.y*.5;game.menuPaused=true;}if(type==='gravePulse'){game.hazards=[];s.z.cast.pulseCount=3;addGravePulses(s.z.owner,s.z.cast,bossAttackDamage(s.z.owner,'gravePulse'));s.z.p.x=650;s.z.p.y=0;s.follow=true;game.camX=580;game.camY=0;}},
+  animate(dt){const s=previewState;if(!s)return;s.z.p.invuln=1e9;if(s.type==='walkingHedge')routeHedge(s.z,{normal:p=>p.y,across:p=>p.x,move:(n,t)=>{game.joystick.pointer=-1;game.joystick.x=t;game.joystick.y=n;}});if(s.type==='gravePulse')pulseController(s.z);run(dt);if(s.follow){game.camX=s.z.p.x-65;game.camY=s.z.p.y;}refreshUI();render();},
+  restore(){worldScenery=scenery;}
+ };
+}
+module.exports={travellingFixture};
