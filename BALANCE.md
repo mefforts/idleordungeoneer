@@ -1,5 +1,7 @@
 # Dungeon progression and balance
 
+Build 11.8.1 gives health motes a 12-combat-second lifetime, including at full health, and a three-second fade. Elites/rares independently roll 25% for blessing spoils and 50% for health; ordinary health drop frequency and all healing amounts remain. Other ground loot keeps its persistence. Zone 1’s Floor 5 overlord opens with Walking Hedge and repeats it between normal-rotation attacks, retaining his full attack variety and the major-attack budget.
+
 Build 11.8 adds 39 selected themed mechanics, 4/5/6-enemy guardian interludes and capped uncommon ranged creatures. [Selected mechanics and counterplay](SELECTED_MECHANICS.md); [50 new theme-neutral proposals only](THEME_NEUTRAL_IDEAS.md). Per-enemy health and ordinary spawn cadence retain their previous calibration.
 
 Build 11.7 gives Iron 3 weapon refinements, Steel 12 and Mithril 10, with exponential late Steel material costs. The all-three-style 80% material reference trains each discipline to about level 20; idle runs at 25% of base active speed. Equipment ceilings are 80 / 240 / 480 DPS, with a stronger Mithril starting point. See [SKILL_ECONOMY.md](SKILL_ECONOMY.md) for the reproducible material and XP budget. Enemy health and spawn cadence retain their previous calibration.
@@ -192,12 +194,12 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 4 | ~254 min | 240.0 |
 | 5 | ~135 min | 480.0 |
 
-- Live Zone 1: **12.6 min**, 413 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **20.3 min**, 648 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **179.8 min**, 938 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **192.0 min**, 1118 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **133.0 min**, 1118 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **129.7 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 1: **12.2 min**, 413 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **20.8 min**, 648 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **181.3 min**, 938 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **190.5 min**, 1118 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **132.4 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **129.8 min**, 1118 rewarded defeats, 480.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
@@ -211,7 +213,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with one continuously expanding Grave Pulse ring. Dash through it: it has no fixed lifetime or travel limit and always moves faster than running, including movement buffs. Pulse casts cannot overlap, and the next warning allows dash recharge before impact. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 8.7–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 92.6–189 HP remained in the finale trials and 122.5–189 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 8.7–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 69.9–189 HP remained in the finale trials and 64.4–160.7 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
@@ -269,7 +271,7 @@ Rebounding Barrage fires three spaced rings that bounce off the marked arena bou
 
 ## Stackable blessings and healing
 
-Rare and other non-summoned elites each leave a blessing choice 35% of the time. Walk over spoils to pause combat and choose one of three cards by click, touch or keys 1/2/3. The outer frame and fullscreen tint/blur are removed; only the three cards and Skip remain over the arena. Movement and Escape cannot select or dismiss it; Skip explicitly discards it. Choice contents are fixed when dropped and persist through reload.
+Rare and other non-summoned elites each leave a blessing choice 25% of the time. Walk over spoils to pause combat and choose one of three cards by click, touch or keys 1/2/3. The outer frame and fullscreen tint/blur are removed; only the three cards and Skip remain over the arena. Movement and Escape cannot select or dismiss it; Skip explicitly discards it. Choice contents are fixed when dropped and persist through reload.
 
 | Blessing | Duration | Effect |
 | --- | ---: | --- |
@@ -286,7 +288,7 @@ Rare and other non-summoned elites each leave a blessing choice 35% of the time.
 
 A vertical, scrollable combat column shows temporary buffs. On mobile it is 44 units wide and shows only icons with timers above them, retaining 44-unit touch targets. Desktop keeps names, effects and counts. Details list every independent remaining time, including Rally. Different blessings and repeated copies stack with independent combat timers. Damage, attack speed, reach and movement multipliers multiply; extra gold adds; material luck increases the capped drop chance. Menus, pause and skilling freeze timers. Blessings carry across Zones in the same Dungeon. Secondary proc attacks do not recursively trigger more procs. No new blessing heals.
 
-Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 55% chance of 12%; rares use that same 55% chance and 12% heal. Intercepted healing restores 0.35% player maximum HP per second, with a finite 15% lifetime reserve per healing totem. Once depleted it still blocks the caster’s healing. An uninterrupted stream restores 0.4% caster maximum HP per second. Healing streams do not stack. The lifesteal ring starts at 0.5% of actual health removed; fifty fine refinements raise it to at most 0.5625%.
+Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 50% chance of 12%; rares use that same 50% chance and 12% heal. Motes last 12 combat seconds, including at full health, and fade during the last three. Waves do not reset their age; menus, pauses and skilling freeze it. Motes are transient and clear on floor start, retry or reload, while ordinary ground loot persists. Intercepted healing restores 0.35% player maximum HP per second, with a finite 15% lifetime reserve per healing totem. Once depleted it still blocks the caster’s healing. An uninterrupted stream restores 0.4% caster maximum HP per second. Healing streams do not stack. The lifesteal ring starts at 0.5% of actual health removed; fifty fine refinements raise it to at most 0.5625%.
 
 ## Persistent progression and migration
 

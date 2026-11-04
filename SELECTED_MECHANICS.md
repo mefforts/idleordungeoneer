@@ -44,6 +44,8 @@ Build 11.8 adds all 39 selected proposals. The original idea numbers below remai
 | 41 | Turning Bulwark | All themes | Circle behind the rotating front shield |
 | 46 | Rally Thread | All themes | Dash across the enemy buff thread |
 
+Build 11.8.1 makes Walking Hedge the Zone 1 Floor 5 overlord’s opening move and repeats it between every other normal-rotation attack. His other themed and legacy attacks remain; threshold attacks retain their existing queue and major hazards keep their shared budget.
+
 The two encounters between monster waves contain a lead guardian and escorts: four enemies early in a Zone, five in the middle and six deeper down. The floor boss remains a separate encounter. Defeating the lead does not clear surviving escorts. Ordinary monster waves keep their existing counts.
 
 Uncommon creatures replace about 7% of eligible ordinary spawns, after the opening enemies. They have 2× ordinary health and repeat one ranged move. Their simultaneous cap is 1 / 2 / 3 / 4 by Zone, capped at four. They keep ordinary loot, do not occupy rare slots and cannot appear as summons or guardian escorts.

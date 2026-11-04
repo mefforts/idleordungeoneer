@@ -1,5 +1,5 @@
 {
-  "version": "11.8.0",
+  "version": "11.8.1",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1256,8 +1256,8 @@
       "maximumRares": 3,
       "knownElites": 6
     },
-    "blessingChance": 0.35,
-    "otherEliteBlessingChance": 0.35,
+    "blessingChance": 0.25,
+    "otherEliteBlessingChance": 0.25,
     "stacking": true,
     "lifesteal": 0.005,
     "boons": {
@@ -2080,6 +2080,10 @@
       "deep": 6
     },
     "effectAssets": 156,
+    "zoneOneFinale": {
+      "opening": "walkingHedge",
+      "betweenNormalAttacks": true
+    },
     "colors": {
       "danger": {
         "color": "#f16d68",
@@ -2153,9 +2157,11 @@
       "chance": 0.02,
       "ordinary": 0.03,
       "elite": 0.12,
-      "eliteChance": 0.55,
+      "eliteChance": 0.5,
       "rare": 0.12,
-      "rareChance": 0.55
+      "rareChance": 0.5,
+      "lifetime": 12,
+      "fadeSeconds": 3
     },
     "healingStream": {
       "playerPerSecond": 0.0035,
@@ -3021,7 +3027,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 753.4000000000215,
+      "seconds": 734.8800000000224,
       "kills": 413,
       "referenceDps": 80,
       "targetSeconds": 822
@@ -3029,7 +3035,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1217.6800000000649,
+      "seconds": 1245.7600000000634,
       "kills": 648,
       "referenceDps": 240,
       "targetSeconds": 1291
@@ -3037,7 +3043,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 10785.360000001243,
+      "seconds": 10879.200000001143,
       "kills": 938,
       "referenceDps": 240,
       "targetSeconds": 14296
@@ -3045,7 +3051,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 11518.720000000782,
+      "seconds": 11430.160000001004,
       "kills": 1118,
       "referenceDps": 240,
       "targetSeconds": 15207
@@ -3053,7 +3059,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 7979.72000000113,
+      "seconds": 7941.320000001111,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3061,7 +3067,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 7781.120000001024,
+      "seconds": 7789.2000000009975,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3378,7 +3384,7 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 92.6,
+        "remainingHp": 69.9,
         "seconds": 60,
         "status": "running",
         "phase": 2,
@@ -3412,7 +3418,7 @@
         },
         "maxHp": 189,
         "remainingHp": 189,
-        "seconds": 55.1,
+        "seconds": 58.02,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
@@ -3430,7 +3436,7 @@
           "cleave",
           "crossfire",
           "cinderStitch",
-          "forgeHammers"
+          "moltenDroplets"
         ]
       },
       {
@@ -3445,7 +3451,7 @@
         },
         "maxHp": 189,
         "remainingHp": 158.8,
-        "seconds": 52.78,
+        "seconds": 55.96,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
@@ -3460,7 +3466,8 @@
           "cinderStitch",
           "fury",
           "crossfire",
-          "summon"
+          "summon",
+          "turningBulwark"
         ]
       },
       {
@@ -3541,7 +3548,7 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 189,
+        "remainingHp": 160.7,
         "seconds": 157.5,
         "status": "running",
         "phase": 2,
@@ -3579,8 +3586,8 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 157.5,
-        "seconds": 134.4,
+        "remainingHp": 156.9,
+        "seconds": 133.42,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
@@ -3617,13 +3624,13 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 122.5,
-        "seconds": 139.54,
+        "remainingHp": 64.4,
+        "seconds": 153.32,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 3,
-        "damage": 80.9,
+        "hits": 5,
+        "damage": 168.2,
         "echoes": 10,
         "casts": [
           "gravePulse",
@@ -3637,11 +3644,11 @@
           "coffinPress",
           "fury",
           "mend",
-          "turningBulwark",
           "ricochet",
+          "turningBulwark",
           "shield",
-          "crossfire",
           "bloom",
+          "crossfire",
           "summon"
         ]
       }

@@ -1,5 +1,6 @@
 /* Rare creature families and stackable timed blessings. */
 const RARE_ELITE_CHANCE=.03;
+const ELITE_BLESSING_CHANCE=.25;
 const RARE_ELITE_NAMES=[
  ['Thorncrown Mossling','Elder Moss Beetle','Antlered Sapling','Crowncap','Briar Alpha','Ancient Root Crawler'],
  ['Cinderheart Emberling','Ashhorn Imp','Molten Slag Beetle','Soot Revenant','Furnace Alpha','Obsidian Ravager'],
@@ -53,7 +54,7 @@ function paintRareElite(enemy){
  ctx.save();ctx.font='600 9px system-ui';ctx.textAlign='center';ctx.strokeStyle='#13140d';ctx.lineWidth=3;ctx.strokeText(enemy.name,enemy.x,y-6);ctx.fillStyle='#ead8ac';ctx.fillText(enemy.name,enemy.x,y-6);ctx.restore();
 }
 function dropEliteSpoils(enemy){
- if(enemy.summoned||!enemy.elite||Math.random()>=.35)return null;
+ if(enemy.summoned||!enemy.elite||Math.random()>=ELITE_BLESSING_CHANCE)return null;
  const drop={id:++data.eliteSpoilsSequence,zone:zoneNumber(),x:enemy.x,y:enemy.y};drop.choices=blessingChoices(drop);data.eliteSpoils.push(drop);if(data.eliteSpoils.length>256)data.eliteSpoils.shift();codexDiscover('rare_elites');save();return drop;
 }
 function paintEliteSpoils(){
@@ -98,8 +99,8 @@ function eliteBoonHud(){
 function paintEliteBoonAura(player){
  const boons=activeEliteBoons();if(!boons.length)return;ctx.save();ctx.strokeStyle=ELITE_BOONS[boons[0].id].color+'80';ctx.lineWidth=1.3;ctx.beginPath();ctx.ellipse(player.x,player.y+14,21,7,0,0,Math.PI*2);ctx.stroke();ctx.restore();
 }
-function rareEliteCodexHtml(){return codexParagraph('Rare and other elite creatures each leave spoils 35% of the time. Walk over a drop to pause the delve and choose A, B or C. Select with a touch/click or keys 1/2/3; movement keys cannot choose or dismiss it. Skip blessing discards that drop.')+codexRuleList([['Blessings','40–60 seconds of combat time. Multiple different or repeated blessings can stack.'],['Pause','Menus, skilling and the choice screen preserve all remaining time.'],['Travel','Blessings remain within this Dungeon; unclaimed spoils remain in their Zone.'],['Summons','Summoned creatures grant no loot or wave progress. Destroy their summoning totem to stop replacements.'],['Violet attacks','Hurt you and other monsters. Bait enemies into a cleave, charge or marked eruption.'],['Red attacks','Hurt you only.']]);}
-function eliteBoonCodexHtml(id){const b=ELITE_BOONS[id];return codexParagraph(b.description+'.')+codexRuleList([['Duration',b.seconds+' seconds of combat time'],['Source','35% of rare and other elite defeats, or Long blessings in the Dungeon Shop for five times the duration'],['Stacking','All blessings stack, including repeated copies, with independent expiry times.'],['Combined active effect',blessingStackEffect(id,activeEliteBoons().filter(v=>v.id===id).length)||'None active'],['Timing','Pause, menus and skilling preserve time. Delve speed advances combat time.'],['Scope','This Dungeon']])+codexHeading('Active stacks',codexRuleList(activeEliteBoons().filter(b=>b.id===id).sort((a,b)=>a.remaining-b.remaining).map((b,i)=>['Stack '+(i+1),Math.ceil(b.remaining)+' seconds of combat time remaining'])))+codexParagraph('The HUD shows the next stack to expire. Pause, menus and skilling freeze the countdown; Delving speed advances it.');}
+function rareEliteCodexHtml(){return codexParagraph('Rare and other elite creatures each leave spoils '+Math.round(ELITE_BLESSING_CHANCE*100)+'% of the time. Walk over a drop to pause the delve and choose A, B or C. Select with a touch/click or keys 1/2/3; movement keys cannot choose or dismiss it. Skip blessing discards that drop.')+codexRuleList([['Blessings','40–60 seconds of combat time. Multiple different or repeated blessings can stack.'],['Pause','Menus, skilling and the choice screen preserve all remaining time.'],['Travel','Blessings remain within this Dungeon; unclaimed spoils remain in their Zone.'],['Summons','Summoned creatures grant no loot or wave progress. Destroy their summoning totem to stop replacements.'],['Violet attacks','Hurt you and other monsters. Bait enemies into a cleave, charge or marked eruption.'],['Red attacks','Hurt you only.']]);}
+function eliteBoonCodexHtml(id){const b=ELITE_BOONS[id];return codexParagraph(b.description+'.')+codexRuleList([['Duration',b.seconds+' seconds of combat time'],['Source',Math.round(ELITE_BLESSING_CHANCE*100)+'% of rare and other elite defeats, or Long blessings in the Dungeon Shop for five times the duration'],['Stacking','All blessings stack, including repeated copies, with independent expiry times.'],['Combined active effect',blessingStackEffect(id,activeEliteBoons().filter(v=>v.id===id).length)||'None active'],['Timing','Pause, menus and skilling preserve time. Delve speed advances combat time.'],['Scope','This Dungeon']])+codexHeading('Active stacks',codexRuleList(activeEliteBoons().filter(b=>b.id===id).sort((a,b)=>a.remaining-b.remaining).map((b,i)=>['Stack '+(i+1),Math.ceil(b.remaining)+' seconds of combat time remaining'])))+codexParagraph('The HUD shows the next stack to expire. Pause, menus and skilling freeze the countdown; Delving speed advances it.');}
 
 /* Enemy area attacks hit each ordinary monster once, without player hit procs. */
 function cleaveContains(actor,cast){

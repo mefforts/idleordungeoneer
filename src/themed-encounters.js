@@ -59,7 +59,9 @@ function bossPlan(e){
  extras=extras.filter(id=>id!=='orbitTransfer'||themedPartner(e));
  if(extras.length){const shift=(zoneStage()-1+(e.visualType||0))%extras.length;extras=[...extras.slice(shift),...extras.slice(0,shift)];}
  if(e.elite)extras=extras.filter((id,i)=>i<2||id==='turningBulwark'||id==='rallyThread');
- if(!extras.length)return base;const result=[];for(let i=0;i<Math.max(base.length,extras.length);i++){result.push(base[i%base.length],extras[i%extras.length]);}return result;
+ if(!extras.length)return base;const result=[];for(let i=0;i<Math.max(base.length,extras.length);i++){result.push(base[i%base.length],extras[i%extras.length]);}
+ if(e.boss&&!e.elite&&e.bossIndex===2&&zoneNumber()===0&&isZoneFinal())return result.filter(type=>type!=='walkingHedge').flatMap(type=>['walkingHedge',type]);
+ return result;
 }
 function canBeginThemedCast(owner,type){
  const def=themedAbility(type);if(!def)return true;

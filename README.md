@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.8.1** gives healing motes a **12-combat-second lifetime**, including while at full health, with a fade over the last three seconds. Menus, pauses and skilling freeze their timer. Elites and rares now independently roll **25% for blessing spoils** and **50% for a 12% health mote**. Ordinary monsters keep their 2% chance of a 3% heal. Other ground loot retains its persistence. The **Zone 1 Floor 5 boss** now opens with Walking Hedge and repeats it between his other normal-rotation attacks.
+
 **Build 11.8.0** adds **39 themed elite, rare and boss mechanics**, with illustrated roots, hammers, lanterns, portals and other animated effects. Openings use teal symbols, counter targets use gold and timer arcs, and the Codex holds the detailed instructions. Major new attacks share one arena budget. [Mechanics and counterplay](SELECTED_MECHANICS.md) · [All 39 appearances](preview-themed-mechanics.png) · [Animation reel](preview-themed-mechanics.mp4).
 
 The two guardian encounters between monster waves now field **4 enemies early, 5 midway and 6 deep in each Zone**, including the lead guardian. The final floor boss remains separate. **Uncommon creatures** occasionally replace ordinary spawns: **2× ordinary HP**, one ranged attack, ordinary loot, and simultaneous caps of **1 / 2 / 3 / 4** by Zone. Their eligible spawn chance is **7%**, after the opening enemies. [Uncommon threats](preview-uncommon-mobile.png) · [Guardian pack](preview-guardian-pack-mobile.png).
@@ -279,7 +281,7 @@ The interludes have four to six guardians/Echoes. Within ordinary monster waves,
 
 ## Rare elites and blessings
 
-All **42 ordinary creature forms** have a distinct painted rare elite form with **5.25× ordinary health in Zones 1–2 / 7.875× from Zone 3**. Eligible spawns have a **3% chance**, capped at one rare per ordinary wave. Zone 2’s final floor uses 10% and permits three rares. Rares and other elites share a **35%** chance of blessing spoils and the same loot/healing rules.
+All **42 ordinary creature forms** have a distinct painted rare elite form with **5.25× ordinary health in Zones 1–2 / 7.875× from Zone 3**. Eligible spawns have a **3% chance**, capped at one rare per ordinary wave. Zone 2’s final floor uses 10% and permits three rares. Rares and other elites share a **25%** chance of blessing spoils and the same loot/healing rules.
 
 **Walk over spoils** to pause the delve and see three A/B/C options. Touch/click a card or press **1 / 2 / 3**. Movement and Escape cannot choose or dismiss the screen. **Skip blessing** explicitly discards that drop. Choice contents are fixed when dropped and survive reload.
 
@@ -293,7 +295,7 @@ The Opal Leech Ring starts at **0.5%** of actual direct-hit health removed, with
 
 ## Healing drops
 
-Ordinary monsters have a **2% chance** of a mote healing **3% maximum HP**. Other elites have a **55% chance** of **12%**, and rares share that **55% chance** and **12%** heal. Motes wait at full health and stay through waves on the same floor; starting or retrying clears them.
+Ordinary monsters have a **2% chance** of a mote healing **3% maximum HP**. Other elites have a **50% chance** of **12%**, and rares share that **50% chance** and **12%** heal. Motes expire after **12 combat seconds**, even at full health, fading during the final three seconds. Waves do not refresh the timer; menus, pause and skilling freeze it. Starting, retrying or reloading clears motes. They are separate from persistent gold/material drops.
 
 An intercepted healing stream restores **0.35% maximum HP per second**, up to a **15% lifetime reserve per totem**. A depleted stream still blocks the caster's healing. Uninterrupted streams restore **0.4% caster maximum HP per second**. Healing streams do not stack.
 
