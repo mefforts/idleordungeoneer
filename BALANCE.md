@@ -1,5 +1,7 @@
 # Dungeon progression and balance
 
+Build 11.13.1 labels the Settings save download Backup/Export and updates the save help. Save format and export contents remain compatible; combat, economy and progression retain the 11.13.0 calibration.
+
 Offscreen living enemies share a red directional corner haze at 0.8 pulses/second, capped at 18% opacity before directional weighting. Diagonal threats light one corner; cardinal threats share two. Enemy sprite bounds keep partially visible creatures from raising an alert. Groups do not add brightness. Reduced motion uses a steady glow; pauses freeze the real-time pulse and Delving speed never accelerates it. The canvas effect adds no input layer and appears only during a running delve.
 
 Build 11.13.0 also lowers eligible elite/rare/Echo blessing drops from 25% to 15%: 40% fewer expected blessing drops, with health and other loot rates preserved. Released projectiles, delayed bursts, ground hazards, travelling walls/rims, planted reflect wards and independent themed mechanics continue after caster defeat, retaining damage, friendly fire, counters and their own lifetimes. Caster defeat stops unreleased casts and effects bound to the caster or a living pair. Healing/power totems and deployed lanterns retarget surviving enemies, remain interruptible and never heal a corpse.

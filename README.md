@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.13.1** makes save exports explicit: open **Settings → Save → Backup/Export** to download a readable copy of your current progress for review or backup. **Restore** accepts that same file.
+
 **Build 11.13.0** gives the player a **chest-to-feet damage hitbox**. Body hits now register across projectiles, charges and floor attacks; the head and outstretched arms stay outside it. Dashes, movement, pickups and teal protected openings retain their existing roles. [Hitbox preview](preview-player-hitbox-mobile.png).
 
 **Elites, rares and guardian Echoes reserve separate fighting positions** instead of converging on the player. Advance, ranged and guard roles keep pressure from different directions; some defend totems, and paired mechanics retain their coordinated movement. Wounded ordinary and uncommon creatures can retreat toward an unblocked healing totem for a small, capped heal. Intercept or break that support to deny it. [Enemy positions](preview-enemy-positions-mobile.png).
