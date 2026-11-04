@@ -1,6 +1,6 @@
 /* Three authored equipment tiers. Combat power is finite; skill dedication adds
    a small, explicit bonus rather than another unbounded damage multiplier. */
-const TIER_LIMITS={1:{name:'Iron',dps:100,weapon:10,armor:5,speed:5,reach:5,enchant:2},2:{name:'Steel',dps:200,weapon:20,armor:10,speed:10,reach:10,enchant:4},3:{name:'Mithril',dps:300,weapon:30,armor:15,speed:15,reach:15,enchant:6}};
+const TIER_LIMITS={1:{name:'Iron',power:80,dps:100,weapon:3,armor:5,speed:5,reach:5,enchant:2},2:{name:'Steel',power:240,dps:300,weapon:12,armor:10,speed:10,reach:10,enchant:4},3:{name:'Mithril',floor:300,power:480,dps:600,weapon:10,armor:15,speed:15,reach:15,enchant:6}};
 const TIER_RESOURCES=['coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth','mithrilOre','mithrilBars','yewLogs','verdantCloth','enchantedSalvage','enchantedFragments','sapphires','cutSapphires'];
 const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:100,zoneMaterials:1},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:100,zoneMaterials:1},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:100,zoneMaterials:1}};
 const WEAPON_RIGS={sword:{height:57,grip:[.49,.85]},shield:{height:33,grip:[.5,.5]},polearm:{height:104,grip:[.19,.79]},greatsword:{height:76,grip:[.5,.84]},bow:{height:54,grip:[.16,.5],flip:true},staff:{height:80,grip:[.5,.78]}};
@@ -17,8 +17,9 @@ function normalizeTierProgression(){
  if(legacy){
   data.legacyProgressionArchive={styles:JSON.parse(JSON.stringify(data.styles)),armor:[...(data.archivedArmor||[]),...(data.ownedArmor||[])]};
  }
+ normalizeRefinementRanks();
  for(const [id,s]of Object.entries(data.styles)){
-  s.tier=legacy?(tier2Unlocked()&&s.weapon>=10?2:1):styleTier(id);
+  s.tier=legacy?(tier2Unlocked()&&(data.refinementRankArchive?.[id]?.weapon??s.weapon)>=10?2:1):styleTier(id);
   for(const kind of ['weapon','armor','speed','reach','enchant'])s[kind]=Math.min(styleUpgradeCap(id,kind),finiteRank(s[kind]));
  }
  data.tierProgressionVersion=1;
@@ -71,10 +72,10 @@ function paintEquipmentWeapon(c,d,type,pose={x:0,y:0,angle:0}){
 function promoteStyle(id,voucher){
  if(!STYLE_DEFS[id]||styleTier(id)>=3)return false;const p=promotionDetails(id);
  if(!equipmentTierUnlocked(p.tier)){toast(p.name+' locked',equipmentTierGate(p.tier));return false;}
- if(data.styles[id].weapon<p.rank||weaponCraftLevel(STYLE_DEFS[id].weapon)<p.level){toast('Finish your '+TIER_LIMITS[p.tier-1].name+' training','Refinement '+p.rank+' and '+DISCIPLINES[STYLE_DEFS[id].group].name+' level '+p.level+'.');return false;}
+ if(data.styles[id].weapon<p.rank||weaponCraftLevel(STYLE_DEFS[id].weapon)<p.level){toast('Finish your '+TIER_LIMITS[p.tier-1].name+' training',(p.rank?'Refinement '+p.rank+' and ':'')+DISCIPLINES[STYLE_DEFS[id].group].name+' level '+p.level+'.');return false;}
  if(!(voucher===undefined?spendAtStation(p.cost,STYLE_DEFS[id].group):spendUpgradeVoucher('promotion:'+id,voucher)))return false;
- data.styles[id].tier=p.tier;equipmentWorkXp(id,'promotion');if(data.craftGoal==='promotion:'+id)data.craftGoal='';projectCombatStyle();codexDiscover(p.tier===3?'unlock_mithril':'unlock_steel');
- toast(STYLE_DEFS[id].name+' upgraded to '+p.name,'Refinement '+(p.rank+1)+'–'+(p.rank+10)+' unlocked');save();refreshUI();renderDisciplineDrawer();return true;
+ data.styles[id].tier=p.tier;data.styles[id].weapon=0;equipmentWorkXp(id,'promotion');if(data.craftGoal==='promotion:'+id)data.craftGoal='';projectCombatStyle();codexDiscover(p.tier===3?'unlock_mithril':'unlock_steel');
+ toast(STYLE_DEFS[id].name+' upgraded to '+p.name,'Refinement 1–'+TIER_LIMITS[p.tier].weapon+' unlocked');save();refreshUI();renderDisciplineDrawer();return true;
 }
 function styleUpgradeBase(id,kind,rank=data.styles[id][kind]||0){
  const tier=kind==='armor'?ownedArmorTier(id):styleTier(id);
@@ -98,7 +99,7 @@ function styleUpgradeMaterials(id,kind,rank=data.styles[id][kind]||0){
 }
 function craftStyleUpgrade(id,kind,voucher){
  if(!STYLE_DEFS[id]||!['weapon','armor','enchant','speed','reach'].includes(kind))return false;
- const s=data.styles[id],cap=styleUpgradeCap(id,kind);if(s[kind]>=cap){toast(TIER_LIMITS[styleTier(id)].name+' limit reached',styleTier(id)===1?'Clear Zone 1 and upgrade this style to Steel for the next tier.':styleTier(id)===2?'Complete Zone 4 and promote this style to Mithril for the next tier.':'This is the current Mithril upgrade limit.');return false;}
+ const s=data.styles[id],cap=styleUpgradeCap(id,kind);if(s[kind]>=cap){toast(TIER_LIMITS[styleTier(id)].name+' limit reached',styleTier(id)===1?'Clear Zone 1 and upgrade this style to Steel for the next tier.':styleTier(id)===2?'Complete Zone 3 and train to level 20, then promote this style to Mithril for the next tier.':'This is the current Mithril upgrade limit.');return false;}
  if(kind==='armor'&&!data.ownedArmor.some(key=>ARMOR_SETS[key]?.style===id)){toast('Craft an armor set first','Choose a '+ARMOR_STYLES[id].label+' set above.');return false;}
  if(!(voucher===undefined?spendAtStation(styleUpgradeBase(id,kind),upgradeGroup(id,kind)):spendUpgradeVoucher('upgrade:'+id+':'+kind,voucher)))return false;
  const oldMax=game.player.maxHp;s[kind]++;equipmentWorkXp(id,kind);if(kind==='weapon'){data.firstWeaponCrafted=true;announceWeaponUpgradeTip();}projectCombatStyle();game.player.maxHp=maxHp()+waveVitality();
@@ -121,7 +122,7 @@ function produce(key,active=false){
  const amount=skillYield(key);data[skill.resource]=(data[skill.resource]||0)+amount;
  if(skill.goldGain){data.gold+=skill.goldGain+(data.skillBoosts?.scavenging?1:0)+skill.goldGain*trinketBonus('gold');data.scavengeDry=(data.scavengeDry||0)+1;
   if(Math.random()<.07+trinketBonus('find')||data.scavengeDry>=20){data.scavengeDry=0;const gem=skill.tier===3?'sapphires':skill.tier===2?'garnets':'opals';data[gem]++;codexDiscover('resource_'+gem);if(active)toast(gem==='sapphires'?'Sapphire found!':gem==='garnets'?'Garnet found!':'Opal found!','A rough gem for Artisan');}}
- awardDisciplineXp(disciplineFor(key),active?Math.max(5,Math.floor(skill.gain*.65)):skill.gain,skill.tier||1,skill.xp);
+ awardDisciplineXp(disciplineFor(key),skill.gain,skill.tier||1,skill.xp);
  codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
 }
 
@@ -156,8 +157,8 @@ function installTierProgressionUI(){
  TOOL_DEFS.pickaxe.skills.push('coal','mithrilMine');TOOL_DEFS.hatchet.skills.push('willow','yew');TOOL_DEFS.mattock.skills.push('ancientScavenge','cleanAncient','garnetSearch','relicClean','deepScavenge','restoreEnchanted','sapphireSearch');
  for(const key of TIER_RESOURCES)if(!CODEX_ITEMS.some(a=>a.id==='resource_'+key))CODEX_ITEMS.push({id:'resource_'+key,cat:'Materials',name:RESOURCE_LABEL[key],desc:equipmentTierGate(SKILLS[RESOURCE_SOURCE[key]].tier)+' material · '+SKILLS[RESOURCE_SOURCE[key]].name+' · '+(SKILLS[RESOURCE_SOURCE[key]].cost?Object.entries(SKILLS[RESOURCE_SOURCE[key]].cost).map(([k,n])=>n+' '+RESOURCE_LABEL[k]).join(' + '):'Gather directly')});
  for(const [id,sk]of Object.entries(SKILLS).filter(([,s])=>s.tier>=2))CODEX_ITEMS.push({id:'skill_'+id,cat:'Skills',name:sk.name,desc:equipmentTierGate(sk.tier)+' and '+DISCIPLINES[disciplineFor(id)].name+' level '+((sk.tier-1)*10)+' · '+sk.item});
- CODEX_ITEMS.push({id:'unlock_mithril',cat:'Weapons',name:'Mithril tier',desc:'Complete Zone 4 and train the matching discipline to level 20. Promote a Steel style at refinement 20; craft the blue ranged, green Mage or Mithril melee set separately.'});
- CODEX_ITEMS.push({id:'unlock_steel',cat:'Weapons',name:'Steel tier',desc:'Clear Zone 1, finish Iron refinement 10, train crafting to level 10 and promote a combat style. Refinement 11–20.'});
+ CODEX_ITEMS.push({id:'unlock_mithril',cat:'Weapons',name:'Mithril tier',desc:'Complete Zone 3 and train the matching discipline to level 20. Promote an owned Steel style; craft the blue ranged, green Mage or Mithril melee set separately.'});
+ CODEX_ITEMS.push({id:'unlock_steel',cat:'Weapons',name:'Steel tier',desc:'Clear Zone 1, finish Iron refinement 3, train crafting to level 10 and promote a combat style. Steel has 12 refinements with growing costs.'});
  zone2CampImage=new Image();zone2CampImage.src=iconAsset('zone2-gathering');
  $('consolidatedSkills').addEventListener('click',e=>{const promote=e.target.closest('[data-promote-style]'),tier=e.target.closest('[data-workshop-tier]');if(promote&&!promote.disabled)promoteStyle(promote.dataset.promoteStyle);if(tier){workshopTier=Number(tier.dataset.workshopTier);renderDisciplineDrawer();}});
 }

@@ -8,7 +8,7 @@ function normalizePreparationEconomy(){
  if(data.preparationEconomyVersion===1)return;
  let credit=0;
  for(const [id,style]of Object.entries(data.styles)){
-  for(const kind of ['weapon','speed'])for(let rank=0;rank<style[kind];rank++){
+  for(const kind of ['weapon','speed'])for(let rank=0;rank<(kind==='weapon'?Math.min((data.refinementRankArchive?.[id]?.tier||styleTier(id))*10,data.refinementRankArchive?.[id]?.weapon??style[kind]):style[kind]);rank++){
    const tier=rank<(kind==='weapon'?10:5)?1:2;credit+=preparationUpgradeGold(tier,kind,rank,true)-preparationUpgradeGold(tier,kind,rank);
   }
   if(styleTier(id)===2)credit+=50;

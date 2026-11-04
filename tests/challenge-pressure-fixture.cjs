@@ -3,7 +3,7 @@ function challengePressureFixture(){
  window.__challengePressure=(zone,final,careful,seed)=>{
   __workshopUpdate.fresh(zone);data.floor=final?zoneEnd(zone):zoneStart(zone);data.cleared=data.floor-1;normalizeZone();data.weaponType='bow';data.unlockedWeapons=['sword','bow'];data.arrows=10000;
   data.ownedArmor=['ranged_2'];data.equippedArmor='ranged_2';__workshopUpdate.level('woodworking',10);const gear=data.styles.ranged;gear.tier=2;gear.armor=3;let best=Infinity,chosen={};
-  for(let weapon=10;weapon<=20;weapon++)for(let speed=0;speed<=10;speed++){gear.weapon=weapon;gear.speed=speed;const error=Math.abs(weaponDps('bow')-150);if(error<best){best=error;chosen={weapon,speed};}}
+  for(let weapon=0;weapon<=TIER_LIMITS[2].weapon;weapon++)for(let speed=0;speed<=10;speed++){gear.weapon=weapon;gear.speed=speed;const error=Math.abs(weaponDps('bow')-150);if(error<best){best=error;chosen={weapon,speed};}}
   Object.assign(gear,chosen);projectCombatStyle();data.seenElites[biomeIndex()]=[true,true,true];
   const original={random:Math.random,hurt,spawnGraveEcho};let value=seed,damage=0,hits=0,echoes=0,seconds=0;const casts=new Set();
   Math.random=()=>((value=(Math.imul(value,1664525)+1013904223)>>>0)/4294967296);

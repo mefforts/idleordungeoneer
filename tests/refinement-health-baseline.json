@@ -1,0 +1,27 @@
+[
+  {
+    "index": 0,
+    "hpScale": 1.251910859571855,
+    "spawnSeconds": 0.9166666666666666
+  },
+  {
+    "index": 1,
+    "hpScale": 3.1081361988823755,
+    "spawnSeconds": 1.2222222222222223
+  },
+  {
+    "index": 2,
+    "hpScale": 5.049167255084418,
+    "spawnSeconds": 1.3750000000000002
+  },
+  {
+    "index": 3,
+    "hpScale": 5.049167255084418,
+    "spawnSeconds": 1.2833333333333334
+  },
+  {
+    "index": 4,
+    "hpScale": 5.166143530978628,
+    "spawnSeconds": 1.32
+  }
+]

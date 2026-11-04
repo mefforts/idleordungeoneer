@@ -33,7 +33,7 @@ function goalRequirement(action){
  return '';
 }
 function idleButtonHtml(key,label='Idle'){
- const unlocked=idleSlotsUnlocked()>0,active=data.idleJobs.includes(key),locked=!canUseSkill(key),reason=active?'Stop '+SKILLS[key].name:locked?skillLockReason(key):!unlocked?'Zone 1 · Floor 2':'Idle '+SKILLS[key].name;
+ const unlocked=idleSlotsUnlocked()>0,active=data.idleJobs.includes(key),locked=!canUseSkill(key),reason=active?'Stop '+SKILLS[key].name:locked?skillLockReason(key):!unlocked?'Zone 1 · Floor 2':'Idle '+SKILLS[key].name+' · 25% base active speed';
  return '<button type="button" class="idle-action '+(active?'is-idling':'')+'" data-idle-skill="'+key+'" data-focus-key="idle-'+(label==='Idle'?'card':'hub')+'-'+key+'" aria-pressed="'+active+'" aria-label="'+escapeHTML(reason)+'" data-hint="'+escapeHTML(reason)+'" '+(!unlocked||locked&&!active?'disabled':'')+'>'+uiIcon(active?'stop':'idle')+'<span>Idle</span></button>';
 }
 function workCard(key){
@@ -209,7 +209,7 @@ function polishNotice(title,description=''){
  if(/^(MONSTER SWARM|ENCOUNTER CLEARED|THE FLOOR IS YOURS|OVERLORD APPROACHES)/.test(title))return {title:'',description:''};
  if(title==='Delve paused · Gather or Craft')return {title:'',description:''};
  if(/^(Mining|Smithing|Woodcutting|Fletching|Warding|Runecrafting|Scavenging|Gem Cutting|Coal Mining|Willow Woodcutting|Ancient Salvaging|Steel Smithing|Runic Weaving|Garnet)/.test(title)&&/is now idle/.test(title))return {title:title.replace(' is now idle',' · idle'),description:''};
- if(/upgraded to Steel/.test(title))description='Refinement 11–20 unlocked';
+ if(/upgraded to Steel/.test(title))description='Refinement 1–'+TIER_LIMITS[2].weapon+' unlocked';
  if(/intended permanent ceiling|Permanent .+ progression|trained separately|armor and weapons equip independently|One weapon equipped|Equipped automatically|larger gathering bonuses|Independent progression|bounded|reference build/.test(description))description='';
  if(/crafted & equipped/.test(title))description='';
  if(/proficiency \d+$/.test(title))description='';

@@ -21,13 +21,22 @@ function normalizeSkillXpCurve(){
  data.skillXpCurveVersion=1;
  if(retained){const history=data.noticeHistory=Array.isArray(data.noticeHistory)?data.noticeHistory:[];history.push({title:'Skill training updated',description:'Your earned skill levels and level progress are retained. Tier 1 trains to 10; tier 2 trains toward 20. Older work gives 10% XP but keeps its full material yield.',time:Date.now()});data.noticeHistory=history.slice(-40);}
 }
+function trainingXpRate(tier,xp){
+ const band=Math.floor(skillLevelAtXp(xp)/10);
+ if(band<tier)return 1;
+ return (tier===1?.1:.01)*Math.pow(.01,band-tier);
+}
 function scaledTrainingXp(amount,tier,xp){
- if(!Number.isFinite(amount)||amount<=0)return 0;const boundary=skillXpThreshold(tier*10),full=Math.min(amount,Math.max(0,boundary-xp));
- return Math.round((full+(amount-full)*.1)*1e6)/1e6;
+ if(!Number.isFinite(amount)||amount<=0)return 0;let left=amount,total=0,current=xp;
+ for(let i=0;left>1e-8&&i<12;i++){
+  const rate=trainingXpRate(tier,current),band=Math.floor(skillLevelAtXp(current)/10),boundary=skillXpThreshold(Math.min(100,(band+1)*10));
+  const raw=boundary>current?Math.min(left,(boundary-current)/rate):left,gain=raw*rate;total+=gain;current+=gain;left-=raw;
+ }
+ return Math.round(total*1e6)/1e6;
 }
 function awardDisciplineXp(group,amount,tier=1,activityField){
- const field=DISCIPLINES[group]?.xp;if(!field)return 0;const gain=scaledTrainingXp(amount,tier,data[field]||0);
+ const field=DISCIPLINES[group]?.xp;if(!field)return 0;const gain=scaledTrainingXp(amount*trainingXpMultiplier(group,tier),tier,data[field]||0);
  data[field]=(data[field]||0)+gain;if(activityField&&activityField!==field)data[activityField]=(data[activityField]||0)+gain;return gain;
 }
-function workTrainingXp(key,active=true){const s=SKILLS[key];return s?scaledTrainingXp(active?Math.max(5,Math.floor(s.gain*.65)):s.gain,s.tier||1,data[DISCIPLINES[disciplineFor(key)].xp]||0):0;}
-function trainingBandText(group){const level=disciplineLevel(group),tier=level>=20?3:level>=10?2:1;return tier===1?'Tier 1 trains toward level 10':tier===2?'Train tier 2 toward 20 · tier 1 gives 10% XP':'Train tier 3 beyond 20 · earlier tiers give 10% XP';}
+function workTrainingXp(key,active=true){const s=SKILLS[key];return s?scaledTrainingXp(s.gain*trainingXpMultiplier(disciplineFor(key),s.tier||1),s.tier||1,data[DISCIPLINES[disciplineFor(key)].xp]||0):0;}
+function trainingBandText(group){const level=disciplineLevel(group),tier=level>=20?3:level>=10?2:1;return tier===1?'Tier 1 trains toward level 10':tier===2?'Train tier 2 toward 20 · tier 1 gives 10% XP':'Train tier 3 beyond 20 · older materials give very little XP';}

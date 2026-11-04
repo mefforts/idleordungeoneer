@@ -24,7 +24,7 @@ function dropVoucherKinds(tier){
   if(kind==='jewelry')return data.trinkets.some(id=>jewelryRank(id)<JEWELRY_REFINEMENT.maximum);
   if(kind.startsWith('tool-')){const id=kind.slice(5);return data.tools[id]&&toolRank(id)<TOOL_REFINEMENT.maximum;}
   if(kind.startsWith('station-'))return stationRank(kind.slice(8))<5;
-  return styles.some(style=>data.styles[style][kind]<limit[kind]&&(kind!=='armor'||data.ownedArmor.some(id=>ARMOR_SETS[id]?.style===style)));
+  return styles.some(style=>equipmentVoucherBank(kind==='armor'?ownedArmorTier(style):styleTier(style))===tier&&data.styles[style][kind]<limit[kind]&&(kind!=='armor'||data.ownedArmor.some(id=>ARMOR_SETS[id]?.style===style)));
  });return kinds.length?kinds:['weapon'];
 }
 function voucherInventoryHtml(){

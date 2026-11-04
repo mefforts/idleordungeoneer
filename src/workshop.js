@@ -30,7 +30,7 @@ function produce(key,active=false){
  const amount=skillYield(key);data[skill.resource]=(data[skill.resource]||0)+amount;let gold=0,found='';
  if(skill.goldGain){gold=skillGoldYield(key);data.gold+=gold;data.scavengeDry=(data.scavengeDry||0)+1;
   if(Math.random()<.07+trinketBonus('find')||data.scavengeDry>=20){data.scavengeDry=0;found=skill.tier===3?'sapphires':skill.tier===2?'garnets':'opals';data[found]++;codexDiscover('resource_'+found);if(active)toast(found==='sapphires'?'Sapphire found!':found==='garnets'?'Garnet found!':'Opal found!','A rough gem for Artisan');}}
- awardDisciplineXp(disciplineFor(key),active?Math.max(5,Math.floor(skill.gain*.65)):skill.gain,skill.tier||1,skill.xp);
+ awardDisciplineXp(disciplineFor(key),skill.gain,skill.tier||1,skill.xp);
  recordWorkshopReward(key,amount,gold,found);codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
 }
 function goToSource(resource){

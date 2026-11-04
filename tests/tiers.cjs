@@ -36,11 +36,11 @@ function instrumentation(){
   ]);assert.ok(costs.every(c=>c.made>0));passed.push('All six new refining recipes consume their exact cross-skill ingredients and produce real equipment materials / ammunition');
   for(const tier of [1,2]){
    const normal=await p.evaluate(t=>__tierTest.dps(t),tier),dedicated=await p.evaluate(t=>__tierTest.dps(t,true),tier);report['tier'+tier]={normal,dedicated};
-   assert.ok(normal.every(r=>Math.abs(r.now-tier*80)<.001),'All six weapons reach the tier budget');
+   assert.ok(normal.every(r=>Math.abs(r.now-({1:80,2:240}[tier]))<.001),'All six weapons reach the tier budget');
    assert.ok(normal.every(r=>Math.abs(r.damage/r.cooldown*1.05-r.now)<.001),'Reported DPS agrees with live hit damage and attack cooldown');
-   assert.ok(dedicated.every(r=>r.now>tier*80&&r.now<=tier*86.4+.001),'Dedicated training stays at most 8% above the tier budget');
-  }passed.push('Live attacks and readiness figures agree: all six weapon families reach 80 / 160 equipment DPS; exhaustive training stays within 86.4 / 172.8');
-  const caps=await p.evaluate(()=>__tierTest.capAndPromote());assert.deepEqual(caps,{blocked:false,spent:0,promote:true,again:false,rankAfterPromotion:10,upgrade:true,rank:11,tier:2,other:1});passed.push('A capped upgrade spends nothing; a paid Steel promotion retains rank 10, opens rank 11 and leaves other combat styles alone');
+   assert.ok(dedicated.every(r=>r.now>({1:80,2:240}[tier])&&r.now<=({1:86.4,2:259.2}[tier])+.001),'Dedicated training stays at most 8% above the tier budget');
+  }passed.push('Live attacks and readiness figures agree: all six weapon families reach 80 / 240 equipment DPS; exhaustive training stays within 86.4 / 259.2');
+  const caps=await p.evaluate(()=>__tierTest.capAndPromote());assert.deepEqual(caps,{blocked:false,spent:0,promote:true,again:false,rankAfterPromotion:0,upgrade:true,rank:1,tier:2,other:1});passed.push('A capped upgrade spends nothing; a paid Steel promotion starts Steel at rank 0 and opens rank 1 and leaves other combat styles alone');
   const rig=await p.evaluate(()=>{
    const d=__deepwell.getState().data,rows=[];for(const weapon of ['sword','shield','polearm','greatsword','bow','staff'])for(const attack of [0,.25,.5,.75,1]){
     const r=DeepwellAvatar.poseRig({data:{...d,weaponType:weapon},pose:'combat',attack,time:1});rows.push({weapon,attack,main:r.main,back:r.back,angle:r.angle,shaft:weapon==='polearm'?Math.hypot(r.back.x-r.main.x-Math.sin(r.angle)*13,r.back.y-r.main.y+Math.cos(r.angle)*13):0});
@@ -57,7 +57,7 @@ function instrumentation(){
   await p.setViewportSize({width:320,height:844});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);assert.ok(await p.locator('.armor-set-card').evaluateAll(cs=>cs.every(c=>c.getBoundingClientRect().right<=innerWidth+1)));
   await p.screenshot({path:path.join(runtime.resultsDir,'tiers-mobile-armor.png')});passed.push('Zone 2 skills expose working Idle buttons and exactly three armor recipes per class, including at 320px');
   const save=await p.evaluate(()=>__tierTest.persist());await p.reload();assert.deepEqual(await p.evaluate(()=>({armor:__deepwell.getState().data.equippedArmor,tier:__deepwell.getState().data.styles.melee.tier,weapon:__deepwell.getState().weaponType})),save);
-  const migration=await p.evaluate(()=>__tierTest.migrate());assert.equal(migration.rank,10);assert.equal(migration.armor,'melee_1');assert.ok(migration.owned.every(k=>k.endsWith('_1')));assert.ok(migration.archive.includes('melee_4'));assert.equal(migration.raw,500);passed.push('Tier promotions and independent armor survive reload; older excess ranks / future armor are archived while playable power follows current limits');
+  const migration=await p.evaluate(()=>__tierTest.migrate());assert.equal(migration.rank,3);assert.equal(migration.armor,'melee_1');assert.ok(migration.owned.every(k=>k.endsWith('_1')));assert.ok(migration.archive.includes('melee_4'));assert.equal(migration.raw,500);passed.push('Tier promotions and independent armor survive reload; older excess ranks / future armor are archived while playable power follows current limits');
   await p.evaluate(()=>__tierTest.allKnown());const images=p.locator('.codex-icon img');await images.evaluateAll(imgs=>Promise.all(imgs.map(i=>i.decode())));const icons=await images.evaluateAll(imgs=>imgs.map(i=>i.src));assert.equal(new Set(icons).size,icons.length);assert.deepEqual(errors,[]);passed.push('Every Codex icon is unique and loaded, including all new materials, activities and the Steel unlock');
   report.passed=passed;report.errors=errors;fs.writeFileSync(path.join(runtime.resultsDir,'tier-progression.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
  }finally{await runtime.close();}

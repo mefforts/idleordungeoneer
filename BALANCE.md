@@ -1,5 +1,7 @@
 # Dungeon progression and balance
 
+Build 11.7 gives Iron 3 weapon refinements, Steel 12 and Mithril 10, with exponential late Steel material costs. The all-three-style 80% material reference trains each discipline to about level 20; idle runs at 25% of base active speed. Equipment ceilings are 80 / 240 / 480 DPS, with a stronger Mithril starting point. See [SKILL_ECONOMY.md](SKILL_ECONOMY.md) for the reproducible material and XP budget. Enemy health and spawn cadence retain their previous calibration.
+
 Build 10.0 replaces individual Zone Shops with a permanent Dungeon Shop. All current Zones belong to The First Descent. The data model can assign future Zones to a new Dungeon with a separate wallet and purchases. Equipment, global Dungeoneering and Mastery retain their own roles.
 
 Build 10.1 adds physical counterplay to summoning spires: one bump breaks an ordinary spire; a crowned spire takes two. Leave the base between walking impacts, or use another dash. Teal is safe; red means a summoning surge. Dash through a surge or wait for teal to avoid retaliation.
@@ -54,7 +56,7 @@ A seeded five-minute active refining check at 1× made **107 bars without pickup
 
 ## Skill curve and Mithril progression
 
-Levels 1–10 retain their original thresholds. Level 20 now requires 32,166 total XP instead of 7,410. After each work tier’s training band (10 / 20 / 30), that older work gives 10% XP while keeping its full material yield and production speed. The reward splits exactly at the boundary. Active/idle/offline production, instant refining batches, jewelry/tool refinements, new armor, equipment ranks and transmutation use the shared award path. Artisan retains its eightfold base XP.
+Levels 1–10 retain their original thresholds. Level 20 now requires 32,166 total XP instead of 7,410. Tier 1 gives 10% XP after level 10 and 0.1% after level 20; tier 2 gives 1% after level 20. Later outdated bands taper again. Material yield stays full. Active/idle work share XP per batch, and idle uses 25% of the base active production rate. The reward splits exactly at every training boundary. Active/idle/offline production, instant refining batches, jewelry/tool refinements, new armor, equipment ranks and transmutation use the shared award path. Artisan retains its eightfold base XP.
 
 | Skill level | Total XP |
 | --- | ---: |
@@ -72,7 +74,7 @@ Levels 1–10 retain their original thresholds. Level 20 now requires 32,166 tot
 
 A one-time save conversion retains each existing skill level and fractional progress, rather than dropping earned levels when the curve changes. Levels, equipment, materials and earlier unlocks survive actual reloads. New gains use the slower curve.
 
-Completing Zone 4 unlocks Mithril resources and equipment at matching discipline level 20. Steel refinement 20 promotes into ranks 21–30; speed/reach/reinforcement cap at 15 and enchantment at 6. Armor is crafted separately. Mithril metal, blue ranged leathers and green Runewoven robes use the same silhouettes and joints, with small belt and shoulder changes. Ten activities introduce mithril ore/bars, yew, verdant cloth, enchanted salvage/fragments and sapphires. No new authored Zone layouts or attacks are added. Zone 5 and later existing repeat layouts use the 240-DPS Mithril reference and a 300-DPS soft budget.
+Completing Zone 3 unlocks Mithril resources and equipment at matching discipline level 20. Owned Steel weapons can promote without max refinement; each tier has its own weapon ranks (3 Iron / 12 Steel / 10 Mithril). Speed, reach and reinforcement retain their cumulative caps of 5 / 10 / 15; enchantment retains 2 / 4 / 6. Armor is crafted separately. Mithril metal, blue ranged leathers and green Runewoven robes use the same silhouettes and joints, with small belt and shoulder changes. Ten activities introduce mithril ore/bars, yew, verdant cloth, enchanted salvage/fragments and sapphires. No new authored Zone layouts or attacks are added. Steel reaches 240 equipment DPS; Mithril starts around 300 with Steel speed training and reaches 480. Soft budgets of at least 100 / 300 / 600 follow equipped tier. Enemy HP calibration remains fixed at its previous values.
 
 The work-scene controls now separate Skills navigation from direct Gather/Refine or input-source swaps. A swap clears held input, consumes no materials and leaves assigned idle tasks untouched.
 
@@ -82,7 +84,7 @@ Gather and Refine list all three tiers together, including locked rows. Every ti
 
 Artisan gathering/cutting XP is multiplied by eight and jewelry crafting gives 400 XP. Existing Artisan XP receives the same eightfold catch-up once. Owned jewelry supports 50 optional refinements, each adding 0.25% of its base effect, with 80 base Artisan XP per successful rank before the old-tier reduction. The Leech Ring gains 0.00125 percentage points of lifesteal per rank, from 0.5% to at most 0.5625%. Costs start at one silver bar and 10 gold, grow every ten ranks in silver and by three gold per rank, and add one cut opal each fifth rank.
 
-Crafted tools retain 8% active speed and support ten refinements of +0.5 percentage points each, with normal material/gold costs. They do not accelerate idle work. Relic prospecting is now a normal ingredient-paid activity: 12 fragments for one rough opal, 4s active / 20s idle before bonuses. Prospecting and ancient cleaning use a standing brush-and-relic pose at a bench, with no digging animation. Warding Refine offers a compact resource selector: exactly 100 essence for a random 1–10 chosen raw resources. Unlocks apply and conservation does not discount this essence cost.
+Crafted tools retain 8% active speed and support ten refinements of +0.5 percentage points each, with normal material/gold costs. They do not accelerate idle work. Relic prospecting is now a normal ingredient-paid activity: 12 fragments for one rough opal, 4s active / 16s idle before bonuses. Prospecting and ancient cleaning use a standing brush-and-relic pose at a bench, with no digging animation. Warding Refine offers a compact resource selector: exactly 100 essence for a random 1–10 chosen raw resources. Unlocks apply and conservation does not discount this essence cost.
 
 The Dungeon Shop has a Long blessings sub-store. Most effects cost 60 interchangeable Zone materials, Golden/Plentiful Hunt cost 80 and Silence/Stillworld cost 100. Purchase activates one independent stack at five times normal combat duration (200–300s), with existing pause, stacking, save and Dungeon rules. The 128-stack limit is checked before spending.
 
@@ -94,28 +96,28 @@ Build 11.6 retains +75% regular elite health and +50% rare, guardian Echo (boss 
 
 | Weapon | Style | Iron | Dedicated Iron | Steel | Dedicated Steel | Mithril | Dedicated Mithril |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Arming Sword | Melee | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
-| Sword & Shield | Melee | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
-| Halberd | Melee | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
-| Greatsword | Melee | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
-| Hunting Bow | Ranged | 80.0 | 86.4 | 160.0 | 172.8 | 240.0 | 259.2 |
-| Focus Staff | Mage | 80.0 | 86.2 | 160.0 | 171.9 | 240.0 | 257.1 |
+| Arming Sword | Melee | 80.0 | 86.4 | 240.0 | 259.2 | 480.0 | 518.4 |
+| Sword & Shield | Melee | 80.0 | 86.4 | 240.0 | 259.2 | 480.0 | 518.4 |
+| Halberd | Melee | 80.0 | 86.4 | 240.0 | 259.2 | 480.0 | 518.4 |
+| Greatsword | Melee | 80.0 | 86.4 | 240.0 | 259.2 | 480.0 | 518.4 |
+| Hunting Bow | Ranged | 80.0 | 86.4 | 240.0 | 259.2 | 480.0 | 518.4 |
+| Focus Staff | Mage | 80.0 | 86.2 | 240.0 | 257.8 | 480.0 | 514.3 |
 
-These figures use maximum refinement and speed, 5% base critical chance and matching robes for Mage. Proficiency adds up to 3% damage and matching crafting levels up to 5%. Iron refinement ends at 10, speed/reach at 5, reinforcement at 5 and enchantment at 2. Steel ends at 20 / 10 / 10 / 4; Mithril ends at 30 / 15 / 15 / 6. Primary material curves, jewelry and armor prices and equipment limits are retained. Occasional one-item Zone-material costs below are additional.
+These figures use maximum refinement and speed, 5% base critical chance and matching robes for Mage. Proficiency adds up to 3% damage and matching crafting levels up to 5%. Iron weapons have 3 refinements, Steel 12 and Mithril 10. Speed/reach/reinforcement caps remain 5 / 10 / 15, and enchantment caps remain 2 / 4 / 6. Weapon refinements use 3 / 12 / 10 tier-local ranks. Steel weapon material costs grow 1.48× per rank; its other upgrade material costs grow 1.6×. Steel/Mithril weapon refinements also use cut gems as abrasives. Gold grows more gently. Jewelry, armor crafting and non-weapon rank caps are retained. Occasional one-item Zone-material costs below are additional.
 
-## Preparation costs and equipment work
+## Historical preparation credit and equipment work
 
-| Core upgrades | Previous gold | Build 11 gold |
+| Historical core upgrades | Before Build 11 | Build 11, before 11.7 |
 | --- | ---: | ---: |
 | Iron refinement 0–10 + speed 0–5 | 1,485 | 785 |
 | Steel refinement 10–20 + speed 5–10 | 3,050 | 1,885 |
 | Steel promotion per style | 150 | 100 |
 
-Iron refinement costs 18 + 9 × current rank; Iron speed costs 20 + 10 × current rank. Steel refinement/speed costs 45 + 22 × ranks above the Iron limit. Resources and later rank goals remain required. Equipment work trains its matching discipline: crafting a new weapon gives 60 XP, refinement 60 / 120, speed 20 / 40 for Iron / Steel, and promotion 100. Equipping again and failed purchases grant none. Existing armor-work XP remains unchanged.
+The current all-style refinement material budget and 1×/3× timings are in [SKILL_ECONOMY.md](SKILL_ECONOMY.md). Its 80% reference requires 2,894 Steel bars versus 6,626 at full completion. Active and idle work grant equal XP per item; idle uses four times the base active interval. Skill XP rates are calibrated to that material reference across all five disciplines. Equipment work trains its matching discipline: crafting a new weapon gives 60 XP, refinement 60 / 120, speed 20 / 40 for Iron / Steel, and promotion 100. Equipping again and failed purchases grant none. These are base XP amounts, before the discipline training multiplier and outdated-tier reductions; existing armor-work base XP remains unchanged.
 
 Older saves receive a one-time gold credit equal to the price reduction on currently owned refinement/speed ranks and Steel promotions. This preserves the value of owned upgrades without estimating a full spending history; no materials, gear, balances or allocations are removed and no retrospective skill XP is added. The credit is recorded in Settings → Messages. [Preparation comparison](PREPARATION.md) separates steady and lean routes, active work, combat/retries and the Steel handoff.
 
-Above the single-target budget (100 DPS in Zone 1, 200 in Zones 2–4, 300 from Zone 5), each additional calculated DPS contributes 0.25 actual DPS. Live primary damage uses the same adjustment. Ranged extra arrows contribute 15% each and are included in that figure. Conditional effects, burns, chains, ricochets, secondary targets and temporary blessings are additional.
+Above the single-target budget (at least 100 / 300 / 600 DPS for Iron / Steel / Mithril), each additional calculated DPS contributes 0.25 actual DPS. Live primary damage uses the same adjustment. Ranged extra arrows contribute 15% each and are included in that figure. Conditional effects, burns, chains, ricochets, secondary targets and temporary blessings are additional.
 
 ## Dungeon Shop
 
@@ -183,17 +185,17 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | Zone | Forecast at 1× | Reference DPS |
 | --- | --- | ---: |
 | 1 | ~12 min | 80.0 |
-| 2 | ~24 min | 160.0 |
-| 3 | ~257 min | 160.0 |
-| 4 | ~279 min | 160.0 |
-| 5 | ~193 min | 240.0 |
+| 2 | ~18 min | 240.0 |
+| 3 | ~174 min | 240.0 |
+| 4 | ~189 min | 240.0 |
+| 5 | ~101 min | 480.0 |
 
-- Live Zone 1: **10.5 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **23.5 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **205.7 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **214.1 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **175.9 min**, 960 rewarded defeats, 240.0 reference DPS.
-- Live Zone 15: **179.2 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 1: **10.8 min**, 375 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **18.0 min**, 570 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **154.7 min**, 780 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **161.1 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **104.3 min**, 960 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **104.9 min**, 960 rewarded defeats, 480.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
@@ -205,9 +207,9 @@ Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon
 
 Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing health, spawn counts, equipment or rewards. Build 11.5 makes growing stars more frequent in Zone 2 and raises them to speed 200. They remain outbound at least 2.2s and normally reach 230 units from the moving caster before returning; a 3.7s fallback prevents indefinite outbound flight. Cleaves leave 3.2s of red fire dealing 25% of the cleave hit per tick before defenses/invulnerability. Its final floor substitutes six known elites per wave and permits up to three rares at 10% spawn chance. Other floors use a doubled 3% rare chance and one rare per wave. Rares now use the ordinary elite gold, Sigil, blessing, material and healing tables.
 
-Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. Existing 80/160 equipment ceilings and earned DPS are retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with two expanding Grave Pulse rims; dash across or outrun them. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
+Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with two expanding Grave Pulse rims; dash across or outrun them. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.7s on Zone 2’s finale and 4.8–5.4s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 5 of 6 trials: 130.9–189 HP remained in the finale trials and 0–12.3 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.9s on Zone 2’s finale and 4.8–5.5s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 4 of 6 trials: 54.1–115.8 HP remained in the finale trials and 0–47.5 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
