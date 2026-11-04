@@ -21,7 +21,7 @@ function challengePressureFixture(){
      else if(major){const q=major.cast.safe;target={x:(q.left+q.right)/2,y:(q.top+q.bottom)/2};}
      else if(nearest){const angle=Math.atan2(p.y-nearest.y,p.x-nearest.x)+.15;target={x:nearest.x+Math.cos(angle)*210,y:nearest.y+Math.sin(angle)*210};}
      const wave=game.hazards.find(h=>h.wave&&!(h.delay>0)&&Math.abs(Math.hypot(p.x-h.x,p.y-h.y)-h.r)<80);
-     if(wave&&!mirror&&!spire){const dx=p.x-wave.x,dy=p.y-wave.y,d=Math.hypot(dx,dy)||1;target={x:p.x+dx/d*120,y:p.y+dy/d*120};}
+     if(wave&&!mirror&&!spire&&!wave.playerHit){const dx=p.x-wave.x,dy=p.y-wave.y,d=Math.hypot(dx,dy)||1;target={x:p.x-dx/d*120,y:p.y-dy/d*120};if(p.dashCooldown<=0){p.vx=-dx/d;p.vy=-dy/d;dash();}}
      const shot=game.hostileShots.find(s=>Math.hypot(s.x-p.x,s.y-p.y)<65),ghost=(game.graveEchoes||[]).find(e=>e.age>.6&&Math.hypot(e.x-p.x,e.y-p.y)<65);
      if((shot||ghost)&&p.dashCooldown<=0){const threat=shot||ghost,dx=p.x-threat.x,dy=p.y-threat.y,d=Math.hypot(dx,dy)||1;p.vx=dx/d;p.vy=dy/d;dash();}
     }

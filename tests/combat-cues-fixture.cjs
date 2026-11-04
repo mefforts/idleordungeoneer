@@ -16,10 +16,10 @@ function combatCuesFixture(){
   refugeHit(inside=true){const e=prepare();if(!beginBossCast(e))throw Error('No refuge');const c=e.cast,s=c.shapes[0];e.cast=null;resolveBossCast(e,c);game.player.x=s.x+(inside?0:s.inner+35);game.player.y=s.y;game.player.invuln=0;const before=game.player.hp;tickDungeonHazards(.02);const h=game.hazards[0];return {before,after:game.player.hp,warning:s,impact:{x:h.x,y:h.y,inner:h.inner,refuge:h.refuge}};},
   pulse(dashing=false,center=false){
    const e=prepare('gravePulse');e.x=e.y=0;game.player.x=1000;game.player.y=0;if(!beginBossCast(e))throw Error('No pulse');const c=e.cast;e.cast=null;resolveBossCast(e,c);
-   for(let i=0;i<90;i++)tickDungeonHazards(.01);
-   let angle=null;for(let i=0;i<24;i++){const a=i*Math.PI/12;if(Array.from({length:16},(_,n)=>58+n*10).every(r=>encounterClear(Math.cos(a)*r,Math.sin(a)*r,12))){angle=a;break;}}
-   if(angle===null)throw Error('No open dash lane');const p=game.player,r=center?0:207;p.x=Math.cos(angle)*r;p.y=Math.sin(angle)*r;p.invuln=0;game.keys={};game.mouseMove.active=false;game.joystick.pointer=null;
-   if(center)e.contact=0;else e.contact=1e6;const before=p.hp;
+   if(!center)for(let i=0;i<90;i++)tickDungeonHazards(.01);
+   let angle=null;for(let i=0;i<24;i++){const a=i*Math.PI/12;if(Array.from({length:20},(_,n)=>185+n*9).every(r=>encounterClear(Math.cos(a)*r,Math.sin(a)*r+13,12))){angle=a;break;}}
+   if(angle===null)throw Error('No open dash lane');const p=game.player,r=center?0:game.hazards[0].r+18;p.x=Math.cos(angle)*r;p.y=Math.sin(angle)*r;p.invuln=0;game.keys={};game.mouseMove.active=false;game.joystick.pointer=null;
+   e.contact=1e6;const before=p.hp;
    if(dashing){p.vx=-Math.cos(angle);p.vy=-Math.sin(angle);p.dashCooldown=0;dash();}
    for(let i=0;i<60;i++)tickCombat(.01);
    return {before,after:p.hp,waves:game.hazards.filter(h=>h.wave).map(h=>({inner:h.inner,r:h.r,hit:!!h.playerHit})),distance:Math.hypot(p.x-e.x,p.y-e.y),dashCooldown:p.dashCooldown,warning:c.shapes[0],hint:c.hint};
@@ -36,7 +36,7 @@ function combatCuesFixture(){
   visual(type='gravePulse',active=false){
    const e=prepare(type,2,0,'right',true,1);data.idleNoticeSlots=2;data.idleFirstAssigned=data.firstWeaponCrafted=true;game.phase=4;game.phaseTarget=zoneBalance().targets[4];game.phaseSpawned=game.phaseTarget;game.player.hp=game.player.maxHp=180;game.attackTimer=1e8;
    if(!beginBossCast(e))throw Error('Visual cast deferred');const c=e.cast;game.frame=4;game.menuPaused=true;
-   if(active){e.cast=null;resolveBossCast(e,c);game.player.x=type==='donut'?c.shapes[0].x:350;game.player.y=type==='donut'?c.shapes[0].y:250;for(let i=0;i<(type==='gravePulse'?110:18);i++)tickDungeonHazards(.01);if(type==='gravePulse'){game.player.x=70;game.player.y=85;}}
+   if(active){e.cast=null;resolveBossCast(e,c);game.player.x=type==='donut'?c.shapes[0].x:350;game.player.y=type==='donut'?c.shapes[0].y:250;for(let i=0;i<(type==='gravePulse'?60:18);i++)tickDungeonHazards(.01);if(type==='gravePulse'){game.player.x=70;game.player.y=85;}}
    else c.windup=c.total*.5;
    $('toastStack').replaceChildren();refreshUI();render();return {cast:c,enemy:{x:e.x,y:e.y},player:{x:game.player.x,y:game.player.y}};
   }

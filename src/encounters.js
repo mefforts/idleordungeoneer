@@ -69,6 +69,7 @@ function beginBossCast(e){
  let shieldTarget=null,banks=null;if(type==='shield'){shieldTarget=shieldingTarget(e);if(!shieldTarget)type='ricochet';}if(type==='ricochet'){banks=ricochetPoints(e);if(!banks)type='volley';}
  if(type==='charge'&&Math.hypot(game.player.x-e.x,game.player.y-e.y)>340)return false;
  const active=game.enemies.filter(other=>other.cast),reflect=active.some(other=>['reflect','reversal'].includes(other.cast.type)),major=['sunder','gauntlet','donut','bastion'];
+ if(type==='gravePulse'&&!gravePulseCanCast())return false;
  if(reflect||active.some(other=>major.includes(other.cast.type)))return false;
  if(game.counterRequest&&!game.enemies.includes(game.counterRequest))game.counterRequest=null;
  if(['reflect','reversal'].includes(type)){

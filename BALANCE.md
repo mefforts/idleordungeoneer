@@ -191,11 +191,11 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 5 | ~101 min | 480.0 |
 
 - Live Zone 1: **10.8 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **18.0 min**, 570 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **154.7 min**, 780 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **161.1 min**, 960 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **104.3 min**, 960 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **104.9 min**, 960 rewarded defeats, 480.0 reference DPS.
+- Live Zone 2: **17.9 min**, 570 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **151.9 min**, 780 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **161.3 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **105.3 min**, 960 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **104.3 min**, 960 rewarded defeats, 480.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
@@ -207,9 +207,9 @@ Ordinary / crowned spires need 1 / 2 physical impacts regardless of Zone, weapon
 
 Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing health, spawn counts, equipment or rewards. Build 11.5 makes growing stars more frequent in Zone 2 and raises them to speed 200. They remain outbound at least 2.2s and normally reach 230 units from the moving caster before returning; a 3.7s fallback prevents indefinite outbound flight. Cleaves leave 3.2s of red fire dealing 25% of the cleave hit per tick before defenses/invulnerability. Its final floor substitutes six known elites per wave and permits up to three rares at 10% spawn chance. Other floors use a doubled 3% rare chance and one rare per wave. Rares now use the ordinary elite gold, Sigil, blessing, material and healing tables.
 
-Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with two expanding Grave Pulse rims; dash across or outrun them. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
+Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with one continuously expanding Grave Pulse ring. Dash through it: it has no fixed lifetime or travel limit and always moves faster than running, including movement buffs. Pulse casts cannot overlap, and the next warning allows dash recharge before impact. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.9s on Zone 2’s finale and 4.8–5.5s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 4 of 6 trials: 54.1–115.8 HP remained in the finale trials and 0–47.5 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.9s on Zone 2’s finale and 4.8–5.5s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 4 of 6 trials: 54.1–115.8 HP remained in the finale trials and 0–143.2 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
@@ -217,7 +217,7 @@ Codex is nested inside Inventory (C still opens it). Defeat can open the last av
 
 ## Warning language and ability library
 
-Grave Pulse keeps its expanding violet rims: dash through or outrun them. Moving rings have no teal center. Stationary Outer Ruin refuges are placed clear of the caster, terrain and other enemies, remain inside the visible arena and include time to reach the circle. Crowded arenas defer the cast when no reachable refuge fits. The teal circle and sanctuary symbol remain fixed through impact. Mechanic labels and the combat guide omit the word SAFE.
+Build 11.7.1 gives Grave Pulse one continuously expanding violet ring. Dash through its rim; it cannot be outwaited or outrun. The wave retires only after passing every actor and the visible screen; caster defeat and encounter cleanup retain their normal cancellation. Its launch covers the origin too. Swept collision catches fast crossings, and movement buffs cannot overtake the wave. Pulse warnings and active rings never overlap across casters. The next warning begins only when the remaining dash cooldown fits inside its 1.7-second windup with 0.4 seconds to spare. Moving rings have no teal center. Stationary Outer Ruin refuges are placed clear of the caster, terrain and other enemies, remain inside the visible arena and include time to reach the circle. Crowded arenas defer the cast when no reachable refuge fits. The teal circle and sanctuary symbol remain fixed through impact. Mechanic labels and the combat guide omit the word SAFE.
 
 | Color | Meaning |
 | --- | --- |
@@ -233,7 +233,7 @@ Instruction labels fade in, fade out and recur on a real-time clock; changing in
 
 The encounter library now has 29 patterns: the ten original attacks plus nineteen expanded patterns. Final guardians use a broad rotation and forced phase attacks.
 
-- **Grave Pulse**: Expanding bone rings · dash through or outrun the rims.
+- **Grave Pulse**: Expanding bone ring · dash through the rim.
 - **Rebounding Barrage**: Three rings · gaps rotate · violet shots rebound.
 - **Growing Stars**: Projectiles grow · leave a wider gap.
 - **Homeward Blades**: Red blades turn home · watch the return path.

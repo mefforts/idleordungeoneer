@@ -1,5 +1,6 @@
 /* Zone 2's finale and the first steps into the Hollow Crypt. */
 const ZONE_THREE_DAMAGE=1.6;
+const GRAVE_PULSE={speed:320,runningFactor:1.25,width:32,dashReadyLead:.4};
 function rareEliteQuota(index=zoneNumber(),stage=zoneStage()){return index===1&&stage===zoneFloorCount(index)?3:1;}
 function rareEliteSpawnChance(index=zoneNumber(),stage=zoneStage()){return index===1&&stage===zoneFloorCount(index)?.10:RARE_ELITE_CHANCE;}
 function expectedRareCount(trials,chance,cap=1){let probability=Math.pow(1-chance,trials),sum=0;for(let n=0;n<=trials;n++){sum+=Math.min(n,cap)*probability;probability*=((trials-n)/(n+1))*(chance/(1-chance));}return sum;}
@@ -30,5 +31,24 @@ function addEmberCleave(enemy,cast,damage){
  game.hazards.push({type:'expanded',shape:'cone',abilityType:'emberCleave',origin:{...cast.origin},angle:cast.angle,reach:cast.reach,halfAngle:cast.halfAngle,owner:null,biome:1,language:'danger',damage:damage*.25,life:3.2,total:3.2,age:0,lingering:true,enemyHits:new Set()});
 }
 function addGravePulses(enemy,cast,damage){
- for(const delay of [0,.9])game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:25,r:47,wave:true,waveSpeed:145,owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:2.4,total:2.4,age:0,delay,enemyHits:cast.enemyHits});
+ game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:0,enemyHits:cast.enemyHits});
+}
+function gravePulseCanCast(){
+ return game.player.dashCooldown<=EXPANDED_ABILITIES.gravePulse.seconds-GRAVE_PULSE.dashReadyLead+1e-9&&
+  !game.enemies.some(e=>e.cast?.type==='gravePulse')&&!(game.hazards||[]).some(h=>h.abilityType==='gravePulse');
+}
+function gravePulseFinished(h){
+ // Retire the moving rim only after it has passed every actor and the screen.
+ const visible=Math.hypot(h.x-game.camX,h.y-game.camY)+Math.hypot(game.viewWidth,game.viewHeight)/2+48;
+ return h.inner>visible&&h.inner>Math.hypot(h.x-game.player.x,h.y-game.player.y)+32&&
+  game.enemies.every(e=>h.inner>Math.hypot(h.x-e.x,h.y-e.y)+(e.rad||18)+32);
+}
+function expandingWaveContains(actor,h,previous,from=actor){
+ const radius=actor===game.player?9:Math.min(18,actor.rad||10),dx=actor.x-from.x,dy=actor.y-from.y,ux=from.x-h.x,uy=from.y-h.y,travel=Math.hypot(dx,dy),growth=h.r-previous.r;
+ // Distance from the expanding rim is convex along a movement segment.
+ // Test its minimum and endpoint maximum so fast dashes cannot tunnel through.
+ let t=1;
+ if(travel>growth+1e-9){const along=(ux*dx+uy*dy)/travel,across=Math.sqrt(Math.max(0,ux*ux+uy*uy-along*along));t=clamp((growth*across/Math.sqrt(travel*travel-growth*growth)-along)/travel,0,1);}
+ const offset=at=>Math.hypot(ux+dx*at,uy+dy*at)-growth*at,a=offset(0),b=offset(1);
+ return Math.min(a,b,offset(t))<previous.r+radius&&Math.max(a,b)>previous.inner-radius;
 }

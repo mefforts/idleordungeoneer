@@ -1,5 +1,5 @@
 {
-  "version": "11.7.0",
+  "version": "11.7.1",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1414,6 +1414,16 @@
       "life": 4.2
     },
     "zoneThreeOpeningPattern": "gravePulse",
+    "gravePulse": {
+      "speed": 320,
+      "runningFactor": 1.25,
+      "width": 32,
+      "dashReadyLead": 0.4,
+      "rings": 1,
+      "fixedExpiry": false,
+      "offscreenCleanup": true,
+      "serialCasts": true
+    },
     "enlargedArenaDimensions": 1.5,
     "emberCleaveSeconds": 3.2,
     "zoneTwoOpeningStars": {
@@ -1430,7 +1440,7 @@
       "gravePulse": {
         "name": "Grave Pulse",
         "seconds": 1.7,
-        "hint": "Expanding bone rings · dash through or outrun the rims"
+        "hint": "Expanding bone ring · dash through the rim"
       },
       "ringchain": {
         "name": "Rebounding Barrage",
@@ -2464,7 +2474,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 649.4400000000305,
+      "seconds": 646.0800000000299,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 684
@@ -2472,7 +2482,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1077.5600000000493,
+      "seconds": 1071.640000000049,
       "kills": 570,
       "referenceDps": 240,
       "targetSeconds": 1067
@@ -2480,7 +2490,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 9284.640000001682,
+      "seconds": 9116.160000001628,
       "kills": 780,
       "referenceDps": 240,
       "targetSeconds": 10435
@@ -2488,7 +2498,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 9665.840000001781,
+      "seconds": 9676.760000001783,
       "kills": 960,
       "referenceDps": 240,
       "targetSeconds": 11299
@@ -2496,7 +2506,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 6257.520000000248,
+      "seconds": 6316.080000000279,
       "kills": 960,
       "referenceDps": 480,
       "targetSeconds": 6837
@@ -2504,7 +2514,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 6296.92000000027,
+      "seconds": 6257.680000000249,
       "kills": 960,
       "referenceDps": 480,
       "targetSeconds": 6837
@@ -2984,7 +2994,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 106.8,
+        "seconds": 105.5,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
@@ -3014,13 +3024,13 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 47.5,
-        "seconds": 83.38,
+        "remainingHp": 143.2,
+        "seconds": 83.14,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 4,
-        "damage": 164.2,
+        "hits": 2,
+        "damage": 68.5,
         "echoes": 7,
         "casts": [
           "beam",
@@ -3047,7 +3057,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 95.98,
+        "seconds": 95.52,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
