@@ -5,7 +5,7 @@ const TOOL_REFINEMENT={maximum:10,speedStep:.005};
 function disciplineLevel(group){return skillLevelAtXp(data[DISCIPLINES[group].xp]||0);}
 function masteryMilestoneLabel(rank){return rank===2?'Complete Zone 2':'Reach Zone '+dungeoneeringMilestone(rank);}
 function remainingSummonThreats(){return (game.totems||[]).some(t=>t.destructible&&t.hp>0)||game.enemies.some(e=>e.summoned&&e.summonTotem&&e.hp>0);}
-function completeSummonCleanup(){if(game.phaseCleanupPending&&!remainingSummonThreats()&&game.status==='running')finishPhase();}
+function completeSummonCleanup(){if(game.phaseCleanupPending&&!remainingSummonThreats()&&!remainingReleasedThreats()&&game.status==='running')finishPhase();}
 function normalizeArtisanProgression(){
  if(data.artisanProgressionVersion!==1){for(const key of ['artisanXp','artisanDisciplineXp'])data[key]=Math.min(1e10,Math.max(0,Number(data[key])||0)*8);data.artisanProgressionVersion=1;}
  data.trinketRefinements=Object.fromEntries(['leech','coin','scholar','reach','vigor','guard','haste','fortune'].map(id=>[id,Math.max(0,Math.min(50,Math.floor(Number(data.trinketRefinements?.[id])||0)))]));

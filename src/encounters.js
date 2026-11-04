@@ -6,20 +6,19 @@ function encounterImage(kind,type){
  return encounterImages.get(key);
 }
 function clearEncounterState(){
- game.themedEvents=[];game.themedHistory=[];game.hazards=[];
- game.eliteRecruits=new Map();game.elitePromotionCount=0;game.dashSweep=null;
+ game.themedEvents=[];game.themedHistory=[];game.hazards=[];game.releasedWards=[];
+ game.eliteRecruits=new Map();game.elitePromotionCount=0;game.enemyPositionSerial=0;game.dashSweep=null;
  game.phaseCleanupPending=false;game.graveEchoes=[];game.totems=[];game.counterEffects=[];game.counterRequest=null;game.reflectCooldown=0;game.disruptReadyAt=0;game.bossBursts=[];
  if(game.player){game.player.hitInvuln=0;game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
- for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;e.resolveDisabledUntil=0;}
+ for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.enemyPosition=null;e.healingRetreat=null;e.retreatReadyAt=0;e.ascendance=0;e.stunnedByDash=null;e.resolveDisabledUntil=0;}
 }
 function clearOwnerMechanics(owner){
- game.themedEvents=(game.themedEvents||[]).filter(e=>e.owner!==owner&&e.partner!==owner);
+ if(isReflectCast(owner.cast)&&!owner.cast.resolved)(game.releasedWards||(game.releasedWards=[])).push({owner,cast:owner.cast});
+ owner.defeated=true;game.themedEvents=(game.themedEvents||[]).filter(e=>e.partner!==owner&&(e.owner!==owner||independentThemedMechanic(e)));
  owner.cast=null;owner.charge=null;owner.shieldLink=null;owner.guardIds=[];
  clearEliteTask(owner);for(const enemy of game.enemies)if(enemy.eliteTask?.target===owner)interruptEliteTask(enemy,'target');
  for(const enemy of game.enemies)if(enemy.cast?.themed?.partner===owner)enemy.cast=null;
  for(const enemy of game.enemies)if(enemy.shieldLink?.target===owner)enemy.shieldLink=null;
- game.totems=(game.totems||[]).filter(t=>t.destructible||t.owner!==owner);game.bossBursts=(game.bossBursts||[]).filter(b=>b.owner!==owner);
- game.hostileShots=(game.hostileShots||[]).filter(s=>s.owner!==owner);game.hazards=(game.hazards||[]).filter(h=>h.owner!==owner);
  game.enemies=game.enemies.filter(e=>!e.summoned||e.summonedBy!==owner||e.summonTotem&&(game.totems||[]).includes(e.summonTotem));owner.furyLinked=false;clearDeadShieldLinks();
  if(game.counterRequest===owner)game.counterRequest=null;
 }
@@ -79,7 +78,7 @@ function beginBossCast(e){
  if(type==='gravePulse'&&!gravePulseCanCast())return false;
  if(themedAbility(type)&&!canBeginThemedCast(e,type))return false;
  if(active.some(other=>themedAbility(other.cast.type))||(game.themedEvents||[]).some(event=>!event.done)&&!['volley','ricochet','shield','mend','fury'].includes(type))return false;
- const minor=['volley','ricochet','shield','mend','fury'].includes(type);
+ const minor=['volley','ricochet','shield','mend','fury'].includes(type);if((game.releasedWards||[]).length&&!minor)return false;
  if(reflect||active.some(other=>major.includes(other.cast.type)&&!(other.cast.siphon&&minor)))return false;
  if(game.counterRequest&&!game.enemies.includes(game.counterRequest))game.counterRequest=null;
  if(['reflect','reversal'].includes(type)){
@@ -126,7 +125,7 @@ function tickBossSpecial(e,dt,playerFrom=encounterFoot(game.player),dashing=game
   const phase=e.hp/e.maxHp<.40?2:e.hp/e.maxHp<.75?1:0,old=e.combatPhase||0;
   if(phase>old){e.combatPhase=phase;(e.phaseQueue||(e.phaseQueue=[])).push(e.bossIndex===2?(phase===1?'sunder':'bastion'):phase===1?'crossfire':'summon');e.castCooldown=Math.min(e.castCooldown||0,.5);floater(e.x,e.y-65,phase===1?'ENRAGED':'FINAL STAND',combatTheme('danger').hot);}
  }
- if(e.charge){if(e.stagger>0)e.charge=null;else{tickEnemyCharge(e,dt);return;}}
+ if(e.charge){if(e.stagger>0)e.charge=null;else{tickEnemyCharge(e,dt,{x:playerFrom.x,y:playerFrom.y-13});return;}}
  if(e.stagger>0){if(isReflectCast(e.cast))tickReflectWard(e,e.cast,dt,playerFrom);if(e.cast?.siphon)e.cast=null;e.stagger=Math.max(0,e.stagger-dt);return;}
  if(e.eliteTask)return;
  if(e.cast?.siphon){tickSiphonTether(e,e.cast,dt,playerFrom,dashing);return;}
@@ -136,7 +135,7 @@ function tickBossSpecial(e,dt,playerFrom=encounterFoot(game.player),dashing=game
  e.castCooldown=(e.castCooldown??2)-dt*(e.ascendance>0?ELITE_TASKS.ascend.tempo:1);if(e.castCooldown<=0&&!beginBossCast(e))e.castCooldown=.2;
 }
 function totemInterception(t){
- const totem=encounterFoot(t),caster=encounterFoot(t.owner),player=encounterFoot(game.player);
+ const recipient=supportTotemRecipient(t);if(!recipient)return false;const totem=encounterFoot(t),caster=encounterFoot(recipient),player=encounterFoot(game.player);
  return Math.hypot(player.x-totem.x,player.y-totem.y)<Math.hypot(caster.x-totem.x,caster.y-totem.y);
 }
 function dashSupportTotem(t,from=encounterFoot(game.player),dashing=false){
@@ -150,7 +149,7 @@ function dashSupportTotem(t,from=encounterFoot(game.player),dashing=false){
 function tickEncounterObjects(dt,playerFrom=encounterFoot(game.player),dashing=game.player.dashTime>0){
  const p=game.player;p.rallyTime=Math.max(0,(p.rallyTime||0)-dt);p.mending=false;game.reflectCooldown=Math.max(0,(game.reflectCooldown||0)-dt);
  game.counterEffects=(game.counterEffects||[]).filter(fx=>{fx.life-=dt;return fx.life>0;});for(const e of game.enemies)e.furyLinked=false;
- game.totems=(game.totems||[]).filter(t=>t.destructible?t.hp>0:game.enemies.includes(t.owner));
+ game.totems=(game.totems||[]).filter(t=>!t.destructible||t.hp>0);
  let healing=0;
  for(const t of [...game.totems]){
   if(!game.totems.includes(t))continue;
@@ -159,13 +158,13 @@ function tickEncounterObjects(dt,playerFrom=encounterFoot(game.player),dashing=g
   else if(dashSupportTotem(t,playerFrom,dashing))continue;
   if(t.disabled){t.blocked=false;continue;}
   if(t.destructible){tickSummonTotem(t,dt);tickSummonArrival(t,dt);continue;}
-  t.blocked=totemInterception(t);const disrupt=waveRank('disrupt'),power=Math.max(.4,1-.15*disrupt);
+  const recipient=supportTotemRecipient(t);t.dormant=!recipient;t.blocked=totemInterception(t);const disrupt=waveRank('disrupt'),power=Math.max(.4,1-.15*disrupt);
   if(t.type==='mend'){
    if(t.blocked){t.healReserve=t.healReserve??p.maxHp*.15;const amount=Math.min(t.healReserve,p.maxHp*.0035*dt,Math.max(0,p.maxHp-p.hp));healing=Math.max(healing,amount);t.healReserve-=amount;p.mending=amount>0;}
-   else t.owner.hp=Math.min(t.owner.maxHp,t.owner.hp+t.owner.maxHp*.004*dt*power);
-  }else if(t.blocked)p.rallyTime=5;else t.owner.furyLinked=true;
+   else if(recipient)recipient.hp=Math.min(recipient.maxHp,recipient.hp+recipient.maxHp*.004*dt*power);
+  }else if(t.blocked)p.rallyTime=5;else if(recipient)recipient.furyLinked=true;
  }
- if(healing)p.hp=Math.min(p.maxHp,p.hp+healing);tickBossBursts(dt);tickGraveEchoes(dt);
+ if(healing)p.hp=Math.min(p.maxHp,p.hp+healing);tickReleasedWards(dt,playerFrom);tickBossBursts(dt);tickGraveEchoes(dt);
 }
 function damageTotem(t,damage,impact=false){
  if(!impact||!t?.destructible||t.hp<=0||!(game.totems||[]).includes(t)||damage<=0)return false;
@@ -199,7 +198,7 @@ function encounterLabel(label,x,y,color,size=10){
 }
 function paintReflectWard(point,progress,kind,active=false){paintReflectWardArt(point,progress,kind,active);}
 function paintEncounterGround(){
- paintAbilityGroundArt();paintThemedGround();
+ paintAbilityGroundArt();paintThemedGround();paintReleasedWards();
  paintEliteTaskGround();
  for(const e of game.enemies)if(['reflect','reversal'].includes(e.cast?.type))paintReflectWard(e.cast.point,clamp(1-e.cast.windup/e.cast.total,0,1),e.biome);
  for(const fx of game.counterEffects||[]){ctx.save();ctx.globalAlpha=fx.life/fx.total;if(fx.type==='cleave')paintEnemyCleave(fx.cast,combatTheme('friendly'),1,true);else if(fx.type==='ricochet')for(const point of fx.points)paintRicochetBank(point,DUNGEON_THEMES[fx.biome]);else paintReflectWard(fx,1,fx.biome,true);ctx.restore();}
@@ -215,8 +214,8 @@ function paintTotem(t){
 function paintEncounterLinks(){
  paintCounterReadiness();
  for(const t of game.totems||[]){
-  if(t.destructible)continue;
-  const a={x:t.x,y:t.y-22},b={x:t.owner.x,y:t.owner.y-22},p={x:game.player.x,y:game.player.y-18},theme=totemSignal(t),end=t.blocked?p:b;
+  if(t.destructible)continue;const recipient=supportTotemRecipient(t);if(!recipient)continue;
+  const a={x:t.x,y:t.y-22},b={x:recipient.x,y:recipient.y-22},p={x:game.player.x,y:game.player.y-18},theme=totemSignal(t),end=t.blocked?p:b;
   paintAbilityStream(t,a,end,b);
   const label=t.disabled?'DISABLED':t.blocked?(t.type==='mend'&&t.healReserve<=0?'HEALING DEPLETED · BLOCKED':theme.label+' · YOU'):theme.label+' · APPROACH';
   encounterTip(label,t.x,t.y-62,theme.hot,10,t,label,'stream');

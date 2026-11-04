@@ -59,11 +59,11 @@ function resolveEliteSpecial(enemy,cast,damage){
  }
  return false;
 }
-function tickEnemyCharge(enemy,dt){
+function tickEnemyCharge(enemy,dt,playerFrom=game.player){
  const charge=enemy.charge;if(!charge)return false;const distance=Math.min(charge.remaining,460*dt*enemyMovementFactor()),x=enemy.x+Math.cos(charge.angle)*distance,y=enemy.y+Math.sin(charge.angle)*distance;
  if(!encounterClear(x,y+enemy.rad*.65,Math.max(10,enemy.rad*.7))){enemy.charge=null;burst(enemy.x,enemy.y,7,combatTheme('friendly').color);return true;}
  const oldX=enemy.x,oldY=enemy.y;enemy.x=x;enemy.y=y;charge.remaining-=distance;
- if(!charge.hitPlayer&&segmentDistance(game.player.x,game.player.y,oldX,oldY,x,y)<enemyChargeHalfWidth(enemy)+9){charge.hitPlayer=true;hurtEncounter(enemy,charge,bossAttackDamage(enemy,'charge'));enemy.contact=.8;}
+ if(!charge.hitPlayer&&playerProjectileContains({x:oldX,y:oldY},{x,y},enemyChargeHalfWidth(enemy),playerFrom)){charge.hitPlayer=true;hurtEncounter(enemy,charge,bossAttackDamage(enemy,'charge'));enemy.contact=.8;}
  damageMonstersInAttack(enemy,charge,other=>segmentDistance(other.x,other.y,oldX,oldY,x,y)<enemyChargeHalfWidth(enemy)+other.rad+1);
  if(charge.trail){charge.trailClock-=dt;if(charge.trailClock<=0){charge.trailClock=.18;game.hazards.push({type:'ground',language:'friendly',lingering:true,x:oldX,y:oldY,r:28,life:1.3,total:1.3,age:0,owner:enemy,enemyHits:charge.enemyHits,damage:bossAttackDamage(enemy,'charge')*.7,biome:enemy.biome});}}
  if(charge.remaining<=0)enemy.charge=null;return true;

@@ -101,7 +101,7 @@ function bossPlan(e){
 }
 function canBeginThemedCast(owner,type){
  const def=themedAbility(type);if(!def)return true;
- if((game.themedEvents||[]).some(e=>!e.done&&game.enemies.includes(e.owner)))return false;
+ if((game.themedEvents||[]).some(e=>!e.done&&encounterSourceActive(e.owner)))return false;
  if(game.enemies.some(e=>e.cast&&e!==owner))return false;
  if((game.hazards||[]).some(h=>h.wave||h.type==='expanded'&&!h.lingering)||game.counterRequest||(game.bossBursts||[]).length||(game.hostileShots||[]).some(s=>s.bounds||s.orbit||s.abilityType&&!['volley','ricochet'].includes(s.abilityType)))return false;
  if((type==='orbitTransfer'||type==='rallyThread')&&!themedPartner(owner))return false;
@@ -186,7 +186,7 @@ function themedFields(e,age=e.age){
  case 'boneLoom':for(let i=0;i<2;i++)fields.push(themedGate(a,false,t.x+(i?1:-1)*(100-180*u),e.opening.y+Math.sin(age*1.2+i*Math.PI)*45,104,{end:e.total,key:'ribs'+i,art:'rib'}));break;
  case 'coffinPress':for(let i=0;i<2;i++){const x=t.x+(i?1:-1)*(120-120*u);fields.push(themedField({shape:'rect',rect:{left:x-30,right:x+30,top:t.y-78,bottom:t.y+78}},{start:.12,end:e.total,key:'coffin'+i,art:'coffin'}));}break;
  case 'hauntedFootsteps':{const f=themedPathPoint(e.path,u);circle(f.x,f.y,22,{end:e.total,key:'ghost',factor:.85,art:'ghost'});break;}
- case 'graveClock':{const phase=age<1.5?age/1.5:age<2.2?1:1-(age-2.2)/1.8,angle=e.angle-1+phase*2;for(const [lo,hi]of [[24,74],[146,190]])segment({x:t.x+Math.cos(angle)*lo,y:t.y+Math.sin(angle)*lo},{x:t.x+Math.cos(angle)*hi,y:t.y+Math.sin(angle)*hi},22,{end:e.total,key:'hand',factor:.75,art:'clock'});circle(t.x,t.y,22,{end:e.total,key:'hub',factor:.5,art:'clock'});break;}
+ case 'graveClock':{const phase=age<1.5?age/1.5:age<2.2?1:1-(age-2.2)/1.8,angle=e.angle-1+phase*2;for(const [lo,hi]of [[24,74],[146,190]])segment({x:t.x+Math.cos(angle)*lo,y:t.y+Math.sin(angle)*lo},{x:t.x+Math.cos(angle)*hi,y:t.y+Math.sin(angle)*hi},22,{end:e.total,key:'hand',factor:.75,art:'clock',groundRefuge:{...t,inner:94,r:126}});circle(t.x,t.y,22,{end:e.total,key:'hub',factor:.5,art:'clock'});break;}
  case 'ribcageRise':fields.push(themedField({shape:'arc',x:t.x,y:t.y,r:Math.max(0,125*(1-u)),width:23,gap:e.exitAngle??e.angle,gapHalf:.64},{end:e.total,key:'cage',art:'rib'}));break;
  case 'gravityWell':circle(t.x,t.y,145,{start:2.7,end:3.25,key:'collapse',factor:1,art:'lens'});break;
  case 'constellationCage':fields.push(themedField({shape:'triangle',points:Array.from({length:3},(_,i)=>({x:t.x+Math.cos(e.angle+i*Math.PI*2/3)*120,y:t.y+Math.sin(e.angle+i*Math.PI*2/3)*120}))},{start:.15,end:.95,key:'triangle',factor:2,art:'star'}));break;
@@ -198,6 +198,7 @@ function themedFields(e,age=e.age){
 }
 function themedPathPoint(path,u){const index=clamp(u,0,.9999)*(path.length-1),i=Math.floor(index),f=index-i;return {x:path[i].x+(path[i+1].x-path[i].x)*f,y:path[i].y+(path[i+1].y-path[i].y)*f};}
 function themedContains(actor,f){
+ if(actor===game.player)return playerShapeContains(f);
  const radius=actor===game.player?9:Math.min(18,actor.rad||10);
  if(f.shape==='circle')return Math.hypot(actor.x-f.x,actor.y-f.y)<f.r+radius;
  if(f.shape==='segment')return segmentDistance(actor.x,actor.y,f.a.x,f.a.y,f.b.x,f.b.y)<f.width/2+radius;
@@ -223,15 +224,15 @@ function themedCounterContact(e,point,from,dt,start=0,end=e.total){
 }
 function themedReturnHalf(e,point){
  refundCounterDash();
- const owner=e.owner;owner.hp-=owner.maxHp*.06;owner.stagger=Math.max(owner.stagger||0,.6);owner.lastDamageStyle=combatStyle();burst(point.x,point.y,9,combatTheme('reflect').color);game.counterEffects.push({...point,inner:26,r:42,tx:owner.x,ty:owner.y-22,reflected:true,life:.75,total:.75,biome:e.kind});if(owner.hp<=0){e.done=true;onKill(owner);}
+ const owner=e.owner,alive=owner.hp>0&&!owner.defeated;owner.hp-=owner.maxHp*.06;owner.stagger=Math.max(owner.stagger||0,.6);owner.lastDamageStyle=combatStyle();burst(point.x,point.y,9,combatTheme('reflect').color);game.counterEffects.push({...point,inner:26,r:42,tx:owner.x,ty:owner.y-22,reflected:true,life:.75,total:.75,biome:e.kind});if(alive&&owner.hp<=0){e.done=true;onKill(owner);}
 }
-function themedToken(e,point,r,key,factor=.6){let old=e.state.tokens?.[key]||point;if(old.portal!==point.portal)old=point;(e.state.tokens||(e.state.tokens={}))[key]=point;themedHit(e,key,actor=>segmentsDistance(old.x,old.y,point.x,point.y,actor.x,actor.y,actor.x,actor.y)<=r+(actor===game.player?9:Math.min(18,actor.rad||10)),Math.max(.4,factor));}
+function themedToken(e,point,r,key,factor=.6,from=game.player){const previous=e.state.tokens?.[key];let old=previous||point;if(!previous||old.portal!==point.portal){old=point;from=game.player;}(e.state.tokens||(e.state.tokens={}))[key]=point;themedHit(e,key,actor=>actor===game.player?playerProjectileContains(old,point,r,from):segmentsDistance(old.x,old.y,point.x,point.y,actor.x,actor.y,actor.x,actor.y)<=r+Math.min(18,actor.rad||10),Math.max(.4,factor));}
 function tickThemedEvent(e,dt,from,dashing){
  const p=game.player,s=e.state,t=e.target,a=e.arena,age=e.age,oldAge=age-dt;
  if(e.type==='walkingHedge')return tickWalkingHedge(e,dt,from);
  if(e.type==='rollingFurnace')return tickRollingFurnace(e,dt,from);
  for(const f of themedFields(e))if(age>=f.start&&oldAge<=f.end){const contains=actor=>themedContains(actor,f);if(f.dot){tickCombatDot(e,f.key,contains,f.dot);if(THEMED_MECHANICS[e.type].language==='friendly')damageMonstersInAttack(e.owner,e,contains);}else themedHit(e,f.key,contains,f.factor);}
- for(const shot of themedProjectileShapes(e))if(e.type!=='clingingSeeds')themedToken(e,shot,shot.r,shot.key,shot.factor);
+ for(const shot of themedProjectileShapes(e))if(e.type!=='clingingSeeds')themedToken(e,shot,shot.r,shot.key,shot.factor,from);
  switch(e.type){
  case 'briarLeash':case 'rallyThread':{
   const end=themedLinkEnd(e);
@@ -240,7 +241,7 @@ function tickThemedEvent(e,dt,from,dashing){
   else if(e.type==='briarLeash'&&age>=e.total-.05&&!s.pulled){s.pulled=true;themedPull(end,65);hurtEncounter(e.owner,e,e.damage*.6);}
   break;}
  case 'clingingSeeds':{
-  if(s.attachedAt===null){const position=v=>({x:e.origin.x+(t.x-e.origin.x)*clamp(v/.85,0,1),y:e.origin.y+(t.y-e.origin.y)*clamp(v/.85,0,1)}),q=position(age),old=position(oldAge);if(segmentsDistance(old.x,old.y,q.x,q.y,from.x,from.y,p.x,p.y)<26){if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else{s.attachedAt=age;hurtEncounter(e.owner,e,e.damage*.4);}}if(age>1&&s.attachedAt===null)e.done=true;}
+  if(s.attachedAt===null){const position=v=>({x:e.origin.x+(t.x-e.origin.x)*clamp(v/.85,0,1),y:e.origin.y+(t.y-e.origin.y)*clamp(v/.85,0,1)}),q=position(age),old=position(oldAge);if(playerProjectileContains(old,q,17,from,p)){if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else{s.attachedAt=age;hurtEncounter(e.owner,e,e.damage*.4);}}if(age>1&&s.attachedAt===null)e.done=true;}
   else if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else if(age-s.attachedAt>3.5){hurtEncounter(e.owner,e,e.damage);e.done=true;}
   break;}
  case 'graftedSwap':if(!s.swapped&&age>=.6){s.swapped=true;s.previous={x:e.owner.x,y:e.owner.y};e.owner.x=e.points[0].x;e.owner.y=e.points[0].y;burst(e.owner.x,e.owner.y,10,'#8ebc67');}break;
@@ -248,13 +249,13 @@ function tickThemedEvent(e,dt,from,dashing){
   const angle=e.angle,dx=Math.cos(angle),dy=Math.sin(angle);if(insideRect(p,a)&&Math.abs((p.x-e.origin.x)*dy-(p.y-e.origin.y)*dx)<135){p.x+=dx*22*dt;p.y+=dy*22*dt;resolveWorldCollisions(p);}
   break;}
  case 'cinderStitch':{
-  for(let i=0;i<12;i++){if(i%4===3)continue;const q={x:e.origin.x+Math.cos(e.angle)*(i+1)*28,y:e.origin.y+Math.sin(e.angle)*(i+1)*28};if(age>=i*.13+1&&age<i*.13+3)tickCombatDot(e,'stitch'+i,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<18,.02);}
+  for(let i=0;i<12;i++){if(i%4===3)continue;const q={x:e.origin.x+Math.cos(e.angle)*(i+1)*28,y:e.origin.y+Math.sin(e.angle)*(i+1)*28};if(age>=i*.13+1&&age<i*.13+3)tickCombatDot(e,'stitch'+i,actor=>actor===game.player?playerCircleContains(q.x,q.y,18):Math.hypot(actor.x-q.x,actor.y-q.y)<18,.02);}
   break;}
- case 'slagAnchors':for(let i=0;i<2;i++){const q=e.points[i];if(!s['anchor'+i]&&dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<36){s['anchor'+i]=true;e.solved=true;refundCounterDash();burst(q.x,q.y,16,'#ffb471');}}break;
+ case 'slagAnchors':for(let i=0;i<2;i++){const q=e.points[i];if(!s['anchor'+i]&&dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<36){s['anchor'+i]=true;e.solved=true;refundCounterDash();burst(q.x,q.y,16,'#ffb471');}}if(s.anchor0&&s.anchor1)e.done=true;break;
  case 'emberCatch':{const q=e.points[0];if(themedCounterContact(e,q,from,dt)){damageMonstersInAttack(e.owner,e,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<145);themedCounter(e,q,.10);}else if(age>=e.total-.05){hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
  case 'soulLantern':{
-  const q=e.points[0];if(dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<37){e.solved=e.done=true;refundCounterDash();burst(q.x,q.y,12,'#70e4a2');break;}
-  const launched=Math.floor(age/1.15);for(let i=0;i<=launched;i++){const progress=(age-i*1.15)/1.5;if(progress<0||progress>1.1||s['soul'+i])continue;const soul={x:q.x+(e.owner.x-q.x)*Math.min(1,progress),y:q.y+(e.owner.y-q.y)*Math.min(1,progress)};if(Math.hypot(p.x-soul.x,p.y-soul.y)<24){s['soul'+i]=true;e.solved=true;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.0035);}else if(progress>=1){s['soul'+i]=true;e.owner.hp=Math.min(e.owner.maxHp,e.owner.hp+e.owner.maxHp*.004);}}
+  const q=e.points[0],recipient=supportTotemRecipient({owner:e.owner,x:q.x,y:q.y});if(dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<37){e.solved=e.done=true;refundCounterDash();burst(q.x,q.y,12,'#70e4a2');break;}
+  if(!recipient)break;const launched=Math.floor(age/1.15);for(let i=0;i<=launched;i++){const progress=(age-i*1.15)/1.5;if(progress<0||progress>1.1||s['soul'+i])continue;const soul={x:q.x+(recipient.x-q.x)*Math.min(1,progress),y:q.y+(recipient.y-q.y)*Math.min(1,progress)};if(Math.hypot(p.x-soul.x,p.y-soul.y)<24){s['soul'+i]=true;e.solved=true;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.0035);}else if(progress>=1){s['soul'+i]=true;recipient.hp=Math.min(recipient.maxHp,recipient.hp+recipient.maxHp*.004);}}
   break;}
  case 'returningSigil':{const index=s.stage||0,q=e.points[index],start=index?(s.stageAt||0)+.6:0;if(themedCounterContact(e,q,from,dt,start,start+3.6)){if(index===0){s.stage=1;s.stageAt=age;e.solved=true;themedReturnHalf(e,q);}else themedCounter(e,q,.06);}else if(age>=start+3.6){hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
  case 'borrowedBreath':if(e.points.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<30)){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,10,combatTheme('safe').color);}else if(age>=e.total-.05){hurtEncounter(e.owner,e,p.maxHp*.15/incomingDamageScale());e.done=true;}break;
@@ -277,7 +278,7 @@ function themedPull(point,amount,radius=Infinity){const p=game.player,dx=point.x
 function tickThemedMechanics(dt,from=game.player,dashing=false){
  const p=game.player,history=game.themedHistory||(game.themedHistory=[]);if(!history.length||game.frame-history[history.length-1].time>=.09){history.push({x:p.x,y:p.y,time:game.frame});if(history.length>32)history.shift();}
  for(const owner of game.enemies){const e=owner.cast?.themed;if(e&&snapThemedLink(e,from,dashing)){owner.cast=null;owner.castCooldown=owner.boss?2.5:3.1;}}
- game.themedEvents=(game.themedEvents||[]).filter(e=>{if(e.done||!game.enemies.includes(e.owner)||e.owner.hp<=0||game.status!=='running')return false;e.age+=dt;tickThemedEvent(e,dt,from,dashing);return !e.done&&(e.persistent||e.age<e.total)&&game.status==='running'&&game.transition<=0;});
+ game.themedEvents=(game.themedEvents||[]).filter(e=>{if(e.done||!encounterSourceActive(e.owner)||game.status!=='running')return false;e.age+=dt;tickThemedEvent(e,dt,from,dashing);return !e.done&&(e.persistent||e.age<e.total)&&game.status==='running'&&game.transition<=0;});
 }
 function themedShieldMultiplier(enemy,from=game.player){const e=(game.themedEvents||[]).find(e=>e.type==='turningBulwark'&&e.owner===enemy&&!e.done);if(!e)return 1;const angle=e.angle+e.age*.5,delta=Math.atan2(from.y-enemy.y,from.x-enemy.x)-angle;return Math.abs(Math.atan2(Math.sin(delta),Math.cos(delta)))<1.05?.3:1;}
 function themedRallyMultiplier(enemy){return (game.themedEvents||[]).some(e=>e.type==='rallyThread'&&!e.done&&(e.owner===enemy||e.partner===enemy))?1.18:1;}

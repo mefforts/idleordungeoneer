@@ -1,6 +1,6 @@
 /* Rare creature families and stackable timed blessings. */
 const RARE_ELITE_CHANCE=.03;
-const ELITE_BLESSING_CHANCE=.25;
+const ELITE_BLESSING_CHANCE=.15;
 const RARE_ELITE_NAMES=[
  ['Thorncrown Mossling','Elder Moss Beetle','Antlered Sapling','Crowncap','Briar Alpha','Ancient Root Crawler'],
  ['Cinderheart Emberling','Ashhorn Imp','Molten Slag Beetle','Soot Revenant','Furnace Alpha','Obsidian Ravager'],
@@ -108,13 +108,14 @@ function eliteBoonCodexHtml(id){const b=ELITE_BOONS[id];return codexParagraph(b.
 
 /* Enemy area attacks hit each ordinary monster once, without player hit procs. */
 function cleaveContains(actor,cast){
+ if(actor===game.player)return playerSectorContains(cast.origin,0,cast.reach,cast.angle,cast.halfAngle);
  const dx=actor.x-cast.origin.x,dy=actor.y-cast.origin.y,distance=Math.hypot(dx,dy);if(distance>cast.reach+(actor.rad||12))return false;
  const angle=Math.atan2(dy,dx)-cast.angle;return Math.abs(Math.atan2(Math.sin(angle),Math.cos(angle)))<=cast.halfAngle;
 }
 function damageMonstersInAttack(owner,shape,contains){
- if(!owner||!game.enemies.includes(owner)||game.status!=='running')return;const hits=shape.enemyHits||(shape.enemyHits=new Set());
+ if(!encounterSourceActive(owner)||game.status!=='running')return;const hits=shape.enemyHits||(shape.enemyHits=new Set());
  for(const enemy of [...game.enemies]){
-  if(!game.enemies.includes(owner)||game.status!=='running')break;if(enemy===owner||hits.has(enemy)||!contains(enemy))continue;
+  if(!encounterSourceActive(owner)||game.status!=='running')break;if(enemy===owner||hits.has(enemy)||!contains(enemy))continue;
   hits.add(enemy);const damage=enemy.maxHp*(enemy.boss?.025:enemy.elite?.12:.35)*enemyShieldMultiplier(enemy,owner);enemy.hp-=damage;enemy.lastHitAt=game.frame;enemy.lastDamageStyle=combatStyle();
   if(game.floaters.length<90)floater(enemy.x,enemy.y-25,Number(damage.toFixed(1)),combatTheme('friendly').hot);burst(enemy.x,enemy.y,3,combatTheme('friendly').color);if(enemy.hp<=0)onKill(enemy);
  }

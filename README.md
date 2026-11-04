@@ -4,6 +4,16 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.13.0** gives the player a **chest-to-feet damage hitbox**. Body hits now register across projectiles, charges and floor attacks; the head and outstretched arms stay outside it. Dashes, movement, pickups and teal protected openings retain their existing roles. [Hitbox preview](preview-player-hitbox-mobile.png).
+
+**Elites, rares and guardian Echoes reserve separate fighting positions** instead of converging on the player. Advance, ranged and guard roles keep pressure from different directions; some defend totems, and paired mechanics retain their coordinated movement. Wounded ordinary and uncommon creatures can retreat toward an unblocked healing totem for a small, capped heal. Intercept or break that support to deny it. [Enemy positions](preview-enemy-positions-mobile.png).
+
+Offscreen enemies now produce a **soft red corner pulse** in their direction. Groups share one haze; reduced motion uses a steady glow. The signal stops when the enemy enters view or dies, and it leaves all controls interactive. [Phone](preview-offscreen-threats-mobile.png) · [Desktop](preview-offscreen-threats-desktop.png).
+
+Temporary blessing drops are **40% less frequent**: eligible enemies now roll 15% instead of 25%; health-drop rates are unchanged. **Released attacks and placed hazards outlive their caster.** Waves, fire, projectiles, planted reflect wards and deployed mechanics finish their own sequence or counter, and encounter completion waits for remaining danger. Healing/power totems and lanterns can support surviving enemies. Unfinished casts and effects attached to a living caster or pair still stop on defeat; death, retry and floor boundaries clean up the encounter.
+
+Threefold Ruin keeps its red/teal floor lighting and fire effects, with the quarter divider lines removed. [Phone](preview-threefold-ruin-mobile.png) · [Desktop](preview-threefold-ruin-desktop.png). The shared-defense foot arc and the ring around intercepted totem beams are removed; shield percentages and colored streams remain. Base health and damage, material/gold rewards, progression and the curved navigation labels retain their prior values. [Rules and checks](BALANCE.md).
+
 **Build 11.12.0** makes overlapping elite and boss mistakes hurt. Direct hits have a **12.5% maximum-health floor before defenses**; distinct mechanics can hit together, while one projectile spread shares a short repeat-hit window. Dash and spawn protection still work. Fire and siphons keep their smaller, capped ticks; missed reflects remain 15%.
 
 **Ascendance lasts 12 seconds, Rare Awakening 14**, and siphons last at least 12. Rally Thread, Orbit Transfer, Briar Leash, Soul Lantern and Slag Anchors stay for 14 seconds. New **Siege Channel** variants walk to a clear position, then keep firing warned volleys or marking the ground until interrupted. Existing focused-hit, stun and dash interrupts apply, including dash refunds. [Volley channel](preview-siege-volley-mobile.png) · [Ground-mark channel](preview-siege-marks-mobile.png).

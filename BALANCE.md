@@ -1,5 +1,19 @@
 # Dungeon progression and balance
 
+Offscreen living enemies share a red directional corner haze at 0.8 pulses/second, capped at 18% opacity before directional weighting. Diagonal threats light one corner; cardinal threats share two. Enemy sprite bounds keep partially visible creatures from raising an alert. Groups do not add brightness. Reduced motion uses a steady glow; pauses freeze the real-time pulse and Delving speed never accelerates it. The canvas effect adds no input layer and appears only during a running delve.
+
+Build 11.13.0 also lowers eligible elite/rare/Echo blessing drops from 25% to 15%: 40% fewer expected blessing drops, with health and other loot rates preserved. Released projectiles, delayed bursts, ground hazards, travelling walls/rims, planted reflect wards and independent themed mechanics continue after caster defeat, retaining damage, friendly fire, counters and their own lifetimes. Caster defeat stops unreleased casts and effects bound to the caster or a living pair. Healing/power totems and deployed lanterns retarget surviving enemies, remain interruptible and never heal a corpse.
+
+Encounter completion waits for released danger rather than erasing it on the last kill. Support totems persist between encounters on the same floor and can be dashed apart; death, retry and floor boundaries clear encounter state. Breaking both Slag Anchors completes that mechanic immediately. No extra on-screen text is added for these rules.
+
+Build 11.13.0 extends the player damage capsule from the feet to the middle of the chest: 12-unit radius, with outer vertical bounds -42 to +15 relative to the ground anchor. Projectiles use relative swept collision, including moving players; circles, sectors, strips, rings, waves, gates, triangles, charges and lingering damage share the body shape. Head, hats, arms, equipment and animation never change it. Movement, pickups and beneficial/counter interactions retain their ground checks; existing teal quarter, ring, jaw, clock, flood and gate protections still protect the whole body. Grazing a pulse during dash protection does not consume it; fully crossing its rim still refunds dash once.
+
+Elites, rares and guardian Echoes now reserve persistent, terrain-checked fighting positions with advance, ranged and guard roles. Local separation supplements those destinations; movement never exceeds normal walking speed, casts and channels keep their existing movement rules, and paired mechanics retain their link geometry. Some enemies defend healing/power/summoning totems instead of closing on the player; destroyed anchors release their guards. Full-boss movement, base damage, HP, material/gold rewards and ordinary spawn budgets retain their prior values.
+
+Wounded natural ordinary/uncommon creatures at or below 38% HP can retreat to an active, unblocked healing totem within 360 units. Only one retreating creature claims each totem. A retreat lasts at most 12 combat seconds and restores 1.5% maximum HP/second near the totem, capped at 12% per retreat, with a 20-second retry cooldown. Intercepting, disabling or destroying the stream ends the retreat; stuns prevent movement and healing. Recruits, summons and special enemies cannot use this healing. Pauses freeze all of these timers. Green travelling crosses show actual healing.
+
+Threefold Ruin removes quarter outlines while retaining floor tint, fire effects and identical hit/protection geometry. Warband Resolve keeps the shield percentage and cracked-shield feedback without the foot arc. Intercepted totem beams keep their colored stream and benefit feedback without the player-center ring. Targeted browser checks exercise the new damage shape, body misses, protection, pack spacing on four viewport sizes, terrain, guards, retreats and cleanup. Full-Zone timing below uses automated counterplay with incoming damage disabled; it is a pacing benchmark, not a human playthrough.
+
 Build 11.12.0 sets a 12.5% maximum-health floor for direct elite/rare/boss/Echo hits before normal defenses. Independent attacks bypass only the ordinary post-hit immunity, so overlapping mechanics stack. A shared 0.47-second window prevents one projectile spread from shotgunning; dash protection, deliberate spawn immunity and ordinary/uncommon hit rules remain. Fire/siphons retain smaller capped DoT ticks, while failed reflects remain 15%. Closed mirror jaws and ordinary spire backlash now hurt for 12.5%; crowned backlash is 15%. Siphon channels still allow one concurrent minor cast, and a missed ward has its own damage window.
 
 Ascendance channels for 12 seconds and heals at most 4% before its existing 14-second damage/cadence boost. Rare Awakening takes 14 seconds. Siphons last at least 12 seconds; Rally Thread, Orbit Transfer, Briar Leash, Soul Lantern and Slag Anchors last 14. Siege Channel moves to a clear site, then fires 12.5% warned volleys or 18% ground marks until interrupted. Its first shot begins after a one-second setup, with a 1.2-second warning; later warnings follow a 2.8-second interval. One/two active-task caps, focused-hit interrupts, damage-free dash interrupts and refunds remain. A whole volley shares one hit window.
@@ -234,17 +248,17 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 4 | ~254 min | 240.0 |
 | 5 | ~135 min | 480.0 |
 
-- Live Zone 1: **15.9 min**, 413 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **26.4 min**, 648 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **225.1 min**, 938 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **251.0 min**, 1118 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **168.5 min**, 1118 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **168.9 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 1: **16.1 min**, 413 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **28.3 min**, 648 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **238.0 min**, 938 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **264.1 min**, 1118 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **169.6 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **171.3 min**, 1118 rewarded defeats, 480.0 reference DPS.
 
 | Zone | v11.8.1 live reference | Current live reference |
 | --- | ---: | ---: |
-| 1 | 12.2 min | 15.9 min |
-| 2 | 20.8 min | 26.4 min |
+| 1 | 12.2 min | 16.1 min |
+| 2 | 20.8 min | 28.3 min |
 
 This comparison retains reference equipment and invulnerability. The current controller also recognizes task interrupts; movement and random encounters differ, so these times measure pacing rather than a matched human survival or difficulty trial.
 
@@ -260,7 +274,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with one continuously expanding Grave Pulse ring. Dash through it: it has no fixed lifetime or travel limit and always moves faster than running, including movement buffs. Pulse casts cannot overlap, and the next warning allows dash recharge before impact. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses about 150 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 7.5–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 3 of 6 trials: 46.3–113.4 HP remained in the finale trials and 0 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json. This ranged reference keeps its existing movement priorities instead of chasing every new channel. A separate task-chasing comparison survived less well, so these results do not establish the best human interruption strategy.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses about 150 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 7.5–9.4s on Zone 2’s finale and 4.6–5.5s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 1 of 6 trials: 0–82.7 HP remained in the finale trials and 0 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json. This ranged reference keeps its existing movement priorities instead of chasing every new channel. A separate task-chasing comparison survived less well, so these results do not establish the best human interruption strategy.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 

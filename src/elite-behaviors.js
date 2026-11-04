@@ -9,7 +9,7 @@ function initializeEliteBehavior(e){
  const slot=game.enemies.filter(eliteBehaviorEligible).indexOf(e),family=e.champion?{charge:0,shield:1,ricochet:2}[rareEliteRole(e)]:(e.bossIndex||0)%3;
  e.eliteBehavior={slot,family,nextTaskAt:game.frame+ELITE_TASKS.initial+(slot%3)*1.25,taskIndex:family+(slot%2)};
 }
-function eliteRecruitEligible(e){return e&&e.hp>0&&!e.boss&&!e.elite&&!e.uncommon&&!e.totem&&!e.summoned&&!e.cast;}
+function eliteRecruitEligible(e){return e&&e.hp>0&&!e.boss&&!e.elite&&!e.uncommon&&!e.totem&&!e.summoned&&!e.cast&&!e.healingRetreat;}
 function eliteTaskLinked(e){return (game.themedEvents||[]).some(t=>!t.done&&(t.owner===e||t.partner===e))||game.enemies.some(other=>other.cast?.themed&&(other===e||other.cast.themed.partner===e));}
 function eliteRecruit(owner){
  if(game.phase%2||game.phase>=6||(game.elitePromotionCount||0)>=elitePromotionCap()||game.enemies.filter(e=>e.champion&&e.hp>0).length>=rareEliteQuota()+elitePromotionCap())return null;
@@ -100,13 +100,7 @@ function eliteBehaviorStep(enemy,dx,dy,step){
  if(enemy.stagger>0)return {x:0,y:0};
  let goal=task?.phase==='travel'?task.point:recruit;if(task?.phase==='channel')return {x:0,y:0};
  if(goal){const x=goal.x-enemy.x,y=goal.y-enemy.y,d=Math.hypot(x,y);return d<8?{x:0,y:0}:{x:x/d*Math.min(Math.abs(step)*1.2,d),y:y/d*Math.min(Math.abs(step)*1.2,d)};}
- if(!eliteBehaviorEligible(enemy)||!enemy.eliteBehavior||!step||enemy.charge)return {x:dx,y:dy};
- const p=game.player,b=enemy.eliteBehavior,d=Math.hypot(enemy.x-p.x,enemy.y-p.y),a=d>1?Math.atan2(enemy.y-p.y,enemy.x-p.x):b.slot*2.4,ux=Math.cos(a),uy=Math.sin(a),close=b.family===0||enemy.champion&&!enemy.cast&&enemy.castCooldown<1,lo=close?65:165,hi=close?125:230,radial=d>hi?-1:d<lo?.85:0,side=(b.slot%2?1:-1)*(Math.floor(game.frame/7)%2?1:-1);
- let x=ux*radial-uy*side*(d<hi+70?.4:.15),y=uy*radial+ux*side*(d<hi+70?.4:.15);
- for(const other of game.enemies){if(other===enemy||!other.elite||other.hp<=0)continue;const gap=Math.hypot(enemy.x-other.x,enemy.y-other.y);if(gap<95){const angle=gap>1?Math.atan2(enemy.y-other.y,enemy.x-other.x):a+b.slot;const force=(95-gap)/70;x+=Math.cos(angle)*force;y+=Math.sin(angle)*force;}}
- const norm=Math.max(1,Math.hypot(x,y)),move={x:x/norm*Math.abs(step),y:y/norm*Math.abs(step)};
- if(encounterClear(enemy.x+move.x,enemy.y+move.y+13,12))return move;
- if(encounterClear(enemy.x+move.x,enemy.y+13,12))return {x:move.x,y:0};if(encounterClear(enemy.x,enemy.y+move.y+13,12))return {x:0,y:move.y};return {x:0,y:0};
+ return enemyPositionStep(enemy,dx,dy,step);
 }
 function eliteTaskGuideIcon(){return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><title>Elite intentions</title><defs><radialGradient id="b"><stop stop-color="#485549"/><stop offset="1" stop-color="#18252a"/></radialGradient></defs><circle cx="64" cy="64" r="60" fill="url(#b)" stroke="#b8a574" stroke-width="2"/><path d="M64 29L30 88H98Z" fill="none" stroke="#c8b88d" stroke-width="4"/><g stroke="#edd9a9" stroke-width="2"><circle cx="64" cy="29" r="19" fill="#345c46"/><circle cx="30" cy="88" r="19" fill="#684d39"/><circle cx="98" cy="88" r="19" fill="#414c68"/></g><path d="M64 16V42M51 29H77" stroke="#9ce2af" stroke-width="6"/><path d="M17 91L15 76L25 83L30 74L35 83L45 76L43 91Z" fill="#efd28a"/><path d="M98 73Q79 81 89 97Q104 109 111 94Q117 79 98 73M98 81Q89 88 97 96Q105 99 106 90Q104 84 98 87" fill="none" stroke="#adc7f0" stroke-width="3"/></svg>');}
 function installEliteTaskGuide(){SVG_FILES['codex-elite_tasks.svg']=eliteTaskGuideIcon();CODEX_ITEMS.push({id:'elite_tasks',cat:'Enemies',name:'Elite intentions',desc:'Elites and rares spread out, then sometimes leave the chase for a task. Ascendance slowly heals and grants a strong temporary damage/cadence buff if finished. Rare Awakening turns an ordinary monster into a rare; killing that recruit stops it. Living Conduit summons a bounded army until interrupted. Siege Channel moves into position and keeps firing warned volleys or marking ground until interrupted. Dash through the channeler, stun it, land three focused weapon hits, or remove 12% of its maximum health to interrupt. A successful dash interrupt refunds dash. Summoned enemies cannot perform these tasks or be promoted.'});}

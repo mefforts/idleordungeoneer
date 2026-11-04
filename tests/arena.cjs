@@ -31,19 +31,19 @@ function instrumentation(){
             // Use counterplay at base equipment with no purchased or timed perks.
             // Reflections, spires and shield guards require deliberate movement.
             if(eliteRewardOpen())closeEliteReward(true);
-            const p=game.player,mirror=game.enemies.find(e=>['reflect','reversal'].includes(e.cast?.type)),spire=(game.totems||[]).find(t=>t.destructible),guard=game.enemies.find(e=>e.bastionGuard),channel=game.enemies.find(e=>e.eliteTask),stream=(game.totems||[]).find(t=>t.type==='mend'),nearest=combatTargets().sort((a,b)=>bodyDistance(a,p.x,p.y)-bodyDistance(b,p.x,p.y))[0];let target=null;
+            const p=game.player,mirror=game.enemies.find(e=>['reflect','reversal'].includes(e.cast?.type))||(game.releasedWards||[]).map(w=>({cast:w.cast}))[0],spire=(game.totems||[]).find(t=>t.destructible),guard=game.enemies.find(e=>e.bastionGuard),channel=game.enemies.find(e=>e.eliteTask),stream=(game.totems||[]).find(t=>!t.destructible&&['mend','fury'].includes(t.type)),nearest=combatTargets().sort((a,b)=>bodyDistance(a,p.x,p.y)-bodyDistance(b,p.x,p.y))[0];let target=null;
             if(mirror){const q=mirror.cast.point,dx=p.x-q.x,dy=p.y+13-q.y,d=Math.hypot(dx,dy);if(!q.armed)target={x:q.x+(d?dx/d:1)*65,y:q.y+(d?dy/d:0)*65-13};else target={x:q.x,y:q.y-13};}
             else if(spire){const base=encounterFoot(spire),dx=p.x-base.x,dy=p.y+13-base.y,distance=Math.hypot(dx,dy),retreat=SUMMON_BUMPS.releaseRadius+8;target=spire.bumpContact?{x:base.x+(distance?dx/distance:1)*retreat,y:base.y+(distance?dy/distance:0)*retreat-13}:{x:base.x,y:base.y-13};}
             else if(channel){target=bodyPoint(channel,p.x,p.y);const dx=target.x-p.x,dy=target.y-p.y,d=Math.hypot(dx,dy)||1;if(d<110&&p.dashCooldown<=0){p.vx=dx/d;p.vy=dy/d;dash();}}
             else if(guard)target=bodyPoint(guard,p.x,p.y);
-            else if(stream){const from=encounterFoot(stream.owner),to=encounterFoot(stream),distance=Math.hypot(to.x-from.x,to.y-from.y),fraction=Math.min(.5,55/Math.max(1,distance));target={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction-13};}
+            else if(stream){const q=encounterFoot(stream),dx=q.x-p.x,dy=q.y-p.y-13,d=Math.hypot(dx,dy)||1;target={x:q.x,y:q.y-13};if(d<110&&p.dashCooldown<=0){p.vx=dx/d;p.vy=dy/d;dash();}}
             else if(nearest&&bodyDistance(nearest,p.x,p.y)>attackReach()*.65)target=bodyPoint(nearest,p.x,p.y);
             const dx=target?target.x-p.x:0,dy=target?target.y-p.y:0;game.joystick.pointer=-1;game.joystick.x=Math.hypot(dx,dy)>6?dx:0;game.joystick.y=Math.hypot(dx,dy)>6?dy:0;
             // This is a pacing benchmark. DoTs intentionally bypass ordinary
             // immunity, so replenish HP as well; survival is tested separately.
             p.hp=p.maxHp;tickCombat(.04);
           }
-          if(game.status!=='clear')throw Error('Simulation did not clear: '+game.status);
+          if(game.status!=='clear')throw Error('Simulation did not clear: '+JSON.stringify({status:game.status,zone:index+1,floor,phase:game.phase,kills:game.phaseKills,target:game.phaseTarget,pending:game.phaseCleanupPending,player:{x:game.player.x,y:game.player.y},enemies:game.enemies.map(e=>({hp:e.hp,max:e.maxHp,x:e.x,y:e.y,task:e.eliteTask?.kind,overlap:enemyTerrainOverlap(e)})),totems:game.totems.map(t=>({type:t.type,blocked:t.blocked,deadOwner:!!t.owner.defeated,recipient:supportTotemRecipient(t)?.name})),hazards:game.hazards.map(h=>({type:h.abilityType,life:h.life,age:h.age})),events:game.themedEvents.map(e=>({type:e.type,age:e.age,total:e.total,done:e.done})),shots:game.hostileShots.length}));
           total+=game.runSeconds;kills+=game.runKills;
         }
         return {zone:index+1,weapon,seconds:total,kills,referenceDps:model.dps,targetSeconds:model.seconds};
@@ -123,7 +123,7 @@ const intersects=(a,b)=>a.x<b.x+b.width&&a.x+a.width>b.x&&a.y<b.y+b.height&&a.y+
       else assert.ok(sim.seconds<sim.targetSeconds*1.25&&sim.seconds>models[i].baseForecastSeconds*2,'Zone '+(i+1)+' keeps a material health jump under percent-health counters: '+sim.seconds+'s; raw-DPS forecast '+sim.targetSeconds+'s');
       assert.equal(sim.kills,models[i].swarmCount+3*models[i].floors+models[i].escortCount);
     }
-    fs.writeFileSync(path.join(resultsDir,'zone-pacing.json'),JSON.stringify({models,simulated},null,2));
+    fs.writeFileSync(path.join(resultsDir,'zone-pacing.json'),JSON.stringify({version:require('../package.json').version,htmlSha256:require('node:crypto').createHash('sha256').update(fs.readFileSync('index.html')).digest('hex'),models,simulated},null,2));
     results.push('Full live combat simulation, including every spawn, hit, guard, spire and reflection with active counterplay and no shop or timed perks, verifies the first four zones and the long-term plateau');
     await p.close();
     const speed=await page({viewport:{width:390,height:844}});

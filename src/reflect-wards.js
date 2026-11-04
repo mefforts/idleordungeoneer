@@ -17,10 +17,13 @@ function reflectEntryFraction(from,to,point){
 }
 function reflectJawContact(point,from,to){
  if(point.variant!=='jaw')return false;const distance=Math.hypot(to.x-from.x,to.y-from.y),steps=Math.max(1,Math.ceil(distance/5));
- for(let i=0;i<=steps;i++){const t=i/steps,x=from.x+(to.x-from.x)*t-point.x,y=from.y+(to.y-from.y)*t-point.y,r=Math.hypot(x,y);if(r<point.inner+10||r>point.r+9)continue;const a=Math.atan2(y,x)-point.gapAngle,angle=Math.abs(Math.atan2(Math.sin(a),Math.cos(a))),margin=Math.asin(Math.min(.9,9/Math.max(10,r)));if(angle>point.gapHalf-margin)return true;}return false;
+ for(let i=0;i<=steps;i++){const t=i/steps,foot={x:from.x+(to.x-from.x)*t,y:from.y+(to.y-from.y)*t},r=Math.hypot(foot.x-point.x,foot.y-point.y),a=Math.atan2(foot.y-point.y,foot.x-point.x),margin=Math.asin(Math.min(.9,9/Math.max(10,r)));
+  if(r<point.inner+10||hitboxAngleContains(a,point.gapAngle,point.gapHalf-margin))continue;
+  if(playerSectorContains(point,point.inner,point.r,point.gapAngle+Math.PI,Math.PI-point.gapHalf,{x:foot.x,y:foot.y-13}))return true;
+ }return false;
 }
 function tickReflectWard(owner,cast,dt,from=encounterFoot(game.player)){
- if(cast.resolved||!game.enemies.includes(owner)||owner.hp<=0)return;
+ if(cast.resolved||!encounterSourceActive(owner))return;
  const point=cast.point,to=encounterFoot(game.player),left=cast.windup,fraction=dt>0?Math.min(1,Math.max(0,left/dt)):1,end={x:from.x+(to.x-from.x)*fraction,y:from.y+(to.y-from.y)*fraction};
  cast.windup=Math.max(0,left-dt);
  const entry=point.armed?reflectEntryFraction(from,end,point):null;
@@ -36,7 +39,7 @@ function resolveReflectWard(owner,cast){
   refundCounterDash();
   const amount=owner.maxHp*(.12+.015*waveRank('prism'));owner.hp-=amount;owner.stagger=1.6+.15*waveRank('prism');for(const t of game.totems||[])if(t.owner===owner)t.disabledUntil=game.frame+waveRank('prism');owner.lastDamageStyle=combatStyle();floater(owner.x,owner.y-42,'Reflected · '+Math.round(amount),combatTheme('reflect').hot);burst(owner.x,owner.y,10,combatTheme('reflect').color);if(owner.hp<=0)onKill(owner);
  }else{
-  if(cast.type==='reversal'){const healed=Math.min(owner.maxHp-owner.hp,owner.maxHp*.05);owner.hp+=healed;floater(owner.x,owner.y-48,'MISSED MIRROR · +'+Math.round(healed)+' HP',combatTheme('danger').hot);}
+  if(cast.type==='reversal'&&!owner.defeated){const healed=Math.min(owner.maxHp-owner.hp,owner.maxHp*.05);owner.hp+=healed;floater(owner.x,owner.y-48,'MISSED MIRROR · +'+Math.round(healed)+' HP',combatTheme('danger').hot);}
   hurtEncounter(owner,cast.failureHit||(cast.failureHit={}),game.player.maxHp*REFLECT_WARDS.failure/incomingDamageScale());floater(p.x,p.y-36,'WARD MISSED',combatTheme('danger').hot);
  }
 }

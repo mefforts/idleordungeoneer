@@ -17,7 +17,6 @@ function paintEnemyResolve(enemy){
  const theme=combatTheme(blocked?'reflect':'shield'),x=enemy.x+(enemy.rad||20)+15,y=enemy.y-45;
  ctx.save();ctx.globalAlpha=blocked?.65:1;paintAbilityShield(x,y,10,theme);
  if(blocked){line(x-6,y-8,x+1,y-1,2,theme.hot);line(x+1,y-1,x-2,y+5,2,theme.hot);}
- else{themedArc(enemy.x,enemy.y+enemy.rad*.65,enemy.rad+9,.25+reduction,theme.color+'a0',2);}
  textAt(Math.round(reduction*100)+'%',x,y+19,'700 10px system-ui',theme.hot);ctx.restore();
 }
 function hostileDamage(owner,fraction){const boost=(owner?.furyLinked?1.12:1)*themedRallyMultiplier(owner)*(owner?.ascendance>0?ELITE_TASKS.ascend.damage:1);return game.player.maxHp*Math.min(.5,fraction*boost)/incomingDamageScale();}

@@ -25,6 +25,7 @@ function walkingHedgeFields(e,age=e.age){
  return e.hedge.waves.filter(w=>!w.retired).map(w=>themedGate(e.arena,e.hedge.horizontal,w.start+Math.max(0,age)*w.speed,w.gap,WALKING_HEDGE.gap,{end:Infinity,key:'hedge'+w.index,art:'hedge',width:WALKING_HEDGE.width,infinite:true,waveIndex:w.index}));
 }
 function movingGateContains(actor,from,old,field){
+ if(actor===game.player)return playerMovingGateContains(actor,from,old,field);
  const radius=actor===game.player?9:Math.min(18,actor.rad||10),n=q=>field.horizontal?q.y:q.x,t=q=>field.horizontal?q.x:q.y,a=n(from)-old.at,b=n(actor)-field.at,half=field.width/2+radius;
  let lo=0,hi=1;if(Math.abs(b-a)<1e-9){if(Math.abs(a)>=half)return false;}
  else{const x=(-half-a)/(b-a),y=(half-a)/(b-a);lo=Math.max(0,Math.min(x,y));hi=Math.min(1,Math.max(x,y));if(lo>hi)return false;}
@@ -70,7 +71,7 @@ function furnaceSweptContains(e,roller,shot,actor,from,oldAge,age){
  if(turns.length===1)turns.push(end);
  for(let i=1;i<turns.length;i++){
   const t0=turns[i-1],t1=turns[i],a=furnacePart(e,roller,t0,shot.branch)||{...path.point},b=furnacePart(e,roller,t1,shot.branch)||{...path.point},p=actorAt(t0),q=actorAt(t1),radius=shot.r+(actor===game.player?9:Math.min(18,actor.rad||10));
-  if(segmentDistance(0,0,a.x-p.x,a.y-p.y,b.x-q.x,b.y-q.y)<radius)return true;
+  if(actor===game.player?playerProjectileContains(a,b,shot.r,p,q):segmentDistance(0,0,a.x-p.x,a.y-p.y,b.x-q.x,b.y-q.y)<radius)return true;
  }
  return false;
 }
@@ -94,7 +95,7 @@ function tickRollingFurnace(e,dt,from){
 }
 function pulseDashCounter(h,previous,from,contact){
  const serial=currentCounterDash();if(h.dashCountered||serial===null)return;
- const side=(q,ring)=>{const d=Math.hypot(q.x-ring.x,q.y-ring.y);return d<ring.inner-9?-1:d>ring.r+9?1:0;},before={...previous,x:h.x,y:h.y};
+ const side=(q,ring)=>{const d=playerRadialRange(ring,q);return d.max<ring.inner?-1:d.min>ring.r?1:0;},before={...previous,x:h.x,y:h.y};
  if(h.counterAttempt?.serial!==serial)h.counterAttempt={serial,side:side(from,before),contact:false};
  const attempt=h.counterAttempt;attempt.contact||=contact;const after=side(game.player,h);
  if(attempt.contact&&after&&(!attempt.side||after!==attempt.side)){h.dashCountered=true;refundCounterDash();}

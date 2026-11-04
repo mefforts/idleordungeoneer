@@ -14,8 +14,8 @@ function tickGraveEchoes(dt){
  game.graveEchoes=(game.graveEchoes||[]).filter(e=>{
   if(game.status!=='running')return false;
   e.age+=dt;e.life-=dt;if(e.life<=0)return false;if(e.age<.85)return true;
-  if(e.age<3.3){const p=game.player,dx=p.x-e.x,dy=p.y-e.y,d=Math.hypot(dx,dy)||1,blend=Math.min(1,dt*2.2);e.vx+=(dx/d*110-e.vx)*blend;e.vy+=(dy/d*110-e.vy)*blend;e.x+=e.vx*dt;e.y+=e.vy*dt;if(Math.hypot(p.x-e.x,p.y-e.y)<18){hurt(e.power);burst(e.x,e.y,8,'#d4c3f3');return false;}}
-  else if(e.life<=dt+.05){if(Math.hypot(game.player.x-e.x,game.player.y-e.y)<48)hurt(e.power);burst(e.x,e.y,10,'#c7b1ef');return false;}
+  if(e.age<3.3){const p=game.player,dx=p.x-e.x,dy=p.y-e.y,d=Math.hypot(dx,dy)||1,blend=Math.min(1,dt*2.2);e.vx+=(dx/d*110-e.vx)*blend;e.vy+=(dy/d*110-e.vy)*blend;e.x+=e.vx*dt;e.y+=e.vy*dt;if(playerCircleContains(e.x,e.y,9)){hurt(e.power);burst(e.x,e.y,8,'#d4c3f3');return false;}}
+  else if(e.life<=dt+.05){if(playerCircleContains(e.x,e.y,48))hurt(e.power);burst(e.x,e.y,10,'#c7b1ef');return false;}
   return true;
  });
 }
@@ -42,10 +42,11 @@ function gravePulseCanCast(){
 function gravePulseFinished(h){
  // Retire the moving rim only after it has passed every actor and the screen.
  const visible=Math.hypot(h.x-game.camX,h.y-game.camY)+Math.hypot(game.viewWidth,game.viewHeight)/2+48;
- return h.inner>visible&&h.inner>Math.hypot(h.x-game.player.x,h.y-game.player.y)+32&&
+ return h.inner>visible&&h.inner>playerRadialRange(h).max+32&&
   game.enemies.every(e=>h.inner>Math.hypot(h.x-e.x,h.y-e.y)+(e.rad||18)+32);
 }
 function expandingWaveContains(actor,h,previous,from=actor){
+ if(actor===game.player)return playerExpandingWaveContains(h,previous,from);
  const radius=actor===game.player?9:Math.min(18,actor.rad||10),dx=actor.x-from.x,dy=actor.y-from.y,ux=from.x-h.x,uy=from.y-h.y,travel=Math.hypot(dx,dy),growth=h.r-previous.r;
  // Distance from the expanding rim is convex along a movement segment.
  // Test its minimum and endpoint maximum so fast dashes cannot tunnel through.

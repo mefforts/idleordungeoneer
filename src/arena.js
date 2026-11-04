@@ -119,10 +119,10 @@ function resetRun(){
 
 function save(){if(game.restoringSave)return;checkpointGroundXp();checkpointGroundLoot();try{data.goldHighWater=Math.max(data.goldHighWater||0,data.gold);data.savedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}catch(err){if(!saveWarningShown&&$('toastStack')){saveWarningShown=true;toast('Progress could not be saved','Allow browser storage, or back up your save in Settings.')}}}
 
-function finishPhase(){if(remainingSummonThreats()){if(!game.phaseCleanupPending)announce('BREAK THE SPIRES · CLEAR THEIR SUMMONS',2);game.phaseCleanupPending=true;game.transition=0;game.spawnTimer=999;return false;}clearEncounterState();game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
+function finishPhase(){if(remainingSummonThreats()||remainingReleasedThreats()){if(!game.phaseCleanupPending&&remainingSummonThreats())announce('BREAK THE SPIRES · CLEAR THEIR SUMMONS',2);game.phaseCleanupPending=true;game.transition=0;game.spawnTimer=999;return false;}const support=(game.totems||[]).filter(t=>!t.destructible);clearEncounterState();game.totems=support;game.hazards=[];game.transition=.72;game.spawnTimer=999;const banked=game.gems.splice(0);for(const gem of banked){gainXp(gem.value)}checkpointGroundXp();for(const e of game.enemies)if(!e.boss)burst(e.x,e.y,5,'#bedfa2');game.enemies=[];game.hostileShots=[];announce(game.phase===5?'THE FLOOR IS YOURS':'ENCOUNTER CLEARED',1.2);}
 
 function nextPhase(){
-  clearEncounterState();game.phase++;game.enemies=[];game.shots=[];game.hostileShots=[];game.boss=null;game.phaseKills=0;game.phaseSpawned=0;game.phaseTime=0;game.spawnTimer=.25;game.transition=0;
+  const support=game.phase<5?(game.totems||[]).filter(t=>!t.destructible):[];clearEncounterState();game.totems=support;game.phase++;game.enemies=[];game.shots=[];game.hostileShots=[];game.boss=null;game.phaseKills=0;game.phaseSpawned=0;game.phaseTime=0;game.spawnTimer=.25;game.transition=0;
   if(game.phase>=6){clearFloor();return;}
   game.phaseTarget=zoneBalance().targets[game.phase];prepareEliteWave();game.hazards=[];
   const phase=game.phase;

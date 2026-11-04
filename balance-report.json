@@ -1,5 +1,5 @@
 {
-  "version": "11.12.0",
+  "version": "11.13.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1256,8 +1256,8 @@
       "maximumRares": 3,
       "knownElites": 6
     },
-    "blessingChance": 0.25,
-    "otherEliteBlessingChance": 0.25,
+    "blessingChance": 0.15,
+    "otherEliteBlessingChance": 0.15,
     "stacking": true,
     "lifesteal": 0.005,
     "boons": {
@@ -1388,6 +1388,54 @@
     ]
   },
   "encounters": {
+    "offscreenThreats": {
+      "radius": 0.34,
+      "maximumRadius": 180,
+      "minimumRadius": 80,
+      "opacity": 0.18,
+      "pulsesPerSecond": 0.8,
+      "countsStack": false,
+      "reducedMotion": "Steady",
+      "clock": "Real time; frozen while paused",
+      "inputInterception": false
+    },
+    "releasedAttacks": {
+      "persistAfterSourceDefeat": true,
+      "plantedReflectWards": true,
+      "casterBound": [
+        "briarLeash",
+        "rallyThread",
+        "orbitTransfer",
+        "graftedSwap",
+        "turningBulwark"
+      ],
+      "supportRetargets": true,
+      "phaseWaitsForDanger": true,
+      "floorBoundaryCleanup": true
+    },
+    "playerHurtbox": {
+      "radius": 12,
+      "top": -42,
+      "bottom": 15,
+      "stableAcrossEquipment": true,
+      "groundedInteractions": true,
+      "tealGroundProtection": true
+    },
+    "positioning": {
+      "separation": 150,
+      "planSeconds": 1.6,
+      "holdRadius": 18,
+      "retreatHealth": 0.38,
+      "retreatSeconds": 12,
+      "retreatCooldown": 20,
+      "retreatHealRate": 0.015,
+      "retreatHealCap": 0.12,
+      "healingRadius": 64,
+      "eligible": "Elites, rares and guardian Echoes; full-boss scripts preserved",
+      "pairedMechanicsRetainMovement": true,
+      "speedBudgetUnchanged": true,
+      "healingRetreats": "Natural ordinary/uncommon; one per active unblocked healing totem"
+    },
     "travelling": {
       "hedge": {
         "speed": 245,
@@ -3200,7 +3248,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 952.6799999999819,
+      "seconds": 967.5199999999825,
       "kills": 413,
       "referenceDps": 80,
       "targetSeconds": 905
@@ -3208,7 +3256,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1586.6800000000271,
+      "seconds": 1698.200000000008,
       "kills": 648,
       "referenceDps": 240,
       "targetSeconds": 1423
@@ -3216,7 +3264,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 13504.159999999318,
+      "seconds": 14281.519999998609,
       "kills": 938,
       "referenceDps": 240,
       "targetSeconds": 14296
@@ -3224,7 +3272,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 15061.359999997901,
+      "seconds": 15845.399999997187,
       "kills": 1118,
       "referenceDps": 240,
       "targetSeconds": 15207
@@ -3232,7 +3280,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 10107.080000001239,
+      "seconds": 10178.400000001137,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3240,23 +3288,25 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 10131.840000001137,
+      "seconds": 10275.360000001196,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
     }
   ],
+  "pacingBuild": "11.13.0",
+  "pacingHtmlSha256": "89fd9e41faf446e2969fd52d011bb820ed947888520a37ab0d9fef088b586b69",
   "earlyZoneHealthComparison": [
     {
       "zone": 1,
       "beforeSeconds": 734.8800000000224,
-      "afterSeconds": 952.6799999999819,
+      "afterSeconds": 967.5199999999825,
       "referenceDps": 80
     },
     {
       "zone": 2,
       "beforeSeconds": 1245.7600000000634,
-      "afterSeconds": 1586.6800000000271,
+      "afterSeconds": 1698.200000000008,
       "referenceDps": 240
     }
   ],
@@ -3273,7 +3323,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 6.62,
+        "seconds": 5.52,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
@@ -3291,7 +3341,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 6.62,
+        "seconds": 5.52,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
@@ -3349,7 +3399,7 @@
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 7,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3367,7 +3417,7 @@
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 7,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3381,12 +3431,12 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 18.2,
+        "seconds": 19.26,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 126,
-        "hits": 1,
-        "damageTaken": 18,
+        "remainingHp": 108,
+        "hits": 2,
+        "damageTaken": 36,
         "reflections": 0
       },
       {
@@ -3399,12 +3449,12 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 18.2,
+        "seconds": 19.26,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 126,
-        "hits": 1,
-        "damageTaken": 18,
+        "remainingHp": 108,
+        "hits": 2,
+        "damageTaken": 36,
         "reflections": 0
       },
       {
@@ -3421,7 +3471,7 @@
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 7,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3439,7 +3489,7 @@
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
-        "hits": 7,
+        "hits": 8,
         "damageTaken": 144,
         "reflections": 0
       },
@@ -3456,9 +3506,9 @@
         "seconds": 19.26,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 126,
-        "hits": 1,
-        "damageTaken": 18,
+        "remainingHp": 108,
+        "hits": 2,
+        "damageTaken": 36,
         "reflections": 0
       },
       {
@@ -3474,9 +3524,9 @@
         "seconds": 19.26,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 126,
-        "hits": 1,
-        "damageTaken": 18,
+        "remainingHp": 108,
+        "hits": 2,
+        "damageTaken": 36,
         "reflections": 0
       }
     ],
@@ -3521,11 +3571,11 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 9.46,
+        "seconds": 9.42,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
-        "hits": 4,
+        "hits": 5,
         "damage": 189,
         "echoes": 0,
         "casts": [
@@ -3570,26 +3620,26 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 104,
-        "seconds": 108.3,
+        "remainingHp": 82.7,
+        "seconds": 103.48,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 3,
-        "damage": 85,
+        "hits": 7,
+        "damage": 151.7,
         "echoes": 0,
         "casts": [
           "ground",
           "beam",
           "bloom",
           "cinderStitch",
-          "rallyThread",
-          "volley",
           "fury",
+          "volley",
           "coolingIslands",
-          "crossfire",
-          "emberCatch",
           "reflect",
+          "emberCatch",
+          "rallyThread",
+          "crossfire",
           "summon"
         ]
       },
@@ -3604,28 +3654,23 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 46.3,
-        "seconds": 98.64,
-        "status": "running",
-        "phase": 2,
-        "clearedOpeningGuardian": true,
-        "hits": 5,
-        "damage": 165.4,
+        "remainingHp": 0,
+        "seconds": 63.68,
+        "status": "dead",
+        "phase": 1,
+        "clearedOpeningGuardian": false,
+        "hits": 6,
+        "damage": 189,
         "echoes": 0,
         "casts": [
           "bloom",
           "ground",
           "beam",
-          "rallyThread",
-          "fury",
-          "coolingIslands",
-          "reflect",
-          "crossfire",
           "cinderStitch",
-          "emberCatch",
           "volley",
-          "slagAnchors",
-          "moltenDroplets"
+          "forgeHammers",
+          "emberCatch",
+          "crossfire"
         ]
       },
       {
@@ -3639,29 +3684,25 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 113.4,
-        "seconds": 111.76,
-        "status": "running",
-        "phase": 2,
-        "clearedOpeningGuardian": true,
-        "hits": 3,
-        "damage": 75.6,
+        "remainingHp": 0,
+        "seconds": 78.24,
+        "status": "dead",
+        "phase": 1,
+        "clearedOpeningGuardian": false,
+        "hits": 14,
+        "damage": 189,
         "echoes": 0,
         "casts": [
           "beam",
           "ground",
           "bloom",
           "cinderStitch",
-          "volley",
           "fury",
-          "forgeHammers",
-          "shield",
+          "volley",
+          "coolingIslands",
+          "reflect",
           "emberCatch",
-          "turningBulwark",
-          "crossfire",
-          "rallyThread",
-          "moltenDroplets",
-          "backdraft"
+          "moltenDroplets"
         ]
       },
       {
@@ -3676,7 +3717,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 5.2,
+        "seconds": 5.14,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
@@ -3699,7 +3740,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 4.66,
+        "seconds": 4.62,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
@@ -3720,7 +3761,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 5.6,
+        "seconds": 5.54,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
@@ -3743,13 +3784,13 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 169.72,
+        "seconds": 199.6,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 6,
-        "damage": 189,
-        "echoes": 8,
+        "hits": 7,
+        "damage": 208,
+        "echoes": 7,
         "casts": [
           "ground",
           "soulLantern",
@@ -3761,12 +3802,14 @@
           "gravePulse",
           "beam",
           "boneLoom",
-          "fury",
           "reflect",
-          "crossfire",
           "hauntedFootsteps",
+          "crossfire",
           "volley",
-          "charge"
+          "fury",
+          "charge",
+          "bloom",
+          "shield"
         ]
       },
       {
@@ -3781,25 +3824,26 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 161.92,
+        "seconds": 162.72,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 7,
-        "damage": 211.7,
+        "hits": 6,
+        "damage": 197.4,
         "echoes": 7,
         "casts": [
           "beam",
           "fury",
           "reflect",
-          "charge",
           "ricochet",
           "bloom",
           "gravePulse",
           "ground",
+          "soulLantern",
+          "mend",
           "boneLoom",
-          "hauntedFootsteps",
           "crossfire",
+          "hauntedFootsteps",
           "volley",
           "summon"
         ]
@@ -3816,12 +3860,12 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 145.32,
+        "seconds": 89.82,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 6,
-        "damage": 189,
+        "hits": 7,
+        "damage": 211.7,
         "echoes": 7,
         "casts": [
           "gravePulse",
@@ -3832,11 +3876,7 @@
           "ground",
           "beam",
           "fury",
-          "crossfire",
-          "volley",
-          "summon",
-          "ricochet",
-          "bloom"
+          "crossfire"
         ]
       }
     ]

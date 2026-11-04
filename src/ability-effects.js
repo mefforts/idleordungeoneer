@@ -205,7 +205,6 @@ function paintAbilityStream(t,a,end,caster){
  if(t.blocked){ctx.setLineDash([3,7]);line(end.x,end.y,caster.x,caster.y,1.2,signal.color+'40');ctx.setLineDash([]);}
  if(t.disabled)ctx.setLineDash([5,8]);line(a.x,a.y,end.x,end.y,8,theme.dark+'c0');line(a.x,a.y,end.x,end.y,3.5,theme.color);line(a.x,a.y,end.x,end.y,1,theme.hot);ctx.setLineDash([]);
  if(!t.disabled){const steps=reducedMotion()?1:3;for(let i=0;i<steps;i++){const u=reducedMotion()?.5:(time*.55+i/steps)%1,x=a.x+(end.x-a.x)*u,y=a.y+(end.y-a.y)*u;paintAbilityEmblem(signal.symbol,x,y,5.5,signal);}}
- if(t.blocked&&!t.disabled){ctx.strokeStyle=combatTheme('safe').color;ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(end.x,end.y,15,0,Math.PI*2);ctx.stroke();}
  ctx.restore();
 }
 function encounterBoonIcon(kind){

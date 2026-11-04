@@ -85,6 +85,7 @@ function expandedCastSetup(enemy,cast){
  if(type==='bloom'&&zoneNumber()===1){cast.returningStars=true;cast.label='Returning Stars';cast.hint='Stars grow on the way out · watch them return to the caster';}
 }
 function expandedContains(actor,shape){
+ if(actor===game.player)return playerShapeContains(shape);
  const radius=actor===game.player?9:Math.min(18,actor.rad||10);
  if(shape.shape==='quarters')return insideRect(actor,shape.rect,radius)&&!insideRect(actor,shape.safe,-radius);
  if(shape.shape==='rect')return insideRect(actor,shape.rect,radius);
@@ -171,7 +172,7 @@ function dungeonKillEffects(enemy){
 }
 function tickBossBursts(dt){
  game.bossBursts=(game.bossBursts||[]).filter(event=>{
-  if(!game.enemies.includes(event.owner)||event.owner.hp<=0)return false;event.delay-=dt;if(event.delay>0)return true;
+  if(!encounterSourceActive(event.owner))return false;event.delay-=dt;if(event.delay>0)return true;
   const {owner,type,index,damage,cast}=event,count=type==='spiral'?8:type==='orbit'?8:16,offset=index*.21+(owner.mechanicIndex||0)*.28,speed=type==='bloom'?(cast.returningStars?200:125):type==='return'?175:165;
   for(let i=0;i<count;i++){
    if(type!=='orbit'&&i%4===0)continue;const a=i*Math.PI*2/count+offset;
@@ -180,7 +181,7 @@ function tickBossBursts(dt){
  });
 }
 function advanceExpandedShot(s,dt){
- if(!s.owner||!game.enemies.includes(s.owner)||s.owner.hp<=0){s.life=0;return true;}
+ if(!encounterSourceActive(s.owner)){s.life=0;return true;}
  s.age=(s.age||0)+dt;if(s.growing)s.rad=Math.min(23,(s.baseRad||6)+s.age*4.5);
  if(s.orbit){
   s.orbit.remaining-=dt;s.orbit.angle+=dt*1.8;s.x=s.owner.x+Math.cos(s.orbit.angle)*s.orbit.radius;s.y=s.owner.y+Math.sin(s.orbit.angle)*s.orbit.radius;
@@ -208,7 +209,7 @@ function paintExpandedShape(shape,theme,progress=1,active=false){
  if(shape.shape==='quarters'){
   for(let i=0;i<4;i++){
    const r=arenaQuarter(shape.rect,i),safe=r.left===shape.safe.left&&r.top===shape.safe.top,t=safe?combatTheme('safe'):theme;
-   quad(r.left,r.top,r.right-r.left,r.bottom-r.top,t.color+(safe?'0c':active?'12':'0a'),t.color,2);
+   quad(r.left,r.top,r.right-r.left,r.bottom-r.top,t.color+(safe?'0c':active?'12':'0a'));
    if(safe){
     // An open sanctuary sigil identifies the empty quarter without a text panel.
     const x=(r.left+r.right)/2,y=(r.top+r.bottom)/2;
