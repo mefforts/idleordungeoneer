@@ -33,6 +33,7 @@ function resolveReflectWard(owner,cast){
  const point=cast.point,p=encounterFoot(game.player),reflected=cast.reflected===true||!cast.expired&&point.armed&&Math.hypot(p.x-point.x,p.y-point.y)<=point.inner,kind=owner.biome??biomeIndex();
  game.counterEffects.push({...point,tx:owner.x,ty:owner.y-22,biome:kind,reflected,expired:!reflected,life:.75,total:.75});game.reflectCooldown=6;
  if(reflected){
+  refundCounterDash();
   const amount=owner.maxHp*(.12+.015*waveRank('prism'));owner.hp-=amount;owner.stagger=1.6+.15*waveRank('prism');for(const t of game.totems||[])if(t.owner===owner)t.disabledUntil=game.frame+waveRank('prism');owner.lastDamageStyle=combatStyle();floater(owner.x,owner.y-42,'Reflected · '+Math.round(amount),combatTheme('reflect').hot);burst(owner.x,owner.y,10,combatTheme('reflect').color);if(owner.hp<=0)onKill(owner);
  }else{
   if(cast.type==='reversal'){const healed=Math.min(owner.maxHp-owner.hp,owner.maxHp*.05);owner.hp+=healed;floater(owner.x,owner.y-48,'MISSED MIRROR · +'+Math.round(healed)+' HP',combatTheme('danger').hot);}

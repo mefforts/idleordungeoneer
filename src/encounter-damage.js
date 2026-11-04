@@ -19,7 +19,7 @@ function paintEnemyResolve(enemy){
  else{themedArc(enemy.x,enemy.y+enemy.rad*.65,enemy.rad+9,.25+reduction,theme.color+'a0',2);}
  textAt(Math.round(reduction*100)+'%',x,y+19,'700 10px system-ui',theme.hot);ctx.restore();
 }
-function hostileDamage(owner,fraction){const boost=(owner?.furyLinked?1.12:1)*themedRallyMultiplier(owner);return game.player.maxHp*Math.min(.5,fraction*boost)/incomingDamageScale();}
+function hostileDamage(owner,fraction){const boost=(owner?.furyLinked?1.12:1)*themedRallyMultiplier(owner)*(owner?.ascendance>0?ELITE_TASKS.ascend.damage:1);return game.player.maxHp*Math.min(.5,fraction*boost)/incomingDamageScale();}
 function bossAttackDamage(owner,type=owner.cast?.type){
  if(owner.uncommon)return hostileDamage(owner,type==='ground'?.08:type==='charge'||owner.charge?.10:.06);
  if(themedAbility(type))return hostileDamage(owner,ENCOUNTER_DAMAGE.heavy);

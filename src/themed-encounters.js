@@ -84,7 +84,7 @@ function themedLinkStep(enemy,dx,dy){
 function snapThemedLink(e,from,dashing){
  if(!dashing||!['briarLeash','rallyThread'].includes(e.type)||!liveThemedLink(e))return false;
  const end=themedLinkEnd(e),p=game.player;if(segmentsDistance(from.x,from.y,p.x,p.y,e.owner.x,e.owner.y,end.x,end.y)>=17)return false;
- e.solved=e.done=true;burst(p.x,p.y,12,combatTheme('safe').color);return true;
+ e.solved=e.done=true;refundCounterDash();burst(p.x,p.y,12,combatTheme('safe').color);return true;
 }
 function bossPlan(e){
  if(e.uncommon)return [e.uncommonAttack||uncommonPattern(e)];
@@ -211,7 +211,7 @@ function themedHit(e,key,contains,factor=.8,cooldown=0){
  if(THEMED_MECHANICS[e.type].language==='friendly')damageMonstersInAttack(e.owner,e,contains);
 }
 function themedCounter(e,point,fraction=.12){
- if(e.done)return;e.solved=true;e.done=true;const owner=e.owner,amount=owner.maxHp*fraction;owner.hp-=amount;owner.stagger=Math.max(owner.stagger||0,1.2);owner.lastDamageStyle=combatStyle();burst(point.x,point.y,16,combatTheme('reflect').color);game.counterEffects.push({...point,inner:26,r:42,tx:owner.x,ty:owner.y-22,reflected:true,life:.75,total:.75,biome:e.kind});if(owner.hp<=0)onKill(owner);
+ if(e.done)return;refundCounterDash();e.solved=true;e.done=true;const owner=e.owner,amount=owner.maxHp*fraction;owner.hp-=amount;owner.stagger=Math.max(owner.stagger||0,1.2);owner.lastDamageStyle=combatStyle();burst(point.x,point.y,16,combatTheme('reflect').color);game.counterEffects.push({...point,inner:26,r:42,tx:owner.x,ty:owner.y-22,reflected:true,life:.75,total:.75,biome:e.kind});if(owner.hp<=0)onKill(owner);
 }
 function themedCounterContact(e,point,from,dt,start=0,end=e.total){
  const old=e.age-dt;if(e.age<start||old>=end)return false;
@@ -220,6 +220,7 @@ function themedCounterContact(e,point,from,dt,start=0,end=e.total){
  return segmentDistance(point.x,point.y,a.x,a.y,b.x,b.y)<=27;
 }
 function themedReturnHalf(e,point){
+ refundCounterDash();
  const owner=e.owner;owner.hp-=owner.maxHp*.06;owner.stagger=Math.max(owner.stagger||0,.6);owner.lastDamageStyle=combatStyle();burst(point.x,point.y,9,combatTheme('reflect').color);game.counterEffects.push({...point,inner:26,r:42,tx:owner.x,ty:owner.y-22,reflected:true,life:.75,total:.75,biome:e.kind});if(owner.hp<=0){e.done=true;onKill(owner);}
 }
 function themedToken(e,point,r,key,factor=.6){let old=e.state.tokens?.[key]||point;if(old.portal!==point.portal)old=point;(e.state.tokens||(e.state.tokens={}))[key]=point;themedHit(e,key,actor=>segmentsDistance(old.x,old.y,point.x,point.y,actor.x,actor.y,actor.x,actor.y)<=r+(actor===game.player?9:Math.min(18,actor.rad||10)),Math.max(.4,factor));}
@@ -235,8 +236,8 @@ function tickThemedEvent(e,dt,from,dashing){
   else if(e.type==='briarLeash'&&age>=e.total-.05&&!s.pulled){s.pulled=true;themedPull(end,65);hurt(e.damage*.6);}
   break;}
  case 'clingingSeeds':{
-  if(s.attachedAt===null){const position=v=>({x:e.origin.x+(t.x-e.origin.x)*clamp(v/.85,0,1),y:e.origin.y+(t.y-e.origin.y)*clamp(v/.85,0,1)}),q=position(age),old=position(oldAge);if(segmentsDistance(old.x,old.y,q.x,q.y,from.x,from.y,p.x,p.y)<26){if(dashing){e.done=e.solved=true;burst(p.x,p.y,9,abilityMaterial(0).accent);}else{s.attachedAt=age;hurt(e.damage*.4);}}if(age>1&&s.attachedAt===null)e.done=true;}
-  else if(dashing){e.done=e.solved=true;burst(p.x,p.y,9,abilityMaterial(0).accent);}else if(age-s.attachedAt>3.5){hurt(e.damage);e.done=true;}
+  if(s.attachedAt===null){const position=v=>({x:e.origin.x+(t.x-e.origin.x)*clamp(v/.85,0,1),y:e.origin.y+(t.y-e.origin.y)*clamp(v/.85,0,1)}),q=position(age),old=position(oldAge);if(segmentsDistance(old.x,old.y,q.x,q.y,from.x,from.y,p.x,p.y)<26){if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else{s.attachedAt=age;hurt(e.damage*.4);}}if(age>1&&s.attachedAt===null)e.done=true;}
+  else if(dashing){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,9,abilityMaterial(0).accent);}else if(age-s.attachedAt>3.5){hurt(e.damage);e.done=true;}
   break;}
  case 'graftedSwap':if(!s.swapped&&age>=.6){s.swapped=true;s.previous={x:e.owner.x,y:e.owner.y};e.owner.x=e.points[0].x;e.owner.y=e.points[0].y;burst(e.owner.x,e.owner.y,10,'#8ebc67');}break;
  case 'pollenTide':{
@@ -245,14 +246,14 @@ function tickThemedEvent(e,dt,from,dashing){
  case 'cinderStitch':{
   for(let i=0;i<12;i++){if(i%4===3)continue;const q={x:e.origin.x+Math.cos(e.angle)*(i+1)*28,y:e.origin.y+Math.sin(e.angle)*(i+1)*28};if(age>=i*.13+1&&age<i*.13+3)tickCombatDot(e,'stitch'+i,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<18,.02);}
   break;}
- case 'slagAnchors':for(let i=0;i<2;i++){const q=e.points[i];if(!s['anchor'+i]&&dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<36){s['anchor'+i]=true;e.solved=true;burst(q.x,q.y,16,'#ffb471');}}break;
+ case 'slagAnchors':for(let i=0;i<2;i++){const q=e.points[i];if(!s['anchor'+i]&&dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<36){s['anchor'+i]=true;e.solved=true;refundCounterDash();burst(q.x,q.y,16,'#ffb471');}}break;
  case 'emberCatch':{const q=e.points[0];if(themedCounterContact(e,q,from,dt)){damageMonstersInAttack(e.owner,e,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<145);themedCounter(e,q,.10);}else if(age>=e.total-.05){hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
  case 'soulLantern':{
-  const q=e.points[0];if(dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<37){e.solved=e.done=true;burst(q.x,q.y,12,'#70e4a2');break;}
+  const q=e.points[0];if(dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<37){e.solved=e.done=true;refundCounterDash();burst(q.x,q.y,12,'#70e4a2');break;}
   const launched=Math.floor(age/1.15);for(let i=0;i<=launched;i++){const progress=(age-i*1.15)/1.5;if(progress<0||progress>1.1||s['soul'+i])continue;const soul={x:q.x+(e.owner.x-q.x)*Math.min(1,progress),y:q.y+(e.owner.y-q.y)*Math.min(1,progress)};if(Math.hypot(p.x-soul.x,p.y-soul.y)<24){s['soul'+i]=true;e.solved=true;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.0035);}else if(progress>=1){s['soul'+i]=true;e.owner.hp=Math.min(e.owner.maxHp,e.owner.hp+e.owner.maxHp*.004);}}
   break;}
  case 'returningSigil':{const index=s.stage||0,q=e.points[index],start=index?(s.stageAt||0)+.6:0;if(themedCounterContact(e,q,from,dt,start,start+3.6)){if(index===0){s.stage=1;s.stageAt=age;e.solved=true;themedReturnHalf(e,q);}else themedCounter(e,q,.06);}else if(age>=start+3.6){hurt(p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
- case 'borrowedBreath':if(e.points.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<30)){e.done=e.solved=true;burst(p.x,p.y,10,combatTheme('safe').color);}else if(age>=e.total-.05){hurt(p.maxHp*.15/incomingDamageScale());e.done=true;}break;
+ case 'borrowedBreath':if(e.points.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<30)){e.done=e.solved=true;refundCounterDash();burst(p.x,p.y,10,combatTheme('safe').color);}else if(age>=e.total-.05){hurt(p.maxHp*.15/incomingDamageScale());e.done=true;}break;
  case 'gravityWell':if(age<2.7)themedPull(t,(25+age*18)*dt,170);break;
  case 'orbitTransfer':{if(!game.enemies.includes(e.partner)){e.done=true;break;}break;}
  case 'collapsingNova':{
@@ -281,6 +282,7 @@ function tickThemedMechanics(dt,from=game.player,dashing=false){
 function themedShieldMultiplier(enemy,from=game.player){const e=(game.themedEvents||[]).find(e=>e.type==='turningBulwark'&&e.owner===enemy&&!e.done);if(!e)return 1;const angle=e.angle+e.age*.5,delta=Math.atan2(from.y-enemy.y,from.x-enemy.x)-angle;return Math.abs(Math.atan2(Math.sin(delta),Math.cos(delta)))<1.05?.3:1;}
 function themedRallyMultiplier(enemy){return (game.themedEvents||[]).some(e=>e.type==='rallyThread'&&!e.done&&(e.owner===enemy||e.partner===enemy))?1.18:1;}
 function installThemedEncounters(){
+ installEliteTaskGuide();
  SVG_FILES['codex-siphon_tethers.svg']=encounterBoonIcon('siphon');CODEX_ITEMS.push({id:'siphon_tethers',cat:'Enemies',name:'Siphon Tethers',desc:'A red chain drains small rapid health ticks. Hungry Siphon breaks when you dash away from its caster; Knotted Siphon breaks when you dash through its teal knot. Walking alone does not sever either channel.'});
  SVG_FILES['codex-warband_resolve.svg']=encounterBoonIcon('resolve');CODEX_ITEMS.push({id:'warband_resolve',cat:'Enemies',name:'Warband Resolve',desc:'Each other elite, rare, boss or guardian Echo grants 10% damage reduction, up to 50%. Stunned enemies lose this protection and stop granting it to allies until they recover.'});
  SVG_FILES['codex-uncommon_creatures.svg']=THEMED_EFFECT_ART['icon-uncommon'];

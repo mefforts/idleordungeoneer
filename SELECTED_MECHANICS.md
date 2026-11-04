@@ -6,6 +6,8 @@ Build 11.9 gives Rally Thread and Orbit Transfer a teleport that separates their
 
 Special enemies now share Warband Resolve: 10% damage reduction per other living, unstunned elite, rare, boss or guardian Echo, capped at 50%. A stunned enemy neither receives nor grants this boon. Common charge widths, cleave reach, floor-mark radii, beam widths and nova radii grow by 25%. Hungry Siphon requires an outward dash; Knotted Siphon requires a dash through its teal knot. Both drain small rapid ticks without an expiry burst.
 
+Build 11.10 adds brief, damage-free dash stuns against elite-and-higher enemies. A successful dash counter refunds the cooldown; a plain body stun does not. Elites, rares and guardian Echoes also spread out and walk to interruptible Ascendance, Rare Awakening or Living Conduit tasks. Teal arrows show the dash-through interaction; three gold pips show the focused-hit alternative. The Codex explains their limits, and [BALANCE.md](BALANCE.md) records the timings, summon/promotion caps and tests.
+
 | Idea # | Mechanic | Theme | Counterplay |
 | --- | --- | --- | --- |
 | 1 | Burrowing Briar | Overgrowth | Move after the root stops tracking |
@@ -62,4 +64,4 @@ The previous Grave Pulse solve remains one continuous ring and one timed dash. M
 
 [Fifty new theme-neutral variations](THEME_NEUTRAL_IDEAS.md) are proposals only. Unselected original ideas are not added to live rotations.
 
-Validation covers 48 browser suites. Controlled combat tests cover all 39 selected mechanics, 156 effect assets, two additional Codex medallions, proportional damage, capped DoTs, pack completion, uncommon spawn limits, real-terrain phone/landscape placements, timed/swept counters and transient-state cleanup. The encounter-tuning suite adds Resolve stacking and stun windows, actual terrain-crossing dashes, minimum link separation, larger attack boundaries and both siphon variants. Full invulnerable combat benchmarks clear Zones 1–4 and later reference Zones; three-seed 150-DPS pressure comparisons use real health, damage and loot. These automated controllers are not human playtests. Exact results and limits are in [BALANCE.md](BALANCE.md).
+Validation covers 50 browser suites. Controlled combat tests cover all 39 selected mechanics, 156 effect assets, three additional Codex medallions, proportional damage, capped DoTs, pack completion, uncommon spawn limits, real-terrain phone/landscape placements, timed/swept counters and transient-state cleanup. The encounter-tuning suite adds Resolve stacking and stun windows, actual terrain-crossing dashes, minimum link separation, larger attack boundaries and both siphon variants. Full invulnerable combat benchmarks clear Zones 1–4 and later reference Zones; three-seed 150-DPS pressure comparisons use real health, damage and loot. These automated controllers are not human playtests. Exact results and limits are in [BALANCE.md](BALANCE.md).

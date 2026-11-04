@@ -37,9 +37,13 @@ function rareEliteImage(kind,variant){
  if(!rareEliteImages.has(key)){const image=new Image();image.decoding='async';image.src=art.src;rareEliteImages.set(key,image);}return rareEliteImages.get(key);
 }
 function primeRareElites(kind){for(let variant=0;variant<ENVIRONMENT_ZONES[kind].monsters.length;variant++)rareEliteImage(kind,variant);}
-function promoteRareElite(enemy,roll=Math.random()){
- if(!enemy||enemy.summoned||enemy.boss||enemy.elite||game.phase%2!==0||game.phase>=6||game.phaseSpawned<3||game.rareEliteSpawned||(game.rareEliteCount||0)>=rareEliteQuota()||game.enemies.filter(other=>other.champion).length>=rareEliteQuota()||roll>=rareEliteSpawnChance())return false;
+function promoteRareElite(enemy,roll=Math.random(),ritual=false){
+ if(!enemy||enemy.summoned||enemy.boss||enemy.elite||game.phase%2!==0||game.phase>=6)return false;
+ if(ritual){if(!eliteRecruitEligible(enemy)||(game.elitePromotionCount||0)>=elitePromotionCap()||game.enemies.filter(other=>other.champion&&other.hp>0).length>=rareEliteQuota()+elitePromotionCap())return false;}
+ else if(game.phaseSpawned<3||game.rareEliteSpawned||(game.rareEliteCount||0)>=rareEliteQuota()||game.enemies.filter(other=>other.champion).length>=rareEliteQuota()||roll>=rareEliteSpawnChance())return false;
+ const fraction=enemy.hp/enemy.maxHp;
  enemy.champion=enemy.elite=true;enemy.baseRadius=enemy.rad;enemy.rad=Math.min(22,enemy.rad*1.2);enemy.hp=enemy.maxHp=enemy.maxHp*3.5*encounterHealthMultiplier(enemy)*regionalEncounterHealthMultiplier(enemy)/regionalEncounterHealthMultiplier({});enemy.speed*=.90;enemy.castCooldown=1.4;
+ if(ritual){enemy.hp=enemy.maxHp*fraction;enemy.ritualRaised=true;game.elitePromotionCount=(game.elitePromotionCount||0)+1;}
  enemy.name=RARE_ELITE_NAMES[enemy.biome??biomeIndex()][enemy.visualType||0];game.rareEliteCount=(game.rareEliteCount||0)+1;game.rareEliteSpawned=game.rareEliteCount>=rareEliteQuota();codexDiscover('rare_elites');return true;
 }
 function paintRareElite(enemy){

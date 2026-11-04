@@ -1,5 +1,15 @@
 # Dungeon progression and balance
 
+Build 11.10.0 gives elites, rares and guardian Echoes flanking/standoff movement and three interruptible priorities: Ascendance, Rare Awakening and Living Conduit. They walk to clear, separated channel sites; at most one task runs in Zones 1–2 and two from Zone 3 onward. Full bosses, summons and uncommons do not perform these tasks. Existing links retain their required separation.
+
+Ascendance channels for 5.5 seconds, heals 0.35% maximum HP per second (at most 2%), then grants 35% extra attack damage and 25% faster cooldown recovery for 14 seconds. Warnings retain their full duration and special-hit damage remains capped at 50% maximum HP. Rare Awakening channels for six seconds to promote an existing ordinary mob, preserving its health fraction and wave count; at most one promotion per early-Zone wave and two from Zone 3. Summons cannot be promoted. Living Conduit summons until interrupted, first after 2.8 seconds and then at 5.5-second intervals, with a 1.2-second warning and the shared eight-summon cap. These minions grant no loot, XP or kill credit.
+
+Dash through a task owner, stun it, land three focused weapon hits (at least 0.15 seconds apart), or deal 12% of its maximum HP in direct weapon damage to interrupt. Secondary splash and passive burn do not count. Removing a recruit, defeating a caster, silence against Conduit, defeat, retry and phase changes clear their relevant channels. Menu pauses freeze progress. Interrupted tasks cause a 0.8-second stagger and retry after at least 15 seconds.
+
+Dashing through an elite, rare, boss or guardian Echo inflicts a 0.65-second stun and zero damage, once per enemy per dash. Ordinary mobs and uncommons are excluded. This plain stun does not refund dash. Successful dash counters immediately reset its cooldown: reflects, task/charge/siphon interruptions, accepted summoning-spire impacts, support-totem breaks, severed threads, seeds, anchors, lanterns, gold/teal rune counters and Grave Pulse rim crossings. Walking counters do not refund. A pulse grants at most one refund; crowned spires still require two distinct impacts. Refunding does not end or extend the existing 0.35-second dash protection.
+
+The underlying health calibration, equipment, material economy and ordinary wave budgets remain unchanged. Actual clear times can increase because enemies spread out, heal or promote a wave member. Full-Zone controllers now pursue channelers and use dash interrupts; their measured times below include that behavior. Natural-spawn reward estimates exclude optional ritual promotions; a promotion keeps that mob’s normal rare loot.
+
 Build 11.9.0 separates linked enemy pairs with a visible teleport and a 220-unit minimum span; Briar Leash anchors share the clear crossing rule. Rally/Leash cuts work during formation and activity, including swept final-frame dashes. Link movement restrictions end on sever, expiry, owner/partner defeat or encounter cleanup. Blocked placements defer without teleporting enemies.
 
 Warband Resolve grants each elite, rare, boss or guardian Echo 10% damage reduction per other living, unstunned special enemy, capped at 50%, in all Zones. Stunned recipients lose the boon and stop contributing to allies; ordinary/uncommon monsters and totems do not participate. The small shield percentage updates immediately. Royal Guard and directional shields remain separate multiplicative effects.
@@ -204,19 +214,19 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 4 | ~254 min | 240.0 |
 | 5 | ~135 min | 480.0 |
 
-- Live Zone 1: **15.4 min**, 413 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **26.5 min**, 648 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **229.2 min**, 938 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **238.1 min**, 1118 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **163.7 min**, 1118 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **159.3 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 1: **16.8 min**, 413 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **27.6 min**, 648 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **255.3 min**, 938 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **269.4 min**, 1118 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **180.5 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **179.2 min**, 1118 rewarded defeats, 480.0 reference DPS.
 
 | Zone | v11.8.1 live reference | Current live reference |
 | --- | ---: | ---: |
-| 1 | 12.2 min | 15.4 min |
-| 2 | 20.8 min | 26.5 min |
+| 1 | 12.2 min | 16.8 min |
+| 2 | 20.8 min | 27.6 min |
 
-This comparison uses the same invulnerable full-Zone controller and reference equipment. It measures combat pacing with counters, spires and guards; it does not measure human survival or difficulty.
+This comparison retains reference equipment and invulnerability. The current controller also recognizes task interrupts; movement and random encounters differ, so these times measure pacing rather than a matched human survival or difficulty trial.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage without the shared Resolve boon; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
@@ -230,7 +240,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with one continuously expanding Grave Pulse ring. Dash through it: it has no fixed lifetime or travel limit and always moves faster than running, including movement buffs. Pulse casts cannot overlap, and the next warning allows dash recharge before impact. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 7.5–10s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 5 of 6 trials: 69.9–171 HP remained in the finale trials and 0–123.1 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses about 150 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 7.5–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 3 of 6 trials: 87.9–103.9 HP remained in the finale trials and 0 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json. This ranged reference keeps its existing movement priorities instead of chasing every new channel. A separate task-chasing comparison survived less well, so these results do not establish the best human interruption strategy.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
@@ -315,4 +325,4 @@ After Zone 1 Floor 1, the result and a saved, dismissible reminder explain that 
 
 Old Zone wallets and the full historical price of every purchased rank are refunded at 25 seals per Sigil. Fractional credit is retained and a versioned receipt prevents a second refund. Original Zone ledgers are archived in the save. Earlier progression first passes through the existing XP / Mastery migration. Gold, materials, equipment, cached XP and Mastery are preserved. A legacy active blessing becomes one entry in the stacking collection.
 
-Run npm test for the browser suites, including all 39 themed mechanics and their counterplay, proportional damage, DoT limits, interlude completion, capped uncommon spawns, 76 older-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.
+Run npm test for the browser suites, including all 39 themed mechanics, elite priorities, swept dash stuns/refunds, proportional damage, DoT limits, interlude completion, capped uncommon spawns, 76 older-pattern / environment combinations, mobile picker safety, reward isolation, exact migration, style-adaptive perks, base equipment ceilings and full Zone simulations. Run npm run report:balance to regenerate this document and balance-report.json.

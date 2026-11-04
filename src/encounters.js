@@ -7,13 +7,15 @@ function encounterImage(kind,type){
 }
 function clearEncounterState(){
  game.themedEvents=[];game.themedHistory=[];
+ game.eliteRecruits=new Map();game.elitePromotionCount=0;game.dashSweep=null;
  game.phaseCleanupPending=false;game.graveEchoes=[];game.totems=[];game.counterEffects=[];game.counterRequest=null;game.reflectCooldown=0;game.disruptReadyAt=0;game.bossBursts=[];
- if(game.player){game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;}
- for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];}
+ if(game.player){game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;}
+ for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.ascendance=0;e.stunnedByDash=null;}
 }
 function clearOwnerMechanics(owner){
  game.themedEvents=(game.themedEvents||[]).filter(e=>e.owner!==owner&&e.partner!==owner);
  owner.cast=null;owner.charge=null;owner.shieldLink=null;owner.guardIds=[];
+ clearEliteTask(owner);for(const enemy of game.enemies)if(enemy.eliteTask?.target===owner)interruptEliteTask(enemy,'target');
  for(const enemy of game.enemies)if(enemy.cast?.themed?.partner===owner)enemy.cast=null;
  for(const enemy of game.enemies)if(enemy.shieldLink?.target===owner)enemy.shieldLink=null;
  game.totems=(game.totems||[]).filter(t=>t.destructible||t.owner!==owner);game.bossBursts=(game.bossBursts||[]).filter(b=>b.owner!==owner);
@@ -124,12 +126,13 @@ function tickBossSpecial(e,dt,playerFrom=encounterFoot(game.player),dashing=game
   if(phase>old){e.combatPhase=phase;(e.phaseQueue||(e.phaseQueue=[])).push(e.bossIndex===2?(phase===1?'sunder':'bastion'):phase===1?'crossfire':'summon');e.castCooldown=Math.min(e.castCooldown||0,.5);floater(e.x,e.y-65,phase===1?'ENRAGED':'FINAL STAND',combatTheme('danger').hot);}
  }
  if(e.charge){if(e.stagger>0)e.charge=null;else{tickEnemyCharge(e,dt);return;}}
- if(e.stagger>0){if(e.cast?.siphon)e.cast=null;e.stagger=Math.max(0,e.stagger-dt);return;}
+ if(e.stagger>0){if(isReflectCast(e.cast))tickReflectWard(e,e.cast,dt,playerFrom);if(e.cast?.siphon)e.cast=null;e.stagger=Math.max(0,e.stagger-dt);return;}
+ if(e.eliteTask)return;
  if(e.cast?.siphon){tickSiphonTether(e,e.cast,dt,playerFrom,dashing);return;}
  if(isReflectCast(e.cast)){tickReflectWard(e,e.cast,dt,playerFrom);return;}
  if(e.cast?.themed){tickThemedWindup(e,e.cast,dt);return;}
  if(e.cast){e.cast.windup-=dt;if(e.cast.windup<=0){const cast=e.cast;e.cast=null;resolveBossCast(e,cast);e.castCooldown=e.boss?(e.combatPhase>=2?1.8:2.5):3.1;}return;}
- e.castCooldown=(e.castCooldown??2)-dt;if(e.castCooldown<=0&&!beginBossCast(e))e.castCooldown=.2;
+ e.castCooldown=(e.castCooldown??2)-dt*(e.ascendance>0?ELITE_TASKS.ascend.tempo:1);if(e.castCooldown<=0&&!beginBossCast(e))e.castCooldown=.2;
 }
 function totemInterception(t){
  const totem=encounterFoot(t),caster=encounterFoot(t.owner),player=encounterFoot(game.player);
@@ -140,6 +143,7 @@ function dashSupportTotem(t,from=encounterFoot(game.player),dashing=false){
  const foot=encounterFoot(t),player=encounterFoot(game.player);
  if(segmentsDistance(from.x,from.y,player.x,player.y,foot.x,foot.y-SUMMON_BUMPS.dashRise,foot.x,foot.y+4)>SUMMON_BUMPS.dashRadius)return false;
  game.totems.splice(game.totems.indexOf(t),1);t.blocked=false;
+ refundCounterDash();
  burst(foot.x,foot.y-14,18,totemSignal(t).color);return true;
 }
 function tickEncounterObjects(dt,playerFrom=encounterFoot(game.player),dashing=game.player.dashTime>0){
@@ -195,6 +199,7 @@ function encounterLabel(label,x,y,color,size=10){
 function paintReflectWard(point,progress,kind,active=false){paintReflectWardArt(point,progress,kind,active);}
 function paintEncounterGround(){
  paintAbilityGroundArt();paintThemedGround();
+ paintEliteTaskGround();
  for(const e of game.enemies)if(['reflect','reversal'].includes(e.cast?.type))paintReflectWard(e.cast.point,clamp(1-e.cast.windup/e.cast.total,0,1),e.biome);
  for(const fx of game.counterEffects||[]){ctx.save();ctx.globalAlpha=fx.life/fx.total;if(fx.type==='cleave')paintEnemyCleave(fx.cast,combatTheme('friendly'),1,true);else if(fx.type==='ricochet')for(const point of fx.points)paintRicochetBank(point,DUNGEON_THEMES[fx.biome]);else paintReflectWard(fx,1,fx.biome,true);ctx.restore();}
 }
@@ -216,6 +221,7 @@ function paintEncounterLinks(){
  }
  for(const e of game.enemies){
   paintEnemyResolve(e);
+  paintEliteTaskAir(e);
   if(e.cast?.type==='tether')paintAbilityTether(e,e.cast);
   if(['reflect','reversal'].includes(e.cast?.type)){
    const point=e.cast.point;

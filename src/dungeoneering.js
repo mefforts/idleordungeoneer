@@ -52,6 +52,7 @@ function tickDungeonHazards(dt,playerFrom=game.player){
   if(pulse)h.waveSpeed=Math.max(h.waveSpeed,playerMoveSpeed()*GRAVE_PULSE.runningFactor);else h.life-=dt;
   if(h.wave){h.inner+=h.waveSpeed*dt;h.r+=h.waveSpeed*dt;}if(h.life<=0)return false;
   const contains=actor=>h.wave?expandingWaveContains(actor,h,previous,actor===p?playerFrom:actor):h.type==='expanded'?expandedContains(actor,h):h.type==='ground'?Math.hypot(actor.x-h.x,actor.y-h.y)<h.r+(actor.rad||10):segmentDistance(actor.x,actor.y,h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length)<h.width/2+(actor.rad||10);
+  if(pulse&&!h.dashCountered&&currentCounterDash()!==null&&contains(p)){h.dashCountered=true;refundCounterDash();}
   if(h.lingering)tickCombatDot(h,'fire',contains);else if(contains(p)&&!((h.type==='expanded'||h.singleHit)&&h.playerHit)){hurt(h.damage);if(h.type==='expanded'||h.singleHit)h.playerHit=true;}if(h.language==='friendly'||['ground','beam'].includes(h.type))damageMonstersInAttack(h.owner,h,contains);return game.status==='running'&&game.transition<=0&&(!pulse||!gravePulseFinished(h));
  });
 }
@@ -118,11 +119,11 @@ function drawMob(e,b){
   if(e.hp<e.maxHp){const y=e.y+e.rad*.85-environmentMobSize(e).height-8;quad(e.x-15,y,30,4,'#102934');quad(e.x-15,y,30*clamp(e.hp/e.maxHp,0,1),4,'#d8c594');}
 }
 function playerMoveSpeed(){return 175*(1+trinketBonus('speed'))*(1+styleStats().movePercent/100)*waveSwiftFactor()*eliteBoonValue('movement');}
-function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFrom=encounterFoot(p),dashing=p.dashTime>0;game.frame+=dt;game.phaseTime+=dt;game.runSeconds+=dt;p.invuln=Math.max(0,p.invuln-dt);p.dashCooldown=Math.max(0,p.dashCooldown-dt);
+function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFrom=encounterFoot(p),dashing=p.dashTime>0;game.frame+=dt;game.phaseTime+=dt;game.runSeconds+=dt;p.invuln=Math.max(0,p.invuln-dt);p.dashCooldown=Math.max(0,p.dashCooldown-dt);p.dashGuard=Math.max(0,(p.dashGuard||0)-dt);
  tickEliteBoon(dt);tickEliteLinks(dt);p.attackPose=Math.max(0,p.attackPose-dt);p.hitPose=Math.max(0,p.hitPose-dt);let dx=(game.keys.KeyD||game.keys.ArrowRight?1:0)-(game.keys.KeyA||game.keys.ArrowLeft?1:0),dy=(game.keys.KeyS||game.keys.ArrowDown?1:0)-(game.keys.KeyW||game.keys.ArrowUp?1:0);
  if(game.joystick.pointer!==null){dx=game.joystick.x;dy=game.joystick.y;}else if(game.mouseMove.active){dx=game.mouseMove.x;dy=game.mouseMove.y}
  const norm=Math.hypot(dx,dy)||1;dx/=norm;dy/=norm;p.vx=dx;p.vy=dy;if(Math.abs(dx)>.15)p.facing=dx<0?-1:1;const spd=playerMoveSpeed();if(p.dashTime>0){p.x+=p.dashDX*650*dt;p.y+=p.dashDY*650*dt;p.dashTime-=dt;burst(p.x,p.y,1,'#a4e2b2')}else{p.x+=dx*spd*dt;p.y+=dy*spd*dt}
- resolveWorldCollisions(p);if(tickEliteSpoils())return;tickEncounterObjects(dt,playerFrom,dashing);tickThemedMechanics(dt,{x:playerFrom.x,y:playerFrom.y-13},dashing);if(game.status!=='running')return;updateCombatAim();
+ resolveWorldCollisions(p);game.dashSweep={frame:game.frame,active:dashing,serial:p.dashSerial||0};if(tickEliteSpoils())return;tickEncounterObjects(dt,playerFrom,dashing);tickThemedMechanics(dt,{x:playerFrom.x,y:playerFrom.y-13},dashing);if(game.status!=='running')return;tickDashStuns(playerFrom,dashing);tickEliteTasks(dt);updateCombatAim();
  if(game.upgrades.regen)p.hp=Math.min(p.maxHp,p.hp+(waveRank('regen')*.08)*dt);
  tickAmmunition(dt);game.attackTimer-=dt;if(game.attackTimer<=0&&attack()){game.attackTimer=attackCooldown()}
  if(game.phase%2===0&&game.phase<6){
@@ -145,7 +146,7 @@ function tickCombat(dt){if(eliteRewardOpen())return;const p=game.player,playerFr
    const vx=p.x-e.x,vy=p.y-e.y,dist=Math.hypot(vx,vy)||1;
    if(e.boss||e.elite||e.uncommon)tickBossSpecial(e,dt,playerFrom,dashing);
    if(!game.enemies.includes(e)||game.status!=='running')continue;
-   const walk=e.cast&&!isReflectCast(e.cast)||e.charge||e.stagger>0?0:e.uncommon&&dist<175?-.5:e.uncommon&&dist<280?0:(game.totems||[]).some(t=>t.owner===e)?.20:1,step=e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1),move=themedLinkStep(e,vx/dist*step,vy/dist*step);e.x+=move.x;e.y+=move.y;
+   const walk=e.cast&&!isReflectCast(e.cast)||e.charge||e.stagger>0?0:e.uncommon&&dist<175?-.5:e.uncommon&&dist<280?0:(game.totems||[]).some(t=>t.owner===e)?.20:1,step=e.speed*dt*walk*enemyMovementFactor()*(e.frozen>0?1-(.05+(e.frostRank||1)*.02):1),intent=eliteBehaviorStep(e,vx/dist*step,vy/dist*step,step),move=themedLinkStep(e,intent.x,intent.y);e.x+=move.x;e.y+=move.y;
    if(!(e.stagger>0)&&dist<e.rad+17&&e.contact<=0){hurt(e.boss||e.elite?hostileDamage(e,ENCOUNTER_DAMAGE.contact):(10+combatDepth()*1.5)*(e.furyLinked?1.12:1));e.contact=e.boss?.7:.60}
  }
  tickDungeonHazards(dt,{x:playerFrom.x,y:playerFrom.y-13});tickHealthDrops(dt);tickGroundLoot(dt);
@@ -219,6 +220,7 @@ function dealDamage(enemy,base,fromX,fromY,sourceStyle=combatStyle()){
  if(enemy.totem){damageTotem(enemy,base);return;}if(!game.enemies.includes(enemy))return;
  const healthBefore=Math.max(0,enemy.hp),critical=Math.random()<waveCritChance(),rawDamage=base*eliteBoonValue('damage')*(enemy.elite||enemy.boss?eliteBoonValue('eliteDamage'):1)*(critical?2:1),damage=rawDamage*enemyShieldMultiplier(enemy,{x:fromX,y:fromY});
  enemy.lastHitAt=game.frame;enemy.lastDamageStyle=sourceStyle;enemy.hp-=damage;
+ noteEliteTaskHit(enemy,damage);
  if(trinketBonus('leech')>0)game.player.hp=Math.min(game.player.maxHp,game.player.hp+Math.min(damage,healthBefore)*trinketBonus('leech'));
  if(game.floaters.length<75)floater(enemy.x,enemy.y-15,Math.round(damage),critical?'#ffe68e':'#e8f5de');if(game.enemies.length<110)burst(enemy.x,enemy.y,3,'#ffdfad');
  if(enemy.hp>0){

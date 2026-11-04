@@ -9,8 +9,9 @@ function setupSiphonTether(owner,cast){
  cast.siphon={variant,cut,age:0,healed:0,dashSerial:p.dashSerial,dashStart:Math.hypot(p.x-owner.x,p.y-owner.y)};cast.label=variant==='knot'?'Knotted Siphon':'Hungry Siphon';cast.hint='';owner.siphonSerial=(owner.siphonSerial||0)+1;codexDiscover('siphon_tethers');return true;
 }
 function finishSiphonTether(owner,cast,solved){
+ if(cast.resolved)return;
  cast.siphon.solved=solved;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?2.5:3.1;
- if(solved){const q=cast.siphon.cut||game.player;burst(q.x,q.y,14,combatTheme('safe').color);}
+ if(solved){refundCounterDash();const q=cast.siphon.cut||game.player;burst(q.x,q.y,14,combatTheme('safe').color);}
 }
 function tickSiphonTether(owner,cast,dt,playerFrom,dashing){
  const s=cast.siphon,p=game.player,from={x:playerFrom.x,y:playerFrom.y-13},fraction=dt>0?Math.min(1,cast.windup/dt):1,to={x:from.x+(p.x-from.x)*fraction,y:from.y+(p.y-from.y)*fraction};s.age=Math.min(cast.total,s.age+dt);cast.windup=Math.max(0,cast.windup-dt);

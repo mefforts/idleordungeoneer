@@ -2,13 +2,13 @@
 const ZONE_TWO_DAMAGE=1.25;
 function incomingDamageScale(){return zoneNumber()>=2?ZONE_THREE_DAMAGE:zoneNumber()===1?ZONE_TWO_DAMAGE:1;}
 function hurt(amount,options={}){
- const p=game.player;const dashProtected=p.dashTime>0||p.dashCooldown>2.85&&p.invuln>0;if(game.status!=='running'||p.invuln>0&&(!options.dot||dashProtected))return;
+ const p=game.player;const dashProtected=p.dashTime>0||p.dashGuard>0||p.dashCooldown>2.85&&p.invuln>0;if(game.status!=='running'||p.invuln>0&&(!options.dot||dashProtected))return;
  const damage=amount*incomingDamageScale()*(1-styleStats().guardPercent/100)*(1-trinketBonus('guard'))*(1-.02*waveRank('ward'))*(data.weaponType==='shield'?.72:1)*eliteBoonValue('protection');
  p.hp-=damage;if(!options.dot){p.hitPose=.26;p.invuln=.47;game.shake=6;floater(p.x,p.y-31,'-'+Math.ceil(damage),'#ffb5a5');burst(p.x,p.y,5,'#fa8b87');}else{p.dotDamage=(p.dotDamage||0)+damage;if(game.frame>=(p.dotDisplayAt||0)){floater(p.x,p.y-31,'-'+Math.ceil(p.dotDamage),'#ffc184');p.dotDamage=0;p.dotDisplayAt=game.frame+.6;burst(p.x,p.y,2,'#e79762');}}if(p.hp<=0){p.hp=0;die();}
 }
 function dash(){
  const p=game.player;if(game.status!=='running'||p.dashCooldown>0)return;let x=p.vx,y=p.vy;if(!x&&!y){x=1;y=0;}
- p.dashSerial=(p.dashSerial||0)+1;p.dashTime=.22;p.dashCooldown=3.2;p.invuln=Math.max(p.invuln,.35);p.dashDX=x;p.dashDY=y;burst(p.x,p.y,12,'#a6dfbf');
+ p.dashSerial=(p.dashSerial||0)+1;p.dashTime=.22;p.dashCooldown=3.2;p.dashGuard=DASH_COUNTERS.guard;p.invuln=Math.max(p.invuln,DASH_COUNTERS.guard);p.dashDX=x;p.dashDY=y;burst(p.x,p.y,12,'#a6dfbf');
 }
 function skillAfterDefeat(){
  if(game.status!=='dead')return false;hideOverlay(true);game.manualPaused=game.menuPaused=true;

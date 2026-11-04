@@ -1,5 +1,5 @@
 {
-  "version": "11.9.0",
+  "version": "11.10.0",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1388,6 +1388,51 @@
     ]
   },
   "encounters": {
+    "dashCounters": {
+      "stun": 0.65,
+      "guard": 0.35,
+      "bodyDamage": 0,
+      "bodyRefund": false,
+      "counterRefund": true
+    },
+    "eliteTasks": {
+      "initial": 6,
+      "cooldown": 15,
+      "travelSeconds": 5.5,
+      "interruptHits": 3,
+      "interruptHealth": 0.12,
+      "interruptStun": 0.8,
+      "cap": [
+        1,
+        1,
+        2
+      ],
+      "promotions": [
+        1,
+        1,
+        2
+      ],
+      "ascend": {
+        "seconds": 5.5,
+        "healRate": 0.0035,
+        "healCap": 0.02,
+        "duration": 14,
+        "damage": 1.35,
+        "tempo": 1.25
+      },
+      "empower": {
+        "seconds": 6
+      },
+      "conduit": {
+        "first": 2.8,
+        "interval": 5.5,
+        "warning": 1.2
+      },
+      "eligible": "Natural elites, rares and guardian Echoes; full bosses and summons excluded",
+      "summonRewards": false,
+      "promotionPreservesHealthFraction": true,
+      "physicalTravel": true
+    },
     "resolve": {
       "perAlly": 0.1,
       "maximum": 0.5,
@@ -3065,7 +3110,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 921.8399999999881,
+      "seconds": 1010.2799999999829,
       "kills": 413,
       "referenceDps": 80,
       "targetSeconds": 905
@@ -3073,7 +3118,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1587.7200000000228,
+      "seconds": 1654.5600000000122,
       "kills": 648,
       "referenceDps": 240,
       "targetSeconds": 1423
@@ -3081,7 +3126,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 13751.23999999904,
+      "seconds": 15319.959999997665,
       "kills": 938,
       "referenceDps": 240,
       "targetSeconds": 14296
@@ -3089,7 +3134,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 14288.359999998605,
+      "seconds": 16161.799999996896,
       "kills": 1118,
       "referenceDps": 240,
       "targetSeconds": 15207
@@ -3097,7 +3142,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 9823.440000001174,
+      "seconds": 10829.600000000843,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3105,7 +3150,7 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 9560.080000001139,
+      "seconds": 10751.560000000678,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3115,13 +3160,13 @@
     {
       "zone": 1,
       "beforeSeconds": 734.8800000000224,
-      "afterSeconds": 921.8399999999881,
+      "afterSeconds": 1010.2799999999829,
       "referenceDps": 80
     },
     {
       "zone": 2,
       "beforeSeconds": 1245.7600000000634,
-      "afterSeconds": 1587.7200000000228,
+      "afterSeconds": 1654.5600000000122,
       "referenceDps": 240
     }
   ],
@@ -3386,12 +3431,12 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 10.02,
+        "seconds": 9.46,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
-        "hits": 5,
-        "damage": 211.7,
+        "hits": 4,
+        "damage": 189,
         "echoes": 0,
         "casts": [
           "bloom",
@@ -3435,28 +3480,31 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 171,
-        "seconds": 90.42,
+        "remainingHp": 87.9,
+        "seconds": 110.1,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 6,
-        "damage": 108.7,
+        "hits": 3,
+        "damage": 101.1,
         "echoes": 0,
         "casts": [
           "ground",
           "beam",
           "bloom",
           "cinderStitch",
-          "charge",
-          "cleave",
-          "coolingIslands",
+          "volley",
           "fury",
-          "forgeHammers",
           "emberCatch",
+          "backdraft",
           "crossfire",
+          "summon",
+          "slagAnchors",
+          "rallyThread",
+          "rollingFurnace",
+          "reflect",
           "moltenDroplets",
-          "summon"
+          "turningBulwark"
         ]
       },
       {
@@ -3470,26 +3518,29 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 69.9,
-        "seconds": 83.98,
+        "remainingHp": 103.9,
+        "seconds": 98.16,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 9,
-        "damage": 141.7,
+        "hits": 5,
+        "damage": 104,
         "echoes": 0,
         "casts": [
           "bloom",
           "ground",
           "beam",
-          "forgeHammers",
+          "rallyThread",
           "fury",
-          "shield",
-          "backdraft",
           "coolingIslands",
+          "reflect",
           "crossfire",
+          "volley",
+          "cinderStitch",
+          "slagAnchors",
           "summon",
-          "furnaceVents"
+          "emberCatch",
+          "forgeHammers"
         ]
       },
       {
@@ -3503,28 +3554,31 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 127.6,
-        "seconds": 96.06,
+        "remainingHp": 89.8,
+        "seconds": 119.88,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
         "hits": 5,
-        "damage": 61.4,
+        "damage": 99.2,
         "echoes": 0,
         "casts": [
           "beam",
           "ground",
           "bloom",
           "cinderStitch",
-          "cleave",
+          "volley",
           "fury",
           "forgeHammers",
-          "coolingIslands",
+          "shield",
+          "emberCatch",
           "turningBulwark",
-          "volley",
           "crossfire",
+          "rallyThread",
           "summon",
-          "moltenDroplets"
+          "coolingIslands",
+          "moltenDroplets",
+          "reflect"
         ]
       },
       {
@@ -3606,13 +3660,13 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 161.58,
+        "seconds": 187.8,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 21,
-        "damage": 212.4,
-        "echoes": 8,
+        "hits": 6,
+        "damage": 196.5,
+        "echoes": 7,
         "casts": [
           "ground",
           "soulLantern",
@@ -3621,17 +3675,14 @@
           "ricochet",
           "turningBulwark",
           "summon",
-          "tether",
           "gravePulse",
           "beam",
-          "fury",
           "boneLoom",
           "reflect",
-          "crossfire",
-          "shield",
           "hauntedFootsteps",
-          "bloom",
-          "volley"
+          "crossfire",
+          "volley",
+          "charge"
         ]
       },
       {
@@ -3645,34 +3696,28 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 123.1,
-        "seconds": 184.46,
-        "status": "running",
-        "phase": 2,
-        "clearedOpeningGuardian": true,
-        "hits": 10,
-        "damage": 105.8,
-        "echoes": 10,
+        "remainingHp": 0,
+        "seconds": 169.1,
+        "status": "dead",
+        "phase": 1,
+        "clearedOpeningGuardian": false,
+        "hits": 7,
+        "damage": 211.7,
+        "echoes": 7,
         "casts": [
           "beam",
           "fury",
           "reflect",
+          "charge",
           "ricochet",
           "bloom",
           "gravePulse",
           "ground",
           "boneLoom",
-          "soulLantern",
-          "mend",
           "hauntedFootsteps",
-          "coffinPress",
-          "shield",
           "crossfire",
-          "turningBulwark",
-          "charge",
-          "summon",
           "volley",
-          "tether"
+          "summon"
         ]
       },
       {
@@ -3686,34 +3731,24 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 55.4,
-        "seconds": 174.36,
-        "status": "running",
-        "phase": 2,
-        "clearedOpeningGuardian": true,
-        "hits": 11,
-        "damage": 161,
-        "echoes": 10,
+        "remainingHp": 0,
+        "seconds": 83.98,
+        "status": "dead",
+        "phase": 1,
+        "clearedOpeningGuardian": false,
+        "hits": 6,
+        "damage": 189,
+        "echoes": 7,
         "casts": [
           "gravePulse",
           "boneLoom",
           "reflect",
           "hauntedFootsteps",
           "charge",
-          "cleave",
           "ground",
           "beam",
-          "soulLantern",
-          "fury",
-          "mend",
           "crossfire",
-          "coffinPress",
-          "shield",
-          "ricochet",
-          "turningBulwark",
-          "bloom",
-          "summon",
-          "tether"
+          "volley"
         ]
       }
     ]

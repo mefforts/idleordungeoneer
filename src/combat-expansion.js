@@ -137,6 +137,7 @@ function bumpSummonTotem(t,from=encounterFoot(game.player),dashing=false){
  }
  const surging=!!t.spawnPoint&&!t.disabled&&!totemsDisabled();if(!damageTotem(t,summonBumpDamage(t),true))return false;
  t.bumpContact=true;if(dashing)t.lastBumpDash=dashId;t.bumpFlashUntil=game.frame+.2;burst(foot.x,foot.y-12,8,combatTheme('safe').color);
+ if(dashing)refundCounterDash();
  if(surging&&!dashing)hurt(game.player.maxHp*(t.eliteSummon?SUMMON_BUMPS.royalBacklash:SUMMON_BUMPS.normalBacklash));return true;
 }
 function spawnSummonedEnemy(owner,point,elite=false,guard=false,totem=null){

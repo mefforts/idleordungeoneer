@@ -39,7 +39,7 @@ function encounterTuningFixture(){
    if(mode==='placement')return {started,variant:s.variant,clear:!q||encounterClear(q.x,q.y,24),visible:!q||insideRect(q,arena,-24),gap:!q||Math.hypot(q.x-p.x,q.y-p.y)>=75,time:cast.total};
    if(mode==='late'||mode==='deadline'){cast.windup=.01;p.dashCooldown=0;if(q){p.x=q.x-(mode==='late'?35:33);p.y=q.y;p.vx=1;p.vy=0;dash();}else{p.vx=0;p.vy=1;dash();s.dashSerial=p.dashSerial;s.dashStart=Math.hypot(p.x-owner.x,p.y-owner.y)-(mode==='late'?17:18);}run(.02);}
    else if(mode==='solve'||mode==='wrong'){
-    if(variant==='knot'&&mode==='solve'){p.x=q.x-(final?6:60);p.y=q.y;p.vx=1;p.vy=0;}else{p.vx=0;p.vy=mode==='wrong'&&variant==='escape'?-1:1;}
+    if(variant==='knot'&&mode==='solve'){p.x=q.x-(final?6:60);p.y=q.y;p.vx=1;p.vy=0;}else{p.vx=0;p.vy=mode==='wrong'&&variant==='escape'?-1:1;if(mode==='wrong'&&variant==='escape')p.y=owner.y+300;}
     p.dashCooldown=0;dash();if(final&&variant==='knot'){p.dashTime=.01;run(.02);}else if(final){p.dashTime=.03;run(.04);}else run(.2);
    }else if(mode==='walk'){if(q){p.x=q.x-30;p.y=q.y;game.keys.KeyD=true;}else game.keys.KeyS=true;run(.4);game.keys={};}
    else if(mode==='pause'){game.menuPaused=true;update(1);}
