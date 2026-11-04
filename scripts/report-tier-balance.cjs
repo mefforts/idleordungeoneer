@@ -17,7 +17,7 @@ function fixture(){
    }
    data=defaults();normalizeProgression();
    return {
-    version:'11.6.3',dungeons:DUNGEONS,economy:[0,1].map(i=>({zone:i+1,...zoneGoldBudget(i)})),
+    version:'11.6.4',dungeons:DUNGEONS,economy:[0,1].map(i=>({zone:i+1,...zoneGoldBudget(i)})),
     currencies:[0,1,2,3].map(i=>({zone:i+1,...zoneCurrency(),...ZONE_ABILITY_REWARDS,masteredMonsterChance:.0042,firstClearGuardianEchoes:echoesExpected(i),expectedRareElites:rareExpected(i),expectedFirstClearSigils:(zoneBalance(i).swarmCount-echoesExpected(i)-rareExpected(i))*.003+echoesExpected(i)*.35+rareExpected(i)*.35+4*zoneFloorCount(i)+3})),
     dungeonPerks:DUNGEON_PERKS.map(p=>({...p,styles:p.adaptive?Object.fromEntries(Object.keys(STYLE_DEFS).map(style=>[STYLE_DEFS[style].name,dungeonStylePerk(p.id,style)])):null,ranks:Array.from({length:p.max},(_,i)=>({rank:i+1,price:dungeonPerkCost(p.id,i)}))})),
     migration:{legacySealsPerSigil:25,refund:'Unspent seals plus the full historical price of all purchased ranks',fractionalCredit:true},

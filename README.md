@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.6.4** fixes crossed arms in **Runecrafting and Gem Cutting**, including all three material tiers and both bonus flourishes. The tool approaches from the right, with the working elbow outside the supporting arm, while the tool tip still meets the rune or gem. Entry, release and reduced-motion poses keep the same separation. [Runecrafting on phone](preview-runecrafting-mobile.png) · [Gem Cutting on phone](preview-gem-cutting-mobile.png) · [Arm close-ups](preview-arm-crossings.png).
+
 **Build 11.6.3** repaints all **12 skilling backgrounds** with cleaner equipment, consistent arrows and bowstrings, coherent workbenches and looms, and more deliberate lighting. Warding uses a compact cloth grip, with the weave drawn beneath the fingers during work and bonus flourishes. [Background overview](preview-skilling-backgrounds.png) · [Fletching on phone](preview-fletching-clean-mobile.png) · [Warding on phone](preview-warding-grip-mobile.png) · [Weaving grips](preview-warding-grips.png).
 
 Healing and power totems can now be **destroyed by dashing through their bases**, with a color-matched burst and no new in-game text prompt. Walking still redirects their streams, weapons still ignore them, and breaking them grants no rewards. Fast swept crossings, the final dash frame, edge grazes and disabled totems all count.
@@ -328,7 +330,7 @@ Generated icon sheets, calibrated regions and alignment metrics live in `assets/
 
 `npm run review:skilling` records all eight live work families, collects real rarity pickups, and captures the active timer and collection poses at phone, landscape and desktop sizes. Playwright video recording requires its FFmpeg dependency (`npx playwright install ffmpeg`); final MP4 encoding uses system FFmpeg. Add `-- --stills` to refresh screenshots without recording.
 
-`npm run review:arms` captures the corrected arm and hand crossings in regular work and both bonus reactions, using the live renderer and both facings. The rig suite checks actual surface occlusion as well as joint geometry.
+`npm run review:arms` captures arm and hand layering in mining, smithing, fletching, weaving, rune engraving and gem cutting, including regular work, both bonus reactions and both facings. The rig suite checks actual surface occlusion as well as joint geometry. A separate 50,400-pose regression checks that rune/gem arms never intersect through five cycle variations, work/release blends, both flourishes and reduced motion, while existing checks retain tool contact and joint continuity.
 
 `src/ability-effects.js` draws the illustrated attack materials, projectiles and support symbols without advancing combat state. `npm run review:abilities` records twelve actual patterns and captures four-Zone comparisons and phone views. Use `-- --stills` to skip recording; FFmpeg requirements match the skilling review. `tests/ability-effects.cjs` checks 448 boss/elite warning and impact states, rendered beam hues before/after interception, disabled links, safe-region clipping, combat-clock animation, reduced motion and owner cleanup.
 

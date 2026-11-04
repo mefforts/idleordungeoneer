@@ -22,6 +22,8 @@ const {instrumentAvatar}=require('./arm-layer-fixture.cjs');
  passed.push('Eight continuous work cycles have smooth hand paths; entry/release blends agree in both directions and all six weapon attacks return smoothly to rest');
  const seams=await p.evaluate(()=>__playerTest.attackSeams());assert.equal(seams.length,72);assert.deepEqual(seams.filter(r=>r.startGap>.02||r.endGap>.02||r.startAngle>.01||r.endAngle>.01||r.maxStep>8.5),[]);
  passed.push('All six weapon clips enter and leave without hand, elbow or weapon jumps in 72 movement/dash/facing combinations; the drawn bow releases continuously');
+ const detailLanes=await p.evaluate(()=>__playerTest.detailWorkLanes());assert.equal(detailLanes.length,2);assert.ok(detailLanes.every(r=>r.samples===25200&&r.crossings===0&&r.minSeparation>=14&&r.minWristGap>=16),JSON.stringify(detailLanes));
+ passed.push('50,400 rune-engraving and gem-cutting poses keep both arms and wrists apart through full loops, five cycle variations, both flourishes, entry/release blends and reduced motion');
  const contacts=await p.evaluate(()=>__playerTest.workContacts());assert.equal(contacts.length,4);assert.ok(contacts.every(r=>r.contacts>=12&&r.maxMiss<.1&&r.supportGap<6),JSON.stringify(contacts));
  const bounds=await p.evaluate(()=>__playerTest.toolBounds());assert.ok(bounds.every(r=>r.left>=r.bound.left&&r.right<=r.bound.right),JSON.stringify(bounds));
  const lifted=await p.evaluate(()=>['mine','smith','wood'].map(pose=>{const r=DeepwellAvatar.poseRig({pose,working:true,workPhase:.24,data:__deepwell.getState().data});return {pose,elbow:r.frontArm.elbow.y,wrist:r.main.y};}));assert.ok(lifted.every(r=>r.elbow>r.wrist+8),JSON.stringify(lifted));

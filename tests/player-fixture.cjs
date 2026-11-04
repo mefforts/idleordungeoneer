@@ -30,6 +30,21 @@ function playerFixture(){
     rows.push({weapon,facing,direction,dash,startGap:distance(ready,start),endGap:distance(rest,end),startAngle:Math.abs(ready.angle-start.angle),endAngle:Math.abs(rest.angle-end.angle),maxStep});
    }return rows;
   },
+  detailWorkLanes(){
+   const pointGap=(p,a,b)=>{const dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy||1)));return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy);};
+   const side=(a,b,p)=>(b.x-a.x)*(p.y-a.y)-(b.y-a.y)*(p.x-a.x);
+   const gap=(a,b,c,d)=>side(a,b,c)*side(a,b,d)<0&&side(c,d,a)*side(c,d,b)<0?0:Math.min(pointGap(a,c,d),pointGap(b,c,d),pointGap(c,a,b),pointGap(d,a,b));
+   const rows=[];
+   for(const pose of ['rune','polish']){
+    let samples=0,crossings=0,minSeparation=Infinity,minWristGap=Infinity;
+    for(const workCycle of [0,1,2,3,4])for(let i=0;i<60;i++)for(const working of [true,false])for(const reducedMotion of [true,false])for(const workBlend of [0,.1,.25,.5,.75,.9,1])for(const bonusReaction of [null,{variant:0,progress:i/60},{variant:1,progress:i/60}]){
+     const r=DeepwellAvatar.poseRig({pose,workPhase:i/60,workCycle,working,reducedMotion,workBlend,bonusReaction,time:1.5,data});
+     const a=r.frontArm,b=r.backArm;let distance=Infinity;
+     for(const near of [[a.shoulder,a.elbow],[a.elbow,a.hand]])for(const far of [[b.shoulder,b.elbow],[b.elbow,b.hand]])distance=Math.min(distance,gap(...near,...far));
+     samples++;if(distance===0)crossings++;minSeparation=Math.min(minSeparation,distance);minWristGap=Math.min(minWristGap,Math.hypot(r.main.x-r.back.x,r.main.y-r.back.y));
+    }rows.push({pose,samples,crossings,minSeparation,minWristGap});
+   }return rows;
+  },
   workContacts(){
    const out=[];for(const pose of ['fletch','rune','polish','scavenge']){
     let contacts=0,maxMiss=0,supportGap=0;for(let frame=0;frame<120;frame++){const r=DeepwellAvatar.poseRig({pose,working:true,workBlend:1,workPhase:frame/120,data}),p=r.workPiece,t=r.toolTip;

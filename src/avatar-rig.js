@@ -79,9 +79,9 @@ function poseRig(options={}){
    body.angle=.07+Math.sin(cycle)*.012;back={x:6+pass*.8,y:-42+lift};main={x:41-pass*4,y:-43+lift};angle=-1.35+pass*.20;headAngle=.10+Math.sin(cycle)*.012;workPiece={x:22,y:-43+lift,angle:0};contact=working;
   }else if(pose==='rune'){
    const trace=clipSample([[0,3.8,0],[.22,0,-2.6],[.46,-3.8,0],[.70,0,2.6],[1,3.8,0]],phase),mix=Math.abs(variation)*accent;
-   workPiece={x:31,y:-47,angle:0};back={x:23,y:-46};placeTip(31+lerp(Math.cos(cycle)*3.8,trace[0],mix),-48+lerp(Math.sin(cycle)*2.6,trace[1],mix),2.10+Math.sin(cycle)*.16);body.angle=.15+Math.cos(cycle)*.018;headAngle=.14+Math.sin(cycle)*.02;contact=working;
+   workPiece={x:31,y:-47,angle:0};back={x:23,y:-46};placeTip(31+lerp(Math.cos(cycle)*3.8,trace[0],mix),-48+lerp(Math.sin(cycle)*2.6,trace[1],mix),-2.10+Math.sin(cycle)*.16);body.angle=.15+Math.cos(cycle)*.018;headAngle=.14+Math.sin(cycle)*.02;contact=working;
   }else if(pose==='polish'){
-   const lift=clipSample([[0,0],[.20,1],[.36,1],[.60,0],[.74,0],[1,0]],phase)[0];workPiece={x:31,y:-47,angle:Math.sin(cycle)*.14};back={x:23,y:-45};placeTip(32+Math.sin(cycle)*1.8+variation*accent*.6,-49-lift*5.5,2.12+Math.cos(cycle)*.18);body.angle=.15+lift*.035;headAngle=.12+lift*.035;contact=working&&phase>=.58&&phase<=.76;
+   const lift=clipSample([[0,0],[.20,1],[.36,1],[.60,0],[.74,0],[1,0]],phase)[0];workPiece={x:31,y:-47,angle:Math.sin(cycle)*.14};back={x:23,y:-45};placeTip(32+Math.sin(cycle)*1.8+variation*accent*.6,-49-lift*5.5,-2.12+Math.cos(cycle)*.18);body.angle=.15+lift*.035;headAngle=.12+lift*.035;contact=working&&phase>=.58&&phase<=.76;
   }else if(pose==='clean'){
    const pass=(1-Math.cos(cycle))*.5;body.angle=.05+Math.sin(cycle)*.008;back={x:7,y:-40};headAngle=.12;workPiece={x:26,y:-42,angle:Math.sin(cycle)*.025};placeTip(33+pass*6,-44+Math.sin(cycle)*.8,2.25+Math.sin(cycle)*.025);contact=working&&phase>.12&&phase<.75;
   }else if(pose==='scavenge'){
@@ -109,7 +109,7 @@ function poseRig(options={}){
     back.x-=stretch;back.y-=lift;main.x+=stretch;main.y-=lift;workPiece.y-=lift;workPiece.width=30+stretch*2;angle-=weight*.10;headAngle+=weight*.025;
    }else if(pose==='rune'||pose==='polish'||pose==='clean'){
     workPiece.y-=weight*5;workPiece.angle+=weight*(alternate?.35:-.20);back.y-=weight*5;
-    const targetAngle=2.0,target={x:35-Math.sin(targetAngle)*tool.height*tool.grip[1],y:-61+Math.cos(targetAngle)*tool.height*tool.grip[1]};
+    const targetAngle=pose==='clean'?2.0:-2.0,target={x:35-Math.sin(targetAngle)*tool.height*tool.grip[1],y:-61+Math.cos(targetAngle)*tool.height*tool.grip[1]};
     main={x:lerp(main.x,target.x,weight),y:lerp(main.y,target.y,weight)};angle=lerp(angle,targetAngle,weight);headAngle-=weight*.04;contact=false;
    }else if(pose==='scavenge'){
     const targetAngle=1.15,target={x:49-Math.sin(targetAngle)*tool.height*tool.grip[1],y:(alternate?-20:-14)+Math.cos(targetAngle)*tool.height*tool.grip[1]};
@@ -130,7 +130,10 @@ function poseRig(options={}){
  if(weapon==='bow'&&!activity)offset={x:twoHand*Math.cos(angle),y:twoHand*Math.sin(angle)};
  else if(twoHand)offset={x:-Math.sin(angle)*twoHand,y:Math.cos(angle)*twoHand};
  if(offset){for(let pass=0;pass<12;pass++){main=projectHand(main,frontRoot);const projected=projectHand({x:main.x+offset.x,y:main.y+offset.y},backRoot);main={x:projected.x-offset.x,y:projected.y-offset.y};}back={x:main.x+offset.x,y:main.y+offset.y};}
- const frontArm=inverseKinematics(frontRoot,main,activity||['bow','polearm','greatsword'].includes(weapon)?1:-1,ARM_LENGTHS),backArm=inverseKinematics(backRoot,back,1,ARM_LENGTHS);main=frontArm.hand;back=backArm.hand;
+ // Engraving and gem work approach from the right, with the elbow outside the
+ // supporting arm. Keep that bend through release blends and bonus flourishes.
+ const frontBend=['rune','polish'].includes(pose)?-1:activity||['bow','polearm','greatsword'].includes(weapon)?1:-1;
+ const frontArm=inverseKinematics(frontRoot,main,frontBend,ARM_LENGTHS),backArm=inverseKinematics(backRoot,back,1,ARM_LENGTHS);main=frontArm.hand;back=backArm.hand;
  const headBase=transform(body,{x:0,y:-75}),head={x:headBase.x+Math.sin(headAngle)*10,y:headBase.y-Math.cos(headAngle)*10,angle:headAngle},legs=[];
  for(const side of [-1,1]){
   const hip={x:body.x+side*6,y:body.y};let ankle;if(kneeling)ankle={x:side<0?-28:-13,y:-5};else ankle={x:side*6+side*walk*8,y:-5-(walking?Math.max(0,Math.cos(time*8+(side<0?Math.PI:0)))*4:0)};
