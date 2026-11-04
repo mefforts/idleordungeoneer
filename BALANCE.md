@@ -88,7 +88,7 @@ The Dungeon Shop has a Long blessings sub-store. Most effects cost 60 interchang
 
 ## Encounter health experiment
 
-Build 11.6 retains +75% regular elite health and +50% rare, guardian Echo (boss elite) and boss health. Build 11.6.1 adds a further step from Zone 3 onward: 2× ordinary minion health and 6× health for all special enemies, measured against v11.6.0. The 6× applies once; special enemies do not also receive the minion 2×. Zones 1–2 keep their current health. Rare and boss-elite flags retain their category precedence. Summoning-spire health and one/two-impact rules remain unchanged. All multipliers apply after the existing health-scale calibration: player damage, incoming damage, rewards, spawn counts and cadence are preserved. Forecast times below include the added durability.
+Build 11.6 retains +75% regular elite health and +50% rare, guardian Echo (boss elite) and boss health. Build 11.6.1 added 2× ordinary minion health and 6× health for special enemies from Zone 3 onward, measured against v11.6.0. Build 11.6.2 doubles ordinary minions again: 4× v11.6.0, or 2× v11.6.1. Special enemies retain their existing 6×; they do not inherit the ordinary multiplier. Zones 1–2 keep their current health. Rare and boss-elite flags retain their category precedence. Summoning-spire health and one/two-impact rules remain unchanged. All multipliers apply after the existing health-scale calibration: player damage, incoming damage, rewards, spawn counts and cadence are preserved. Forecast times below include the added durability.
 
 ## Equipment ceilings
 
@@ -184,16 +184,16 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | --- | --- | ---: |
 | 1 | ~12 min | 80.0 |
 | 2 | ~24 min | 160.0 |
-| 3 | ~229 min | 160.0 |
-| 4 | ~241 min | 160.0 |
-| 5 | ~167 min | 240.0 |
+| 3 | ~257 min | 160.0 |
+| 4 | ~279 min | 160.0 |
+| 5 | ~193 min | 240.0 |
 
 - Live Zone 1: **10.7 min**, 375 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **23.7 min**, 570 rewarded defeats, 160.0 reference DPS.
-- Live Zone 3: **201.9 min**, 780 rewarded defeats, 160.0 reference DPS.
-- Live Zone 4: **209.6 min**, 960 rewarded defeats, 160.0 reference DPS.
-- Live Zone 9: **174.3 min**, 960 rewarded defeats, 240.0 reference DPS.
-- Live Zone 15: **173.3 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 2: **23.5 min**, 570 rewarded defeats, 160.0 reference DPS.
+- Live Zone 3: **206.2 min**, 780 rewarded defeats, 160.0 reference DPS.
+- Live Zone 4: **213.8 min**, 960 rewarded defeats, 160.0 reference DPS.
+- Live Zone 9: **176.0 min**, 960 rewarded defeats, 240.0 reference DPS.
+- Live Zone 15: **178.2 min**, 960 rewarded defeats, 240.0 reference DPS.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
@@ -205,7 +205,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. Existing 80/160 equipment ceilings and earned DPS are retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with two expanding Grave Pulse rims; dash across or outrun them. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.7s on Zone 2’s finale and 5.7–6.4s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 3 of 6 trials: 130.9–189 HP remained in the finale trials and 0 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 10.4–10.7s on Zone 2’s finale and 4.8–5.4s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 5 of 6 trials: 130.9–189 HP remained in the finale trials and 0–12.3 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 

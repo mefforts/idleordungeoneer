@@ -1,5 +1,5 @@
 {
-  "version": "11.6.1",
+  "version": "11.6.2",
   "dungeons": [
     {
       "id": "deepwell",
@@ -803,8 +803,8 @@
     },
     {
       "index": 2,
-      "minutes": 229,
-      "seconds": 13689,
+      "minutes": 257,
+      "seconds": 15419,
       "floors": 20,
       "weaponRank": 20,
       "speedRank": 10,
@@ -828,12 +828,12 @@
       "hpScale": 5.049167255084418,
       "previousTargetSeconds": 1800,
       "baseForecastSeconds": 2620.638308184102,
-      "forecastSeconds": 13688.768504302607
+      "forecastSeconds": 15418.72330988046
     },
     {
       "index": 3,
-      "minutes": 241,
-      "seconds": 14445,
+      "minutes": 279,
+      "seconds": 16681,
       "floors": 20,
       "weaponRank": 20,
       "speedRank": 10,
@@ -857,12 +857,12 @@
       "hpScale": 5.049167255084418,
       "previousTargetSeconds": 2100,
       "baseForecastSeconds": 2962.9547943352154,
-      "forecastSeconds": 14444.544226574339
+      "forecastSeconds": 16680.11297481853
     },
     {
       "index": 4,
-      "minutes": 167,
-      "seconds": 10010,
+      "minutes": 193,
+      "seconds": 11526,
       "floors": 20,
       "weaponRank": 30,
       "speedRank": 15,
@@ -886,7 +886,7 @@
       "hpScale": 5.166143530978628,
       "previousTargetSeconds": 2160,
       "baseForecastSeconds": 2160.083135848425,
-      "forecastSeconds": 10009.426196482102
+      "forecastSeconds": 11525.330270279283
     }
   ],
   "zoneDepths": [
@@ -1220,7 +1220,7 @@
   "rareElites": {
     "chance": 0.03,
     "healthMultiplier": 5.25,
-    "fromZoneThreeHealthMultiplier": 15.75,
+    "fromZoneThreeHealthMultiplier": 7.875,
     "maximumPerWave": 1,
     "zoneTwoFinal": {
       "chance": 0.1,
@@ -1366,7 +1366,7 @@
       "bossElite": 1.5
     },
     "zoneThreeHealthStep": {
-      "minion": 2,
+      "minion": 4,
       "special": 6
     },
     "healthCalibration": "Ordinary hpScale, spawn counts, cadence and player damage are preserved; health multipliers apply after calibration",
@@ -2437,7 +2437,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 639.6400000000299,
+      "seconds": 642.3600000000306,
       "kills": 375,
       "referenceDps": 80,
       "targetSeconds": 684
@@ -2445,7 +2445,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1421.4000000000594,
+      "seconds": 1409.52000000006,
       "kills": 570,
       "referenceDps": 160,
       "targetSeconds": 1416
@@ -2453,34 +2453,34 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 12115.520000000566,
+      "seconds": 12374.800000000345,
       "kills": 780,
       "referenceDps": 160,
-      "targetSeconds": 13689
+      "targetSeconds": 15419
     },
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 12575.96000000016,
+      "seconds": 12828.47999999993,
       "kills": 960,
       "referenceDps": 160,
-      "targetSeconds": 14445
+      "targetSeconds": 16681
     },
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 10455.240000001755,
+      "seconds": 10559.200000001862,
       "kills": 960,
       "referenceDps": 240,
-      "targetSeconds": 11414
+      "targetSeconds": 13165
     },
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 10397.000000001823,
+      "seconds": 10690.760000001757,
       "kills": 960,
       "referenceDps": 240,
-      "targetSeconds": 11414
+      "targetSeconds": 13165
     }
   ],
   "zonePressure": {
@@ -2889,15 +2889,15 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 6.38,
+        "seconds": 5.22,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
         "hits": 6,
         "damage": 189,
-        "echoes": 2,
+        "echoes": 0,
         "casts": [
-          "beam"
+          "gravePulse"
         ]
       },
       {
@@ -2912,16 +2912,14 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 5.74,
+        "seconds": 4.84,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
         "hits": 6,
         "damage": 189,
-        "echoes": 2,
-        "casts": [
-          "beam"
-        ]
+        "echoes": 1,
+        "casts": []
       },
       {
         "zone": 3,
@@ -2935,13 +2933,13 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 6.34,
+        "seconds": 5.36,
         "status": "dead",
         "phase": 0,
         "clearedOpeningGuardian": false,
         "hits": 6,
         "damage": 189,
-        "echoes": 2,
+        "echoes": 0,
         "casts": [
           "ground"
         ]
@@ -2958,20 +2956,23 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 81.8,
+        "seconds": 100.52,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 5,
-        "damage": 211.7,
+        "hits": 4,
+        "damage": 198.2,
         "echoes": 7,
         "casts": [
+          "ground",
+          "mend",
+          "ricochet",
+          "summon",
           "gravePulse",
           "reflect",
-          "charge",
-          "cleave",
           "crossfire",
-          "summon"
+          "cleave",
+          "charge"
         ]
       },
       {
@@ -2985,25 +2986,24 @@
           "speed": 9
         },
         "maxHp": 189,
-        "remainingHp": 0,
-        "seconds": 114.2,
-        "status": "dead",
-        "phase": 1,
-        "clearedOpeningGuardian": false,
-        "hits": 5,
-        "damage": 199.9,
+        "remainingHp": 12.3,
+        "seconds": 96.38,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 3,
+        "damage": 182.4,
         "echoes": 7,
         "casts": [
-          "ground",
+          "beam",
+          "fury",
+          "reflect",
           "ricochet",
-          "mend",
+          "bloom",
+          "gravePulse",
+          "crossfire",
           "cleave",
           "summon",
-          "minefield",
-          "shield",
-          "gravePulse",
-          "reflect",
-          "crossfire",
           "charge"
         ]
       },
@@ -3018,19 +3018,24 @@
           "speed": 9
         },
         "maxHp": 189,
-        "remainingHp": 0,
-        "seconds": 34.14,
-        "status": "dead",
-        "phase": 0,
-        "clearedOpeningGuardian": false,
-        "hits": 5,
-        "damage": 189,
-        "echoes": 6,
+        "remainingHp": 3.7,
+        "seconds": 100.14,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 4,
+        "damage": 215.2,
+        "echoes": 7,
         "casts": [
+          "ground",
+          "mend",
+          "ricochet",
+          "summon",
           "gravePulse",
           "reflect",
-          "charge",
-          "cleave"
+          "crossfire",
+          "cleave",
+          "charge"
         ]
       }
     ]

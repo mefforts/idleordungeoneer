@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.6.2** doubles standard-monster HP again from Zone 3 onward: **2× v11.6.1, or 4× the v11.6.0 baseline**. The 6× elite, rare, guardian Echo and boss health setting is retained separately. Zones 1–2 keep their current health.
+
 **Build 11.6.1** makes the Zone 3 health jump much stronger and carries it forward: ordinary minions gain **2× HP**, while elites, rares, guardian Echoes and bosses gain **6× HP over v11.6.0**. Special enemies receive their 6× once, rather than also inheriting the minion multiplier. Zones 1–2 retain their current health. Player damage, incoming damage, spawn counts, loot and summoning-spire impacts keep their current rules.
 
 **Grave Pulse is a movement mechanic:** dash through or outrun its expanding violet rims. Moving rings no longer paint their centers teal or show a `SAFE` label. Stationary Outer Ruin rings place their teal refuge away from the caster, inside the visible arena, with clear terrain and time to reach it. The refuge remains fixed through impact and uses a symbol. Mechanic labels and the combat guide no longer use the word `SAFE`. [Pulse warning](preview-grave-pulse-warning-mobile.png) · [Moving rims](preview-grave-pulse-mobile.png) · [Offset refuge](preview-ring-refuge-mobile.png).
@@ -145,9 +147,9 @@ Weapon refinement, attack-speed training, proficiency and matching crafting leve
 | --- | --- | ---: |
 | 1 | ~12 minutes | ~80 |
 | 2 | ~24 minutes | ~160 |
-| 3 | ~229 minutes | Current Steel reference |
-| 4 | ~241 minutes | Current Steel reference |
-| 5 | ~167 minutes | Mithril reference, ~240 |
+| 3 | ~257 minutes | Current Steel reference |
+| 4 | ~279 minutes | Current Steel reference |
+| 5 | ~193 minutes | Mithril reference, ~240 |
 
 References use complete Iron / Steel / Mithril equipment at base proficiency, with no required Dungeon abilities. Movement, menus, deaths, preparation, cleaves and speed settings affect real completion time. [BALANCE.md](BALANCE.md) explains the paths, rank costs and live simulations; [balance-report.json](balance-report.json) includes exact weapon, shop and economy values. Mithril begins after Zone 4; later tiers remain reserved.
 
@@ -253,7 +255,7 @@ Known guardians still return as elite echoes, up to **one / two / three per wave
 
 ## Rare elites and blessings
 
-All **42 ordinary creature forms** have a distinct painted rare elite form with **5.25× ordinary health in Zones 1–2 / 15.75× from Zone 3**. Eligible spawns have a **3% chance**, capped at one rare per ordinary wave. Zone 2’s final floor uses 10% and permits three rares. Rares and other elites share a **35%** chance of blessing spoils and the same loot/healing rules.
+All **42 ordinary creature forms** have a distinct painted rare elite form with **5.25× ordinary health in Zones 1–2 / 7.875× from Zone 3**. Eligible spawns have a **3% chance**, capped at one rare per ordinary wave. Zone 2’s final floor uses 10% and permits three rares. Rares and other elites share a **35%** chance of blessing spoils and the same loot/healing rules.
 
 **Walk over spoils** to pause the delve and see three A/B/C options. Touch/click a card or press **1 / 2 / 3**. Movement and Escape cannot choose or dismiss the screen. **Skip blessing** explicitly discards that drop. Choice contents are fixed when dropped and survive reload.
 
