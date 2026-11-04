@@ -1,6 +1,6 @@
 /* Zone 2's finale and the first steps into the Hollow Crypt. */
 const ZONE_THREE_DAMAGE=1.6;
-const GRAVE_PULSE={speed:320,runningFactor:1.25,width:32,dashReadyLead:.4,interval:1.2,maximum:3};
+const GRAVE_PULSE={speed:320,openingSpeedFactor:.75,runningFactor:1.25,width:32,minimumSpacing:320,dashReadyLead:.4,interval:1.2,maximum:3};
 function rareEliteQuota(index=zoneNumber(),stage=zoneStage()){return index===1&&stage===zoneFloorCount(index)?3:1;}
 function rareEliteSpawnChance(index=zoneNumber(),stage=zoneStage()){return index===1&&stage===zoneFloorCount(index)?.10:RARE_ELITE_CHANCE;}
 function expectedRareCount(trials,chance,cap=1){let probability=Math.pow(1-chance,trials),sum=0;for(let n=0;n<=trials;n++){sum+=Math.min(n,cap)*probability;probability*=((trials-n)/(n+1))*(chance/(1-chance));}return sum;}
@@ -31,8 +31,15 @@ function addEmberCleave(enemy,cast,damage){
  game.hazards.push({type:'expanded',shape:'cone',abilityType:'emberCleave',origin:{...cast.origin},angle:cast.angle,reach:cast.reach,halfAngle:cast.halfAngle,owner:null,biome:1,language:'danger',damage:damage*.25,life:3.2,total:3.2,age:0,lingering:true,enemyHits:new Set()});
 }
 function addGravePulses(enemy,cast,damage){
- const count=cast.pulseCount??travellingWaveCount(enemy);
- for(let i=0;i<count;i++)game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:i*GRAVE_PULSE.interval,sequenceIndex:i,sequenceCount:count,enemyHits:i===0?cast.enemyHits:new Set()});
+ const count=cast.pulseCount??travellingWaveCount(enemy),openingSpeed=Math.max(GRAVE_PULSE.speed*GRAVE_PULSE.openingSpeedFactor,playerMoveSpeed()*GRAVE_PULSE.runningFactor),firstInterval=Math.max(GRAVE_PULSE.interval,GRAVE_PULSE.minimumSpacing/openingSpeed);
+ for(let i=0;i<count;i++)game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:i===0?openingSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:i*firstInterval,sequenceIndex:i,sequenceCount:count,enemyHits:i===0?cast.enemyHits:new Set()});
+}
+function advanceGravePulse(h,dt){
+ h.waveSpeed=Math.max(h.waveSpeed,playerMoveSpeed()*GRAVE_PULSE.runningFactor);
+ const lead=game.hazards.find(other=>other.abilityType==='gravePulse'&&other.owner===h.owner&&other.sequenceIndex===h.sequenceIndex-1);
+ // Faster follow-up rims keep a dashable gap instead of overtaking the opener.
+ const distance=Math.min(h.waveSpeed*dt,lead?Math.max(0,lead.inner-h.inner-GRAVE_PULSE.minimumSpacing):Infinity);
+ h.inner+=distance;h.r+=distance;
 }
 
 function gravePulseCanCast(){

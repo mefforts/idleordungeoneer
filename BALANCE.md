@@ -1,6 +1,8 @@
 # Dungeon progression and balance
 
-Build 11.13.1 labels the Settings save download Backup/Export and updates the save help. Save format and export contents remain compatible; combat, economy and progression retain the 11.13.0 calibration.
+Build 11.13.2 strengthens jewelry refinements: Leech Ring ranks add 0.05 percentage points of lifesteal, reaching 1.25% at rank 15 and 3% at rank 50. Other jewelry gains 1% of its base effect per rank, up to 50% extra at rank 50. Existing ranks receive the stronger effects automatically; base items, costs and Artisan XP are unchanged. The first fifteen Leech ranks cost 20 silver bars, 465 gold and three cut opals before station savings, excluding initial crafting. This is an early Zone 3 preparation target.
+
+Grave Pulse opens at 240 units/second instead of 320 (25% slower). Follow-up rings retain a 320-unit/second target but pace behind the opener with at least 320 units between rims, preventing overtakes or compressed dash windows. Launches are at least 1.2 seconds apart (1.333 seconds at base opening speed). All rings retain the running-speed floor, persistence, damage, friendly fire and dash refunds.
 
 Offscreen living enemies share a red directional corner haze at 0.8 pulses/second, capped at 18% opacity before directional weighting. Diagonal threats light one corner; cardinal threats share two. Enemy sprite bounds keep partially visible creatures from raising an alert. Groups do not add brightness. Reduced motion uses a steady glow; pauses freeze the real-time pulse and Delving speed never accelerates it. The canvas effect adds no input layer and appears only during a running delve.
 
@@ -30,7 +32,7 @@ Build 11.11.0 upgrades travelling attacks with seven layered physical assets and
 
 Walking Hedge sends two or three parallel thorn walls, with offset 100-unit openings. Initial speed is at least 245 world units/second or 1.3 times player running speed, and only rises if movement buffs require it. Walls begin 220 units behind the player along their travel axis and are separated by 1.5 seconds of their initial speed; successive openings shift at most 100 units. Each clearing has a checked route and terrain corridor. Walls span the world across their travel axis, so walking around an end or waiting 4.4 seconds no longer works. Each wall retires only after passing the player, living enemies and visible screen. A direct dash over the thorns is protected but does not refund dash; a dash-then-opening route works at 10/40/80 ms simulation steps. Each wall can hurt a player once.
 
-Grave Pulse starts with one ring; the greater of floor band and combat phase selects up to three. Repeated rings launch 1.2 combat seconds apart, so the normal 3.2-second cooldown cannot solve the entire sequence. Crossing a rim completely during a dash immediately refunds it, once per ring; touching or skimming the same side does not. Pending and active rings share one sequence budget across casters. Every ring still expands faster than running, with swept collision and offscreen retirement after all actors are passed. Each ring has its own friendly-fire ledger, with normal caster immunity and category fractions. Collapsing Nova retains its separate single outgoing ring.
+Grave Pulse starts with one ring; the greater of floor band and combat phase selects up to three. Repeated rings launch at least 1.2 combat seconds apart, so the normal 3.2-second cooldown cannot solve the entire sequence. Crossing a rim completely during a dash immediately refunds it, once per ring; touching or skimming the same side does not. Pending and active rings share one sequence budget across casters. Every ring still expands faster than running, with swept collision and offscreen retirement after all actors are passed. Each ring has its own friendly-fire ledger, with normal caster immunity and category fractions. Collapsing Nova retains its separate single outgoing ring.
 
 Rolling Furnace progresses from repeated bankshots to splitting cores and paired crossing bankshots. Train/cross casts launch two or three cores 0.95 seconds apart; a split core forks into two smaller pieces at its marked bank. Shots travel at 230 units/second (fragments 1.12 times that), with a 24-unit core radius and 16-unit fragments. Every bank/fork is previewed and uses the same piecewise trajectory for rendering and moving swept collision. Rollers keep going beyond their former 4.6-second lifetime and the arena border until they pass the actors and viewport. Purple friendly fire hits each other enemy at most once per core; the caster is immune. These projectile dodges do not refund dash.
 
@@ -142,7 +144,7 @@ The work-scene controls now separate Skills navigation from direct Gather/Refine
 
 Gather and Refine list all three tiers together, including locked rows. Every tier-2 activity requires Zone 2 access and level 10 in its matching discipline, across active/idle/offline work; existing inventories and owned gear remain. Preparation falls back to available tier-1 ammunition/gold sources and directs blocked material work toward training. Steel promotions sit directly below their weapon list. Stations and tools use ordinary compact rows in Equipment, with no separate Tools tab or station footer.
 
-Artisan gathering/cutting XP is multiplied by eight and jewelry crafting gives 400 XP. Existing Artisan XP receives the same eightfold catch-up once. Owned jewelry supports 50 optional refinements, each adding 0.25% of its base effect, with 80 base Artisan XP per successful rank before the old-tier reduction. The Leech Ring gains 0.00125 percentage points of lifesteal per rank, from 0.5% to at most 0.5625%. Costs start at one silver bar and 10 gold, grow every ten ranks in silver and by three gold per rank, and add one cut opal each fifth rank.
+Artisan gathering/cutting XP is multiplied by eight and jewelry crafting gives 400 XP. Existing Artisan XP receives the same eightfold catch-up once. Owned jewelry supports 50 optional refinements, with 80 base Artisan XP per successful rank before the old-tier reduction. Leech Ring ranks add 0.05 percentage points of lifesteal: 0.5% at rank 0, 1.25% at rank 15 and 3% at rank 50. Other pieces gain 1% of their base effect per rank, reaching 1.5 times base at rank 50. Costs start at one silver bar and 10 gold, grow every ten ranks in silver and by three gold per rank, and add one cut opal each fifth rank.
 
 Crafted tools retain 8% active speed and support ten refinements of +0.5 percentage points each, with normal material/gold costs. They do not accelerate idle work. Relic prospecting is now a normal ingredient-paid activity: 12 fragments for one rough opal, 4s active / 16s idle before bonuses. Prospecting and ancient cleaning use a standing brush-and-relic pose at a bench, with no digging animation. Warding Refine offers a compact resource selector: exactly 100 essence for a random 1–10 chosen raw resources. Unlocks apply and conservation does not discount this essence cost.
 
@@ -250,17 +252,17 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 | 4 | ~254 min | 240.0 |
 | 5 | ~135 min | 480.0 |
 
-- Live Zone 1: **16.1 min**, 413 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **28.3 min**, 648 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **238.0 min**, 938 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **264.1 min**, 1118 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **169.6 min**, 1118 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **171.3 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 1: **15.9 min**, 413 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **27.2 min**, 648 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **238.2 min**, 938 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **258.2 min**, 1118 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **169.1 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **172.7 min**, 1118 rewarded defeats, 480.0 reference DPS.
 
 | Zone | v11.8.1 live reference | Current live reference |
 | --- | ---: | ---: |
-| 1 | 12.2 min | 16.1 min |
-| 2 | 20.8 min | 28.3 min |
+| 1 | 12.2 min | 15.9 min |
+| 2 | 20.8 min | 27.2 min |
 
 This comparison retains reference equipment and invulnerability. The current controller also recognizes task interrupts; movement and random encounters differ, so these times measure pacing rather than a matched human survival or difficulty trial.
 
@@ -352,7 +354,7 @@ Rare and other non-summoned elites each leave a blessing choice 25% of the time.
 
 A vertical, scrollable combat column shows temporary buffs. On mobile it is 44 units wide and shows only icons with timers above them, retaining 44-unit touch targets. Desktop keeps names, effects and counts. Details list every independent remaining time, including Rally. Different blessings and repeated copies stack with independent combat timers. Damage, attack speed, reach and movement multipliers multiply; extra gold adds; material luck increases the capped drop chance. Menus, pause and skilling freeze timers. Blessings carry across Zones in the same Dungeon. Secondary proc attacks do not recursively trigger more procs. No new blessing heals.
 
-Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 50% chance of 12%; rares use that same 50% chance and 12% heal. Motes last 12 combat seconds, including at full health, and fade during the last three. Waves do not reset their age; menus, pauses and skilling freeze it. Motes are transient and clear on floor start, retry or reload, while ordinary ground loot persists. Intercepted healing restores 0.35% player maximum HP per second, with a finite 15% lifetime reserve per healing totem. Once depleted it still blocks the caster’s healing. An uninterrupted stream restores 0.4% caster maximum HP per second. Healing streams do not stack. The lifesteal ring starts at 0.5% of actual health removed; fifty fine refinements raise it to at most 0.5625%.
+Ordinary monsters have a 2% chance of a 3% maximum-HP heal. Other elites have a 50% chance of 12%; rares use that same 50% chance and 12% heal. Motes last 12 combat seconds, including at full health, and fade during the last three. Waves do not reset their age; menus, pauses and skilling freeze it. Motes are transient and clear on floor start, retry or reload, while ordinary ground loot persists. Intercepted healing restores 0.35% player maximum HP per second, with a finite 15% lifetime reserve per healing totem. Once depleted it still blocks the caster’s healing. An uninterrupted stream restores 0.4% caster maximum HP per second. Healing streams do not stack. The lifesteal ring starts at 0.5% of actual health removed; rank 15 reaches 1.25% and rank 50 reaches 3%.
 
 ## Persistent progression and migration
 

@@ -4,6 +4,10 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.13.2** buffs jewelry refinements. The **Leech Ring reaches 1.25% lifesteal at rank 15**, an early Zone 3 preparation goal, and 3% at rank 50. Each rank adds 0.05 percentage points; other jewelry gains 1% of its base effect per rank. Existing ranks benefit immediately, with the same material costs and XP.
+
+**Grave Pulse’s opening ring is 25% slower** (240 instead of 320 units/second). Follow-up rings keep enough space for separate dash counters rather than catching the opener. Movement-speed protection, persistent travel, damage and dash refunds remain. [Balance details](BALANCE.md).
+
 **Build 11.13.1** makes save exports explicit: open **Settings → Save → Backup/Export** to download a readable copy of your current progress for review or backup. **Restore** accepts that same file.
 
 **Build 11.13.0** gives the player a **chest-to-feet damage hitbox**. Body hits now register across projectiles, charges and floor attacks; the head and outstretched arms stay outside it. Dashes, movement, pickups and teal protected openings retain their existing roles. [Hitbox preview](preview-player-hitbox-mobile.png).
@@ -30,7 +34,7 @@ Navigation medallions now have **curved names above them**: Delve, Inventory, Sk
 
 **Build 11.11.0** gives travelling mechanics physical artwork and deliberate repeat patterns. **Walking Hedge** sends two or three world-spanning thorn walls through offset teal openings. They keep travelling faster than running and retire after passing the encounter; crossing a Hedge keeps the normal dash cooldown. The space between walls allows a dash through one, then a walking route through the next opening.
 
-**Grave Pulse** keeps its single opening ring, then grows to two or three rings later in a floor or fight. Rings are **1.2 combat seconds apart**. Each completed dash crossing immediately resets dash for the next ring; merely grazing the rim does not. Every ring keeps expanding until it passes the fight. Bone crests, skulls, spirit trails and a small sequence symbol replace a plain colored band.
+**Grave Pulse** keeps its single opening ring, then grows to two or three rings later in a floor or fight. Rings launch **at least 1.2 combat seconds apart**. Each completed dash crossing immediately resets dash for the next ring; merely grazing the rim does not. Every ring keeps expanding until it passes the fight. Bone crests, skulls, spirit trails and a small sequence symbol replace a plain colored band.
 
 **Rolling Furnace** uses repeated bankshots, splitting cores and paired crossing shots as its floor band advances. Iron cages, incandescent cores, fragments and bank markers show the actual route and fork. Rollers keep travelling beyond the arena boundary and their former lifetime. Purple rims identify attacks that hit players and monsters; red Hedge roots hurt players. **Yellow brackets and a broken-bolt symbol mark interruptible channels and cut points.** Teal remains for openings and protected interactions; gold/white mirrors retain reflection. A small reset symbol confirms dash refunds.
 
@@ -96,7 +100,7 @@ The earlier base health experiment applies across all Zones: **regular elites +7
 
 **Build 11.5.0** consolidates crafting: Gather and Refine show both material tiers together, including locked recipes. Every tier-2 activity needs **Zone 2 access and level 10 in its matching discipline**, including idle/offline work. Steel promotions sit directly below their weapon; station and tool upgrades use the same compact rows in Equipment. The separate Tools tab and station footer are gone. [Equipment](preview-unified-equipment-mobile.png) · [Workshop upgrades](preview-unified-workshop-upgrades-mobile.png) · [Visible tier-2 requirements](preview-visible-tier-two-mobile.png).
 
-**Artisan work now awards 8× its former XP**, with the same one-time catch-up for existing Artisan XP. Owned jewelry has 50 small refinements: each adds **0.25% of its base effect**, so a Leech Ring rank adds only **0.00125 percentage points** of lifesteal. Tools you own can gain ten refinements of +0.5 percentage points of active speed. Vouchers now name a specific rank upgrade—refinement, speed, reach, reinforcement, enchantment, jewelry, a particular tool or a named station. New item crafting and Steel promotions require materials. Old wildcard balances convert once to named upgrades without losing their count, and existing owned items remain. [Jewelry refinements](preview-jewelry-refinement-mobile.png).
+**Artisan work now awards 8× its former XP**, with the same one-time catch-up for existing Artisan XP. Owned jewelry has 50 refinements. Leech ranks add **0.05 percentage points** of lifesteal; other pieces gain **1% of their base effect** per rank. Tools you own can gain ten refinements of +0.5 percentage points of active speed. Vouchers now name a specific rank upgrade—refinement, speed, reach, reinforcement, enchantment, jewelry, a particular tool or a named station. New item crafting and Steel promotions require materials. Old wildcard balances convert once to named upgrades without losing their count, and existing owned items remain. [Jewelry refinements](preview-jewelry-refinement-mobile.png).
 
 Relic prospecting is now ingredient-paid work: **12 fragments → one rough opal**. Prospecting and ancient cleaning use a standing brush-and-relic animation at a bench. Warding Refine also offers **100 essence → 1–10 chosen raw resources**, with normal unlocks and the full essence cost. [Relic cleaning](preview-relic-cleaning-mobile.png) · [Prospecting](preview-clean-prospecting-mobile.png) · [Essence conversion](preview-essence-transmutation-mobile.png) · [Motion preview](preview-workshop-and-crypt.mp4).
 
@@ -338,7 +342,7 @@ The ten blessings last **40–60 seconds**: Battle Fervor, Windstep, Stonebreake
 
 **Different blessings and repeated copies stack**, with independent timers and visible stack counts. Menus, pause and skilling freeze their duration. They carry across Zones in this Dungeon. Unclaimed spoils stay in their original Zone. Delve speed advances combat time.
 
-The Opal Leech Ring starts at **0.5%** of actual direct-hit health removed, with no overkill healing; fifty fine refinements raise it to **0.5625%**.
+The Opal Leech Ring starts at **0.5%** of actual direct-hit health removed, with no overkill healing; refinement 15 reaches **1.25%**, and rank 50 reaches **3%**.
 
 [Phone choices](preview-blessings-mobile.png) · [Landscape choices](preview-blessings-landscape.png).
 

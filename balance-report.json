@@ -1,5 +1,5 @@
 {
-  "version": "11.13.1",
+  "version": "11.13.2",
   "dungeons": [
     {
       "id": "deepwell",
@@ -1159,8 +1159,18 @@
     "artisanCatchUp": true,
     "jewelry": {
       "maximum": 50,
-      "relativeStep": 0.0025,
-      "xp": 80
+      "relativeStep": 0.01,
+      "leechStep": 0.0005,
+      "xp": 80,
+      "leechZoneThreeTarget": {
+        "rank": 15,
+        "value": 0.0125,
+        "costBeforeStation": {
+          "silverBars": 20,
+          "gold": 465,
+          "cutOpals": 3
+        }
+      }
     },
     "tools": {
       "maximum": 10,
@@ -1595,8 +1605,10 @@
     "zoneThreeOpeningPattern": "gravePulse",
     "gravePulse": {
       "speed": 320,
+      "openingSpeedFactor": 0.75,
       "runningFactor": 1.25,
       "width": 32,
+      "minimumSpacing": 320,
       "dashReadyLead": 0.4,
       "interval": 1.2,
       "maximum": 3,
@@ -3248,7 +3260,7 @@
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 967.5199999999825,
+      "seconds": 952.7999999999818,
       "kills": 413,
       "referenceDps": 80,
       "targetSeconds": 905
@@ -3256,7 +3268,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1698.200000000008,
+      "seconds": 1634.9200000000176,
       "kills": 648,
       "referenceDps": 240,
       "targetSeconds": 1423
@@ -3264,7 +3276,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 14281.519999998609,
+      "seconds": 14293.3999999986,
       "kills": 938,
       "referenceDps": 240,
       "targetSeconds": 14296
@@ -3272,7 +3284,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 15845.399999997187,
+      "seconds": 15489.759999997514,
       "kills": 1118,
       "referenceDps": 240,
       "targetSeconds": 15207
@@ -3280,7 +3292,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 10178.400000001137,
+      "seconds": 10144.480000001226,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3288,25 +3300,25 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 10275.360000001196,
+      "seconds": 10360.440000001094,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
     }
   ],
-  "pacingBuild": "11.13.0",
-  "pacingHtmlSha256": "89fd9e41faf446e2969fd52d011bb820ed947888520a37ab0d9fef088b586b69",
+  "pacingBuild": "11.13.2",
+  "pacingHtmlSha256": "b999587d4f520a9807ab3c5f83557c3a5f4a7f6e5f7f3b1b0ee8e28a75715872",
   "earlyZoneHealthComparison": [
     {
       "zone": 1,
       "beforeSeconds": 734.8800000000224,
-      "afterSeconds": 967.5199999999825,
+      "afterSeconds": 952.7999999999818,
       "referenceDps": 80
     },
     {
       "zone": 2,
       "beforeSeconds": 1245.7600000000634,
-      "afterSeconds": 1698.200000000008,
+      "afterSeconds": 1634.9200000000176,
       "referenceDps": 240
     }
   ],

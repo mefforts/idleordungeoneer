@@ -2520,7 +2520,7 @@ const ZONE_TWO_DAMAGE=1.25;
 
 const REFLECT_WARDS={variants:['jaw','rebound','rune'],seconds:3,reboundSeconds:3.4,inner:34,gapHalf:.70,failure:.15,wallDamage:.125};
 
-const JEWELRY_REFINEMENT={maximum:50,relativeStep:.0025,xp:80};
+const JEWELRY_REFINEMENT={maximum:50,relativeStep:.01,leechStep:.0005,xp:80};
 
 const TOOL_REFINEMENT={maximum:10,speedStep:.005};
 
@@ -2528,7 +2528,7 @@ let dungeonShopView='abilities';
 
 const ZONE_THREE_DAMAGE=1.6;
 
-const GRAVE_PULSE={speed:320,runningFactor:1.25,width:32,dashReadyLead:.4,interval:1.2,maximum:3};
+const GRAVE_PULSE={speed:320,openingSpeedFactor:.75,runningFactor:1.25,width:32,minimumSpacing:320,dashReadyLead:.4,interval:1.2,maximum:3};
 
 const WORK_PARTNERS={mine:'forge',forge:'mine',silverMine:'silverSmelt',silverSmelt:'silverMine',coal:'steelSmelt',steelSmelt:'coal',mithrilMine:'mithrilSmelt',mithrilSmelt:'mithrilMine',wood:'fletch',fletch:'wood',willow:'steelFletch',steelFletch:'willow',yew:'mithrilFletch',mithrilFletch:'yew',ward:'rune',rune:'ward',aetherWeave:'ward',greaterRune:'aetherWeave',verdantWeave:'aetherWeave',verdantRune:'verdantWeave',scavenge:'relicClean',relicClean:'scavenge',ancientScavenge:'cleanAncient',cleanAncient:'ancientScavenge',deepScavenge:'restoreEnchanted',restoreEnchanted:'deepScavenge',polish:'relicClean',garnetSearch:'garnetCut',garnetCut:'garnetSearch',sapphireSearch:'sapphireCut',sapphireCut:'sapphireSearch'};
 
@@ -3147,8 +3147,7 @@ function tickDungeonHazards(dt,playerFrom=game.player){
  const p=game.player;game.hazards=(game.hazards||[]).filter(h=>{
   if(game.status!=='running'||h.owner&&!encounterSourceActive(h.owner))return false;
   let step=dt,from=playerFrom;if(h.delay>0){const wait=Math.min(dt,h.delay);h.delay-=wait;step-=wait;if(step<=1e-9)return true;const u=wait/dt;from={x:playerFrom.x+(p.x-playerFrom.x)*u,y:playerFrom.y+(p.y-playerFrom.y)*u};}const previous=h.wave?{inner:h.inner,r:h.r}:null,pulse=h.abilityType==='gravePulse';h.age+=step;
-  if(pulse)h.waveSpeed=Math.max(h.waveSpeed,playerMoveSpeed()*GRAVE_PULSE.runningFactor);else h.life-=step;
-  if(h.wave){h.inner+=h.waveSpeed*step;h.r+=h.waveSpeed*step;}if(h.life<=0)return false;
+  if(pulse)advanceGravePulse(h,step);else{h.life-=step;if(h.wave){h.inner+=h.waveSpeed*step;h.r+=h.waveSpeed*step;}}if(h.life<=0)return false;
   const contains=actor=>h.wave?expandingWaveContains(actor,h,previous,actor===p?from:actor):h.type==='expanded'?expandedContains(actor,h):h.type==='ground'?(actor===p?playerCircleContains(h.x,h.y,h.r):Math.hypot(actor.x-h.x,actor.y-h.y)<h.r+(actor.rad||10)):(actor===p?playerSegmentContains(h,{x:h.x+Math.cos(h.angle)*h.length,y:h.y+Math.sin(h.angle)*h.length},h.width/2):segmentDistance(actor.x,actor.y,h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length)<h.width/2+(actor.rad||10));
   if(pulse){pulseDashCounter(h,previous,from,contains(p));if(h.dashCountered)h.playerHit=true;}
   if(h.lingering)tickCombatDot(h,'fire',contains);else if(contains(p)&&!((h.type==='expanded'||h.singleHit)&&h.playerHit)){const landed=hurtEncounter(h.owner,h.attack||h.enemyHits||h,h.damage);if(landed&&(h.type==='expanded'||h.singleHit))h.playerHit=true;}if(h.language==='friendly'||['ground','beam'].includes(h.type))damageMonstersInAttack(h.owner,h,contains);return game.status==='running'&&game.transition<=0&&(!pulse||!gravePulseFinished(h));
@@ -3635,7 +3634,7 @@ function codexDetailHtml(entry){
   body=codexHeading('Delving',codexRuleList([['Move','Drag anywhere in the arena, or use WASD / arrow keys'],['Dash','Double tap while moving, press Space / Dash, or triple tap a direction. Dash through an elite, rare, boss or Echo to briefly stun it without damage. Successful mechanic counters immediately reset dash.'],['Attack','Automatic when a target is in range'],['Pause','Pause pin or Escape'],['Replay','Press Delve during combat to choose a cleared floor']]))+codexHeading('Skilling',codexRuleList([['Work','Hold the scene, the work button or Space'],['Collect bonuses','Tap, drag over them, or use Enter / Space when focused'],['Idle','First slot: Zone 1, Floor 2. Second slot: Zone 2. Choose an activity’s Idle button; a single slot switches immediately.'],['Recipes','Tap a material cost to visit its source; bookmark a recipe to return to it']]))+codexHeading('Shortcuts',codexRuleList([['B','Dungeon Shop'],['G','Skills'],['E','Equipment'],['C','Codex'],['D','Return to the delve'],['Escape','Close the current menu']]))+codexHeading('Your save',codexParagraph('Progress saves on this device. Use Settings → Backup/Export to download a readable copy for review or backup, and Restore to load it on another device.'));
  }else if(id.startsWith('discipline_')){
   const group=id.slice(11),d=DISCIPLINES[group];
-  body=codexParagraph({blacksmithing:'Mine iron, silver and coal. Smelt bars to forge weapons, armor and tools.',woodworking:'Cut oak and willow. Use logs with metal to make bows, arrows and equipment.',warding:'Weave cloth, inscribe runes and enchant weapons.',scavenging:'Recover relics, gold and rough gems. Clean ancient salvage into fragments.',artisan:'Cut gems for weapon refinements and set silver jewelry. Refine owned jewelry in very small steps: 0.25% of the base effect per rank.'}[group])+codexHeading('Activities','<div class="codex-activity-list">'+d.actions.map(key=>'<button type="button" data-codex-activity="'+key+'">'+artHTML('action-'+key)+'<span>'+SKILLS[key].name+'</span>'+uiIcon(!canUseSkill(key)?'lock':'arrow')+'</button>').join('')+'</div>')+codexHeading('Station',codexRuleList([['Each upgrade','2% ingredient conservation · 3% faster work'],['Maximum level',5],['Current level',stationRank(group)]])+codexParagraph('Conservation accumulates between crafts until it saves a whole ingredient. Recipe costs show the current discounted amount. Tools equip automatically, start at 8% active speed and support ten refinements of +0.5 percentage points each. Stations and owned-tool upgrades share the Equipment menu.'))+codexHeading('Training',codexParagraph('Gathering and crafting grant experience to this discipline. Level 20 roughly matches the material work for 80% of the Iron/Steel upgrade paths across all three styles, including supporting jewelry, tools and stations. Tier 1 work gives 10% XP after level 10 and 0.1% after level 20; tier 2 gives 1% after level 20. Materials are unaffected. Tier 3 unlocks after completing Zone 3 at matching level 20. Crafting levels unlock equipment. Levels 11–60 in the matching weapon discipline add up to 5% damage: Smithing for Melee, Woodworking for Ranged, and Warding for Mage.'));
+  body=codexParagraph({blacksmithing:'Mine iron, silver and coal. Smelt bars to forge weapons, armor and tools.',woodworking:'Cut oak and willow. Use logs with metal to make bows, arrows and equipment.',warding:'Weave cloth, inscribe runes and enchant weapons.',scavenging:'Recover relics, gold and rough gems. Clean ancient salvage into fragments.',artisan:'Cut gems for weapon refinements and set silver jewelry. Refine owned jewelry: Leech Ring ranks add 0.05 percentage points of lifesteal; other pieces gain 1% of their base effect per rank.'}[group])+codexHeading('Activities','<div class="codex-activity-list">'+d.actions.map(key=>'<button type="button" data-codex-activity="'+key+'">'+artHTML('action-'+key)+'<span>'+SKILLS[key].name+'</span>'+uiIcon(!canUseSkill(key)?'lock':'arrow')+'</button>').join('')+'</div>')+codexHeading('Station',codexRuleList([['Each upgrade','2% ingredient conservation · 3% faster work'],['Maximum level',5],['Current level',stationRank(group)]])+codexParagraph('Conservation accumulates between crafts until it saves a whole ingredient. Recipe costs show the current discounted amount. Tools equip automatically, start at 8% active speed and support ten refinements of +0.5 percentage points each. Stations and owned-tool upgrades share the Equipment menu.'))+codexHeading('Training',codexParagraph('Gathering and crafting grant experience to this discipline. Level 20 roughly matches the material work for 80% of the Iron/Steel upgrade paths across all three styles, including supporting jewelry, tools and stations. Tier 1 work gives 10% XP after level 10 and 0.1% after level 20; tier 2 gives 1% after level 20. Materials are unaffected. Tier 3 unlocks after completing Zone 3 at matching level 20. Crafting levels unlock equipment. Levels 11–60 in the matching weapon discipline add up to 5% damage: Smithing for Melee, Woodworking for Ranged, and Warding for Mage.'));
  }else if(id.startsWith('resource_')){
   const key=id.slice(9),source=RESOURCE_SOURCE[key],s=SKILLS[source];
   const uses=Object.entries(SKILLS).filter(([,s])=>s.cost?.[key]).map(([k,s])=>s.name);
@@ -3670,7 +3669,7 @@ function codexDetailHtml(entry){
  else if(id==='health_pickup')body=healthCodexHtml();
  else if(id.startsWith('biome_')){const n=Number(id.slice(6)),b=BIOMES[n],z=zoneBalance(n);body=codexParagraph(b.label+'. '+b.mob+' inhabit this dungeon.')+codexRuleList([['Floors',zoneFloorCount(n)],['Encounters per floor','3 waves · 3 guardians'],['Recommended DPS',Math.round(z.dps)],['Final guardian',b.boss[2]]])+codexParagraph('Guardians telegraph their attacks. Pale shield marks can reflect a strike; approach a totem to draw its stream when you are closer than its caster. Healing and power totems end with their caster. Summoning spires survive and require bumps or dashes to destroy; clear their remaining summons to finish the encounter. Floor overlords use arena control, repeated barrages and shielded reinforcements. Violet attacks also damage other enemies caught in their area. Known guardians return as elite echoes: up to one, two or three per wave in the early, middle and deep floors. The final Embervault floor allows six elite echoes and three rare creatures per wave. The Hollow Crypt introduces pursuing souls from fallen enemies and expanding bone rings from its first guardian.')+codexHeading('Floors',codexRuleList(Array.from({length:zoneFloorCount(n)},(_,i)=>['Floor '+(i+1),zoneFloorName(n,i+1)])))+codexHeading('Creatures',codexParagraph(ENVIRONMENT_ZONES[n].monsters.join(' · ')))+codexParagraph('Dungeon Sigils and permanent Dungeon abilities travel across Zones in the same Dungeon. Equipment, Dungeoneering experience and Mastery travel with you.');}
  else if(id.startsWith('boss_'))body=bossCodexHtml(entry);
- else if(id.startsWith('trinket_')){const t=TRINKETS[id.slice(8)];body=codexParagraph(jewelryValueText(id.slice(8))+'.')+codexParagraph('Refinement '+jewelryRank(id.slice(8))+' / 50. Each rank adds 0.25% of this item’s base effect in Artisan → Equipment.')+codexRuleList([['Slot',t.type==='ring'?'Ring · four slots':'Amulet · one slot'],['Bench','Artisan'],['Applies to','All combat styles']])+codexParagraph('Craft a trinket once, then equip or remove it in Inventory. Four different rings and one amulet can be worn together.');}
+ else if(id.startsWith('trinket_')){const t=TRINKETS[id.slice(8)];body=codexParagraph(jewelryValueText(id.slice(8))+'.')+codexParagraph('Refinement '+jewelryRank(id.slice(8))+' / 50. Each rank adds '+(t.bonus==='leech'?'0.05 percentage points of lifesteal':'1% of this item’s base effect')+' in Artisan → Equipment.')+codexRuleList([['Slot',t.type==='ring'?'Ring · four slots':'Amulet · one slot'],['Bench','Artisan'],['Applies to','All combat styles']])+codexParagraph('Craft a trinket once, then equip or remove it in Inventory. Four different rings and one amulet can be worn together.');}
  else body=codexParagraph(entry.desc||'Collected while delving.');
  return body;
 }
@@ -6119,7 +6118,9 @@ function normalizeArtisanProgression(){
 
 function jewelryRank(id){return data.trinketRefinements?.[id]||0;}
 
-function refinedTrinketValue(id){return (TRINKETS[id]?.value||0)*(1+jewelryRank(id)*JEWELRY_REFINEMENT.relativeStep);}
+function jewelryRefinementStep(id){return id==='leech'?JEWELRY_REFINEMENT.leechStep:(TRINKETS[id]?.value||0)*JEWELRY_REFINEMENT.relativeStep;}
+
+function refinedTrinketValue(id){return (TRINKETS[id]?.value||0)+jewelryRank(id)*jewelryRefinementStep(id);}
 
 function refinedTrinketBonus(key){return [...(data.equippedRings||[]),data.equippedAmulet].reduce((sum,id)=>sum+(TRINKETS[id]?.bonus===key?refinedTrinketValue(id):0),0);}
 
@@ -6164,7 +6165,7 @@ function transmutationHtml(){
 }
 
 function jewelryRefinementHtml(id){
- const rank=jewelryRank(id),cost=stationCost(jewelryRefinementBase(id),'artisan'),maxed=rank>=JEWELRY_REFINEMENT.maximum,step=TRINKETS[id].value*JEWELRY_REFINEMENT.relativeStep;
+ const rank=jewelryRank(id),cost=stationCost(jewelryRefinementBase(id),'artisan'),maxed=rank>=JEWELRY_REFINEMENT.maximum,step=jewelryRefinementStep(id);
  return '<article class="craft-tile compact-recipe jewelry-refinement"><div class="craft-tile-icon">'+artHTML(TRINKETS[id].icon)+'</div><div class="craft-tile-body"><strong>Refine '+TRINKETS[id].name+'</strong><span class="recipe-rank">'+rank+' / '+JEWELRY_REFINEMENT.maximum+'</span><small>'+jewelryValueText(id)+' · next +'+jewelryValueText(id,step).replace(/^\+/,'')+'</small>'+(!maxed?materialCosts(cost,'jewelry:'+id)+workshopVoucherButtonHtml('jewelry:'+id):'')+'</div><div class="recipe-actions"><button type="button" data-refine-jewelry="'+id+'" data-focus-key="refine-jewelry-'+id+'" '+(maxed||!hasIngredients(cost)?'disabled':'')+'>'+(maxed?'Max':'Refine')+'</button></div></article>';
 }
 
@@ -6261,8 +6262,16 @@ function addEmberCleave(enemy,cast,damage){
 }
 
 function addGravePulses(enemy,cast,damage){
- const count=cast.pulseCount??travellingWaveCount(enemy);
- for(let i=0;i<count;i++)game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:i*GRAVE_PULSE.interval,sequenceIndex:i,sequenceCount:count,enemyHits:i===0?cast.enemyHits:new Set()});
+ const count=cast.pulseCount??travellingWaveCount(enemy),openingSpeed=Math.max(GRAVE_PULSE.speed*GRAVE_PULSE.openingSpeedFactor,playerMoveSpeed()*GRAVE_PULSE.runningFactor),firstInterval=Math.max(GRAVE_PULSE.interval,GRAVE_PULSE.minimumSpacing/openingSpeed);
+ for(let i=0;i<count;i++)game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:i===0?openingSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:i*firstInterval,sequenceIndex:i,sequenceCount:count,enemyHits:i===0?cast.enemyHits:new Set()});
+}
+
+function advanceGravePulse(h,dt){
+ h.waveSpeed=Math.max(h.waveSpeed,playerMoveSpeed()*GRAVE_PULSE.runningFactor);
+ const lead=game.hazards.find(other=>other.abilityType==='gravePulse'&&other.owner===h.owner&&other.sequenceIndex===h.sequenceIndex-1);
+ // Faster follow-up rims keep a dashable gap instead of overtaking the opener.
+ const distance=Math.min(h.waveSpeed*dt,lead?Math.max(0,lead.inner-h.inner-GRAVE_PULSE.minimumSpacing):Infinity);
+ h.inner+=distance;h.r+=distance;
 }
 
 function gravePulseCanCast(){
@@ -8433,7 +8442,7 @@ function recipeCard(icon,name,desc,cost,action,label,owned=false,selected=false,
 function recipeHtml(group){
  if(['blacksmithing','woodworking','warding'].includes(group))return classEquipmentHtml(group);
  if(group!=='artisan')return '';
- return '<div class="recipe-filter" role="group" aria-label="Jewelry type">'+[['all','All jewelry'],['ring','Rings'],['amulet','Amulets']].map(([id,name])=>'<button type="button" data-recipe-cat="'+id+'" class="'+(recipeCategory===id?'active':'')+'" aria-pressed="'+(recipeCategory===id)+'">'+name+'</button>').join('')+'</div><div class="craft-tile-list">'+Object.entries(TRINKETS).filter(([,t])=>recipeCategory==='all'||t.type===recipeCategory).map(([id,t])=>recipeCard('',t.name,jewelryValueText(id),trinketCost(id),'data-craft-trinket="'+id+'"','MAKE',data.trinkets.includes(id),t.type==='ring'?data.equippedRings.includes(id):data.equippedAmulet===id,t.icon)+(data.trinkets.includes(id)?jewelryRefinementHtml(id):'')).join('')+'</div><p class="recipe-hint">Four ring slots and one amulet. Each refinement adds only 0.25% of the item’s base effect; crafting new jewelry still requires its materials.</p>';
+ return '<div class="recipe-filter" role="group" aria-label="Jewelry type">'+[['all','All jewelry'],['ring','Rings'],['amulet','Amulets']].map(([id,name])=>'<button type="button" data-recipe-cat="'+id+'" class="'+(recipeCategory===id?'active':'')+'" aria-pressed="'+(recipeCategory===id)+'">'+name+'</button>').join('')+'</div><div class="craft-tile-list">'+Object.entries(TRINKETS).filter(([,t])=>recipeCategory==='all'||t.type===recipeCategory).map(([id,t])=>recipeCard('',t.name,jewelryValueText(id),trinketCost(id),'data-craft-trinket="'+id+'"','MAKE',data.trinkets.includes(id),t.type==='ring'?data.equippedRings.includes(id):data.equippedAmulet===id,t.icon)+(data.trinkets.includes(id)?jewelryRefinementHtml(id):'')).join('')+'</div><p class="recipe-hint">Four ring slots and one amulet. Leech Ring ranks add 0.05 percentage points of lifesteal; other jewelry gains 1% of its base effect per rank. Crafting new jewelry still requires its materials.</p>';
 }
 let recipeCategory='all';
 function renderDisciplineDrawer(){

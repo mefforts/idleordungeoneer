@@ -49,8 +49,7 @@ function tickDungeonHazards(dt,playerFrom=game.player){
  const p=game.player;game.hazards=(game.hazards||[]).filter(h=>{
   if(game.status!=='running'||h.owner&&!encounterSourceActive(h.owner))return false;
   let step=dt,from=playerFrom;if(h.delay>0){const wait=Math.min(dt,h.delay);h.delay-=wait;step-=wait;if(step<=1e-9)return true;const u=wait/dt;from={x:playerFrom.x+(p.x-playerFrom.x)*u,y:playerFrom.y+(p.y-playerFrom.y)*u};}const previous=h.wave?{inner:h.inner,r:h.r}:null,pulse=h.abilityType==='gravePulse';h.age+=step;
-  if(pulse)h.waveSpeed=Math.max(h.waveSpeed,playerMoveSpeed()*GRAVE_PULSE.runningFactor);else h.life-=step;
-  if(h.wave){h.inner+=h.waveSpeed*step;h.r+=h.waveSpeed*step;}if(h.life<=0)return false;
+  if(pulse)advanceGravePulse(h,step);else{h.life-=step;if(h.wave){h.inner+=h.waveSpeed*step;h.r+=h.waveSpeed*step;}}if(h.life<=0)return false;
   const contains=actor=>h.wave?expandingWaveContains(actor,h,previous,actor===p?from:actor):h.type==='expanded'?expandedContains(actor,h):h.type==='ground'?(actor===p?playerCircleContains(h.x,h.y,h.r):Math.hypot(actor.x-h.x,actor.y-h.y)<h.r+(actor.rad||10)):(actor===p?playerSegmentContains(h,{x:h.x+Math.cos(h.angle)*h.length,y:h.y+Math.sin(h.angle)*h.length},h.width/2):segmentDistance(actor.x,actor.y,h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length)<h.width/2+(actor.rad||10));
   if(pulse){pulseDashCounter(h,previous,from,contains(p));if(h.dashCountered)h.playerHit=true;}
   if(h.lingering)tickCombatDot(h,'fire',contains);else if(contains(p)&&!((h.type==='expanded'||h.singleHit)&&h.playerHit)){const landed=hurtEncounter(h.owner,h.attack||h.enemyHits||h,h.damage);if(landed&&(h.type==='expanded'||h.singleHit))h.playerHit=true;}if(h.language==='friendly'||['ground','beam'].includes(h.type))damageMonstersInAttack(h.owner,h,contains);return game.status==='running'&&game.transition<=0&&(!pulse||!gravePulseFinished(h));
