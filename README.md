@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.8.2** adds **75% HP to regular elites** and **25% to bosses and guardian Echoes** in **Zones 1–2 only**, on top of v11.8.1. Royal Guards and summoned elites use the regular-elite increase. Rares, uncommons and ordinary monsters retain their current health, as do enemies from Zone 3 onward. [Balance and pacing](BALANCE.md).
+
 **Build 11.8.1** gives healing motes a **12-combat-second lifetime**, including while at full health, with a fade over the last three seconds. Menus, pauses and skilling freeze their timer. Elites and rares now independently roll **25% for blessing spoils** and **50% for a 12% health mote**. Ordinary monsters keep their 2% chance of a 3% heal. Other ground loot retains its persistence. The **Zone 1 Floor 5 boss** now opens with Walking Hedge and repeats it between his other normal-rotation attacks.
 
 **Build 11.8.0** adds **39 themed elite, rare and boss mechanics**, with illustrated roots, hammers, lanterns, portals and other animated effects. Openings use teal symbols, counter targets use gold and timer arcs, and the Codex holds the detailed instructions. Major new attacks share one arena budget. [Mechanics and counterplay](SELECTED_MECHANICS.md) · [All 39 appearances](preview-themed-mechanics.png) · [Animation reel](preview-themed-mechanics.mp4).
@@ -44,7 +46,7 @@ The two work-scene shortcuts now have distinct purposes: **Skills** opens the cu
 
 [Compare Steel and Mithril outfits](preview-tier-three-comparison.png) · [Mithril mining](preview-mithril-mining-mobile.png) · [Direct Gather / Refine controls](preview-direct-refining-mobile.png) · [Blue ranger](preview-blue-ranger-mobile.png) · [Green Mage](preview-green-mage-mobile.png) · [Visible tier-3 requirements](preview-tier-three-locked-mobile.png) · [Training bands](preview-training-curve-mobile.png) · [Mithril promotion](preview-mithril-promotion-mobile.png).
 
-The health experiment applies across all Zones: **regular elites +75%**, **rares +50%**, and **bosses / guardian Echoes +50%**. Ordinary health calibration, spawn counts, player damage and loot stay the same, so fights last longer. Rare and boss-elite bonuses do not stack with the regular elite multiplier. [BALANCE.md](BALANCE.md) records the revised forecasts and playtest results.
+The earlier base health experiment applies across all Zones: **regular elites +75%**, **rares +50%**, and **bosses / guardian Echoes +50%**. Ordinary health calibration, spawn counts, player damage and loot stay the same, so fights last longer. Rare and boss-elite bonuses do not stack with the regular elite multiplier. [BALANCE.md](BALANCE.md) records the revised forecasts and playtest results.
 
 **Build 11.5.0** consolidates crafting: Gather and Refine show both material tiers together, including locked recipes. Every tier-2 activity needs **Zone 2 access and level 10 in its matching discipline**, including idle/offline work. Steel promotions sit directly below their weapon; station and tool upgrades use the same compact rows in Equipment. The separate Tools tab and station footer are gone. [Equipment](preview-unified-equipment-mobile.png) · [Workshop upgrades](preview-unified-workshop-upgrades-mobile.png) · [Visible tier-2 requirements](preview-visible-tier-two-mobile.png).
 

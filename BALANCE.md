@@ -1,5 +1,7 @@
 # Dungeon progression and balance
 
+Build 11.8.2 adds 75% regular-elite HP and 25% boss/guardian-Echo HP in Zones 1–2, measured against v11.8.1. Royal Guards and summoned elites count as regular elites. Rares, uncommons, ordinary monsters, spires and all enemies from Zone 3 onward retain their previous health. These multipliers apply once after the existing health calibration; player damage, incoming damage, rewards and spawn cadence keep their current rules.
+
 Build 11.8.1 gives health motes a 12-combat-second lifetime, including at full health, and a three-second fade. Elites/rares independently roll 25% for blessing spoils and 50% for health; ordinary health drop frequency and all healing amounts remain. Other ground loot keeps its persistence. Zone 1’s Floor 5 overlord opens with Walking Hedge and repeats it between normal-rotation attacks, retaining his full attack variety and the major-attack budget.
 
 Build 11.8 adds 39 selected themed mechanics, 4/5/6-enemy guardian interludes and capped uncommon ranged creatures. [Selected mechanics and counterplay](SELECTED_MECHANICS.md); [50 new theme-neutral proposals only](THEME_NEUTRAL_IDEAS.md). Per-enemy health and ordinary spawn cadence retain their previous calibration.
@@ -94,7 +96,7 @@ The Dungeon Shop has a Long blessings sub-store. Most effects cost 60 interchang
 
 ## Encounter health experiment
 
-Build 11.6 retains +75% regular elite health and +50% rare, guardian Echo (boss elite) and boss health. Build 11.6.1 added 2× ordinary minion health and 6× health for special enemies from Zone 3 onward, measured against v11.6.0. Build 11.6.2 doubles ordinary minions again: 4× v11.6.0, or 2× v11.6.1. Special enemies retain their existing 6×; they do not inherit the ordinary multiplier. Zones 1–2 keep their current health. Rare and boss-elite flags retain their category precedence. Summoning-spire health and one/two-impact rules remain unchanged. All multipliers apply after the existing health-scale calibration: the equipment curve and per-enemy health remain unchanged. In Build 11.8 the two interludes add escorts, eligible uncommons have 2× ordinary HP, and elite/rare/boss damage uses maximum-health fractions. Forecast times below include escort durability and a chance-weighted uncommon estimate; concurrent caps can reduce the latter.
+Build 11.6 retains +75% regular elite health and +50% rare, guardian Echo (boss elite) and boss health. Build 11.6.1 added 2× ordinary minion health and 6× health for special enemies from Zone 3 onward, measured against v11.6.0. Build 11.6.2 doubles ordinary minions again: 4× v11.6.0, or 2× v11.6.1. Special enemies retain their existing 6×; they do not inherit the ordinary multiplier. The Zone 3 step excludes Zones 1–2; Build 11.8.2 separately raises regular elite and boss/Echo health there. Rare and boss-elite flags retain their category precedence. Summoning-spire health and one/two-impact rules remain unchanged. All multipliers apply after the existing health-scale calibration: the equipment curve and ordinary-monster health retain their calibration, with the early-Zone additions recorded above. In Build 11.8 the two interludes add escorts, eligible uncommons have 2× ordinary HP, and elite/rare/boss damage uses maximum-health fractions. Forecast times below include escort durability and a chance-weighted uncommon estimate; concurrent caps can reduce the latter.
 
 ## Equipment ceilings
 
@@ -188,22 +190,29 @@ Verdant Seeds, Ember Cores, Grave Dust and Rift Shards now each pay one unit of 
 
 | Zone | Forecast at 1× | Reference DPS |
 | --- | --- | ---: |
-| 1 | ~14 min | 80.0 |
-| 2 | ~22 min | 240.0 |
+| 1 | ~16 min | 80.0 |
+| 2 | ~24 min | 240.0 |
 | 3 | ~239 min | 240.0 |
 | 4 | ~254 min | 240.0 |
 | 5 | ~135 min | 480.0 |
 
-- Live Zone 1: **12.2 min**, 413 rewarded defeats, 80.0 reference DPS.
-- Live Zone 2: **20.8 min**, 648 rewarded defeats, 240.0 reference DPS.
-- Live Zone 3: **181.3 min**, 938 rewarded defeats, 240.0 reference DPS.
-- Live Zone 4: **190.5 min**, 1118 rewarded defeats, 240.0 reference DPS.
-- Live Zone 9: **132.4 min**, 1118 rewarded defeats, 480.0 reference DPS.
-- Live Zone 15: **129.8 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 1: **13.6 min**, 413 rewarded defeats, 80.0 reference DPS.
+- Live Zone 2: **23.1 min**, 648 rewarded defeats, 240.0 reference DPS.
+- Live Zone 3: **181.7 min**, 938 rewarded defeats, 240.0 reference DPS.
+- Live Zone 4: **189.0 min**, 1118 rewarded defeats, 240.0 reference DPS.
+- Live Zone 9: **133.2 min**, 1118 rewarded defeats, 480.0 reference DPS.
+- Live Zone 15: **131.2 min**, 1118 rewarded defeats, 480.0 reference DPS.
+
+| Zone | v11.8.1 live reference | Current live reference |
+| --- | ---: | ---: |
+| 1 | 12.2 min | 13.6 min |
+| 2 | 20.8 min | 23.1 min |
+
+This comparison uses the same invulnerable full-Zone controller and reference equipment. It measures combat pacing with counters, spires and guards; it does not measure human survival or difficulty.
 
 The live fixture uses actual spawning, attacks, movement, shield guards, summoning spires, reflection and phase transitions at 40 ms steps. It suppresses incoming damage and XP advancement, skips blessing choices and uses no purchased Dungeon perks. It leaves underfoot runes before returning to reflect centers, destroys spires, defeats guards and intercepts healing streams. These are combat-time benchmarks, not a promise of wall-clock play time. Forecasts use direct damage; percent-health reflections and friendly fire can shorten actual fights, especially after the Zone 3 health step. Menus, mistakes and preparation can extend them.
 
-Boss health retains the earlier 1.12× baseline adjustment, followed by the 1.5× health experiment and, from Zone 3, the additional 6× step. Bosses change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
+Boss health retains the earlier 1.12× baseline adjustment, followed by the 1.5× health experiment, then either the additional 1.25× in Zones 1–2 or the existing 6× step from Zone 3. Bosses change tactics at 75% / 40% HP. Melee uses a capsule matching the visible body of large creatures; player projectiles use swept collision against that same body. Healing and power totems remain interceptable and untargetable. Summoning spires have a health bar and remain until broken, including after their caster falls. They replenish ordinary monsters every 5.5s or elites every 9s, following a visible arrival warning. At most two spires, eight summoned enemies and three summoned elites are active.
 
 Build 11.6.3 allows a dash through a healing or power totem’s base to destroy it without a text prompt or reward. The collision sweeps the same base capsule used by summoning-spire dashes, including final-frame crossings, edge grazes and disabled totems. Walking still intercepts streams and weapons cannot damage them. Destruction stops the stream before that tick’s healing or buff delivery; an already-earned Rally keeps its normal remaining duration. Summoning-spire bump counts, enemy health, damage and reward rules are unchanged.
 
@@ -213,7 +222,7 @@ Build 11.4 raises ordinary incoming damage in Zone 2 by 25%, without changing he
 
 Zone 3 onward uses 1.6× normal incoming damage. Opening health is floored at 125% of Zone 2’s final-floor reference, removing the old health drop when crossing the boundary. The v11.7 equipment ceilings are 80/240/480, while the earlier enemy health calibration is retained. The health floor also prevents later Zones stepping back down; reference combat times are recalculated rather than claiming the former 30–40-minute plateau. The first Crypt wave introduces death echoes: a 0.85s warning, a slow pursuing soul, then a final burst, capped at five. The first guardian opens with one continuously expanding Grave Pulse ring. Dash through it: it has no fixed lifetime or travel limit and always moves faster than running, including movement buffs. Pulse casts cannot overlap, and the next warning allows dash recharge before impact. Quadrant and rebounding-ring boundaries are 1.5× wider and taller in actual warning/collision geometry. Ring lifetimes cover the larger travel distance.
 
-The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 8.7–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 69.9–189 HP remained in the finale trials and 64.4–160.7 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
+The zone-pressure fixture compares stationary and moving controllers with real damage, basic Iron ranged armor and about 55 DPS. The separate zone-challenge-pressure fixture uses 150.18 DPS, reinforced Steel ranged armor (189 HP), actual spawns, ammunition, loot, chosen blessings and spire cleanup. Across 3 seeds, stationary play died in 8.5–9.5s on Zone 2’s finale and 4.7–5.6s at Zone 3 entry. Moving counterplay cleared the opening wave and first guardian in 6 of 6 trials: 80.3–189 HP remained in the finale trials and 64.4–160.7 HP in the Crypt trials. These are short automated controller comparisons, not human difficulty ratings; raw rows are in balance-report.json.
 
 In the initial v11.6.1 comparison, the moving 150-DPS controller failed all three Zone 3 openings, surviving 34.1–114.2 combat seconds. The same controller cleared all three in [v11.6.0](https://github.com/mefforts/idleordungeoneer/blob/8cd4b2485ea990f9dfd147d34665109cb3a82a52/balance-report.json). Zone 2 trial rows were identical. The controller uses no purchased combat perks or jewelry; these results record the size of the health experiment.
 
