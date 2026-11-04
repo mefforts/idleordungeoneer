@@ -4,6 +4,8 @@
 
 The game, environments, creatures, equipment and icons are embedded in one HTML file. The downloaded build needs no installation or internet connection. `npm start` serves it locally if you prefer a consistent browser save origin.
 
+**Build 11.11.2** extends the Warband Resolve dash lockout to **ten combat seconds**, preserving the current stagger. Keyboard, touch Dash and mobile double-tap checks verify that moving elites take full damage after stagger ends and beyond the former five-second limit; both receiving and granting the boon stay disabled until expiry. No new in-game hint is added.
+
 **Build 11.11.1** makes dash-throughs a longer opening against **Warband Resolve**. The enemy keeps its existing stagger, then remains unable to receive or grant the shared damage-reduction boon until **five combat seconds after impact**. Fresh dashes refresh the window; pauses and skilling freeze it. The cracked shield stays at 0% during recovery, with no new in-game hint.
 
 **Build 11.11.0** gives travelling mechanics physical artwork and deliberate repeat patterns. **Walking Hedge** sends two or three world-spanning thorn walls through offset teal openings. They keep travelling faster than running and retire after passing the encounter; crossing a Hedge keeps the normal dash cooldown. The space between walls allows a dash through one, then a walking route through the next opening.

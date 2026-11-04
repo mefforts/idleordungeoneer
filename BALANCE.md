@@ -1,5 +1,7 @@
 # Dungeon progression and balance
 
+Build 11.11.2 extends the Warband Resolve dash lockout to ten combat seconds. Moving-elites tests use real keyboard, touch Dash and mobile double taps, verifying full hit damage after stagger ends, beyond five seconds and just before expiry, then normal damage reduction after ten seconds. The 0.25×, 1× and 4× Delving clocks, pauses, fresh-dash refresh and cleanup retain their existing rules. No new in-game explanation is added. Pacing figures still refer to v11.11.0.
+
 Build 11.11.1 keeps the existing dash stagger and blocks both receiving and granting Warband Resolve for five combat seconds after dash contact. Each enemy counts once per dash; a fresh dash refreshes the lockout. Menus and skilling pause it, and encounter cleanup clears it. The cracked 0% shield persists through recovery without a new in-game hint. Plain body stuns still deal no damage and keep their normal cooldown. Pacing figures below retain the v11.11.0 benchmark; the lockout is validated separately by targeted combat regressions.
 
 Build 11.11.0 upgrades travelling attacks with seven layered physical assets and a consistent signal: teal openings, purple attacks that hit players and monsters, red player-only threats, yellow interrupt brackets and gold/white reflect centers. Channelers, cut links, lanterns, anchors, charging enemies and siphons use yellow marks; reflected/dash recovery uses a small reset symbol. Standard hazard rims gain stronger contrast without filling large opaque panels.

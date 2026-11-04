@@ -1,6 +1,6 @@
 /* Fractions are base maximum-health damage; protection still mitigates them. */
 const ENCOUNTER_DAMAGE={projectile:.10,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35};
-const ENEMY_RESOLVE={perAlly:.10,maximum:.50,dashLockout:5};
+const ENEMY_RESOLVE={perAlly:.10,maximum:.50,dashLockout:10};
 const ENCOUNTER_AREA={common:1.25};
 function resolveEnemy(enemy){return !!enemy&&enemy.hp>0&&!enemy.totem&&!enemy.uncommon&&!!(enemy.boss||enemy.elite||enemy.bossElite||enemy.champion);}
 function enemyResolveBlocked(enemy){return enemy.stagger>0||(enemy.resolveDisabledUntil||0)>game.frame;}
