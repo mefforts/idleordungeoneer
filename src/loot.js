@@ -43,6 +43,10 @@ function recordMonsterLoot(enemy,rewards){
  for(const item of items)data.lootHistory.push({name:item.name,amount:item.amount,zone:zoneNumber()+1});data.lootHistory=data.lootHistory.slice(-40);
 }
 function tickLootReceipts(dt){if(game.menuPaused||game.scene!=='combat'||!$('overlay').classList.contains('hidden'))return;game.lootDrops=(game.lootDrops||[]).filter(drop=>(drop.age+=dt)<5.5);}
+function lootReceiptName(item){
+ if(item.voucher){const kind=item.key.split('_')[2]||'';return {weapon:'Refine',speed:'Atk speed',reach:'Reach',armor:'Armor',enchant:'Enchant',jewelry:'Jewelry'}[kind]||voucherKindName(kind).replace(/ refinement| upgrade/g,'').slice(0,10);}
+ return {gold:'Gold',sigils:'Sigil',essence:'Ess.',ore:'Ore',coal:'Coal',logs:'Oak',cloth:'Cloth',scraps:'Frag.',willowLogs:'Willow',ancientSalvage:'Salvage',mithrilOre:'Mithril',yewLogs:'Yew',enchantedSalvage:'Ench. salv.',loot_0:'Seeds',loot_1:'Cores',loot_2:'Dust',loot_3:'Shards'}[item.key]||(RESOURCE_LABEL[item.key]||item.name||'Loot').slice(0,10);
+}
 function paintLootReceipts(){
  for(const drop of game.lootDrops||[]){
   const fade=drop.age<4.5?1:Math.max(0,5.5-drop.age),rise=reducedMotion()?0:Math.min(18,drop.age*10);ctx.save();ctx.globalAlpha=fade;
@@ -50,7 +54,7 @@ function paintLootReceipts(){
    const centerX=clamp(drop.x,game.camX-game.viewWidth/2+90,game.camX+game.viewWidth/2-90),centerY=clamp(drop.y,game.camY-game.viewHeight/2+200,game.camY+game.viewHeight/2-90),x=centerX+(i%2-.5)*91,y=centerY-24-Math.floor(i/2)*27-rise;let image=lootImages.get(item.art);if(!image){image=new Image();image.src=iconAsset(item.art);lootImages.set(item.art,image);}
    ctx.fillStyle=item.voucher?'#4b3b20ed':'#15282be8';ctx.strokeStyle=item.voucher?'#f3d38e':'#b1c6ab8c';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(x-41,y-13,85,25,5);ctx.fill();ctx.stroke();
    if(image.complete&&image.naturalWidth)ctx.drawImage(image,x-38,y-11,22,22);
-   const kind=item.voucher?item.key.split('_')[2]:'',name=item.voucher?({weapon:'Refine',speed:'Atk speed',reach:'Reach',armor:'Armor',enchant:'Enchant',jewelry:'Jewelry'}[kind]||voucherKindName(kind||'').replace(/ refinement| upgrade/g,'').slice(0,10)):{gold:'Gold',sigils:'Sigil',essence:'Ess.',ore:'Ore',coal:'Coal',logs:'Oak',cloth:'Cloth',scraps:'Frag.',willowLogs:'Willow',ancientSalvage:'Salvage',loot_0:'Seeds',loot_1:'Cores',loot_2:'Dust',loot_3:'Shards'}[item.key]||'VOUCHER';
+   const name=lootReceiptName(item);
    ctx.font='700 '+(item.voucher?8:10)+'px system-ui';ctx.textAlign='left';ctx.fillStyle=item.voucher?'#ffe2a5':'#f6ead1';ctx.fillText('+'+uiCompact(item.amount)+' '+name,x-12,y+4);
   });ctx.restore();
  }

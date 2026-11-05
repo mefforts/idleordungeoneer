@@ -26,14 +26,7 @@ function normalizeTierProgression(){
  if(legacy)data.zone2SkillsAnnounced=tier2Unlocked();
  if(SKILLS[data.lastSkill]?.tier>1&&!canUseSkill(data.lastSkill))data.lastSkill='mine';
 }
-function weaponDamageBase(id=data.weaponType,rank=data.styles[styleForWeapon(id)].weapon){
- const w=WEAPON_TYPES[id],r=Math.max(0,Math.min(TIER_LIMITS[styleTier(styleForWeapon(id))].weapon,rank));
- const starter=14*w.power/w.cooldown*1.05;
- const first=80/1.1,second=160/1.2;
- const third=240/1.3,budget=r<=10?starter+(first-starter)*r/10:r<=20?first+(second-first)*(r-10)/10:second+(third-second)*(r-20)/10;
- const robeAllowance=styleForWeapon(id)==='magic'?Math.min(1,r/10)*.04+Math.max(0,r-10)/10*.04:0;
- return budget*w.cooldown/w.power/1.05/(1+robeAllowance);
-}
+
 function styleStats(id=combatStyle()){
  const s=data.styles[id],level=Math.min(50,1+Math.floor(Math.sqrt(s.xp/80))),armor=armorStats(),skillLevel=levelRange(data[DISCIPLINES[STYLE_DEFS[id].group].xp]||0).lvl;
  const proficiencyPercent=(level-1)*3/49,craftsmanshipPercent=Math.min(5,Math.max(0,skillLevel-10)*.1),weapon=id===combatStyle()?data.weaponType:s.lastWeapon;
@@ -81,22 +74,7 @@ function styleUpgradeBase(id,kind,rank=data.styles[id][kind]||0){
  const tier=kind==='armor'?ownedArmorTier(id):styleTier(id);
  return {...styleUpgradeMaterials(id,kind,rank),...(upgradeZoneMaterialCost(tier,kind,rank)?{zoneMaterials:1}:{})};
 }
-function styleUpgradeMaterials(id,kind,rank=data.styles[id][kind]||0){
- const s=data.styles[id],r=rank,tier=kind==='armor'?ownedArmorTier(id):styleTier(id),cap=TIER_LIMITS[tier][kind],local=tier>1?Math.max(0,r-TIER_LIMITS[tier-1][kind]):r;
- if(tier===1){
-  if(kind==='weapon')return {bars:8+local*5,...(id==='ranged'?{logs:4+local*2}:id==='magic'?{cloth:6+local*2}:{}),gold:preparationUpgradeGold(1,kind,r)};
-  if(kind==='armor')return id==='melee'?{bars:6+local*5,gold:25+local*20}:id==='ranged'?{bars:3+local*2,cloth:6+local*4,gold:25+local*20}:{bars:2+local,cloth:12+local*6,gold:25+local*20};
-  if(kind==='enchant')return {bars:4+local*3,essence:2+local*2,cutOpals:1};
-  return {bars:5+local*3,...(id==='ranged'?{logs:8+local*4}:id==='magic'?{cloth:8+local*4}:{}),gold:kind==='speed'?preparationUpgradeGold(1,kind,r):35+local*20};
- }
- const material=tier===3?'mithrilBars':'steelBars',wood=tier===3?'yewLogs':'willowLogs',cloth=tier===3?'verdantCloth':'runicCloth',fragments=tier===3?'enchantedFragments':'ancientFragments',gem=tier===3?'cutSapphires':'cutGarnets';
- const cost={[material]:(kind==='armor'&&id!=='melee'?4:8)+local*3,gold:['weapon','speed'].includes(kind)?preparationUpgradeGold(tier,kind,r):75+local*35};
- if(id==='ranged')cost[wood]=8+local*3;
- if(id==='magic'||kind==='armor'&&id==='ranged')cost[cloth]=(id==='magic'?12:6)+local*3;
- if(kind==='weapon')cost[fragments]=3+local;
- if(kind==='enchant'){cost.essence=4+local*2;cost[gem]=1+local;}
- return cost;
-}
+
 function craftStyleUpgrade(id,kind,voucher){
  if(!STYLE_DEFS[id]||!['weapon','armor','enchant','speed','reach'].includes(kind))return false;
  const s=data.styles[id],cap=styleUpgradeCap(id,kind);if(s[kind]>=cap){toast(TIER_LIMITS[styleTier(id)].name+' limit reached',styleTier(id)===1?'Clear Zone 1 and upgrade this style to Steel for the next tier.':styleTier(id)===2?'Complete Zone 3 and train to level 20, then promote this style to Mithril for the next tier.':'This is the current Mithril upgrade limit.');return false;}
@@ -111,20 +89,8 @@ function craftStyleUpgrade(id,kind,voucher){
 function canUseSkill(key){const s=SKILLS[key];if(!s)return false;const tier=s.tier||1;return equipmentTierUnlocked(tier)&&(!(tier>1||['silverMine','silverSmelt'].includes(key))||disciplineLevel(disciplineFor(key))>=(tier>1?(tier-1)*10:10));}
 function skillLockReason(key){if(canUseSkill(key))return 'Available';const s=SKILLS[key],tier=s?.tier||1,group=DISCIPLINES[disciplineFor(key)],level=tier>1?(tier-1)*10:10;return [!equipmentTierUnlocked(tier)?equipmentTierGate(tier):'',disciplineLevel(disciplineFor(key))<level?group.name+' level '+level:''].filter(Boolean).join(' · ');}
 
-function goToSource(resource){
- if(resource==='gold'||resource==='essence'){closeDrawer();setScene('combat',true);toast(resource==='gold'?'Gold comes from delving or scavenging':'Defeat a guardian for essence');return;}
- const key=RESOURCE_SOURCE[resource];if(!key)return;workshopTier=SKILLS[key].tier||1;
- if(!canUseSkill(key)){openWorkshop(disciplineFor(key),SKILLS[key].cost?'refine':'gather');toast('Resource locked',skillLockReason(key));return;}
- enterActivity(key);
-}
-function produce(key,active=false){
- const skill=SKILLS[key];if(!skill||!canUseSkill(key)||!spendAtStation(skill.cost||{},disciplineFor(key)))return false;
- const amount=skillYield(key);data[skill.resource]=(data[skill.resource]||0)+amount;
- if(skill.goldGain){data.gold+=skill.goldGain+(data.skillBoosts?.scavenging?1:0)+skill.goldGain*trinketBonus('gold');data.scavengeDry=(data.scavengeDry||0)+1;
-  if(Math.random()<.07+trinketBonus('find')||data.scavengeDry>=20){data.scavengeDry=0;const gem=skill.tier===3?'sapphires':skill.tier===2?'garnets':'opals';data[gem]++;codexDiscover('resource_'+gem);if(active)toast(gem==='sapphires'?'Sapphire found!':gem==='garnets'?'Garnet found!':'Opal found!','A rough gem for Artisan');}}
- awardDisciplineXp(disciplineFor(key),skill.gain,skill.tier||1,skill.xp);
- codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
-}
+
+
 
 function refinementForTarget(id,target=zoneBalance().dps){
  const cap=styleUpgradeCap(styleForWeapon(id),'weapon'),stats=styleStats(styleForWeapon(id)),w=WEAPON_TYPES[id];
@@ -175,29 +141,7 @@ function refreshTierProgressionUI(){
 
 function defaults(){return {skillXpCurveVersion:0,preparationEconomyVersion:1,preparationEconomyCredit:0,lootPresentationVersion:1,upgradeVouchers:{iron:0,steel:0},voucherRolls:{},lootHistory:[],timeProgressionVersion:1,timeMilestones:0,timeRates:null,legacyDungeoneeringLevel:0,zoneLayoutVersion:1,tierProgressionVersion:0,coal:0,steelBars:0,willowLogs:0,ancientSalvage:0,ancientFragments:0,garnets:0,cutGarnets:0,runicCloth:0,progressionVersion:3,firstWeaponCrafted:false,eliteSpoils:[],eliteSpoilsSequence:0,eliteBoon:null,eliteBoons:null,eliteBoonSequence:0,weaponUpgradeTipSeen:false,firstMasteryTipSeen:false,essenceEnchantTipSeen:false,combatLanguageTipSeen:false,zone2TravelTipSeen:false,masteryRewardVersion:0,earlyMasteryClaimed:false,zoneAbilityVersion:0,styles:null,tools:{},stationLevels:{},stationCredits:{},stationSaved:{},goldHighWater:45,skillsNudgeSeen:false,idleNoticeSlots:0,idleFirstAssigned:false,floor:1,cleared:0,mastery:{},biomeLoot:{},gold:45,essence:0,ore:0,bars:0,weapon:0,armor:0,enchant:0,weaponType:'sword',unlockedWeapons:['sword'],zone:null,zoneShopVersion:0,zoneShops:{},dungeonShopVersion:0,dungeonShops:{},dungeoneeringXp:0,dungeonMastery:null,miningXp:0,smithingXp:0,miningTimer:0,forgeTimer:0,logs:0,arrows:0,ammoCharges:{arrows:0,runes:0},cloth:0,runes:0,scraps:0,scavengeXp:0,scavengingXp:0,scavengeDry:0,silverOre:0,silverBars:0,opals:0,cutOpals:0,artisanXp:0,artisanDisciplineXp:0,trinkets:[],equippedRing:'',equippedRings:[],equippedAmulet:'',devSpeedUnlocked:false,devTravelUnlocked:false,delveGoldRemainder:0,woodXp:0,fletchXp:0,wardXp:0,runeXp:0,idleJobs:[],jobTimers:{},skillBoosts:{},discovered:{},tutorialSeen:false,onboardingDone:false,masteryIntroSeen:false,blacksmithXp:0,woodworkingXp:0,wardingSkillXp:0,lastSkill:'mine',skillAutoReturn:false,custom:DeepwellAvatar.normalizeCustom(),savedAt:Date.now()};}
 
-function drawWorkstationScene(w,h,key){
- const base=SKILLS[key].scene||key,advanced={coal:[0,0],willow:[1,0],ancientScavenge:[0,1],cleanAncient:[0,1],garnetSearch:[1,1],garnetCut:[1,1]}[key];
- const [sheet,oldCol,oldRow]=CAMP_PANELS[base]||[0,0,0],useAdvanced=advanced&&zone2CampImage?.complete&&zone2CampImage.naturalWidth,col=useAdvanced?advanced[0]:oldCol,row=useAdvanced?advanced[1]:oldRow,im=useAdvanced?zone2CampImage:campArt[sheet];
- if(!im?.complete||!im.naturalWidth){drawProceduralWorkstation(w,h,key);return}
- const sw=im.naturalWidth/2,sh=im.naturalHeight/2,sx=col*sw,sy=row*sh,portrait=w/h<.94,t=reducedMotion()?0:game.activeClockMs/1000;
- const focus={wood:.665,mine:.625,silverMine:.625,forge:.68,silverSmelt:.68,fletch:.675,ward:.65,rune:.65,polish:.66,scavenge:.695}[base]||.62;
- const dw=Math.max(w,h*sw/sh),dh=dw*sh/sw,dx=portrait?w*.5-dw*focus:(w-dw)/2,dy=(h-dh)/2;
- ctx.drawImage(im,sx,sy,sw,sh,dx,dy,dw,dh);
- const activeWorking=game.holdSkill===key&&!$('skillHold').disabled,working=activeWorking||(data.idleJobs.includes(key)&&hasIngredients(skillCost(key)));
- const heroPosition={wood:.60,mine:.53,silverMine:.53,forge:.61,silverSmelt:.61,fletch:.60,ward:.57,rune:.57,polish:.57,scavenge:.59};
- const heroFraction=useAdvanced?(base==='wood'?.64:.62):heroPosition[base];
- const feet=Math.min(dy+dh*.81,game.workAreaBottom??h-(innerWidth<=760?304:230)),bounds=workshopBounds(key),leftMargin=16+(data.hudLayout.side==='left'?52:0),rightMargin=16+(data.hudLayout.side==='right'?52:0);
- const scale=Math.min(clamp(dw/sw*1.15,1.05,2.65),Math.max(.85,(feet-96*(w/innerWidth))/100),(w-leftMargin-rightMargin)/(bounds.right-bounds.left));
- const heroX=clamp(dx+dw*heroFraction,leftMargin-bounds.left*scale,Math.max(leftMargin-bounds.left*scale,w-rightMargin-bounds.right*scale));
- const frame=workshopAnimation(key,activeWorking,working),anchor={x:heroX,y:feet,scale,height:scale*100};
- paintWorkshopSceneEffects(frame,anchor,'back');DeepwellAvatar.render(ctx,{...frame,x:heroX,y:feet,scale});paintWorkshopSceneEffects(frame,anchor,'front');paintWorkshopReward(anchor);
 
- if(!reducedMotion()){
-  const warm=['forge','silverSmelt'].includes(base),points=warm?8:6;
-  for(let i=0;i<points;i++){const a=i*2.39+t*.25,px=warm?dx+dw*.25+Math.sin(a)*dw*.035:w*rng(i,83,key.length),py=warm?dy+dh*.48-((t*9+i*22)%(dh*.19)):dy+dh*(.15+rng(i,84)*.5)+Math.sin(t*.3+i)*8;
-   ctx.globalAlpha=warm?.30:.18;disc(px,py,warm?1.3:.9,warm?'#ffe0a3':'#fff0c9');}ctx.globalAlpha=1;
- }
-}
 
 function setScene(scene,force=true){if(eliteRewardOpen())return false;resetArenaTouch(true);clearSkillBonuses();if(!$('skillQuickPicker').classList.contains('hidden'))closeSkillPicker();
  if(scene==='codex'){showCodex();return}if(!['combat',...SKILL_KEYS].includes(scene))return;if(SKILLS[scene]&&!canUseSkill(scene)){toast('Activity locked',skillLockReason(scene));return;}

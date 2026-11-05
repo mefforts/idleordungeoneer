@@ -1,3 +1,4 @@
+const TOTEM_SUPPORT={playerHeal:.0035,playerReserve:.15,enemyHeal:.004,rallySeconds:5};
 /* Guardian counterplay. All encounter objects are transient combat state. */
 const encounterImages=new Map();
 function encounterImage(kind,type){
@@ -51,11 +52,11 @@ function encounterPoint(owner,type){
  }
  return best;
 }
-function standardBossPlan(e){
+function standardBossPlan(e,zone=zoneNumber()){
  if(e.champion){const role=rareEliteRole(e),extra=['nova','bloom','minefield','return','summon','pincer','crossfire','orbit'][(e.visualType+(e.biome||0))%8];return role==='shield'?['shield',extra,'cleave']:role==='charge'?['charge','cleave',extra]:['ricochet','cleave',extra];}
- if(zoneNumber()===2&&e.bossIndex===0)return e.elite?['gravePulse','reflect','charge','cleave']:['gravePulse','reflect','crossfire','cleave','summon','gravePulse','charge'];
- if(zoneNumber()===1&&e.bossIndex===0)return e.elite?['bloom','cleave','reflect','bloom','charge','nova']:['bloom','cleave','reflect','bloom','charge','fury','bloom','crossfire','nova'];
- if(zoneNumber()===1&&e.bossIndex===1)return e.elite?['ground','bloom','shield','summon','tether']:['ground','bloom','cleave','mend','beam','reflect','bloom','summon','pincer','donut','tether'];
+ if(zone===2&&e.bossIndex===0)return e.elite?['gravePulse','reflect','charge','cleave']:['gravePulse','reflect','crossfire','cleave','summon','gravePulse','charge'];
+ if(zone===1&&e.bossIndex===0)return e.elite?['bloom','cleave','reflect','bloom','charge','nova']:['bloom','cleave','reflect','bloom','charge','fury','bloom','crossfire','nova'];
+ if(zone===1&&e.bossIndex===1)return e.elite?['ground','bloom','shield','summon','tether']:['ground','bloom','cleave','mend','beam','reflect','bloom','summon','pincer','donut','tether'];
  if(e.elite)return e.bossIndex===0?['volley','reflect','charge','nova']:e.bossIndex===1?['ground','mend','shield','summon','tether']:['beam','fury','reflect','ricochet','bloom'];
  if(e.bossIndex===0)return ['volley','reflect','cleave','charge','fury','crossfire','nova'];
  if(e.bossIndex===1)return ['ground','mend','beam','reflect','summon','pincer','donut','tether'];
@@ -111,7 +112,7 @@ function resolveBossCast(e,cast){
  if(isReflectCast(cast)){resolveReflectWard(e,cast);return;}
  if(cast.type==='mend'||cast.type==='fury'){
   if(!game.enemies.includes(e)||(game.totems||[]).filter(t=>!t.destructible).length>=2)return;
-  (game.totems||(game.totems=[])).push({totem:true,type:cast.type,biome:theme,owner:e,x:cast.point.x,y:cast.point.y-18,rad:16,age:0,blocked:false,healReserve:game.player.maxHp*.15});return;
+  (game.totems||(game.totems=[])).push({totem:true,type:cast.type,biome:theme,owner:e,x:cast.point.x,y:cast.point.y-18,rad:16,age:0,blocked:false,healReserve:game.player.maxHp*TOTEM_SUPPORT.playerReserve});return;
  }
  if(cast.type==='cleave'){addEmberCleave(e,cast,damage);if(cleaveContains(game.player,cast))hurtEncounter(e,cast,damage);damageMonstersInAttack(e,cast,enemy=>cleaveContains(enemy,cast));(game.counterEffects||(game.counterEffects=[])).push({type:'cleave',cast,biome:theme,life:.35,total:.35});return;}
  if(cast.type==='volley'){
@@ -160,9 +161,9 @@ function tickEncounterObjects(dt,playerFrom=encounterFoot(game.player),dashing=g
   if(t.destructible){tickSummonTotem(t,dt);tickSummonArrival(t,dt);continue;}
   const recipient=supportTotemRecipient(t);t.dormant=!recipient;t.blocked=totemInterception(t);const disrupt=waveRank('disrupt'),power=Math.max(.4,1-.15*disrupt);
   if(t.type==='mend'){
-   if(t.blocked){t.healReserve=t.healReserve??p.maxHp*.15;const amount=Math.min(t.healReserve,p.maxHp*.0035*dt,Math.max(0,p.maxHp-p.hp));healing=Math.max(healing,amount);t.healReserve-=amount;p.mending=amount>0;}
-   else if(recipient)recipient.hp=Math.min(recipient.maxHp,recipient.hp+recipient.maxHp*.004*dt*power);
-  }else if(t.blocked)p.rallyTime=5;else if(recipient)recipient.furyLinked=true;
+   if(t.blocked){t.healReserve=t.healReserve??p.maxHp*TOTEM_SUPPORT.playerReserve;const amount=Math.min(t.healReserve,p.maxHp*TOTEM_SUPPORT.playerHeal*dt,Math.max(0,p.maxHp-p.hp));healing=Math.max(healing,amount);t.healReserve-=amount;p.mending=amount>0;}
+   else if(recipient)recipient.hp=Math.min(recipient.maxHp,recipient.hp+recipient.maxHp*TOTEM_SUPPORT.enemyHeal*dt*power);
+  }else if(t.blocked)p.rallyTime=TOTEM_SUPPORT.rallySeconds;else if(recipient)recipient.furyLinked=true;
  }
  if(healing)p.hp=Math.min(p.maxHp,p.hp+healing);tickReleasedWards(dt,playerFrom);tickBossBursts(dt);tickGraveEchoes(dt);
 }

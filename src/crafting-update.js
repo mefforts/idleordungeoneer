@@ -3,7 +3,6 @@ const JEWELRY_REFINEMENT={maximum:50,relativeStep:.01,leechStep:.0005,xp:80};
 const TOOL_REFINEMENT={maximum:10,speedStep:.005};
 // Save-load offline production runs before the later levelRange const exists.
 function disciplineLevel(group){return skillLevelAtXp(data[DISCIPLINES[group].xp]||0);}
-function masteryMilestoneLabel(rank){return rank===2?'Complete Zone 2':'Reach Zone '+dungeoneeringMilestone(rank);}
 function remainingSummonThreats(){return (game.totems||[]).some(t=>t.destructible&&t.hp>0)||game.enemies.some(e=>e.summoned&&e.summonTotem&&e.hp>0);}
 function completeSummonCleanup(){if(game.phaseCleanupPending&&!remainingSummonThreats()&&!remainingReleasedThreats()&&game.status==='running')finishPhase();}
 function normalizeArtisanProgression(){
@@ -19,7 +18,7 @@ function jewelryValueText(id,value=refinedTrinketValue(id)){
  const item=TRINKETS[id];if(!item)return '';const number=n=>Number(n.toFixed(5));
  return ['hp','pickup'].includes(item.bonus)?'+'+number(value)+' '+(item.bonus==='hp'?'maximum HP':'pickup radius'):number(value*100)+'% '+({leech:'lifesteal',gold:'gold',xp:'material chance',guard:'damage reduction',speed:'movement speed',find:'rare finds'}[item.bonus]);
 }
-function jewelryRefinementBase(id){const rank=jewelryRank(id);return {silverBars:1+Math.floor(rank/10),gold:10+rank*3,...(rank%5===4?{cutOpals:1}:{})};}
+function jewelryRefinementBase(id,rank=jewelryRank(id)){return {silverBars:1+Math.floor(rank/10),gold:10+rank*3,...(rank%5===4?{cutOpals:1}:{})};}
 function refineJewelry(id,voucher){
  if(!TRINKETS[id]||!data.trinkets.includes(id)||jewelryRank(id)>=JEWELRY_REFINEMENT.maximum)return false;
  if(!(voucher===undefined?spendAtStation(jewelryRefinementBase(id),'artisan'):spendUpgradeVoucher('jewelry:'+id,voucher)))return false;
@@ -80,5 +79,5 @@ function jewelryRefinementHtml(id){
 function recipeHtml(group){
  if(['blacksmithing','woodworking','warding'].includes(group))return classEquipmentHtml(group);
  if(group!=='artisan')return '';
- return '<div class="recipe-filter" role="group" aria-label="Jewelry type">'+[['all','All jewelry'],['ring','Rings'],['amulet','Amulets']].map(([id,name])=>'<button type="button" data-recipe-cat="'+id+'" class="'+(recipeCategory===id?'active':'')+'" aria-pressed="'+(recipeCategory===id)+'">'+name+'</button>').join('')+'</div><div class="craft-tile-list">'+Object.entries(TRINKETS).filter(([,t])=>recipeCategory==='all'||t.type===recipeCategory).map(([id,t])=>recipeCard('',t.name,jewelryValueText(id),trinketCost(id),'data-craft-trinket="'+id+'"','MAKE',data.trinkets.includes(id),t.type==='ring'?data.equippedRings.includes(id):data.equippedAmulet===id,t.icon)+(data.trinkets.includes(id)?jewelryRefinementHtml(id):'')).join('')+'</div><p class="recipe-hint">Four ring slots and one amulet. Leech Ring ranks add 0.05 percentage points of lifesteal; other jewelry gains 1% of its base effect per rank. Crafting new jewelry still requires its materials.</p>';
+ return '<div class="recipe-filter" role="group" aria-label="Jewelry type">'+[['all','All jewelry'],['ring','Rings'],['amulet','Amulets']].map(([id,name])=>'<button type="button" data-recipe-cat="'+id+'" class="'+(recipeCategory===id?'active':'')+'" aria-pressed="'+(recipeCategory===id)+'">'+name+'</button>').join('')+'</div><div class="craft-tile-list">'+Object.entries(TRINKETS).filter(([,t])=>recipeCategory==='all'||t.type===recipeCategory).map(([id,t])=>recipeCard('',t.name,jewelryValueText(id),trinketCost(id),'data-craft-trinket="'+id+'"','MAKE',data.trinkets.includes(id),t.type==='ring'?data.equippedRings.includes(id):data.equippedAmulet===id,t.icon)+(data.trinkets.includes(id)?jewelryRefinementHtml(id):'')).join('')+'</div><p class="recipe-hint">Four ring slots and one amulet. Leech Ring ranks add '+jewelryRefinementRule('leech')+'; other jewelry gains '+jewelryRefinementRule('coin')+' per rank. Crafting new jewelry still requires its materials.</p>';
 }

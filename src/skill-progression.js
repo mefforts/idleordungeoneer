@@ -19,7 +19,7 @@ function normalizeSkillXpCurve(){
   data[field]=level<10?xp:Math.round((skillXpThreshold(level)+(skillXpThreshold(level+1)-skillXpThreshold(level))*progress)*1e6)/1e6;retained||=level>=10;
  }
  data.skillXpCurveVersion=1;
- if(retained){const history=data.noticeHistory=Array.isArray(data.noticeHistory)?data.noticeHistory:[];history.push({title:'Skill training updated',description:'Your earned skill levels and level progress are retained. Tier 1 trains to 10; tier 2 trains toward 20. Older work gives 10% XP but keeps its full material yield.',time:Date.now()});data.noticeHistory=history.slice(-40);}
+ if(retained){const history=data.noticeHistory=Array.isArray(data.noticeHistory)?data.noticeHistory:[];history.push({title:'Skill training updated',description:'Your earned skill levels and level progress are retained. Tier 1 trains to 10; tier 2 trains toward 20. Older-tier XP tapers sharply; material yields stay full.',time:Date.now()});data.noticeHistory=history.slice(-40);}
 }
 function trainingXpRate(tier,xp){
  const band=Math.floor(skillLevelAtXp(xp)/10);

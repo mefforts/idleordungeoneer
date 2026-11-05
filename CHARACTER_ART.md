@@ -55,3 +55,7 @@ The rig suite uses labelled render surfaces in isolated test responses to inspec
 The progression suite samples 50,400 weaving/casting poses across both bonuses, release blends, outfits, facings and reduced motion, checking fixed bone lengths and zero arm-segment crossings.
 
 Mithril, Blue Ranged Leathers and Green Runewoven Robes retain the Steel-tier silhouettes and attachment points. Their main change is palette; a centered inset buckle and fine shoulder edging add small finishing details. Mithril weapon illustrations use the existing third row of the weapon atlas. The same renderer exports all 60 body parts and matching portraits.
+
+## Earlier art
+
+The prior closed full-helm appearance remains available in [v11.0.2](https://github.com/mefforts/idleordungeoneer/tree/b3b03755ab730dbfbbb2e21a746bce9689a0f90a). The current face opening uses the original T-shaped visor; the archived version can be recovered without changing the shared rig.

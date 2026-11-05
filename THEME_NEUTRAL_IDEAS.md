@@ -1,6 +1,6 @@
 # Fifty theme-neutral mechanic variations
 
-Proposals only; these are separate from the 39 selected themed mechanics implemented in this update. Each variation can use any Zone's materials, creatures and sounds without changing its counterplay. Red/violet communicates danger, teal marks a usable opening or benefit, gold identifies a counter, and blue identifies protection. Shapes and timer arcs carry the rule; detailed words belong in the Codex.
+Proposals only; these are separate from the 39 implemented themed mechanics. Each variation can use any Zone's materials, creatures and sounds without changing its counterplay. Red/violet communicates danger, teal marks a usable opening or benefit, gold identifies a reflect, yellow brackets identify an interruptible target, and blue identifies protection. Shapes and timer arcs carry the rule; detailed words belong in the Codex.
 
 | # | Variation | Behavior and intended counterplay |
 | --- | --- | --- |

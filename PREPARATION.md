@@ -1,8 +1,8 @@
-# Preparation comparison — Build 11
+# Historical preparation comparison — v10.1 to v11.0
 
 Lower gold costs reduce repeated work while preserving material recipes. They do **not** establish a 25-minute opening for every weapon. In these controller samples, staff and bow still spend over 25 active minutes preparing for Zone 1, with retries contributing to the extra upgrades. The Steel handoff improves, and choosing 2× Skilling reduces it further.
 
-These are historical Build 11 simulations. Build 11.3 adds occasional one-item Zone-material upgrade costs and collects monster rewards from the ground; these timing samples have not been rerun under those changes.
+Historical evidence only: these runs predate the current tier-local refinement ranks, skill curve, quarter-rate idle production and later encounter changes. Their rank numbers and timings do not describe the current game. See [README.md](README.md), [BALANCE.md](BALANCE.md) and [SKILL_ECONOMY.md](SKILL_ECONOMY.md) for current progression.
 
 ## Method
 

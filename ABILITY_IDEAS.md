@@ -1,6 +1,6 @@
 # Fifty encounter ideas for review
 
-Build 11.8 implements the 39 selected entries below. The eleven unselected entries remain proposals. The additional fifty theme-neutral variations are in [THEME_NEUTRAL_IDEAS.md](THEME_NEUTRAL_IDEAS.md) and are proposals only.
+This is the original proposal record. The 39 selected entries below are implemented; [SELECTED_MECHANICS.md](SELECTED_MECHANICS.md) and the Codex describe their current behavior. The eleven unselected entries remain proposals. The additional fifty theme-neutral variations are in [THEME_NEUTRAL_IDEAS.md](THEME_NEUTRAL_IDEAS.md) and are proposals only.
 
 Red remains player danger, violet can hurt monsters, gold marks a reflect interaction, teal marks a protected region or benefit, and blue marks a shield. Every proposal needs readable silhouettes, forgiving phone-sized gaps, a clear windup, paused combat timers and reduced-motion support. Introduce one unfamiliar rule at a time; avoid overlapping major arena attacks. Failure should usually cause a recoverable hit rather than an immediate death.
 

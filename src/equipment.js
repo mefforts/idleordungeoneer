@@ -96,7 +96,7 @@ function equipmentRegion(d,kind,type){
   return image?.complete&&image.naturalWidth&&region?{image,region,details}:null;
 }
 
-function recipeHtml(group){return ['blacksmithing','woodworking','warding'].includes(group)?classEquipmentHtml(group):legacyRecipeHtml(group);}
+
 
 function legacyGoalDetails(action){
   const [type,id,kind]=String(action||'').split(':');

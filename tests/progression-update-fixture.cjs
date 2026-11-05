@@ -9,7 +9,7 @@ function progressionUpdateFixture(){
   patch(patch){Object.assign(data,patch);refreshUI();return state();},
   firstFloor(){fresh();data.idleNoticeSlots=0;clearFloor();return {html:$('overlayCard').textContent,...state()};},
   continue(){startFloor();game.enemies=[];game.boss=null;game.attackTimer=game.spawnTimer=1e9;refreshUI();return state();},
-  hidden(reason){if(reason==='boss')game.boss={};if(reason==='pause')game.manualPaused=true;if(reason==='hold')game.holdSkill='mine';refreshUI();},
+  hidden(reason){if(reason==='boss')game.boss={hp:100,maxHp:100};if(reason==='pause')game.manualPaused=true;if(reason==='hold')game.holdSkill='mine';refreshUI();},
   enchantAll(){for(const s of Object.values(data.styles))s.enchant=1;refreshUI();return state();},
   save(){save();},
   upgradeMatrix(){const rows=[];for(const tier of [1,2])for(const style of Object.keys(STYLE_DEFS))for(const kind of ['weapon','armor','speed','reach','enchant']){

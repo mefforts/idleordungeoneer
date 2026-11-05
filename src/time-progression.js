@@ -1,5 +1,6 @@
 /* Dungeoneering milestones and earned game clocks share one point bank. */
 function dungeoneeringMilestone(rank){return rank<=1?2:rank===2?3:10*Math.pow(2,rank-3);}
+function masteryMilestoneLabel(rank){return rank===2?'Complete Zone 2':'Reach Zone '+dungeoneeringMilestone(rank);}
 function dungeoneeringJourney(){
  const frontier=Math.max(1,Math.floor(Number(data.cleared)||0)+1),zone=zoneForFloor(frontier)+1;let level=0;
  while(level<40&&zone>=dungeoneeringMilestone(level+1))level++;

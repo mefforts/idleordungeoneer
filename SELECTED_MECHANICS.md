@@ -1,14 +1,12 @@
 # Selected encounter mechanics
 
-Build 11.8 adds all 39 selected proposals. The original idea numbers below remain stable. Their detailed counterplay is available in the in-game Codex; combat itself uses brief names, illustrated objects, trajectories, openings and timer arcs.
+The 39 selected mechanics below are implemented. Original proposal numbers remain stable; the in-game Codex provides current counterplay. Combat uses illustrated objects, trajectories, openings and timer arcs, with brief fading reminders.
 
-Build 11.9 gives Rally Thread and Orbit Transfer a teleport that separates their pair, with a minimum 220-unit span and a clear dash crossing. Briar Leash anchors use the same placement rule. The links stay open while active; Rally and Leash can be cut during formation too. Blocked placements defer the cast.
+Red hurts the player; violet also hurts monsters; teal marks protected openings or benefits; gold marks reflects; yellow brackets mark interruptible targets; blue marks shields. Released independent hazards outlive their caster, while living channels and effects bound to a living pair stop with their source. Support totems can retarget living allies.
 
-Special enemies now share Warband Resolve: 10% damage reduction per other living, unstunned elite, rare, boss or guardian Echo, capped at 50%. A stunned enemy neither receives nor grants this boon. Common charge widths, cleave reach, floor-mark radii, beam widths and nova radii grow by 25%. Hungry Siphon requires an outward dash; Knotted Siphon requires a dash through its teal knot. Both drain small rapid ticks without an expiry burst.
+Rally Thread, Orbit Transfer and Briar Leash use separated pairs/anchors with a clear crossing. Linked enemies preserve that space while their mechanic is active. Warband Resolve makes groups tougher together; stunned enemies lose the protection and stop providing it. Elites, rares and Echoes can pursue Ascendance, Rare Awakening, Living Conduit or Siege Channel instead of clumping around the player.
 
-Build 11.10 adds brief, damage-free dash stuns against elite-and-higher enemies. A successful dash counter refunds the cooldown; a plain body stun does not. Elites, rares and guardian Echoes also spread out and walk to interruptible Ascendance, Rare Awakening or Living Conduit tasks. Teal arrows show the dash-through interaction; three gold pips show the focused-hit alternative. The Codex explains their limits, and [BALANCE.md](BALANCE.md) records the timings, summon/promotion caps and tests.
-
-Build 11.11 makes Walking Hedge and Rolling Furnace travel until they pass the encounter. Hedge trains contain two or three offset openings and give no dash refund. Grave Pulse repeats later in a fight/floor, at 1.2-second intervals, and refunds each completed dash crossing. Furnace variants repeat cores, split at a bank or cross paired paths. Seven additional authored assets add physical thorns, iron/molten cores, fragments and bone crests. Yellow brackets identify interruptible targets, with teal openings, purple friendly fire and red player-only threats retained.
+Walking Hedge sends persistent trains with offset openings and no dash refund. Grave Pulse opens at 240 units/second, 25% below the follow-up target; later rings keep a dashable gap and each completed crossing refunds dash. Rolling Furnace uses repeated, splitting and crossing bankshots. Travelling threats retire after passing the encounter rather than timing out. [Current timings, damage and validation](BALANCE.md).
 
 | Idea # | Mechanic | Theme | Counterplay |
 | --- | --- | --- | --- |

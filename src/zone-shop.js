@@ -111,7 +111,7 @@ function applyMastery(){
  const live=game.status==='running';if(live){syncZone();resetRun();game.status='running';game.manualPaused=game.menuPaused=true;nextPhase();}
  save();refreshUI();masteryClose(true);updatePauseHud();toast('Mastery applied',live?'Floor restarted · paused':'');
 }
-function hurt(amount){const p=game.player;p.hitPose=.26;if(game.status!=='running'||p.invuln>0)return;const damage=amount*(1-styleStats().guardPercent/100)*(1-trinketBonus('guard'))*(1-.02*waveRank('ward'))*(data.weaponType==='shield'?.72:1)*eliteBoonValue('protection');p.hp-=damage;p.invuln=.47;game.shake=6;floater(p.x,p.y-31,'-'+Math.ceil(damage),'#ffb5a5');burst(p.x,p.y,5,'#fa8b87');if(p.hp<=0){p.hp=0;die();}}
+
 function powerSummary(id,rank){
  const r=Math.max(0,Math.min(dungeonPerk(id)?.max||0,Number(rank)||0)),style=combatStyle();
  const common={fire:r*2+'% hit damage / s',frost:r?(5+r*2)+'% chill':'No chill',storm:r*4+'% chain chance',nova:(r?6+r*2:0)+'% critical splash',ward:r*2+'% damage reduction',disrupt:r*6+'% disruption chance',shatter:r*8+'% chill-burst damage',vortex:r*12+' pull distance',prism:(r*1.5)+'% extra reflected maximum HP'};

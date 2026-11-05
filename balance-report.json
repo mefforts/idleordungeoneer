@@ -1,5 +1,4 @@
 {
-  "version": "11.13.2",
   "dungeons": [
     {
       "id": "deepwell",
@@ -2380,6 +2379,10 @@
       "phaseWaitsForSpiresAndSummons": true
     },
     "supportTotems": {
+      "playerHeal": 0.0035,
+      "playerReserve": 0.15,
+      "enemyHeal": 0.004,
+      "rallySeconds": 5,
       "dashDestruction": true,
       "walkingInterception": true,
       "weaponDamage": false,
@@ -3256,11 +3259,12 @@
       "group": "artisan"
     }
   ],
+  "version": "11.14.0",
   "simulated": [
     {
       "zone": 1,
       "weapon": "sword",
-      "seconds": 952.7999999999818,
+      "seconds": 1000.2399999999834,
       "kills": 413,
       "referenceDps": 80,
       "targetSeconds": 905
@@ -3268,7 +3272,7 @@
     {
       "zone": 2,
       "weapon": "sword",
-      "seconds": 1634.9200000000176,
+      "seconds": 1675.2000000000096,
       "kills": 648,
       "referenceDps": 240,
       "targetSeconds": 1423
@@ -3276,7 +3280,7 @@
     {
       "zone": 3,
       "weapon": "sword",
-      "seconds": 14293.3999999986,
+      "seconds": 14363.839999998532,
       "kills": 938,
       "referenceDps": 240,
       "targetSeconds": 14296
@@ -3284,7 +3288,7 @@
     {
       "zone": 4,
       "weapon": "sword",
-      "seconds": 15489.759999997514,
+      "seconds": 15593.399999997417,
       "kills": 1118,
       "referenceDps": 240,
       "targetSeconds": 15207
@@ -3292,7 +3296,7 @@
     {
       "zone": 9,
       "weapon": "sword",
-      "seconds": 10144.480000001226,
+      "seconds": 10056.160000001286,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
@@ -3300,25 +3304,25 @@
     {
       "zone": 15,
       "weapon": "sword",
-      "seconds": 10360.440000001094,
+      "seconds": 10211.040000001172,
       "kills": 1118,
       "referenceDps": 480,
       "targetSeconds": 9151
     }
   ],
-  "pacingBuild": "11.13.2",
-  "pacingHtmlSha256": "b999587d4f520a9807ab3c5f83557c3a5f4a7f6e5f7f3b1b0ee8e28a75715872",
+  "pacingBuild": "11.14.0",
+  "pacingHtmlSha256": "42ece3a905b7b57d784fd271dcd7b6ebd1e4250d0c996ccdc824f7a98d630355",
   "earlyZoneHealthComparison": [
     {
       "zone": 1,
       "beforeSeconds": 734.8800000000224,
-      "afterSeconds": 952.7999999999818,
+      "afterSeconds": 1000.2399999999834,
       "referenceDps": 80
     },
     {
       "zone": 2,
       "beforeSeconds": 1245.7600000000634,
-      "afterSeconds": 1634.9200000000176,
+      "afterSeconds": 1675.2000000000096,
       "referenceDps": 240
     }
   ],
@@ -3796,12 +3800,12 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 199.6,
+        "seconds": 128.5,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 7,
-        "damage": 208,
+        "hits": 6,
+        "damage": 190.9,
         "echoes": 7,
         "casts": [
           "ground",
@@ -3818,10 +3822,7 @@
           "hauntedFootsteps",
           "crossfire",
           "volley",
-          "fury",
-          "charge",
-          "bloom",
-          "shield"
+          "charge"
         ]
       },
       {
@@ -3836,12 +3837,12 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 162.72,
+        "seconds": 186.9,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 6,
-        "damage": 197.4,
+        "hits": 7,
+        "damage": 211.2,
         "echoes": 7,
         "casts": [
           "beam",
@@ -3854,8 +3855,8 @@
           "soulLantern",
           "mend",
           "boneLoom",
-          "crossfire",
           "hauntedFootsteps",
+          "crossfire",
           "volley",
           "summon"
         ]
@@ -3872,11 +3873,11 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 89.82,
+        "seconds": 130.76,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 7,
+        "hits": 6,
         "damage": 211.7,
         "echoes": 7,
         "casts": [
@@ -3888,7 +3889,11 @@
           "ground",
           "beam",
           "fury",
-          "crossfire"
+          "crossfire",
+          "ricochet",
+          "volley",
+          "summon",
+          "bloom"
         ]
       }
     ]
