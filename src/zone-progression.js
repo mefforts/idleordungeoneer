@@ -166,7 +166,7 @@ function attack(){
  if(isRanged()&&p.aimTarget){const index=targets.findIndex(o=>o.e===p.aimTarget);if(index>0)targets.unshift(targets.splice(index,1)[0]);}
  const first=targets[0],angle=Math.atan2(first.point.y-p.y,first.point.x-p.x);
  p.facing=Math.cos(angle)<0?-1:1;p.aimFacing=p.facing;p.aimAngle=angle;p.aimTarget=first.e;p.attackPose=.38;
- let damage=attackDamage()*(p.rallyTime>0?1.1:1);if(data.weaponType==='greatsword'&&p.hp<p.maxHp*.5)damage*=1.65;
+ let damage=weaponHitDamage(attackDamage());
  if(isRanged()){
   const ammo=ammunitionResource();if(!loadAmmunition(ammo)){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1');}return false;}
   const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,aimAngle:localAimAngle(p.aimAngle),data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*.98,y:p.y+18+hand.y*.98},speed=data.weaponType==='bow'?360:295;

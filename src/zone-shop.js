@@ -75,6 +75,16 @@ function zoneCombatProfile(id=data.weaponType,options={}){
  const gearDamage=weaponDamageBase(id,rank)*w.power*(1+percent/100),gearCooldown=w.cooldown/(1+speed/100),gear=gearDamage/gearCooldown*1.05,crit=.05,extra=effectiveDungeonRank('multishot',style,ranks),raw=gear*(1+.15*extra),budget=Math.max(shopBudget(index),TIER_LIMITS[styleTier(style)].dps),dps=raw<=budget?raw:budget+(raw-budget)*.25,factor=raw?dps/raw:1;
  return {dps,raw,core:gear,gear,training:0,budget,crit,extra,cooldown:gearCooldown,damage:gearDamage*factor,softFactor:factor};
 }
+function weaponReach(id=data.weaponType){
+ const style=styleForWeapon(id),stats=styleStats(style),weapon=WEAPON_TYPES[id];
+ return weapon.reach*(1+stats.reachPercent/100)*(style==='melee'?1+.12*dungeonRank('technique'):1)*eliteBoonValue('range');
+}
+function weaponAttackInterval(id=data.weaponType){return zoneCombatProfile(id).cooldown/eliteBoonValue('attackSpeed');}
+function weaponHitDamage(base,id=data.weaponType){
+ const p=game.player;let damage=base*(p.rallyTime>0?1.1:1);
+ if(id==='greatsword'&&p.hp<p.maxHp*.5)damage*=1.65;
+ return damage;
+}
 function weaponDps(id=data.weaponType,options={}){
  const style=styleForWeapon(id),w=WEAPON_TYPES[id],stats=styleStats(style);
  if(options.ceiling||options.equipmentOnly){
@@ -82,9 +92,10 @@ function weaponDps(id=data.weaponType,options={}){
   const percent=options.ceiling?(style==='magic'?(styleTier(style)*4):0)+(options.dedicated?8:0):stats.damagePercent;
   return weaponDamageBase(id,rank)*w.power*(1+percent/100)*(1+speed/100)/w.cooldown*1.05;
  }
- return zoneCombatProfile(id,{rank:data.styles[style].weapon+(options.next?1:0)}).dps*(options.run?eliteBoonValue('damage')*eliteBoonValue('attackSpeed'):1);
+ const dps=zoneCombatProfile(id,{rank:data.styles[style].weapon+(options.next?1:0)}).dps;
+ return options.run?weaponHitDamage(dps,id)*eliteBoonValue('damage')*eliteBoonValue('attackSpeed'):dps;
 }
-function attackCooldown(){return zoneCombatProfile().cooldown/eliteBoonValue('attackSpeed');}
+function attackCooldown(){return weaponAttackInterval();}
 
 function grantZoneCurrency(amount,index=zoneNumber()){
  amount=Math.max(0,Math.floor(Number(amount)||0));if(!amount)return 0;const b=dungeonShopFor(index);b.currency=Math.min(1e12,b.currency+amount);b.earned=Math.min(1e12,b.earned+amount);if(!data.zoneShopIntroduced){data.zoneShopIntroduced=true;toast('Dungeon Shop','Spend Dungeon Sigils on abilities for every Zone in this Dungeon.');}codexDiscover('zone_shop');

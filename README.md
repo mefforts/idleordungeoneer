@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.14.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.14.1.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This release consolidates the current game: readable Codex Guides, consistent progression and combat explanations, correct loot labels, and one source implementation per function. It retains the recent combat, skilling and jewelry balance. [Exact current rules and measurements](BALANCE.md) · [Development guide](DEVELOPMENT.md).
+This polish update closes a health-jewelry swap loophole, keeps live equipment stats current and aligns ammunition use and weapon guides with actual attack range. Progression and equipment values retain their current calibration. [Exact current rules and measurements](BALANCE.md) · [Development guide](DEVELOPMENT.md).
 
 ## Play, prepare, return
 
@@ -20,7 +20,7 @@ Delve for gold, Dungeon Sigils, essence and occasional materials. Gather and ref
 
 Mithril has 10 weapon refinements. Melee uses blue metal, Ranged blue leathers and Mage green Runewoven robes. Speed, reach and reinforcement limits are 5 / 10 / 15 across Iron / Steel / Mithril; enchantment limits are 2 / 4 / 6. Equipment DPS ceilings are approximately 80 / 240 / 480 before proficiency, matching-skill training and conditional perks. Armor reinforcement applies within the worn set's tier; switching owned armor does not heal you.
 
-The Leech Ring starts at **0.5% lifesteal**, reaches **1.25% at refinement 15** and **3% at 50**. Each rank adds 0.05 percentage points. Other jewelry gains 1% of its base effect per rank. Lifesteal uses actual direct-hit health removed and grants no overkill healing. [Jewelry preview](preview-jewelry-refinement-mobile.png).
+The Leech Ring starts at **0.5% lifesteal**, reaches **1.25% at refinement 15** and **3% at 50**. Each rank adds 0.05 percentage points. Other jewelry gains 1% of its base effect per rank. Lifesteal uses actual direct-hit health removed and grants no overkill healing. Changing owned jewelry preserves current HP; genuine crafting/refinement gains retain their health increase. [Jewelry preview](preview-jewelry-refinement-mobile.png).
 
 ## Currencies and game time
 
@@ -100,7 +100,7 @@ Seven curved-label medallions provide **Delve, Inventory, Skills, Shop, Settings
 | Return to delve | D or Delve; while delving, it opens replay/frontier travel. |
 | Close menu / pause | Escape. Blessing choices require a selection or Skip. |
 
-Each arrow or rune supplies **10 combat seconds of firing**. Loaded time persists while waiting, paused, skilling or using another weapon. Preparation links help maintain supplies.
+Each arrow or rune supplies **10 combat seconds of firing**. Loaded time persists while waiting, paused, skilling or using another weapon. Ammunition engagement uses the same monster-body range as attacks. Preparation links help maintain supplies.
 
 Progress saves in this browser. **Settings → Save → Backup/Export** downloads it; **Restore** accepts that backup. Use these when moving between browsers, downloaded filenames and the online game. Existing gear, resources, earned levels, Mastery balances, earlier perk unlocks and migration credits remain compatible. Reset progress remains a separate explicit action.
 

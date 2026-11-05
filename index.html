@@ -2179,9 +2179,13 @@ function makeTrinket(id,voucher){
   const item=TRINKETS[id];if(!item||data.trinkets.includes(id)||!(voucher===undefined?spendAtStation(trinketBase(id),'artisan'):spendUpgradeVoucher('trinket:'+id,voucher)))return false;
   data.trinkets.push(id);if(item.type==='ring'){if(data.equippedRings.length<4)data.equippedRings.push(id);data.equippedRing=data.equippedRings[0]||'';}else data.equippedAmulet=id;
   awardDisciplineXp('artisan',400,1,'artisanXp');codexDiscover('trinket_'+id);
-  toast(item.name+' crafted!',(item.type==='ring'&&!data.equippedRings.includes(id)?'Saved to Equipment · ':'Equipped · ')+item.effect);syncTrinketHealth();save();refreshUI();renderDisciplineDrawer();return true;
+  toast(item.name+' crafted!',(item.type==='ring'&&!data.equippedRings.includes(id)?'Saved to Equipment · ':'Equipped · ')+item.effect);syncTrinketHealth(true);save();refreshUI();renderDisciplineDrawer();return true;
 }
-function syncTrinketHealth(){if(typeof game!=='undefined'&&game.player){const old=game.player.maxHp;game.player.maxHp=maxHp()+waveVitality();game.player.hp=Math.min(game.player.maxHp,game.player.hp+Math.max(0,game.player.maxHp-old));}}
+function syncTrinketHealth(grantIncrease=false){
+ if(typeof game==='undefined'||!game.player)return;
+ const p=game.player,previous=p.maxHp;p.maxHp=maxHp()+waveVitality();
+ p.hp=Math.min(p.maxHp,p.hp+(grantIncrease?Math.max(0,p.maxHp-previous):0));
+}
 function equipTrinket(id){
  const item=TRINKETS[id];if(!item||!data.trinkets.includes(id))return;
  if(item.type==='ring'){
@@ -3455,7 +3459,7 @@ function armorEquipmentHtml(){
  return (owned.length?'<div class="owned-armor-grid">'+owned.map(a=>'<button type="button" data-equip-armor="'+a.id+'" class="owned-armor-option" aria-pressed="'+(worn?.id===a.id)+'" data-focus-key="equip-armor-'+a.id+'" aria-label="'+escapeHTML((worn?.id===a.id?'Equipped: ':'Equip ')+a.name)+'">'+artHTML(a.art)+'<span><b>'+a.name+'</b><small>'+uiIcon('heart')+' +'+a.health+'</small></span>'+(worn?.id===a.id?uiIcon('check','selection-check'):'')+'</button>').join('')+'</div><button type="button" class="travel-clothes" data-equip-armor="" '+(!worn?'disabled':'')+'>Travel clothes</button>':'<div class="empty-loadout">'+uiIcon('shield')+'<p>No armor</p></div>')+'<div class="armor-craft-links">'+Object.entries(ARMOR_STYLES).map(([style,d])=>'<button type="button" data-armor-bench="'+d.group+'">'+d.label+uiIcon('craft')+'</button>').join('')+'</div>';
 }
 
-function equipmentUIState(){return JSON.stringify([data.weaponType,data.unlockedWeapons,data.styles,data.equippedArmor,(data.eliteBoons||[]).map(b=>b.id).join(','),zoneNumber(),zoneShopFor().ranks,...Object.values(STYLE_DEFS).map(d=>levelRange(data[DISCIPLINES[d.group].xp]||0).lvl),game.upgrades]);}
+function equipmentUIState(){return JSON.stringify([data.weaponType,data.unlockedWeapons,data.styles,data.equippedArmor,data.equippedRings,data.equippedAmulet,data.trinketRefinements,game.player.rallyTime>0,game.player.hp<game.player.maxHp*.5,(data.eliteBoons||[]).map(b=>b.id).join(','),zoneNumber(),zoneShopFor().ranks,...Object.values(STYLE_DEFS).map(d=>levelRange(data[DISCIPLINES[d.group].xp]||0).lvl),game.upgrades]);}
 
 function refreshArenaUI(){
  if(!arenaInstalled)return;const dps=weaponDps(data.weaponType,{run:true});$('quickDamage').textContent=Math.round(dps);$('hudWeapon').querySelector('small').textContent='DPS';$('hudWeapon').title=dps.toFixed(1)+' DPS';$('hudWeapon').setAttribute('aria-label','Equipment · '+dps.toFixed(1)+' damage per second');
@@ -3605,8 +3609,8 @@ function codexDetailHtml(entry){
   body=codexParagraph(entry.desc)+codexRuleList([['Owned',format(data[key]||0)],...(source?[['Source',s.name],['Unlock',s.tier>1?equipmentTierGate(s.tier)+' · '+DISCIPLINES[disciplineFor(source)].name+' level '+((s.tier-1)*10):['silverMine','silverSmelt'].includes(source)?'Smithing level 10':'Camp']]:[])])+codexHeading('Uses',codexParagraph([...uses,...armor].join(' · ')||'Equipment and crafting.'))+(s?codexHeading('Production',codexSkillDetails(source)):'');
  }else if(id.startsWith('skill_'))body=codexSkillDetails(id.slice(6));
  else if(id.startsWith('weapon_')){
-  const key=id.slice(7),w=WEAPON_TYPES[key],style=styleForWeapon(key),stats=styleStats(style),s=data.styles[style];
-  body=codexParagraph(w.desc)+(['bow','staff'].includes(key)?codexParagraph('Loaded ammunition lasts for 10 seconds of combat firing time. It is retained while waiting for a target, using another weapon, skilling, paused or away.'): '')+codexRuleList([['Style',STYLE_DEFS[style].name],['Tier',TIER_LIMITS[styleTier(style)].name],['Refinement',s.weapon+' / '+styleUpgradeCap(style,'weapon')],['Equipment DPS',weaponDps(key,{equipmentOnly:true}).toFixed(1)],['Current zone DPS',weaponDps(key,{run:true}).toFixed(1)],['Attack interval',zoneCombatProfile(key).cooldown.toFixed(2)+'s'],['Reach',Math.round(w.reach*(1+stats.reachPercent/100)*(['bow','staff'].includes(key)?1:waveReachFactor()))],...(key==='bow'?[['Ammunition','10s of firing time per arrow']]:key==='staff'?[['Ammunition','10s of casting time per rune']]:[])])+codexHeading('Refinement',codexParagraph('Iron has 3 weapon refinements. Clear Zone 1, finish those ranks and train the matching discipline to level 10, then promote to Steel with 12 refinements. Late Steel material costs grow exponentially and use cut gems as abrasives. Complete Zone 3 and reach matching discipline level 20 to promote an owned Steel style to 10 Mithril refinements; fully refining Steel is optional. Promotion starts a new rank counter while retaining the preceding tier’s power. Successful crafting and upgrades also train the matching discipline. At maximum refinement and speed, Iron reaches about 80 equipment DPS, Steel 240 and Mithril 480. Mithril starts around 300 with completed Steel speed training. Dungeon abilities add elemental effects, protection and additional targets. Mage figures include matching robes.'))+codexHeading('Proficiency',codexParagraph('Defeating enemies trains the wielded combat style. Proficiency grants up to 3% damage at level 50. Matching crafting levels add up to another 5%. Additional targets and conditional effects can increase combat damage beyond equipment DPS.'))+'<button type="button" class="codex-action" data-codex-bench="'+STYLE_DEFS[style].group+'">'+DISCIPLINES[STYLE_DEFS[style].group].name+uiIcon('arrow')+'</button>';
+  const key=id.slice(7),w=WEAPON_TYPES[key],style=styleForWeapon(key),s=data.styles[style];
+  body=codexParagraph(w.desc)+(['bow','staff'].includes(key)?codexParagraph('Loaded ammunition lasts for 10 seconds of combat firing time. It is retained while waiting for a target, using another weapon, skilling, paused or away.'): '')+codexRuleList([['Style',STYLE_DEFS[style].name],['Tier',TIER_LIMITS[styleTier(style)].name],['Refinement',s.weapon+' / '+styleUpgradeCap(style,'weapon')],['Equipment DPS',weaponDps(key,{equipmentOnly:true}).toFixed(1)],['Current zone DPS',weaponDps(key,{run:true}).toFixed(1)],['Attack interval',weaponAttackInterval(key).toFixed(2)+'s'],['Reach',Math.round(weaponReach(key))],...(key==='bow'?[['Ammunition','10s of firing time per arrow']]:key==='staff'?[['Ammunition','10s of casting time per rune']]:[])])+codexHeading('Refinement',codexParagraph('Iron has 3 weapon refinements. Clear Zone 1, finish those ranks and train the matching discipline to level 10, then promote to Steel with 12 refinements. Late Steel material costs grow exponentially and use cut gems as abrasives. Complete Zone 3 and reach matching discipline level 20 to promote an owned Steel style to 10 Mithril refinements; fully refining Steel is optional. Promotion starts a new rank counter while retaining the preceding tier’s power. Successful crafting and upgrades also train the matching discipline. At maximum refinement and speed, Iron reaches about 80 equipment DPS, Steel 240 and Mithril 480. Mithril starts around 300 with completed Steel speed training. Dungeon abilities add elemental effects, protection and additional targets. Mage figures include matching robes.'))+codexHeading('Proficiency',codexParagraph('Defeating enemies trains the wielded combat style. Proficiency grants up to 3% damage at level 50. Matching crafting levels add up to another 5%. Additional targets and conditional effects can increase combat damage beyond equipment DPS.'))+'<button type="button" class="codex-action" data-codex-bench="'+STYLE_DEFS[style].group+'">'+DISCIPLINES[STYLE_DEFS[style].group].name+uiIcon('arrow')+'</button>';
  }else if(id.startsWith('armor_set_')){
   const a=ARMOR_SETS[id.slice(10)];body=codexParagraph(armorPerkText(a)+'.')+codexRuleList([['Health','+'+a.health],['Class',ARMOR_STYLES[a.style].label],['Skill',DISCIPLINES[a.group].name+' '+a.level],['Unlock',equipmentTierGate(a.tier)],['Reinforcement limit',TIER_LIMITS[a.tier].armor]])+codexHeading('Wearing armor',codexParagraph('Equip one owned set in Inventory. Changing your weapon leaves the armor in place. Switching between owned sets does not heal you. Melee protection and Ranged movement apply while worn; a Mage robe’s damage bonus applies to Mage attacks.'))+codexHeading('Reinforcement',codexParagraph('Each reinforcement rank adds 8 health to a worn set of that class. The set’s own tier limits the applied ranks.'))+codexHeading('Recipe',codexRecipe(a.cost,null))+'<button type="button" class="codex-action" data-codex-bench="'+a.group+'">'+DISCIPLINES[a.group].name+uiIcon('arrow')+'</button>';
  }else if(id.startsWith('tool_')){const key=id.slice(5),t=TOOL_DEFS[key],rank=toolRank(key);body=codexParagraph(t.name+' equips automatically for '+t.skills.map(k=>SKILLS[k].name).join(', ')+'.')+codexRuleList([['Active gathering',Number((8+rank*.5).toFixed(1))+'% faster'],['Refinement',rank+' / '+TOOL_REFINEMENT.maximum],['Per refinement','+0.5 percentage points of active speed'],['Gathering bonuses','+1 material'],['Craft at',DISCIPLINES[t.group].name]])+codexParagraph('Tool speed improves active work; it does not accelerate idling.')+codexHeading('Recipe',materialCosts(t.cost,'codex-tool-'+id))+'<button type="button" class="codex-action" data-codex-bench="'+t.group+'" data-codex-view="equipment">Tools and station'+uiIcon('arrow')+'</button>';}
@@ -3749,6 +3753,19 @@ function zoneCombatProfile(id=data.weaponType,options={}){
  return {dps,raw,core:gear,gear,training:0,budget,crit,extra,cooldown:gearCooldown,damage:gearDamage*factor,softFactor:factor};
 }
 
+function weaponReach(id=data.weaponType){
+ const style=styleForWeapon(id),stats=styleStats(style),weapon=WEAPON_TYPES[id];
+ return weapon.reach*(1+stats.reachPercent/100)*(style==='melee'?1+.12*dungeonRank('technique'):1)*eliteBoonValue('range');
+}
+
+function weaponAttackInterval(id=data.weaponType){return zoneCombatProfile(id).cooldown/eliteBoonValue('attackSpeed');}
+
+function weaponHitDamage(base,id=data.weaponType){
+ const p=game.player;let damage=base*(p.rallyTime>0?1.1:1);
+ if(id==='greatsword'&&p.hp<p.maxHp*.5)damage*=1.65;
+ return damage;
+}
+
 function weaponDps(id=data.weaponType,options={}){
  const style=styleForWeapon(id),w=WEAPON_TYPES[id],stats=styleStats(style);
  if(options.ceiling||options.equipmentOnly){
@@ -3756,10 +3773,11 @@ function weaponDps(id=data.weaponType,options={}){
   const percent=options.ceiling?(style==='magic'?(styleTier(style)*4):0)+(options.dedicated?8:0):stats.damagePercent;
   return weaponDamageBase(id,rank)*w.power*(1+percent/100)*(1+speed/100)/w.cooldown*1.05;
  }
- return zoneCombatProfile(id,{rank:data.styles[style].weapon+(options.next?1:0)}).dps*(options.run?eliteBoonValue('damage')*eliteBoonValue('attackSpeed'):1);
+ const dps=zoneCombatProfile(id,{rank:data.styles[style].weapon+(options.next?1:0)}).dps;
+ return options.run?weaponHitDamage(dps,id)*eliteBoonValue('damage')*eliteBoonValue('attackSpeed'):dps;
 }
 
-function attackCooldown(){return zoneCombatProfile().cooldown/eliteBoonValue('attackSpeed');}
+function attackCooldown(){return weaponAttackInterval();}
 
 function grantZoneCurrency(amount,index=zoneNumber()){
  amount=Math.max(0,Math.floor(Number(amount)||0));if(!amount)return 0;const b=dungeonShopFor(index);b.currency=Math.min(1e12,b.currency+amount);b.earned=Math.min(1e12,b.earned+amount);if(!data.zoneShopIntroduced){data.zoneShopIntroduced=true;toast('Dungeon Shop','Spend Dungeon Sigils on abilities for every Zone in this Dungeon.');}codexDiscover('zone_shop');
@@ -4429,7 +4447,7 @@ function loadAmmunition(key){
 function tickAmmunition(dt){
  const key=ammunitionResource();if(!key||ammunitionCharge(key)<=0)return;
  const p=game.player,reach=attackReach();
- if(combatTargets().some(enemy=>Math.hypot(enemy.x-p.x,enemy.y-p.y)<reach+enemy.rad))data.ammoCharges[key]=Math.max(0,ammunitionCharge(key)-dt);
+ if(combatTargets().some(enemy=>bodyDistance(enemy,p.x,p.y)<reach))data.ammoCharges[key]=Math.max(0,ammunitionCharge(key)-dt);
 }
 
 function renderAmmunitionHud(){
@@ -6104,7 +6122,7 @@ function jewelryRefinementBase(id,rank=jewelryRank(id)){return {silverBars:1+Mat
 function refineJewelry(id,voucher){
  if(!TRINKETS[id]||!data.trinkets.includes(id)||jewelryRank(id)>=JEWELRY_REFINEMENT.maximum)return false;
  if(!(voucher===undefined?spendAtStation(jewelryRefinementBase(id),'artisan'):spendUpgradeVoucher('jewelry:'+id,voucher)))return false;
- data.trinketRefinements[id]++;awardDisciplineXp('artisan',JEWELRY_REFINEMENT.xp,1,'artisanXp');syncTrinketHealth();
+ data.trinketRefinements[id]++;awardDisciplineXp('artisan',JEWELRY_REFINEMENT.xp,1,'artisanXp');syncTrinketHealth(true);
  toast(TRINKETS[id].name+' · refinement '+jewelryRank(id),jewelryValueText(id));save();refreshUI();renderDisciplineDrawer();return true;
 }
 
@@ -7693,7 +7711,7 @@ const dmgBase=()=>styleStats().baseDamage;
 const weaponInfo=()=>WEAPON_TYPES[data.weaponType]||WEAPON_TYPES.sword;
 const isRanged=()=>['bow','staff'].includes(data.weaponType);
 const attackDamage=()=>zoneCombatProfile(data.weaponType).damage;
-const attackReach=()=>weaponInfo().reach*(1+styleStats().reachPercent/100)*(isRanged()?1:waveReachFactor())*eliteBoonValue("range");
+const attackReach=()=>weaponReach();
 const maxHp=()=>120+armorStats().health+trinketBonus('hp');
 const weaponCost=()=>styleUpgradeCost(combatStyle(),'weapon');
 const armorCost=()=>styleUpgradeCost(combatStyle(),'armor');
@@ -7882,7 +7900,7 @@ function attack(){
  if(isRanged()&&p.aimTarget){const index=targets.findIndex(o=>o.e===p.aimTarget);if(index>0)targets.unshift(targets.splice(index,1)[0]);}
  const first=targets[0],angle=Math.atan2(first.point.y-p.y,first.point.x-p.x);
  p.facing=Math.cos(angle)<0?-1:1;p.aimFacing=p.facing;p.aimAngle=angle;p.aimTarget=first.e;p.attackPose=.38;
- let damage=attackDamage()*(p.rallyTime>0?1.1:1);if(data.weaponType==='greatsword'&&p.hp<p.maxHp*.5)damage*=1.65;
+ let damage=weaponHitDamage(attackDamage());
  if(isRanged()){
   const ammo=ammunitionResource();if(!loadAmmunition(ammo)){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1');}return false;}
   const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,aimAngle:localAimAngle(p.aimAngle),data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*.98,y:p.y+18+hand.y*.98},speed=data.weaponType==='bow'?360:295;

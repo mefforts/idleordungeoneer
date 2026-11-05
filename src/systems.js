@@ -197,7 +197,7 @@ function makeTrinket(id,voucher){
   const item=TRINKETS[id];if(!item||data.trinkets.includes(id)||!(voucher===undefined?spendAtStation(trinketBase(id),'artisan'):spendUpgradeVoucher('trinket:'+id,voucher)))return false;
   data.trinkets.push(id);if(item.type==='ring'){if(data.equippedRings.length<4)data.equippedRings.push(id);data.equippedRing=data.equippedRings[0]||'';}else data.equippedAmulet=id;
   awardDisciplineXp('artisan',400,1,'artisanXp');codexDiscover('trinket_'+id);
-  toast(item.name+' crafted!',(item.type==='ring'&&!data.equippedRings.includes(id)?'Saved to Equipment · ':'Equipped · ')+item.effect);syncTrinketHealth();save();refreshUI();renderDisciplineDrawer();return true;
+  toast(item.name+' crafted!',(item.type==='ring'&&!data.equippedRings.includes(id)?'Saved to Equipment · ':'Equipped · ')+item.effect);syncTrinketHealth(true);save();refreshUI();renderDisciplineDrawer();return true;
 }
 
 function refreshSystemsUI(){

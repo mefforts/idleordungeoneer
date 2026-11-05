@@ -38,6 +38,11 @@ function weaponArt(id=data.weaponType){return 'weapon-art-'+id+'_'+weaponArtTier
 function weaponDisplayName(id=data.weaponType){return WEAPON_PREFIXES[weaponArtTier(id)-1]+(['bow','staff'].includes(id)?'-bound ':' ')+WEAPON_BASE_NAMES[id];}
 function weaponCraftLevel(id){return levelRange(data[DISCIPLINES[STYLE_DEFS[styleForWeapon(id)].group].xp]||0).lvl;}
 function armorRecipeCost(id){const a=ARMOR_SETS[id];return stationCost(a.cost,a.group);}
+function syncTrinketHealth(grantIncrease=false){
+ if(typeof game==='undefined'||!game.player)return;
+ const p=game.player,previous=p.maxHp;p.maxHp=maxHp()+waveVitality();
+ p.hp=Math.min(p.maxHp,p.hp+(grantIncrease?Math.max(0,p.maxHp-previous):0));
+}
 function equipArmor(id,crafted=false){
   if(id&&!data.ownedArmor.includes(id))return false;const old=game.player.maxHp;data.equippedArmor=id;projectCombatStyle();
   game.player.maxHp=maxHp()+waveVitality();game.player.hp=Math.min(game.player.maxHp,game.player.hp+(crafted?Math.max(0,game.player.maxHp-old):0));

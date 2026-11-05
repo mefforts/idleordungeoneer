@@ -48,7 +48,7 @@ npm run report:balance
 
 Use system Chromium or set `CHROMIUM_PATH`; install Playwright Chromium only if needed. Browser suites cover progression, actual paid production and combat, saves/migrations, native gesture suppression, touch/keyboard navigation, encounters, appearance and all-zone pacing. Runtime fixtures are injected into isolated browser responses and must never be embedded in the public standalone.
 
-`tests/current-experience.cjs` exercises the current guide/menu loop, named guardian libraries, tier/tool details, loot receipts and focus restoration. Existing economy, jewelry, input and encounter suites retain their precise rules. Rendering and input tests should not be run with heavy simultaneous browser workloads; timing assertions use real input.
+`tests/current-experience.cjs` exercises the current guide/menu loop, named guardian libraries, tier/tool details, loot receipts and focus restoration. `tests/equipment-edge-cases.cjs` covers health-preserving jewelry swaps, live stat caches, body-range ammunition and current weapon previews. Existing economy, jewelry, input and encounter suites retain their precise rules. Rendering and input tests should not be run with heavy simultaneous browser workloads; timing assertions use real input.
 
 Full-Zone pacing suppresses incoming damage and replenishes HP. It measures combat time rather than human survival or wall-clock completion. Keep the report's build and standalone hash with the measurements. Historical preparation/survival comparisons must remain clearly labeled; do not present them as freshly retested balance.
 

@@ -1,6 +1,6 @@
 # Current game rules and balance
 
-Build **11.14.0**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. This consolidation preserves the current combat and economy calibration.
+Build **11.14.1**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Equipment values, progression costs and encounter tuning retain their current calibration.
 
 ## Progression and clocks
 
@@ -71,7 +71,7 @@ Iron is intended for Zone 1; Steel spans Zones 2–4. Mithril is intended around
 | Hunting Bow | 80 | 240 | 480 |
 | Focus Staff | 80 | 240 | 480 |
 
-These are maximum equipment-only values at base proficiency. Full combat proficiency adds up to 3% damage, and matching crafting levels up to 5%. Mage equipment figures include matching robes. Mithril starts around 300 DPS with completed Steel speed training. Soft budgets of at least 100 / 300 / 600 DPS follow equipped tier; damage above a budget contributes at 25%. Additional targets, elemental effects and temporary blessings are separate.
+These are maximum equipment-only values at base proficiency. Full combat proficiency adds up to 3% damage, and matching crafting levels up to 5%. Mage equipment figures include matching robes. Mithril starts around 300 DPS with completed Steel speed training. Soft budgets of at least 100 / 300 / 600 DPS follow equipped tier; damage above a budget contributes at 25%. Live direct-DPS displays include temporary damage/speed bonuses, Rally and the greatsword’s low-health bonus. Additional targets, enemy defenses and elemental procs remain separate.
 
 Level 20 targets the work for about 80% of Iron/Steel upgrade paths across **all three styles**, including supporting jewelry, tools and stations. [SKILL_ECONOMY.md](SKILL_ECONOMY.md) gives the reproducible budget. Steel weapon materials grow 1.48× per rank; its other upgrade materials grow 1.6×. Steel/Mithril weapon refinement also consumes cut gems.
 
@@ -93,7 +93,7 @@ Tier-1 work grants 10% XP after level 10 and 0.1% after level 20; tier-2 work gr
 
 ## Jewelry, tools and stations
 
-Jewelry has 50 optional refinements. The Leech Ring starts at 0.5% lifesteal and adds 0.05 percentage points per rank: 1.25% at rank 15, and 3% at rank 50. Other pieces add 1% of their base effect per rank, up to 50% extra. Existing ranks receive these effects automatically.
+Jewelry has 50 optional refinements. The Leech Ring starts at 0.5% lifesteal and adds 0.05 percentage points per rank: 1.25% at rank 15, and 3% at rank 50. Other pieces add 1% of their base effect per rank, up to 50% extra. Existing ranks receive these effects automatically. Equipping or removing owned jewelry preserves current HP; crafting/refinement can grant a genuine maximum-health increase.
 
 The first 15 Leech ranks cost 20 silver bars, 465 gold and 3 cut opals before station savings, excluding the ring craft. Each rank gives 80 base Artisan XP before training reductions. Lifesteal uses actual direct-hit health removed, caps overkill and never exceeds maximum player HP.
 

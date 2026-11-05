@@ -22,7 +22,7 @@ function jewelryRefinementBase(id,rank=jewelryRank(id)){return {silverBars:1+Mat
 function refineJewelry(id,voucher){
  if(!TRINKETS[id]||!data.trinkets.includes(id)||jewelryRank(id)>=JEWELRY_REFINEMENT.maximum)return false;
  if(!(voucher===undefined?spendAtStation(jewelryRefinementBase(id),'artisan'):spendUpgradeVoucher('jewelry:'+id,voucher)))return false;
- data.trinketRefinements[id]++;awardDisciplineXp('artisan',JEWELRY_REFINEMENT.xp,1,'artisanXp');syncTrinketHealth();
+ data.trinketRefinements[id]++;awardDisciplineXp('artisan',JEWELRY_REFINEMENT.xp,1,'artisanXp');syncTrinketHealth(true);
  toast(TRINKETS[id].name+' · refinement '+jewelryRank(id),jewelryValueText(id));save();refreshUI();renderDisciplineDrawer();return true;
 }
 function toolRank(id){return data.toolRefinements?.[id]||0;}

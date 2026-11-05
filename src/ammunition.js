@@ -12,7 +12,7 @@ function loadAmmunition(key){
 function tickAmmunition(dt){
  const key=ammunitionResource();if(!key||ammunitionCharge(key)<=0)return;
  const p=game.player,reach=attackReach();
- if(combatTargets().some(enemy=>Math.hypot(enemy.x-p.x,enemy.y-p.y)<reach+enemy.rad))data.ammoCharges[key]=Math.max(0,ammunitionCharge(key)-dt);
+ if(combatTargets().some(enemy=>bodyDistance(enemy,p.x,p.y)<reach))data.ammoCharges[key]=Math.max(0,ammunitionCharge(key)-dt);
 }
 function renderAmmunitionHud(){
  const host=$('ammoNotice'),key=ammunitionResource(),visible=game.scene==='combat'&&!!key;if(!host)return;host.classList.toggle('hidden',!visible);if(!visible)return;
