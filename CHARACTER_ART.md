@@ -27,7 +27,7 @@ Working and two-handed arms use an elbow bend that stays below raised hands. Too
 
 Mining, smithing and chopping now use distinct anticipation/impact/recovery timing with small variations between cycles. Variations ease to zero at the loop seam; hands still resolve through the same fixed-length joints and calibrated tool grips. Sparks and chips burst on contact instead of streaming throughout a strike. Two bonus-collection clips per family add finishing strokes, a shuttle flourish, inspection of an engraved rune or cut gem, or a lifted scavenging find. A brief rarity-coloured capture trail follows the pickup into the work, while reduced motion suppresses flourishes and moving particles.
 
-Work clips retain anticipation, strike and recovery, plus continuous carving, weaving, engraving, gem working and searching motions. Starting and stopping blend over 180 / 240 ms. The rig and work scenes share one visual-rate table. Animation is separate from production. The visual rate caps at 2.5× for readability; resource production retains the full Skilling time multiplier. Dungeoneering speed does not enter this clock. Reduced motion uses stable working poses.
+Work clips retain anticipation, strike and recovery, plus continuous carving, weaving, engraving, gem working and searching motions. Starting and stopping blend over 180 / 240 ms. Release and immediate resume retain the same running clip phase, so hands and tool tips do not jump to a preset impact frame. The rig and work scenes share one visual-rate table. Animation is separate from production. The visual clock runs at 0.6× base clip speed at 1× production, 0.75× at 2×, and caps at 1.05× from 4× production onward. Resource production retains the full Skilling time multiplier. Dungeoneering speed does not enter this clock. Reduced motion uses stable working poses.
 
 Combat, all 31 skill activities, appearance previews and inventory portraits share this rig. Saved hair, eye, clothing and skin choices retain their identifiers and colors. Six hair shapes and four eye styles use the same face anchors.
 
@@ -55,6 +55,8 @@ The rig suite uses labelled render surfaces in isolated test responses to inspec
 The progression suite samples 50,400 weaving/casting poses across both bonuses, release blends, outfits, facings and reduced motion, checking fixed bone lengths and zero arm-segment crossings.
 
 Mithril, Blue Ranged Leathers and Green Runewoven Robes retain the Steel-tier silhouettes and attachment points. Their main change is palette; a centered inset buckle and fine shoulder edging add small finishing details. Mithril weapon illustrations use the existing third row of the weapon atlas. The same renderer exports all 60 body parts and matching portraits.
+
+`tests/animation-balance.cjs` samples 1,488 live work transitions across all 31 activities at 1×, 2×, 4× and 24× production, including release, partial recovery and resume. Real Space release and touch cancellation use the shipped handlers. [Work release and resume](preview-work-release.png) shows the actual renderer.
 
 ## Earlier art
 

@@ -2292,6 +2292,8 @@ let dungeoneeringInstalled=false;
 
 const TIER_LIMITS={1:{name:'Iron',power:80,dps:100,weapon:3,armor:5,speed:5,reach:5,enchant:2},2:{name:'Steel',power:240,dps:300,weapon:12,armor:10,speed:10,reach:10,enchant:4},3:{name:'Mithril',floor:300,power:480,dps:600,weapon:10,armor:15,speed:15,reach:15,enchant:6}};
 
+const ENCHANTMENT=Object.freeze({chances:Object.freeze([0,.14,.28,.42,.56,.58,.60]),arc:.5,range:200});
+
 const TIER_RESOURCES=['coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth','mithrilOre','mithrilBars','yewLogs','verdantCloth','enchantedSalvage','enchantedFragments','sapphires','cutSapphires'];
 
 const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:100,zoneMaterials:1},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:100,zoneMaterials:1},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:100,zoneMaterials:1}};
@@ -3219,6 +3221,8 @@ function playerMoveSpeed(){return 175*(1+trinketBonus('speed'))*(1+styleStats().
 
 function spawnBaseEnemy(boss=false,bossIndex=0){const a=rand(0,Math.PI*2),r=rand(205,320),d=zoneEnemyHp(false,0,rand(.9,1.1))/Math.max(1,30+game.phase*4);const e={x:game.player.x+Math.cos(a)*r,y:game.player.y+Math.sin(a)*r,rad:boss?(bossIndex===2?36:29):rand(12,17),hp:boss?100:((30+game.phase*4)*d),maxHp:boss?100:((30+game.phase*4)*d),speed:(boss?(bossIndex===2?77:86):rand(77,108)*(1+Math.min(1,combatDepth()*.05)))*(zoneVisualBand()===2?1.12:1),boss,bossIndex,contact:0,attack:boss?2.5:0,telegraph:0,wobble:rand(0,7),name:''};game.enemies.push(e);return e;}
 
+function enchantmentChance(rank){return ENCHANTMENT.chances[Math.max(0,Math.min(ENCHANTMENT.chances.length-1,Math.floor(Number(rank)||0)))];}
+
 function tier2Unlocked(){return data.cleared>=zoneEnd(0)||data.floor>=zoneStart(1);}
 
 function styleTier(id=combatStyle()){return Math.max(1,...[2,3].filter(tier=>tier<=Number(data.styles?.[id]?.tier)&&equipmentTierUnlocked(tier))); }
@@ -3623,7 +3627,7 @@ function codexDetailHtml(entry){
  }else if(id==='permanent_armor'){
   body=codexParagraph('Craft armor in Skills, then choose a set in Inventory. Your weapon selects the combat style; your armor is a separate choice.')+codexHeading('Sets',codexRuleList([['Melee','Iron / Steel / Mithril · health and protection'],['Ranged','Plain / Cured / Blue leathers · movement'],['Mage','Linen / Blue Wool / Runewoven robes · Mage damage']]))+codexHeading('Upgrades',codexRuleList([['Iron','Weapon refinement 3 · speed / reach 5 · reinforcement 5'],['Steel','Weapon refinement 12 · speed / reach 10 · reinforcement 10'],['Mithril','Weapon refinement 10 · speed / reach 15 · reinforcement 15']]))+codexParagraph('Each equipment tier has finite upgrade ranks. Proficiency and matching crafting levels can add a small further damage bonus. Armor reinforcement belongs to its class, and the worn set limits how many ranks apply.');
  }else if(/^loot_[0-3]$/.test(id))body=codexParagraph('A rare Zone material. Verdant Seeds, Ember Cores, Grave Dust and Rift Shards each pay one unit of any Zone-material recipe cost. Any combination works; earlier Zone materials are spent first.')+codexRuleList([['Used for','Every second weapon refinement, the final reinforcement / attack speed / reach / enchantment rank in each tier, tier promotions, and station ranks 3 and 5. Iron and Steel promotions use one Zone material; Mithril promotion uses two. Other listed upgrades use one.'],['Finds','Rare drops from monsters in this Zone; 1.5% base chance before bonuses. Elites drop two when successful.'],['Preserved banks','Existing materials keep their full value. Vouchers cover the entire recipe, including Zone materials.']]);
- else if(id==='permanent_enchant')body=codexParagraph('Enchant a combat style in Warding → Equipment. Essence comes from delving and pays for enchantment alongside bars and cut gems. The enchantment applies to weapons of that style.')+codexRuleList([['Trigger chance','14% per rank, up to 60%'],['Arc damage','50% of the triggering hit'],['Range','Another enemy within 200 units'],['Iron limit',TIER_LIMITS[1].enchant],['Steel limit',TIER_LIMITS[2].enchant],['Mithril limit',TIER_LIMITS[3].enchant]])+codexParagraph('An enchantment needs a second target. Its extra damage is not included in single-target DPS. Dungeon abilities such as Soul Conductor are separate and work with any weapon.');
+ else if(id==='permanent_enchant')body=codexParagraph('Enchant a combat style in Warding → Equipment. Essence comes from delving and pays for enchantment alongside bars and cut gems. The enchantment applies to weapons of that style, including shots already in flight when you switch weapons.')+codexRuleList([['Trigger chance',ENCHANTMENT.chances.slice(1).map(chance=>Math.round(chance*100)+'%').join(' / ')+' for ranks 1–'+(ENCHANTMENT.chances.length-1)],['Arc damage',Math.round(ENCHANTMENT.arc*100)+'% of the triggering hit'],['Range','Another enemy within '+ENCHANTMENT.range+' units'],['Iron limit',TIER_LIMITS[1].enchant],['Steel limit',TIER_LIMITS[2].enchant],['Mithril limit',TIER_LIMITS[3].enchant]])+codexParagraph('An enchantment needs a second target. Its extra damage is not included in single-target DPS. Dungeon abilities such as Soul Conductor are separate and work with any weapon.');
  else if(id==='permanent_mastery'||id.startsWith('permanent_talent_'))body=codexParagraph('Earn one shared Dungeoneering point on reaching Zone 2, completing Zone 2, then reaching Zones 10, 20, 40 and so on. Spend points on permanent game time ranks in the Dungeon Shop. Delving starts at 1.25× and adds 0.25× per rank. Skilling starts at 2×, reaches 10× in steps of one, then increases by two. Skilling includes active work, online idle and offline idle.')+codexParagraph('Optional Mastery allocations change spawn pressure, Sigil chance and rare finds. Refunding these allocations does not refund permanent time ranks. Existing saves retain earned balances and prior unlocks.');
  else if(id.startsWith('dungeon_perk_'))body=zoneAbilityCodexHtml(entry);
  else if(id.startsWith('mechanic_')){const d=themedAbility(id.slice(9));body=codexParagraph(d.guide+'.')+codexRuleList([['Theme',d.biome<0?'All Zones':BIOMES[d.biome].label],['Warning',d.seconds+' seconds or more'],['Damage','Maximum-health based; protection applies']]);}
@@ -4498,7 +4502,9 @@ function workshopAnimation(key,active,working){
  const time=reducedMotion()?0:(game.workVisualClock||0),now=performance.now();
  if(!game.workPresentation||game.workPresentation.key!==key)game.workPresentation={key,at:now,blend:0};
  const presentation=game.workPresentation,elapsedVisual=Math.min(.08,Math.max(0,(now-presentation.at)/1000));presentation.at=now;presentation.blend=clamp(presentation.blend+(working?elapsedVisual/.18:-elapsedVisual/.24),0,1);
- const visualPhase=working&&!reducedMotion()?((time*DeepwellAvatar.workRate(pose))%1):.65;
+ // Continue the same clip while blending out; resetting phase on release snaps
+ // the tool and both hands before they can settle into their resting pose.
+ const visualPhase=reducedMotion()?.65:((time*DeepwellAvatar.workRate(pose))%1);
  const reaction=game.workBonusReaction?.key===key?game.workBonusReaction:null;
  const frame={key,base,pose,working,phase:visualPhase,productionPhase:phase,time,workCycle:Math.floor(time*DeepwellAvatar.workRate(pose)),workBlend:reducedMotion()?(working?1:0):presentation.blend,workPhase:visualPhase,bonusReaction:reaction&&!reducedMotion()?{progress:reaction.age/reaction.duration,variant:reaction.variant}:null,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
  frame.speedRate=skillingTimeMultiplier()*(active?skillBuffMultiplier(key):1);frame.speedTier=workSpeedTier(frame.speedRate);
@@ -4523,7 +4529,7 @@ function paintWorkshopWorkpiece(frame,rig,c=ctx){
   c.fillStyle=SKILLS[key].tier===3?'#84ae88':SKILLS[key].tier===2?'#94aac6':'#c5b3ce';c.strokeStyle='#4e4351';c.lineWidth=.8;c.beginPath();c.moveTo(x-half,y-2);c.quadraticCurveTo(x,y,x+half,y-2);c.lineTo(x+half-1,y+10);c.quadraticCurveTo(x,y+8,x-half+1,y+10);c.closePath();c.fill();c.stroke();
   for(let row=0;row<5;row++){c.strokeStyle=row%2?theme.light:'#e2d6d7';c.lineWidth=.45;c.beginPath();c.moveTo(x-half+2,y+row*2);c.quadraticCurveTo(x,y+2+row*2,x+half-2,y+row*2);c.stroke();}
  }else if(pose==='rune'){
-  c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#626d72';c.strokeStyle='#263438';c.lineWidth=1;c.beginPath();c.ellipse(0,0,8,5,-.2,0,Math.PI*2);c.fill();c.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);c.restore();
+  c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#626d72';c.strokeStyle='#263438';c.lineWidth=1;c.beginPath();c.ellipse(0,0,8,5,-.2,0,Math.PI*2);c.fill();c.stroke();workshopGlyph(c,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);c.restore();
  }else if(pose==='clean'){
   c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#bcae7b';c.strokeStyle='#4f5142';c.lineWidth=1;c.beginPath();c.moveTo(-12,-3);c.lineTo(-5,-8);c.lineTo(9,-6);c.lineTo(13,1);c.lineTo(4,7);c.lineTo(-10,5);c.closePath();c.fill();c.stroke();c.strokeStyle=theme.deep;c.beginPath();c.arc(0,-1,4,.2,5.1);c.moveTo(-6,0);c.lineTo(7,1);c.stroke();c.globalAlpha=.35+(1-Math.cos(rig.phase*Math.PI*2))*.22;c.fillStyle='#756d57';for(let i=0;i<8;i++){c.beginPath();c.ellipse(-8+i*2.6,Math.sin(i*2)*3,2,1.4,0,0,Math.PI*2);c.fill();}c.restore();
  }else if(pose==='polish'){
@@ -7884,7 +7890,8 @@ function dealDamage(enemy,base,fromX,fromY,sourceStyle=combatStyle()){
  if(waveRank('storm')&&Math.random()<waveRank('storm')*.04)secondaryDamage(nearby(145)[0],damage*(.20+.03*waveRank('storm')),sourceStyle,enemy);
  if(waveRank('nova')&&critical){for(const t of nearby(65).slice(0,1+waveRank('nova')))secondaryDamage(t,damage*(.06+.02*waveRank('nova')),sourceStyle,enemy);burst(enemy.x,enemy.y,11,DUNGEON_THEMES[biomeIndex()].color);}
  if(waveRank('disrupt')&&game.frame>=(game.disruptReadyAt||0)&&Math.random()<.06*waveRank('disrupt')){game.disruptReadyAt=game.frame+8;for(const t of game.totems||[])t.disabledUntil=game.frame+1+waveRank('disrupt')*.5;floater(enemy.x,enemy.y-35,'TOTEMS DISRUPTED','#a7e4ff');}
- if(data.enchant>0&&Math.random()<Math.min(.6,.14*data.enchant))secondaryDamage(nearby(200)[0],damage*.5,sourceStyle,enemy);
+ const enchant=data.styles[sourceStyle]?.enchant||0;
+ if(enchant>0&&Math.random()<enchantmentChance(enchant))secondaryDamage(nearby(ENCHANTMENT.range)[0],damage*ENCHANTMENT.arc,sourceStyle,enemy);
  if(sourceStyle==='magic')for(const t of nearby(70).slice(0,2))secondaryDamage(t,damage*.25,sourceStyle,enemy);
  if(sourceStyle==='melee'&&waveRank('echo')&&Math.random()<.12*waveRank('echo'))secondaryDamage(nearby(150)[0],damage*.22,sourceStyle,enemy);
  if(eliteBoonSum('chainChance')&&Math.random()<Math.min(.85,eliteBoonSum('chainChance')))secondaryDamage(nearby(210)[0],damage*.35,sourceStyle,enemy);
@@ -7899,16 +7906,18 @@ function attack(){
  if(enemyShieldMultiplier(targets[0].e)<1){const protectedEnemy=targets[0].e,index=targets.findIndex(t=>protectedEnemy.guardIds?.includes(t.e)||t.e.shieldLink?.target===protectedEnemy);if(index>0)targets.unshift(targets.splice(index,1)[0]);}
  if(isRanged()&&p.aimTarget){const index=targets.findIndex(o=>o.e===p.aimTarget);if(index>0)targets.unshift(targets.splice(index,1)[0]);}
  const first=targets[0],angle=Math.atan2(first.point.y-p.y,first.point.x-p.x);
- p.facing=Math.cos(angle)<0?-1:1;p.aimFacing=p.facing;p.aimAngle=angle;p.aimTarget=first.e;p.attackPose=.38;
+ p.facing=Math.cos(angle)<0?-1:1;p.aimFacing=p.facing;p.aimAngle=angle;p.aimTarget=first.e;
  let damage=weaponHitDamage(attackDamage());
  if(isRanged()){
   const ammo=ammunitionResource();if(!loadAmmunition(ammo)){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1');}return false;}
+  p.attackPose=.38;
   const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,aimAngle:localAimAngle(p.aimAngle),data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*.98,y:p.y+18+hand.y*.98},speed=data.weaponType==='bow'?360:295;
   for(let i=0;i<1+waveRank('multishot');i++){
    const target=targets[Math.min(i,targets.length-1)].e,point=bodyPoint(target,origin.x,origin.y),a=Math.atan2(point.y-origin.y,point.x-origin.x);
    game.shots.push({x:origin.x,y:origin.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,damage:damage*(i===0?1:.15),combatStyle:combatStyle(),life:Math.max(1.4,(reach+90)/speed),pierce:waveRank('pierce'),ricochet:data.weaponType==='staff'?waveRank('echo'):0,homing:data.weaponType==='staff'?waveRank('technique'):0,hits:new Set(),magic:data.weaponType==='staff'});
   }
  }else{
+  p.attackPose=.38;
   const maxHits=(data.weaponType==='greatsword'?4:data.weaponType==='polearm'?3:1)+waveRank('cleave'),cone=data.weaponType==='greatsword'?1.65:data.weaponType==='polearm'?.68:1.05;let hits=0;
   for(const t of targets){if(hits>=maxHits)break;const a=Math.atan2(t.point.y-p.y,t.point.x-p.x),delta=Math.atan2(Math.sin(a-angle),Math.cos(a-angle));if(Math.abs(delta)>cone)continue;dealDamage(t.e,damage*(hits?.84:1),p.x,p.y);hits++;}
   game.swings.push({x:p.x,y:p.y,angle,reach:reach*.94,cone,life:.22,max:.22,style:data.weaponType});burst(p.x+Math.cos(angle)*reach*.48,p.y+Math.sin(angle)*reach*.48,3,'#f8d7a0');
@@ -8505,7 +8514,12 @@ function recipeCard(icon,name,desc,cost,action,label,owned=false,selected=false,
  const level=weapon?WEAPON_LEVELS[weapon[1]]:0,maxed=upgrade&&data.styles[upgrade[1].split(':')[0]][upgrade[1].split(':')[1]]>=styleUpgradeCap(...upgrade[1].split(':'));
  const needsArmor=upgrade&&upgrade[1].endsWith(':armor')&&!data.ownedArmor.some(k=>ARMOR_SETS[k]?.style===upgrade[1].split(':')[0]);
  const text=selected?uiIcon('check'):owned?'Equip':locked?(maxed?'Max':weapon?'Lv. '+level:needsArmor?'Craft armor':'Locked'):upgrade?'Upgrade':label==='PROSPECT'?'Prospect':'Craft';
- let effect='';if(upgrade){const [style,kind]=upgrade[1].split(':'),s=data.styles[style],cap=styleUpgradeCap(style,kind);name={weapon:'Refinement',armor:'Reinforcement',speed:'Attack speed',reach:'Reach',enchant:'Enchantment'}[kind];effect='<span class="recipe-rank">'+s[kind]+' / '+cap+'</span>'+(maxed?'':kind==='armor'?'<span>'+uiIcon('heart')+' +8</span>':kind==='speed'?'<span>'+uiIcon('speed')+' +2%</span>':kind==='reach'?'<span>'+uiIcon('reach')+' +3%</span>':'');}
+ let effect='';if(upgrade){
+  const [style,kind]=upgrade[1].split(':'),s=data.styles[style],cap=styleUpgradeCap(style,kind);
+  name={weapon:'Refinement',armor:'Reinforcement',speed:'Attack speed',reach:'Reach',enchant:'Enchantment'}[kind];
+  effect='<span class="recipe-rank">'+s[kind]+' / '+cap+'</span>'+(maxed?'':kind==='armor'?'<span>'+uiIcon('heart')+' +8</span>':kind==='speed'?'<span>'+uiIcon('speed')+' +2%</span>':kind==='reach'?'<span>'+uiIcon('reach')+' +3%</span>':'');
+  if(kind==='enchant')effect+='<span>'+Math.round(enchantmentChance(s.enchant)*100)+'%'+(maxed?'':' → '+Math.round(enchantmentChance(s.enchant+1)*100)+'%')+' arc chance</span>';
+ }
  else if(jewel)effect='<span>'+jewelryValueText(jewel[1])+'</span>';else if(tool)effect='<span>'+uiIcon('speed')+' +8%</span>';else if(weapon)effect='<span>'+weaponDps(weapon[1]).toFixed(1)+' DPS</span>';
  return '<article class="craft-tile compact-recipe '+(ready||owned?'can-make':'needs-material')+' '+(selected?'is-equipped':'')+'"><div class="craft-tile-icon">'+artHTML(idIcon||'anvil')+'</div><div class="craft-tile-body"><div class="recipe-title"><strong>'+escapeHTML(name)+'</strong>'+codexLink(codex,name+' details')+'</div><div class="recipe-effects">'+effect+'</div>'+(weapon?'<small class="weapon-role">'+weaponRole(weapon[1])+(!owned&&['bow','staff'].includes(weapon[1])?' · Starts below the sword in single-target damage.':'')+'</small>':'')+(!owned&&!maxed?materialCosts(cost,goal):'')+(!owned&&!selected?workshopVoucherButtonHtml(goal):'')+'</div><div class="recipe-actions"><button type="button" class="craft-tile-action" data-focus-key="craft-'+goal+'" '+action+' '+(locked||selected||!owned&&!ready?'disabled':'')+' aria-label="'+escapeHTML((selected?'Equipped: ':owned?'Equip ':upgrade?'Upgrade ':'Craft ')+name)+'">'+text+'</button>'+(!owned&&!maxed&&goal?trackRecipeButton(goal,name):'')+'</div></article>';
 }

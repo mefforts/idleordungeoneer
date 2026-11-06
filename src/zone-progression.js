@@ -1,10 +1,12 @@
 /* Three authored equipment tiers. Combat power is finite; skill dedication adds
    a small, explicit bonus rather than another unbounded damage multiplier. */
 const TIER_LIMITS={1:{name:'Iron',power:80,dps:100,weapon:3,armor:5,speed:5,reach:5,enchant:2},2:{name:'Steel',power:240,dps:300,weapon:12,armor:10,speed:10,reach:10,enchant:4},3:{name:'Mithril',floor:300,power:480,dps:600,weapon:10,armor:15,speed:15,reach:15,enchant:6}};
+const ENCHANTMENT=Object.freeze({chances:Object.freeze([0,.14,.28,.42,.56,.58,.60]),arc:.5,range:200});
 const TIER_RESOURCES=['coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth','mithrilOre','mithrilBars','yewLogs','verdantCloth','enchantedSalvage','enchantedFragments','sapphires','cutSapphires'];
 const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:100,zoneMaterials:1},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:100,zoneMaterials:1},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:100,zoneMaterials:1}};
 const WEAPON_RIGS={sword:{height:57,grip:[.49,.85]},shield:{height:33,grip:[.5,.5]},polearm:{height:104,grip:[.19,.79]},greatsword:{height:76,grip:[.5,.84]},bow:{height:54,grip:[.16,.5],flip:true},staff:{height:80,grip:[.5,.78]}};
 let workshopTier=1,tierProgressionInstalled=false,zone2CampImage=null;
+function enchantmentChance(rank){return ENCHANTMENT.chances[Math.max(0,Math.min(ENCHANTMENT.chances.length-1,Math.floor(Number(rank)||0)))];}
 function tier2Unlocked(){return data.cleared>=zoneEnd(0)||data.floor>=zoneStart(1);}
 function styleTier(id=combatStyle()){return Math.max(1,...[2,3].filter(tier=>tier<=Number(data.styles?.[id]?.tier)&&equipmentTierUnlocked(tier))); }
 function styleUpgradeCap(id,kind){
@@ -165,16 +167,18 @@ function attack(){
  if(enemyShieldMultiplier(targets[0].e)<1){const protectedEnemy=targets[0].e,index=targets.findIndex(t=>protectedEnemy.guardIds?.includes(t.e)||t.e.shieldLink?.target===protectedEnemy);if(index>0)targets.unshift(targets.splice(index,1)[0]);}
  if(isRanged()&&p.aimTarget){const index=targets.findIndex(o=>o.e===p.aimTarget);if(index>0)targets.unshift(targets.splice(index,1)[0]);}
  const first=targets[0],angle=Math.atan2(first.point.y-p.y,first.point.x-p.x);
- p.facing=Math.cos(angle)<0?-1:1;p.aimFacing=p.facing;p.aimAngle=angle;p.aimTarget=first.e;p.attackPose=.38;
+ p.facing=Math.cos(angle)<0?-1:1;p.aimFacing=p.facing;p.aimAngle=angle;p.aimTarget=first.e;
  let damage=weaponHitDamage(attackDamage());
  if(isRanged()){
   const ammo=ammunitionResource();if(!loadAmmunition(ammo)){if(game.frame-(game.lastAmmoMessage||0)>2){game.lastAmmoMessage=game.frame;floater(p.x,p.y-39,'NEED '+ammo.toUpperCase(),'#e8bba1');}return false;}
+  p.attackPose=.38;
   const socket=DeepwellAvatar.poseRig({pose:'combat',attack:1,aimAngle:localAimAngle(p.aimAngle),data}),hand=data.weaponType==='bow'?socket.main:socket.back,origin={x:p.x+hand.x*p.facing*.98,y:p.y+18+hand.y*.98},speed=data.weaponType==='bow'?360:295;
   for(let i=0;i<1+waveRank('multishot');i++){
    const target=targets[Math.min(i,targets.length-1)].e,point=bodyPoint(target,origin.x,origin.y),a=Math.atan2(point.y-origin.y,point.x-origin.x);
    game.shots.push({x:origin.x,y:origin.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,damage:damage*(i===0?1:.15),combatStyle:combatStyle(),life:Math.max(1.4,(reach+90)/speed),pierce:waveRank('pierce'),ricochet:data.weaponType==='staff'?waveRank('echo'):0,homing:data.weaponType==='staff'?waveRank('technique'):0,hits:new Set(),magic:data.weaponType==='staff'});
   }
  }else{
+  p.attackPose=.38;
   const maxHits=(data.weaponType==='greatsword'?4:data.weaponType==='polearm'?3:1)+waveRank('cleave'),cone=data.weaponType==='greatsword'?1.65:data.weaponType==='polearm'?.68:1.05;let hits=0;
   for(const t of targets){if(hits>=maxHits)break;const a=Math.atan2(t.point.y-p.y,t.point.x-p.x),delta=Math.atan2(Math.sin(a-angle),Math.cos(a-angle));if(Math.abs(delta)>cone)continue;dealDamage(t.e,damage*(hits?.84:1),p.x,p.y);hits++;}
   game.swings.push({x:p.x,y:p.y,angle,reach:reach*.94,cone,life:.22,max:.22,style:data.weaponType});burst(p.x+Math.cos(angle)*reach*.48,p.y+Math.sin(angle)*reach*.48,3,'#f8d7a0');

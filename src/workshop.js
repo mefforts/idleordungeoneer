@@ -51,7 +51,9 @@ function workshopAnimation(key,active,working){
  const time=reducedMotion()?0:(game.workVisualClock||0),now=performance.now();
  if(!game.workPresentation||game.workPresentation.key!==key)game.workPresentation={key,at:now,blend:0};
  const presentation=game.workPresentation,elapsedVisual=Math.min(.08,Math.max(0,(now-presentation.at)/1000));presentation.at=now;presentation.blend=clamp(presentation.blend+(working?elapsedVisual/.18:-elapsedVisual/.24),0,1);
- const visualPhase=working&&!reducedMotion()?((time*DeepwellAvatar.workRate(pose))%1):.65;
+ // Continue the same clip while blending out; resetting phase on release snaps
+ // the tool and both hands before they can settle into their resting pose.
+ const visualPhase=reducedMotion()?.65:((time*DeepwellAvatar.workRate(pose))%1);
  const reaction=game.workBonusReaction?.key===key?game.workBonusReaction:null;
  const frame={key,base,pose,working,phase:visualPhase,productionPhase:phase,time,workCycle:Math.floor(time*DeepwellAvatar.workRate(pose)),workBlend:reducedMotion()?(working?1:0):presentation.blend,workPhase:visualPhase,bonusReaction:reaction&&!reducedMotion()?{progress:reaction.age/reaction.duration,variant:reaction.variant}:null,action:working?game.workAction:0,data,theme:WORKSHOP_THEMES[biomeIndex()]};
  frame.speedRate=skillingTimeMultiplier()*(active?skillBuffMultiplier(key):1);frame.speedTier=workSpeedTier(frame.speedRate);
@@ -74,7 +76,7 @@ function paintWorkshopWorkpiece(frame,rig,c=ctx){
   c.fillStyle=SKILLS[key].tier===3?'#84ae88':SKILLS[key].tier===2?'#94aac6':'#c5b3ce';c.strokeStyle='#4e4351';c.lineWidth=.8;c.beginPath();c.moveTo(x-half,y-2);c.quadraticCurveTo(x,y,x+half,y-2);c.lineTo(x+half-1,y+10);c.quadraticCurveTo(x,y+8,x-half+1,y+10);c.closePath();c.fill();c.stroke();
   for(let row=0;row<5;row++){c.strokeStyle=row%2?theme.light:'#e2d6d7';c.lineWidth=.45;c.beginPath();c.moveTo(x-half+2,y+row*2);c.quadraticCurveTo(x,y+2+row*2,x+half-2,y+row*2);c.stroke();}
  }else if(pose==='rune'){
-  c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#626d72';c.strokeStyle='#263438';c.lineWidth=1;c.beginPath();c.ellipse(0,0,8,5,-.2,0,Math.PI*2);c.fill();c.stroke();workshopGlyph(ctx,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);c.restore();
+  c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#626d72';c.strokeStyle='#263438';c.lineWidth=1;c.beginPath();c.ellipse(0,0,8,5,-.2,0,Math.PI*2);c.fill();c.stroke();workshopGlyph(c,0,-1,3.1,biomeIndex(),working?theme.spark:theme.light);c.restore();
  }else if(pose==='clean'){
   c.save();c.translate(x,y);c.rotate(piece.angle||0);c.fillStyle='#bcae7b';c.strokeStyle='#4f5142';c.lineWidth=1;c.beginPath();c.moveTo(-12,-3);c.lineTo(-5,-8);c.lineTo(9,-6);c.lineTo(13,1);c.lineTo(4,7);c.lineTo(-10,5);c.closePath();c.fill();c.stroke();c.strokeStyle=theme.deep;c.beginPath();c.arc(0,-1,4,.2,5.1);c.moveTo(-6,0);c.lineTo(7,1);c.stroke();c.globalAlpha=.35+(1-Math.cos(rig.phase*Math.PI*2))*.22;c.fillStyle='#756d57';for(let i=0;i<8;i++){c.beginPath();c.ellipse(-8+i*2.6,Math.sin(i*2)*3,2,1.4,0,0,Math.PI*2);c.fill();}c.restore();
  }else if(pose==='polish'){

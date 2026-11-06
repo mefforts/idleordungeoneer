@@ -230,7 +230,8 @@ function dealDamage(enemy,base,fromX,fromY,sourceStyle=combatStyle()){
  if(waveRank('storm')&&Math.random()<waveRank('storm')*.04)secondaryDamage(nearby(145)[0],damage*(.20+.03*waveRank('storm')),sourceStyle,enemy);
  if(waveRank('nova')&&critical){for(const t of nearby(65).slice(0,1+waveRank('nova')))secondaryDamage(t,damage*(.06+.02*waveRank('nova')),sourceStyle,enemy);burst(enemy.x,enemy.y,11,DUNGEON_THEMES[biomeIndex()].color);}
  if(waveRank('disrupt')&&game.frame>=(game.disruptReadyAt||0)&&Math.random()<.06*waveRank('disrupt')){game.disruptReadyAt=game.frame+8;for(const t of game.totems||[])t.disabledUntil=game.frame+1+waveRank('disrupt')*.5;floater(enemy.x,enemy.y-35,'TOTEMS DISRUPTED','#a7e4ff');}
- if(data.enchant>0&&Math.random()<Math.min(.6,.14*data.enchant))secondaryDamage(nearby(200)[0],damage*.5,sourceStyle,enemy);
+ const enchant=data.styles[sourceStyle]?.enchant||0;
+ if(enchant>0&&Math.random()<enchantmentChance(enchant))secondaryDamage(nearby(ENCHANTMENT.range)[0],damage*ENCHANTMENT.arc,sourceStyle,enemy);
  if(sourceStyle==='magic')for(const t of nearby(70).slice(0,2))secondaryDamage(t,damage*.25,sourceStyle,enemy);
  if(sourceStyle==='melee'&&waveRank('echo')&&Math.random()<.12*waveRank('echo'))secondaryDamage(nearby(150)[0],damage*.22,sourceStyle,enemy);
  if(eliteBoonSum('chainChance')&&Math.random()<Math.min(.85,eliteBoonSum('chainChance')))secondaryDamage(nearby(210)[0],damage*.35,sourceStyle,enemy);

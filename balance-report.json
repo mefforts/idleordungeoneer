@@ -690,6 +690,40 @@
       }
     }
   },
+  "workAnimation": {
+    "clockRates": [
+      {
+        "production": 1,
+        "clock": 0.6
+      },
+      {
+        "production": 2,
+        "clock": 0.75
+      },
+      {
+        "production": 4,
+        "clock": 1.05
+      },
+      {
+        "production": 24,
+        "clock": 1.05
+      }
+    ],
+    "continuousRelease": true
+  },
+  "enchantment": {
+    "chances": [
+      0,
+      0.14,
+      0.28,
+      0.42,
+      0.56,
+      0.58,
+      0.6
+    ],
+    "arc": 0.5,
+    "range": 200
+  },
   "limits": {
     "1": {
       "name": "Iron",
@@ -3259,7 +3293,7 @@
       "group": "artisan"
     }
   ],
-  "version": "11.14.1",
+  "version": "11.14.2",
   "simulated": [
     {
       "zone": 1,

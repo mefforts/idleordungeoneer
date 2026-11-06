@@ -1,6 +1,6 @@
 # Current game rules and balance
 
-Build **11.14.1**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Equipment values, progression costs and encounter tuning retain their current calibration.
+Build **11.14.2**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Tier power, progression costs and encounter health retain their current calibration.
 
 ## Progression and clocks
 
@@ -62,6 +62,8 @@ Iron is intended for Zone 1; Steel spans Zones 2–4. Mithril is intended around
 | Steel | 12 | 10 / 10 / 10 | 4 |
 | Mithril | 10 | 15 / 15 / 15 | 6 |
 
+Enchantment trigger chances by rank are 14% / 28% / 42% / 56% / 58% / 60%. Every rank improves the chance; Iron and Steel retain their prior values, with Mithril ranks 5/6 sharing the final four percentage points below the 60% ceiling. Arcs deal 50% of the triggering hit to another target within 200 units. Airborne shots use their firing style’s enchantment even after switching weapons. Crafting rows show current and next chance; single-target DPS excludes the arc.
+
 | Weapon | Iron DPS | Steel DPS | Mithril DPS |
 | --- | --- | --- | --- |
 | Arming Sword | 80 | 240 | 480 |
@@ -114,7 +116,7 @@ Warding transmutation spends exactly 100 essence for 1–10 selected raw resourc
 
 Pickups use color, speed and duration rather than rarity labels. The strongest active boost applies; equal pickups refresh within a bounded duration, stronger pickups improve it. A weaker gathering pickup gives 1–5 resources; a weaker refining pickup completes up to five normal, ingredient-paid batches and stops when stock runs out. Every batch retains its normal yield and XP.
 
-Discovery timers count real seconds of active work on that activity. Release, menus, missing ingredients, backgrounding and other activities pause them. They survive reload and do not boost idle/offline work. Permanent Skilling speed still affects both active and idle production. Animation tempo caps at 4× while higher rates add bounded effects; reduced motion suppresses decoration.
+Discovery timers count real seconds of active work on that activity. Release, menus, missing ingredients, backgrounding and other activities pause them. They survive reload and do not boost idle/offline work. Permanent Skilling speed still affects both active and idle production. The visual clock runs at 0.6× base clip speed at 1× production and caps at 1.05×. Release/resume retains the clip phase through its rest blend; higher production rates add bounded effects. Reduced motion suppresses decoration.
 
 ## Dungeon Shop and rewards
 

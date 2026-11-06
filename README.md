@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.14.1.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.14.2.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This polish update closes a health-jewelry swap loophole, keeps live equipment stats current and aligns ammunition use and weapon guides with actual attack range. Progression and equipment values retain their current calibration. [Exact current rules and measurements](BALANCE.md) · [Development guide](DEVELOPMENT.md).
+This animation and balance pass smooths skilling release/resume, prevents empty-ammo attack flashes and keeps flying shots tied to their firing style’s enchantment. Every enchantment rank now improves its trigger chance, shown before purchase. Tier power, progression costs and enemy health retain their current calibration. [Exact current rules and measurements](BALANCE.md) · [Development guide](DEVELOPMENT.md).
 
 ## Play, prepare, return
 
@@ -39,13 +39,15 @@ Speed is present from the start. Delving freely offers **0.25× / 0.50× / 0.75�
 
 Combat perks use Sigils separately from Mastery points. Eight are available immediately, with more at Dungeoneering 3 / 5 / 8 / 12. Effects such as Battle Geometry, Echo Arts and Returning Power adapt to the equipped style while keeping their shared ranks. The shop's **Long blessings** section spends 60–100 Zone materials for five times a blessing's normal duration.
 
+Enchantment arcs trigger at **14% / 28% / 42% / 56% / 58% / 60%** across ranks 1–6. The last two Mithril ranks share the remaining chance below the 60% ceiling; Iron and Steel retain their prior values. Arcs need a second target and deal 50% of the triggering hit.
+
 ## Skills and idling
 
 Each discipline has **Gather, Refine and Equipment** tabs. All three material tiers remain visible before unlock. Tier-2 activities need Zone 2 access and matching level 10; tier 3 needs Zone 3 completion and matching level 20. Silver mining/smelting also needs Smithing level 10. Active, idle and offline production enforce the same gates.
 
 Hold a work scene, its work button or Space. The **Skills** shortcut opens the current discipline; **Gather / Refine / Source** swaps directly to related work. Ingredient chips visit their source and recipe bookmarks track a preparation route.
 
-Colored discoveries give temporary active speed, from **+35% for 6 working seconds** to **double speed for 15**. The strongest applies; equal pickups refresh it and stronger pickups improve it. A weaker gathering pickup gives 1–5 items. A weaker refining pickup completes up to five normal batches, paying available ingredients and stopping when stock runs out. Timers count real seconds of work and pause on release, missing ingredients, menus or backgrounding. They survive reload but do not accelerate idle/offline production. Animation tempo is capped; higher speeds add bounded effects.
+Colored discoveries give temporary active speed, from **+35% for 6 working seconds** to **double speed for 15**. The strongest applies; equal pickups refresh it and stronger pickups improve it. A weaker gathering pickup gives 1–5 items. A weaker refining pickup completes up to five normal batches, paying available ingredients and stopping when stock runs out. Timers count real seconds of work and pause on release, missing ingredients, menus or backgrounding. They survive reload but do not accelerate idle/offline production. Animation tempo is capped; higher speeds add bounded effects. Releasing, cancelling or resuming a hold keeps the work pose continuous. [Work transition review](preview-work-release.png).
 
 **Idle produces at 25% of the base active rate**, with the same XP per batch. Assign it with an activity's Idle control: one slot switches directly; two slots use an empty slot or ask which task to replace. Assigned work continues through combat and menus, with up to **eight real hours offline** before the earned Skilling multiplier. Missing ingredients pause refining.
 
