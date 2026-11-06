@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.18.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.19.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This update improves ability appearances and communication: clearer buildup, stronger danger footprints, subdued later strikes, more distinct projectiles and refined flame, root, bone, hammer and astral effects. The [visual lifecycle review](preview-ability-conveyance.png) shows buildup through activity. Combat timing, damage and progression retain the [mechanics bible](MECHANICS_BIBLE.md) rules; Zones 1–5 remain the balance target. [Measured progression](PROGRESSION.md) · [Balance and extension guide](BALANCE_CONFIG.md) · [Exact current rules](BALANCE.md).
+This update redraws 24 ability-prop families across four material palettes: layered nature growths, forged machinery, carved crypt relics and spirits, and faceted astral constructs. Planted props breathe, spirits hover, lenses turn about a stable center, and impacts add bounded debris and spore mist. [Artwork studies](preview-ability-artwork.png) · [Mechanic gallery](preview-themed-mechanics.png) · [Motion reel](preview-ability-artwork.mp4). Combat timing, damage and progression retain the [mechanics bible](MECHANICS_BIBLE.md) rules; Zones 1–5 remain the balance target. [Measured progression](PROGRESSION.md) · [Exact current rules](BALANCE.md).
 
 ## Play, prepare, return
 

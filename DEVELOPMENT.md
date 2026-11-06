@@ -65,6 +65,8 @@ For iOS Safari/in-app review, hold gameplay for at least five seconds, drag over
 
 ## Art and reviews
 
+`scripts/effect_artwork.py` owns the current illustrated material props; `scripts/export-themed-effects.py` builds the four palettes, matching Codex medallions and embedded image catalog. `src/ability-artwork.js` owns bounded decorative poses and field details. Gameplay geometry and deadlines remain in the mechanic modules. `npm run review:artwork -- --motion` captures the prop studies, phone examples and scripted motion reel. `tests/ability-artwork.cjs` checks cached-image rendering, stable rotation/projectile anchors, reduced motion, clipped openings, render purity and viewport fitting.
+
 The existing `art:*` and `review:*` commands in `package.json` export art and capture the actual renderer. Most motion reviews accept `-- --stills`; recording needs Playwright video support and FFmpeg. Source work atlases live in `assets/skilling/`; actor, navigation and encounter assets retain their source catalogs in `assets/` and `src/*-art.*`.
 
 Use the closest existing review for a change rather than regenerating every preview. Preserve reduced-motion states, clear teal openings, purple tactical damage and yellow interrupt targets. Shared equipment silhouettes and articulated hands must remain joined across combat, work, Inventory and Appearance. [CHARACTER_ART.md](CHARACTER_ART.md) describes attachment and animation checks.

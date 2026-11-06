@@ -1,7 +1,10 @@
 /* Illustrated props, motion and collision share the same event geometry. */
 function themedSprite(art,kind,x,y,width=44,angle=0,alpha=1,centered=false){
  const image=themedEffectImages.get(art+'-'+kind);if(!image?.complete||!image.naturalWidth)return;
- ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.globalAlpha*=alpha;ctx.drawImage(image,-width/2,-width*(centered?136/256:116/128),width,width*136/128);ctx.restore();
+ const pose=themedArtworkPose(art,x,y,centered),height=width*136/128;ctx.save();ctx.globalAlpha*=alpha;
+ if(!centered)ellipse(x,y+width*4/128,width*40/128,width*9/128,'#10142148');
+ if(centered||pose.center){ctx.translate(x,y+(centered?0:-width*48/128)+pose.bob);ctx.rotate(angle+pose.sway);ctx.scale(pose.sx,pose.sy);ctx.drawImage(image,-width/2,-height/2,width,height);}
+ else{ctx.translate(x,y+pose.bob);ctx.rotate(angle+pose.sway);ctx.scale(pose.sx,pose.sy);ctx.drawImage(image,-width/2,-width*116/128,width,height);}ctx.restore();
 }
 function themedArc(x,y,r,progress,color='#f2e7d4',width=2){ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.arc(x,y,r,-Math.PI/2,-Math.PI/2+Math.PI*2*clamp(progress,0,1));ctx.stroke();ctx.restore();}
 function themedArrow(x,y,angle,color,size=8){ctx.save();ctx.translate(x,y);ctx.rotate(angle);line(-size,-size*.6,0,0,2,color);line(0,0,-size,size*.6,2,color);ctx.restore();}
@@ -28,11 +31,11 @@ function paintThemedField(e,f,warning=false){
  ctx.save();ctx.globalAlpha*=alpha;ctx.lineCap='round';ctx.lineJoin='round';
  if(f.shape==='circle'){
   paintAbilityFootprint(f,theme,progress,active,cue.pending);
-  if(active)paintAbilityScars(f.x,f.y,f.r,e.kind,theme,1,true);
+  if(active){paintAbilityScars(f.x,f.y,f.r,e.kind,theme,1,true);paintThemedImpact(e,f,theme);}
   const until=f.start-e.age,fall=active?0:clamp(until/.8,0,1)*65,scale=active?1.06:.65+.2*progress;
   if(['hammer','branch','droplet','comet'].includes(f.art)){ellipse(f.x,f.y,f.r*.6,f.r*.18,'#11131b60');themedSprite(f.art,e.kind,f.x,f.y-fall,f.r*1.55*scale,f.art==='branch'?.2:0);}
   else if(f.art==='vent'){themedSprite('vent',e.kind,f.x,f.y+13,f.r*1.65);if(active)for(let i=0;i<3;i++)paintEmberFlame(f.x+(i-1)*13,f.y,23+(i%2)*10,i);}
-  else if(f.art==='sporeCloud'){glow(f.x,f.y,f.r,theme.color+'28');for(let i=0;i<5;i++)disc(f.x+Math.sin(time+i)*16,f.y+Math.cos(time*1.3+i)*13,5,'#c7d1a755');}
+  else if(f.art==='sporeCloud')paintThemedSporeCloud(e,f,theme,active);
   else if(f.art==='lens'){themedSprite('lens',e.kind,f.x,f.y+25,70,time*.25);if(active){themedSprite('prism',e.kind,f.x,f.y,74);for(let i=0;i<8;i++){const a=i*Math.PI/4;themedSprite('star',e.kind,f.x+Math.cos(a)*f.r*.6,f.y+Math.sin(a)*f.r*.6,21,a);}}}
   else if(f.art==='ghost')themedSprite('ghost',e.kind,f.x,f.y+20,60,0,.75);
   else if(f.art==='pod'){themedSprite('pod',e.kind,f.x,f.y+18,45+progress*18);if(active)for(let i=0;i<6;i++){const a=i*Math.PI/3;themedSprite('seed',e.kind,f.x+Math.cos(a)*f.r*.65,f.y+Math.sin(a)*f.r*.6,16,a);}}
@@ -43,17 +46,17 @@ function paintThemedField(e,f,warning=false){
   if(f.art==='prism'){themedLine(f.a,f.b,active?7:1,theme.hot);if(active)themedLine(f.a,f.b,2,'#fff9ed');}
   else if(f.art==='clock'){themedLine(f.a,f.b,11,'#393440');themedLine(f.a,f.b,7,'#e3d8b8');for(let i=0;i<3;i++){const t=(i+.5)/3;disc(f.a.x+(f.b.x-f.a.x)*t,f.a.y+(f.b.y-f.a.y)*t,4,'#f4ead5');}}
   else if(f.art!=='rift')for(let i=0;i<count;i++){const u=(i+.5)/count,x=f.a.x+(f.b.x-f.a.x)*u,y=f.a.y+(f.b.y-f.a.y)*u;if(f.art==='flame'){if(active)paintEmberFlame(x,y,22,i);else {disc(x,y,4,'#ffb878');line(x-7,y,x+7,y,1,color);}}else themedSprite(f.art,e.kind,x,y-(active?0:25*(1-progress)),f.art==='branch'?65:36,angle+(f.art==='branch'?0:Math.PI/2));}
-  if(f.art==='rift'){themedLine(f.a,f.b,13,'#1b1c30');themedLine(f.a,f.b,4,'#d1b1ec');}
+  if(f.art==='rift')paintThemedRiftSeam(e,f,active);
  }else if(f.shape==='gate'){
   const lo=f.horizontal?f.arena.left:f.arena.top,hi=f.horizontal?f.arena.right:f.arena.bottom,coordinate=n=>f.horizontal?{x:n,y:f.at}:{x:f.at,y:n};
-  for(const [left,right]of [[lo,f.gap-f.gapWidth/2],[f.gap+f.gapWidth/2,hi]]){const a=coordinate(left),b=coordinate(right),half=f.width/2,rect=f.horizontal?{left:a.x,right:b.x,top:a.y-half,bottom:b.y+half}:{left:a.x-half,right:b.x+half,top:a.y,bottom:b.y};paintAbilityFootprint({shape:'rect',rect},theme,progress,active,cue.pending);for(let n=left+14;n<right-10;n+=28){const q=coordinate(n);themedSprite(f.art,e.kind,q.x,q.y+9,42,f.horizontal?0:Math.PI/2);}}
+  for(const [left,right]of [[lo,f.gap-f.gapWidth/2],[f.gap+f.gapWidth/2,hi]]){const a=coordinate(left),b=coordinate(right),half=f.width/2,rect=f.horizontal?{left:a.x,right:b.x,top:a.y-half,bottom:b.y+half}:{left:a.x-half,right:b.x+half,top:a.y,bottom:b.y};paintAbilityFootprint({shape:'rect',rect},theme,progress,active,cue.pending);ctx.save();ctx.beginPath();if(f.horizontal)ctx.rect(left,f.at-140,right-left,190);else ctx.rect(f.at-140,left,190,right-left);ctx.clip();for(let n=left+14;n<right-10;n+=28){const q=coordinate(n);themedSprite(f.art,e.kind,q.x,q.y+9,42,f.horizontal?0:Math.PI/2);}ctx.restore();}
   const q=coordinate(f.gap),teal=combatTheme('safe');for(const end of [f.gap-f.gapWidth/2,f.gap+f.gapWidth/2]){const p=coordinate(end),dx=f.horizontal?0:18,dy=f.horizontal?18:0;line(p.x-dx,p.y-dy,p.x+dx,p.y+dy,6,MECHANIC_INK.keyline);line(p.x-dx,p.y-dy,p.x+dx,p.y+dy,3,teal.color);}themedArrow(q.x,q.y,f.horizontal?-Math.PI/2:0,teal.hot,10);
  }else if(f.shape==='rect'){
   paintAbilityFootprint(f,theme,progress,active,cue.pending);themedSprite('coffin',e.kind,(f.rect.left+f.rect.right)/2,f.rect.bottom,100,e.serial%2?.1:-.1);
   for(const y of [f.rect.top-16,f.rect.bottom+16])themedArrow((f.rect.left+f.rect.right)/2,y,y<f.rect.top?-Math.PI/2:Math.PI/2,combatTheme('safe').color,8);
  }else if(f.shape==='arc'){
   ctx.strokeStyle=color;ctx.lineWidth=f.width;ctx.beginPath();ctx.arc(f.x,f.y,f.r,f.gap+f.gapHalf,f.gap+Math.PI*2-f.gapHalf);ctx.stroke();
-  for(let i=0;i<14;i++){const angle=f.gap+f.gapHalf+(Math.PI*2-f.gapHalf*2)*(i+.5)/14;themedSprite('rib',e.kind,f.x+Math.cos(angle)*f.r,f.y+Math.sin(angle)*f.r,34,angle+Math.PI/2);}
+  ctx.save();ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.arc(f.x,f.y,f.r+90,f.gap+f.gapHalf,f.gap+Math.PI*2-f.gapHalf);ctx.closePath();ctx.clip();for(let i=0;i<14;i++){const angle=f.gap+f.gapHalf+(Math.PI*2-f.gapHalf*2)*(i+.5)/14;themedSprite('rib',e.kind,f.x+Math.cos(angle)*f.r,f.y+Math.sin(angle)*f.r,34,angle+Math.PI/2);}ctx.restore();
   themedArrow(f.x+Math.cos(f.gap)*(f.r+12),f.y+Math.sin(f.gap)*(f.r+12),f.gap,combatTheme('safe').hot,10);
  }else if(f.shape==='triangle'){
   const [a,b,c]=f.points;paintAbilityFootprint(f,theme,progress,active,cue.pending);
@@ -107,7 +110,7 @@ function paintThemedSpecial(e,warning=false){
  }
 }
 function paintThemedAir(){for(const e of game.themedEvents||[]){if(e.done)continue;if(e.type==='clingingSeeds'&&e.state.attachedAt!==null){const p=game.player;for(let i=0;i<3;i++)themedSprite('seed',e.kind,p.x+(i-1)*19,p.y-28+(reducedMotion()?0:Math.sin(abilityEffectTime()*2+i)*3),20,i*.6,1,true);themedArc(p.x,p.y-12,32,1-(e.age-e.state.attachedAt)/3.5,combatTheme('danger').hot,2);}
- if(e.type==='soulLantern'){const q=e.points[0],recipient=supportTotemRecipient({owner:e.owner,x:q.x,y:q.y});if(!recipient)continue;for(let i=0;i<=Math.floor(e.age/1.15);i++){const u=(e.age-i*1.15)/1.5;if(u>=0&&u<=1&&!e.state['soul'+i])themedSprite('wisp',e.kind,q.x+(recipient.x-q.x)*u,q.y+(recipient.y-q.y)*u,23,0,.85,true);}}
+ if(e.type==='soulLantern'){const q=e.points[0],recipient=supportTotemRecipient({owner:e.owner,x:q.x,y:q.y});if(!recipient)continue;for(let i=0;i<=Math.floor(e.age/1.15);i++){const u=(e.age-i*1.15)/1.5;if(u>=0&&u<=1&&!e.state['soul'+i]){const x=q.x+(recipient.x-q.x)*u,y=q.y+(recipient.y-q.y)*u;themedSprite('wisp',e.kind,x,y,23,0,.85,true);paintAbilityEmblem('heal',x+6,y-7,4.5,TOTEM_SIGNALS.mend);}}}
  if(e.type==='rollingFurnace'){paintRollingFurnaceAir(e);continue;}
  const theme=combatTheme(THEMED_MECHANICS[e.type].language),previousShots=new Map(themedProjectileShapes(e,Math.max(0,e.age-.10)).map(q=>[q.key,q]));for(const q of themedProjectileShapes(e)){const previous=previousShots.get(q.key);if(previous&&previous.portal===q.portal){line(previous.x,previous.y,q.x,q.y,q.r*.9,theme.color+'55');line(previous.x,previous.y,q.x,q.y,1.3,theme.hot+'99');}glow(q.x,q.y,q.r*2.4,theme.color+'30');themedSprite(q.art,e.kind,q.x,q.y,q.r*2.7,(q.angle||e.angle)+(reducedMotion()?0:e.age*(q.art==='boulder'?2:1)),1,true);paintProjectileSignal(q.x,q.y,q.r,theme);}}}
 function paintThemedEvent(e,warning=false){ctx.save();for(const field of themedFields(e,warning?0:e.age))paintThemedField(e,field,warning);paintThemedSpecial(e,warning);ctx.restore();}

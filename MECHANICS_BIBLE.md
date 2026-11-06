@@ -1,6 +1,6 @@
 # Combat mechanics bible
 
-This is the design contract for current and future dungeons. Build 11.18.0 adds a shared presentation pass to the runtime contract. Exact tunable values live in `combat.mechanics` in [src/balance-config.json](src/balance-config.json); [src/mechanic-contracts.js](src/mechanic-contracts.js) enforces encounter pressure, recovery and tactical rewards. Individual modules own geometry and theme. [SELECTED_MECHANICS.md](SELECTED_MECHANICS.md) lists the implemented abilities.
+This is the design contract for current and future dungeons. Build 11.19.0 extends the shared presentation contract with illustrated material props and bounded artwork motion. Exact tunable values live in `combat.mechanics` in [src/balance-config.json](src/balance-config.json); [src/mechanic-contracts.js](src/mechanic-contracts.js) enforces encounter pressure, recovery and tactical rewards. Individual modules own geometry and theme. [SELECTED_MECHANICS.md](SELECTED_MECHANICS.md) lists the implemented abilities.
 
 ## The experience
 
@@ -40,6 +40,8 @@ Actual renderer examples: [optional Ember Catch](preview-mechanic-ember-mobile.p
 - Preserve the uncluttered quadrant treatment: floor color, physical eruptions and the teal opening sigil, without cross-arena lines. Shared defense uses its shield percentage, without a second feet ring; totem streams do not add a ring to the player's torso.
 
 Review with `npm run review:conveyance` (add `-- --motion` for the motion reel) and `npm run review:abilities -- --stills`. [Lifecycle contact sheet](preview-ability-conveyance.png) · [Motion reel](preview-ability-conveyance.mp4) · [Phone warning](preview-ability-warning-mobile.png) · [Desktop activity](preview-ability-cage-desktop.png). The isolated `ability-conveyance` suite checks real cast progress, distinct stages, geometry, render purity, reduced motion and phone/landscape/desktop layouts.
+
+The current material illustrations live in `scripts/effect_artwork.py`, with four generated palettes and matching Codex medallions. `src/ability-artwork.js` defines restrained planted, floating and rotating poses. Rotating lenses keep their visual center; projectile images retain their exact mechanical anchor without decorative drift or travelling ground shadows. Ground shadows are drawn separately from animated prop images. Raised gate foliage and ribs are clipped out of protected openings. Spore mist, rift seams and impact debris stay within their field footprints. Reduced motion retains static material art while suppressing breathing, hover, sway and drifting fragments. [Artwork studies](preview-ability-artwork.png) · [Scripted motion review](preview-ability-artwork.mp4).
 
 ## Every ability has a complete lifecycle
 
