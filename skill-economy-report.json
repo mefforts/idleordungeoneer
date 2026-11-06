@@ -1,9 +1,9 @@
 {
-  "version": "11.15.0",
+  "version": "11.16.0",
   "assumptions": [
     "All three combat styles, one weapon per shared style, both Iron/Steel armor sets, all five core upgrade paths.",
-    "Complete Iron; about 80% Steel ranks, every jewelry piece at 40/50, each tool at 8/10 and every station at 4/5.",
-    "Gross material costs; no conservation, tool speed, temporary discoveries, vouchers, monster material drops or starting stock.",
+    "Complete Iron; about 80% Steel ranks, every jewelry piece at the configured rank-15 support target, each tool at 8/10 and every station at 4/5.",
+    "Gross material costs; no conservation, tool speed, temporary discoveries, vouchers, monster material drops or starting material stock; the reference credits 4,000 delve gold.",
     "Gold searches credit expected rough gem finds at the base 7% roll with the 20-search pity rule.",
     "Existing levels and materials are retained in saves; equipment work XP can bring the milestone slightly earlier.",
     "Times count work in each discipline; other disciplines supply its ingredients. Two idle slots may work concurrently."
@@ -11,42 +11,42 @@
   "models": [
     {
       "fraction": 0.8,
-      "scope": "All three combat styles; complete Iron, Steel targets, all eight jewelry pieces, three tools and five stations",
+      "scope": "All three combat styles; complete Iron, Steel targets, eight jewelry pieces at the configured support rank, three tools and five stations",
       "ledger": {
         "bars": 816,
         "cloth": 1324,
-        "gold": 35084,
+        "gold": 16884,
         "zoneMaterials": 38,
         "essence": 30,
-        "cutOpals": 78,
+        "cutOpals": 38,
         "logs": 1248,
         "scraps": 564,
         "steelBars": 2894,
-        "runicCloth": 1547,
+        "runicCloth": 3028,
         "ancientFragments": 956,
-        "willowLogs": 1000,
+        "willowLogs": 2434,
         "cutGarnets": 1260,
         "ore": 890,
-        "silverBars": 917
+        "silverBars": 277
       },
       "work": {
-        "ancientScavenge": 11695,
+        "ancientScavenge": 2148,
         "mine": 4155,
         "forge": 816,
-        "ward": 1436,
-        "scavenge": 936,
+        "ward": 2176,
+        "scavenge": 564,
         "relicClean": 0,
-        "polish": 78,
+        "polish": 38,
         "wood": 624,
         "coal": 1447,
         "steelSmelt": 2894,
-        "willow": 887,
-        "aetherWeave": 774,
+        "willow": 1974,
+        "aetherWeave": 1514,
         "cleanAncient": 478,
-        "garnetSearch": 191,
+        "garnetSearch": 1064,
         "garnetCut": 1260,
-        "silverMine": 917,
-        "silverSmelt": 917
+        "silverMine": 277,
+        "silverSmelt": 277
       },
       "external": {
         "zoneMaterials": 38,
@@ -54,54 +54,54 @@
       },
       "training": {
         "blacksmithing": {
-          "tier1": 69094,
+          "tier1": 54374,
           "tier2": 73797,
-          "base": 8448.400000000001,
-          "xp": 32166.007558,
+          "base": 6976.400000000001,
+          "xp": 32166.00120386,
           "level": 20,
-          "percentOfLevel20": 1.0000002349686004,
-          "activeHours": 9.240583333333333,
-          "calibratedRate": 0.3213897583912625
+          "percentOfLevel20": 1.0000000374264753,
+          "activeHours": 8.085027777777777,
+          "calibratedRate": 0.34133636868707395
         },
         "woodworking": {
           "tier1": 5616,
-          "tier2": 12418,
+          "tier2": 27636,
           "base": 2100.6,
-          "xp": 32166.010616,
+          "xp": 32166.00053124,
           "level": 20,
-          "percentOfLevel20": 1.0000003300379283,
-          "activeHours": 1.1551666666666667,
-          "calibratedRate": 2.421114511193429
+          "percentOfLevel20": 1.0000000165155754,
+          "activeHours": 2.061,
+          "calibratedRate": 1.0879070777247069
         },
         "warding": {
-          "tier1": 12924,
-          "tier2": 12384,
-          "base": 2831.4,
-          "xp": 32166.006192,
+          "tier1": 19584,
+          "tier2": 24224,
+          "base": 3497.4,
+          "xp": 32166.00043744,
           "level": 20,
-          "percentOfLevel20": 1.000000192501399,
-          "activeHours": 1.6023333333333332,
-          "calibratedRate": 2.36875
+          "percentOfLevel20": 1.000000013599453,
+          "activeHours": 2.712333333333333,
+          "calibratedRate": 1.1834791941875824
         },
         "scavenging": {
-          "tier1": 7488,
-          "tier2": 172334,
-          "base": 2287.8,
-          "xp": 32166.045156,
+          "tier1": 4512,
+          "tier2": 38676,
+          "base": 1990.2,
+          "xp": 32166.00066072,
           "level": 20,
-          "percentOfLevel20": 1.0000014038425666,
-          "activeHours": 14.382444444444445,
-          "calibratedRate": 0.1733737973934337
+          "percentOfLevel20": 1.0000000205409438,
+          "activeHours": 3.413,
+          "calibratedRate": 0.7802202916537387
         },
         "artisan": {
-          "tier1": 9984,
-          "tier2": 264840,
-          "base": 2537.4,
-          "xp": 32166.06996,
+          "tier1": 4864,
+          "tier2": 369600,
+          "base": 2025.4,
+          "xp": 32166.006496,
           "level": 20,
-          "percentOfLevel20": 1.0000021749673569,
-          "activeHours": 1.7210833333333333,
-          "calibratedRate": 0.11187358405074761
+          "percentOfLevel20": 1.0000002019523722,
+          "activeHours": 2.770111111111111,
+          "calibratedRate": 0.08154924242424243
         }
       },
       "targets": {
@@ -110,14 +110,14 @@
         "reach": 8,
         "armor": 8,
         "enchant": 3,
-        "jewelry": 40,
+        "jewelry": 15,
         "tool": 8,
         "station": 4
       }
     },
     {
       "fraction": 1,
-      "scope": "All three combat styles; complete Iron, Steel targets, all eight jewelry pieces, three tools and five stations",
+      "scope": "All three combat styles; complete Iron, Steel targets, eight jewelry pieces at the configured support rank, three tools and five stations",
       "ledger": {
         "bars": 875,
         "cloth": 1954,
@@ -128,28 +128,28 @@
         "logs": 1941,
         "scraps": 958,
         "steelBars": 6626,
-        "runicCloth": 3521,
+        "runicCloth": 7001,
         "ancientFragments": 2084,
-        "willowLogs": 2272,
+        "willowLogs": 5610,
         "cutGarnets": 2769,
         "ore": 1520,
         "silverBars": 1357
       },
       "work": {
-        "ancientScavenge": 17596,
+        "ancientScavenge": 8132,
         "mine": 8261,
         "forge": 875,
-        "ward": 2738,
+        "ward": 4478,
         "scavenge": 1128,
         "relicClean": 0,
         "polish": 94,
         "wood": 971,
         "coal": 3313,
         "steelSmelt": 6626,
-        "willow": 2017,
-        "aetherWeave": 1761,
+        "willow": 4556,
+        "aetherWeave": 3501,
         "cleanAncient": 1042,
-        "garnetSearch": 1161,
+        "garnetSearch": 2026,
         "garnetCut": 2769,
         "silverMine": 1357,
         "silverSmelt": 1357
@@ -163,51 +163,51 @@
           "tier1": 116935,
           "tier2": 168963,
           "base": 13232.5,
-          "xp": 32519.712082,
+          "xp": 32553.39992494,
           "level": 20,
-          "percentOfLevel20": 1.0109964584343716,
+          "percentOfLevel20": 1.0120437705944165,
           "activeHours": 18.208916666666667,
           "calibratedRate": 0.11205707758503342
         },
         "woodworking": {
           "tier1": 8739,
-          "tier2": 28238,
+          "tier2": 63784,
           "base": 2412.9,
-          "xp": 32552.167456,
+          "xp": 32562.38087656,
           "level": 20,
-          "percentOfLevel20": 1.0120054547037245,
-          "activeHours": 2.3281666666666667,
-          "calibratedRate": 1.053654649762731
+          "percentOfLevel20": 1.012322976949574,
+          "activeHours": 4.444,
+          "calibratedRate": 0.4664665119779255
         },
         "warding": {
-          "tier1": 24642,
-          "tier2": 28176,
-          "base": 4003.2000000000003,
-          "xp": 32551.805088,
+          "tier1": 40302,
+          "tier2": 56016,
+          "base": 5569.200000000001,
+          "xp": 32562.97071696,
           "level": 20,
-          "percentOfLevel20": 1.0119941891438164,
-          "activeHours": 3.2928333333333337,
-          "calibratedRate": 0.9995315161839864
+          "percentOfLevel20": 1.0123413143368776,
+          "activeHours": 5.902833333333333,
+          "calibratedRate": 0.4748071979434447
         },
         "scavenging": {
           "tier1": 9024,
-          "tier2": 265100,
+          "tier2": 132604,
           "base": 2441.4,
-          "xp": 32328.4374,
+          "xp": 32903.35958088,
           "level": 20,
-          "percentOfLevel20": 1.0050499720201456,
-          "activeHours": 21.689777777777778,
-          "calibratedRate": 0.11212599019238023
+          "percentOfLevel20": 1.0229235708785676,
+          "activeHours": 11.174222222222221,
+          "calibratedRate": 0.224160658803656
         },
         "artisan": {
           "tier1": 12032,
-          "tier2": 670968,
+          "tier2": 774768,
           "base": 2742.2,
-          "xp": 32622.575192,
+          "xp": 32503.59305168,
           "level": 20,
-          "percentOfLevel20": 1.0141943416029349,
-          "activeHours": 4.627138888888889,
-          "calibratedRate": 0.04385276197970693
+          "percentOfLevel20": 1.0104953382975812,
+          "activeHours": 5.708388888888889,
+          "calibratedRate": 0.03797756231542862
         }
       },
       "targets": {
@@ -223,42 +223,42 @@
     },
     {
       "fraction": 0.8,
-      "scope": "All three combat styles; complete Iron, Steel targets, all eight jewelry pieces, three tools and five stations",
+      "scope": "All three combat styles; complete Iron, Steel targets, eight jewelry pieces at the configured support rank, three tools and five stations",
       "ledger": {
         "bars": 816,
         "cloth": 1324,
-        "gold": 35084,
+        "gold": 16884,
         "zoneMaterials": 38,
         "essence": 30,
-        "cutOpals": 78,
+        "cutOpals": 38,
         "logs": 1248,
         "scraps": 564,
         "steelBars": 2894,
-        "runicCloth": 1547,
+        "runicCloth": 3028,
         "ancientFragments": 956,
-        "willowLogs": 1000,
+        "willowLogs": 2434,
         "cutGarnets": 1260,
         "ore": 890,
-        "silverBars": 917
+        "silverBars": 277
       },
       "work": {
-        "ancientScavenge": 11695,
+        "ancientScavenge": 2148,
         "mine": 4155,
         "forge": 816,
-        "ward": 1436,
-        "scavenge": 936,
+        "ward": 2176,
+        "scavenge": 564,
         "relicClean": 0,
-        "polish": 78,
+        "polish": 38,
         "wood": 624,
         "coal": 1447,
         "steelSmelt": 2894,
-        "willow": 887,
-        "aetherWeave": 774,
+        "willow": 1974,
+        "aetherWeave": 1514,
         "cleanAncient": 478,
-        "garnetSearch": 191,
+        "garnetSearch": 1064,
         "garnetCut": 1260,
-        "silverMine": 917,
-        "silverSmelt": 917
+        "silverMine": 277,
+        "silverSmelt": 277
       },
       "external": {
         "zoneMaterials": 38,
@@ -266,54 +266,54 @@
       },
       "training": {
         "blacksmithing": {
-          "tier1": 69094,
+          "tier1": 54374,
           "tier2": 73797,
-          "base": 8448.400000000001,
-          "xp": 32166.007558,
+          "base": 6976.400000000001,
+          "xp": 32166.00120386,
           "level": 20,
-          "percentOfLevel20": 1.0000002349686004,
-          "activeHours": 36.96233333333333,
-          "calibratedRate": 0.3213897583912625
+          "percentOfLevel20": 1.0000000374264753,
+          "activeHours": 32.340111111111106,
+          "calibratedRate": 0.34133636868707395
         },
         "woodworking": {
           "tier1": 5616,
-          "tier2": 12418,
+          "tier2": 27636,
           "base": 2100.6,
-          "xp": 32166.010616,
+          "xp": 32166.00053124,
           "level": 20,
-          "percentOfLevel20": 1.0000003300379283,
-          "activeHours": 4.620666666666667,
-          "calibratedRate": 2.421114511193429
+          "percentOfLevel20": 1.0000000165155754,
+          "activeHours": 8.244,
+          "calibratedRate": 1.0879070777247069
         },
         "warding": {
-          "tier1": 12924,
-          "tier2": 12384,
-          "base": 2831.4,
-          "xp": 32166.006192,
+          "tier1": 19584,
+          "tier2": 24224,
+          "base": 3497.4,
+          "xp": 32166.00043744,
           "level": 20,
-          "percentOfLevel20": 1.000000192501399,
-          "activeHours": 6.409333333333333,
-          "calibratedRate": 2.36875
+          "percentOfLevel20": 1.000000013599453,
+          "activeHours": 10.849333333333332,
+          "calibratedRate": 1.1834791941875824
         },
         "scavenging": {
-          "tier1": 7488,
-          "tier2": 172334,
-          "base": 2287.8,
-          "xp": 32166.045156,
+          "tier1": 4512,
+          "tier2": 38676,
+          "base": 1990.2,
+          "xp": 32166.00066072,
           "level": 20,
-          "percentOfLevel20": 1.0000014038425666,
-          "activeHours": 57.52977777777778,
-          "calibratedRate": 0.1733737973934337
+          "percentOfLevel20": 1.0000000205409438,
+          "activeHours": 13.652,
+          "calibratedRate": 0.7802202916537387
         },
         "artisan": {
-          "tier1": 9984,
-          "tier2": 264840,
-          "base": 2537.4,
-          "xp": 32166.06996,
+          "tier1": 4864,
+          "tier2": 369600,
+          "base": 2025.4,
+          "xp": 32166.006496,
           "level": 20,
-          "percentOfLevel20": 1.0000021749673569,
-          "activeHours": 6.884333333333333,
-          "calibratedRate": 0.11187358405074761
+          "percentOfLevel20": 1.0000002019523722,
+          "activeHours": 11.080444444444444,
+          "calibratedRate": 0.08154924242424243
         }
       },
       "targets": {
@@ -322,7 +322,7 @@
         "reach": 8,
         "armor": 8,
         "enchant": 3,
-        "jewelry": 40,
+        "jewelry": 15,
         "tool": 8,
         "station": 4
       }

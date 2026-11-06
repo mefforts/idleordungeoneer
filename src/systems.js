@@ -27,10 +27,10 @@ function normalizeProgression(){
   const old=data.styles&&typeof data.styles==='object'?data.styles:{};
   data.styles=Object.fromEntries(Object.keys(STYLE_DEFS).map(id=>{
     const s=old[id]&&typeof old[id]==='object'?old[id]:legacy;
-    return [id,{weapon:finiteRank(s.weapon),armor:finiteRank(s.armor),enchant:finiteRank(s.enchant),speed:Math.min(20,finiteRank(s.speed)),reach:Math.min(20,finiteRank(s.reach)),xp:Math.max(0,Math.min(1e10,Number(s.xp)||0)),tier:Math.max(1,Math.min(3,Math.floor(Number(s.tier)||1))),lastWeapon:s.lastWeapon||STYLE_DEFS[id].weapon}];
+    return [id,{weapon:finiteRank(s.weapon),armor:finiteRank(s.armor),enchant:finiteRank(s.enchant),speed:finiteRank(s.speed),reach:finiteRank(s.reach),xp:Math.max(0,Math.min(1e10,Number(s.xp)||0)),tier:Math.max(1,Math.min(maximumEquipmentTier(),Math.floor(Number(s.tier)||1))),lastWeapon:s.lastWeapon||STYLE_DEFS[id].weapon}];
   }));
   data.tools=Object.fromEntries(Object.keys(TOOL_DEFS).map(id=>[id,!!data.tools?.[id]]));
-  data.stationLevels=Object.fromEntries(Object.keys(DISCIPLINES).map(id=>[id,Math.min(5,finiteRank(data.stationLevels?.[id]??(data.skillBoosts?.[id]?1:0)))]));
+  data.stationLevels=Object.fromEntries(Object.keys(DISCIPLINES).map(id=>[id,Math.min(BALANCE_CONFIG.production.station.maximum,finiteRank(data.stationLevels?.[id]??(data.skillBoosts?.[id]?1:0)))]));
   if(!data.stationCredits||typeof data.stationCredits!=='object')data.stationCredits={};
   for(const group of Object.keys(DISCIPLINES)){
     const credits=data.stationCredits[group];
@@ -48,22 +48,22 @@ function stationRank(group){return data.stationLevels?.[group]||0;}
 function toolForSkill(key){return Object.keys(TOOL_DEFS).find(id=>TOOL_DEFS[id].skills.includes(key));}
 function skillInterval(key,active=true){
   const rank=stationRank(disciplineFor(key)),tool=toolForSkill(key);
-  return (active?ACTIVE_INTERVAL[key]:SKILLS[key].seconds)/(1+rank*.03+(active&&tool&&data.tools?.[tool]? .08+toolRank(tool)*TOOL_REFINEMENT.speedStep:0));
+  return (ACTIVE_INTERVAL[key]/(active?1:BALANCE_CONFIG.production.idleRate))/(1+rank*BALANCE_CONFIG.production.station.speedPerRank+(active&&tool&&data.tools?.[tool]? BALANCE_CONFIG.production.tool.baseSpeed+toolRank(tool)*TOOL_REFINEMENT.speedStep:0));
 }
 // Whole ingredients stay whole. Fractional conservation carries between batches;
 // it is spent only when a craft succeeds, never by looking at a recipe.
 function stationCost(base,group){
-  const rate=stationRank(group)*.02,credits=data.stationCredits?.[group]||{};
+  const rate=stationRank(group)*BALANCE_CONFIG.production.station.conservationPerRank,credits=data.stationCredits?.[group]||{};
   return Object.fromEntries(Object.entries(base||{}).filter(([,n])=>n>0).map(([key,n])=>[key,key==='gold'?n:n-Math.min(n,Math.floor((credits[key]||0)+n*rate+1e-8))]));
 }
 function spendAtStation(base,group){
   const cost=stationCost(base,group);if(!hasIngredients(cost))return false;
-  spendIngredients(cost);const credits=data.stationCredits[group],rate=stationRank(group)*.02;
+  spendIngredients(cost);const credits=data.stationCredits[group],rate=stationRank(group)*BALANCE_CONFIG.production.station.conservationPerRank;
   for(const [key,n]of Object.entries(base||{}))if(key!=='gold'&&n>0){const saved=n-(cost[key]||0);credits[key]=Math.max(0,Number(((credits[key]||0)+n*rate-saved).toFixed(8)));data.stationSaved[group]+=saved;}
   return true;
 }
 function skillCost(key){return stationCost(SKILLS[key].cost||{},disciplineFor(key));}
-function stationUpgradeCost(group){const rank=stationRank(group);return {...Object.fromEntries(Object.entries(GROUP_COSTS[group]).map(([k,n])=>[k,Math.ceil(n*Math.pow(1.6,rank))])),...([2,4].includes(rank)?{zoneMaterials:1}:{})};}
+function stationUpgradeCost(group){const rank=stationRank(group);return {...Object.fromEntries(Object.entries(GROUP_COSTS[group]).map(([k,n])=>[k,Math.ceil(n*Math.pow(BALANCE_CONFIG.production.station.costGrowth,rank))])),...([2,4].includes(rank)?{zoneMaterials:1}:{})};}
 
 function upgradeGroup(id,kind){return kind==='enchant'?'warding':STYLE_DEFS[id].group;}
 function styleUpgradeCost(id,kind){return stationCost(styleUpgradeBase(id,kind),upgradeGroup(id,kind));}
@@ -76,7 +76,7 @@ function makeTool(id,voucher){
   save();refreshUI();renderDisciplineDrawer();return true;
 }
 function upgradeSkill(key,voucher){
-  const group=DISCIPLINES[key]?key:disciplineFor(key);if(!DISCIPLINES[group]||stationRank(group)>=5)return false;
+  const group=DISCIPLINES[key]?key:disciplineFor(key);if(!DISCIPLINES[group]||stationRank(group)>=BALANCE_CONFIG.production.station.maximum)return false;
   if(voucher===undefined){if(!hasIngredients(stationUpgradeCost(group)))return false;spendIngredients(stationUpgradeCost(group));}else if(!spendUpgradeVoucher('station:'+group,voucher))return false;
   data.stationLevels[group]++;
   toast(DISCIPLINES[group].name+' station '+stationRank(group),stationRank(group)*2+'% ingredient conservation · '+stationRank(group)*3+'% faster active and idle work');
@@ -93,7 +93,7 @@ function activeSkill(key,batch=false){
 }
 function advanceProduction(seconds,multiplier=selectedTimeRate('skilling')){
   ensureJobs();const jobs=data.idleJobs.filter(Boolean);if(!jobs.length)return {mined:0,smelted:0};
-  const beforeOre=data.ore,beforeBars=data.bars;let left=Math.min(28800,Math.max(0,seconds))*Math.max(1,multiplier);
+  const beforeOre=data.ore,beforeBars=data.bars;let left=Math.min(BALANCE_CONFIG.production.offlineHours*3600,Math.max(0,seconds))*Math.max(1,multiplier);
   while(left>.00001){
     const step=Math.min(left,...jobs.map(k=>Math.max(.00001,skillInterval(k,false)-(data.jobTimers[k]||0))));
     jobs.forEach(k=>data.jobTimers[k]=(data.jobTimers[k]||0)+step);left-=step;

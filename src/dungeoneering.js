@@ -251,7 +251,7 @@ function update(dt){
  game.mineAction=Math.max(0,game.mineAction-dt);game.forgeAction=Math.max(0,game.forgeAction-dt);game.workAction=Math.max(0,game.workAction-dt);
  advanceSkillWork(dt,skillSpeed);
  game.frame+=game.status==='running'?0:dt;
- const realNow=Date.now(),jobsDelta=Math.min(8*3600,Math.max(0,(realNow-game.lastJobsAt)/1000));game.lastJobsAt=realNow;
+ const realNow=Date.now(),jobsDelta=Math.min(BALANCE_CONFIG.production.offlineHours*3600,Math.max(0,(realNow-game.lastJobsAt)/1000));game.lastJobsAt=realNow;
  if(jobsDelta>0)advanceProduction(jobsDelta,skillSpeed);
  if(!game.customizing&&!game.menuPaused&&$('overlay').classList.contains('hidden')&&game.scene==='combat'&&game.status==='running'){
   let left=simDt,steps=0;

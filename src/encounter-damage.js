@@ -1,7 +1,7 @@
 /* Fractions are base maximum-health damage; protection still mitigates them. */
-const ENCOUNTER_DAMAGE={minimum:.125,projectile:.125,contact:.15,standard:.18,heavy:.25,major:.50,reflect:.15,dot:.025,dotInterval:.35,hitWindow:.47};
-const ENEMY_RESOLVE={perAlly:.10,maximum:.50,dashLockout:10};
-const ENCOUNTER_AREA={common:1.25};
+const ENCOUNTER_DAMAGE=BALANCE_CONFIG.combat.damage;
+const ENEMY_RESOLVE=BALANCE_CONFIG.combat.resolve;
+const ENCOUNTER_AREA=BALANCE_CONFIG.combat.area;
 function resolveEnemy(enemy){return !!enemy&&enemy.hp>0&&!enemy.totem&&!enemy.uncommon&&!!(enemy.boss||enemy.elite||enemy.bossElite||enemy.champion);}
 function enemyResolveBlocked(enemy){return enemy.stagger>0||(enemy.resolveDisabledUntil||0)>game.frame;}
 function enemyResolveReduction(enemy){

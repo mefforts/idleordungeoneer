@@ -1,14 +1,14 @@
 /* Fine jewelry/tool work, visible material gates and an expensive essence sink. */
-const JEWELRY_REFINEMENT={maximum:50,relativeStep:.01,leechStep:.0005,xp:80};
-const TOOL_REFINEMENT={maximum:10,speedStep:.005};
+const JEWELRY_REFINEMENT=BALANCE_CONFIG.equipment.jewelry;
+const TOOL_REFINEMENT=BALANCE_CONFIG.production.tool;
 // Save-load offline production runs before the later levelRange const exists.
 function disciplineLevel(group){return skillLevelAtXp(data[DISCIPLINES[group].xp]||0);}
 function remainingSummonThreats(){return (game.totems||[]).some(t=>t.destructible&&t.hp>0)||game.enemies.some(e=>e.summoned&&e.summonTotem&&e.hp>0);}
 function completeSummonCleanup(){if(game.phaseCleanupPending&&!remainingSummonThreats()&&!remainingReleasedThreats()&&game.status==='running')finishPhase();}
 function normalizeArtisanProgression(){
  if(data.artisanProgressionVersion!==1){for(const key of ['artisanXp','artisanDisciplineXp'])data[key]=Math.min(1e10,Math.max(0,Number(data[key])||0)*8);data.artisanProgressionVersion=1;}
- data.trinketRefinements=Object.fromEntries(['leech','coin','scholar','reach','vigor','guard','haste','fortune'].map(id=>[id,Math.max(0,Math.min(50,Math.floor(Number(data.trinketRefinements?.[id])||0)))]));
- data.toolRefinements=Object.fromEntries(['pickaxe','hatchet','mattock'].map(id=>[id,Math.max(0,Math.min(10,Math.floor(Number(data.toolRefinements?.[id])||0)))]));
+ data.trinketRefinements=Object.fromEntries(Object.keys(TRINKETS).map(id=>[id,Math.max(0,Math.min(JEWELRY_REFINEMENT.maximum,Math.floor(Number(data.trinketRefinements?.[id])||0)))]));
+ data.toolRefinements=Object.fromEntries(Object.keys(TOOL_DEFS).map(id=>[id,Math.max(0,Math.min(TOOL_REFINEMENT.maximum,Math.floor(Number(data.toolRefinements?.[id])||0)))]));
 }
 function jewelryRank(id){return data.trinketRefinements?.[id]||0;}
 function jewelryRefinementStep(id){return id==='leech'?JEWELRY_REFINEMENT.leechStep:(TRINKETS[id]?.value||0)*JEWELRY_REFINEMENT.relativeStep;}
@@ -16,7 +16,7 @@ function refinedTrinketValue(id){return (TRINKETS[id]?.value||0)+jewelryRank(id)
 function refinedTrinketBonus(key){return [...(data.equippedRings||[]),data.equippedAmulet].reduce((sum,id)=>sum+(TRINKETS[id]?.bonus===key?refinedTrinketValue(id):0),0);}
 function jewelryValueText(id,value=refinedTrinketValue(id)){
  const item=TRINKETS[id];if(!item)return '';const number=n=>Number(n.toFixed(5));
- return ['hp','pickup'].includes(item.bonus)?'+'+number(value)+' '+(item.bonus==='hp'?'maximum HP':'pickup radius'):number(value*100)+'% '+({leech:'lifesteal',gold:'gold',xp:'material chance',guard:'damage reduction',speed:'movement speed',find:'rare finds'}[item.bonus]);
+ return ['hp','pickup'].includes(item.bonus)?'+'+number(value)+' '+(item.bonus==='hp'?'maximum HP · '+number(value*BALANCE_CONFIG.equipment.reinforcement.vigorGuardPerHp*100)+'% less damage':'pickup radius'):number(value*100)+'% '+({leech:'lifesteal',gold:'gold',xp:'material chance',guard:'damage reduction',speed:'movement speed',find:'rare finds'}[item.bonus]);
 }
 function jewelryRefinementBase(id,rank=jewelryRank(id)){return {silverBars:1+Math.floor(rank/10),gold:10+rank*3,...(rank%5===4?{cutOpals:1}:{})};}
 function refineJewelry(id,voucher){
@@ -31,7 +31,7 @@ function toolRefinementCost(id){return stationCost(toolRefinementBase(id),TOOL_D
 function refineTool(id,voucher){
  const t=TOOL_DEFS[id];if(!t||!data.tools[id]||toolRank(id)>=TOOL_REFINEMENT.maximum)return false;
  if(voucher===undefined){if(!spendAtStation(toolRefinementBase(id),t.group))return false;}else if(!spendUpgradeVoucher('tool-upgrade:'+id,voucher))return false;
- data.toolRefinements[id]++;awardDisciplineXp(t.group,20,1);toast(t.name+' · refinement '+toolRank(id),'+'+Number((8+toolRank(id)*.5).toFixed(1))+'% active work speed');save();refreshUI();renderDisciplineDrawer();return true;
+ data.toolRefinements[id]++;awardDisciplineXp(t.group,20,1);toast(t.name+' · refinement '+toolRank(id),'+'+Number(((TOOL_REFINEMENT.baseSpeed+toolRank(id)*TOOL_REFINEMENT.speedStep)*100).toFixed(1))+'% active work speed');save();refreshUI();renderDisciplineDrawer();return true;
 }
 function transmutationResources(){return ['ore','logs','cloth','scraps','silverOre','opals','coal','willowLogs','ancientSalvage','garnets','mithrilOre','yewLogs','enchantedSalvage','sapphires'];}
 function canTransmuteResource(key){return transmutationResources().includes(key)&&canUseSkill(RESOURCE_SOURCE[key]);}
@@ -61,15 +61,15 @@ function renderDisciplineDrawer(){
  if(focus){const next=host.querySelector('[data-focus-key="'+focus+'"]')||(fallback&&host.querySelector('[data-focus-key="'+fallback+'"]')),target=next?.disabled?next.closest('article')?.querySelector('.codex-link'):next;(target||host.querySelector('[data-workshop-view="'+workshopView+'"]'))?.focus({preventScroll:true});}
 }
 function tierPromotionHtml(style){
- if(styleTier(style)>=3)return '';const p=promotionDetails(style),cost=stationCost(p.cost,STYLE_DEFS[style].group),reason=goalRequirement('promotion:'+style),ready=!reason&&hasIngredients(cost),weapon=STYLE_DEFS[style].weapon;
+ if(styleTier(style)>=maximumEquipmentTier())return '';const p=promotionDetails(style),cost=stationCost(p.cost,STYLE_DEFS[style].group),reason=goalRequirement('promotion:'+style),ready=!reason&&hasIngredients(cost),weapon=STYLE_DEFS[style].weapon;
  return '<article class="craft-tile compact-recipe tier-promotion"><div class="craft-tile-icon">'+artHTML('weapon-art-'+weapon+'_'+p.tier)+'</div><div class="craft-tile-body"><div class="recipe-title"><strong>Upgrade to '+p.name+'</strong>'+codexLink(p.tier===3?'unlock_mithril':'unlock_steel',p.name+' requirements')+'</div><small>'+(reason||'Unlock the next ranks for this weapon style')+'</small>'+materialCosts(cost,'promotion:'+style)+'</div><div class="recipe-actions"><button type="button" data-promote-style="'+style+'" data-focus-key="promote-'+style+'" '+(ready?'':'disabled')+'>Promote</button>'+trackRecipeButton('promotion:'+style,p.name+' promotion')+'</div></article>';
 }
 function stationToolsHtml(group){
- const rank=stationRank(group),cost=stationUpgradeCost(group),tools=Object.entries(TOOL_DEFS).filter(([,t])=>t.group===group);
- const station='<article class="craft-tile compact-recipe" data-station-card="'+group+'"><div class="craft-tile-icon">'+artHTML('station-'+group)+'</div><div class="craft-tile-body"><div class="recipe-title"><strong>Station</strong><span class="recipe-rank">'+rank+' / 5</span>'+codexLink('discipline_'+group,'Station upgrades')+'</div><div class="recipe-effects"><span>'+uiIcon('speed')+' +'+rank*3+'%</span><span>'+uiIcon('bag')+' '+rank*2+'% saved</span></div>'+(rank<5?materialCosts(cost,'station:'+group)+workshopVoucherButtonHtml('station:'+group):'')+'</div><div class="recipe-actions"><button type="button" data-unified-upgrade="'+group+'" data-focus-key="upgrade-station-'+group+'" '+(rank>=5||!hasIngredients(cost)?'disabled':'')+'>'+(rank>=5?'Max':'Upgrade')+'</button></div></article>';
+ const rank=stationRank(group),maximum=BALANCE_CONFIG.production.station.maximum,cost=stationUpgradeCost(group),tools=Object.entries(TOOL_DEFS).filter(([,t])=>t.group===group);
+ const station='<article class="craft-tile compact-recipe" data-station-card="'+group+'"><div class="craft-tile-icon">'+artHTML('station-'+group)+'</div><div class="craft-tile-body"><div class="recipe-title"><strong>Station</strong><span class="recipe-rank">'+rank+' / '+BALANCE_CONFIG.production.station.maximum+'</span>'+codexLink('discipline_'+group,'Station upgrades')+'</div><div class="recipe-effects"><span>'+uiIcon('speed')+' +'+Number((rank*BALANCE_CONFIG.production.station.speedPerRank*100).toFixed(6))+'%</span><span>'+uiIcon('bag')+' '+Number((rank*BALANCE_CONFIG.production.station.conservationPerRank*100).toFixed(6))+'% saved</span></div>'+(rank<BALANCE_CONFIG.production.station.maximum?materialCosts(cost,'station:'+group)+workshopVoucherButtonHtml('station:'+group):'')+'</div><div class="recipe-actions"><button type="button" data-unified-upgrade="'+group+'" data-focus-key="upgrade-station-'+group+'" '+(rank>=BALANCE_CONFIG.production.station.maximum||!hasIngredients(cost)?'disabled':'')+'>'+(rank>=BALANCE_CONFIG.production.station.maximum?'Max':'Upgrade')+'</button></div></article>';
  return uiSection('Workshop upgrades','<div class="craft-tile-list">'+station+tools.map(([id,t])=>{
   const owned=data.tools[id],rank=toolRank(id),maxed=rank>=TOOL_REFINEMENT.maximum,cost=owned?toolRefinementCost(id):stationCost(t.cost,group),action=owned?'data-refine-tool="'+id+'"':'data-craft-tool="'+id+'"';
-  return '<article class="craft-tile compact-recipe"><div class="craft-tile-icon">'+artHTML(t.art)+'</div><div class="craft-tile-body"><strong>'+t.name+'</strong><small>'+(owned?'Refinement '+rank+' / '+TOOL_REFINEMENT.maximum+' · +'+Number((8+rank*.5).toFixed(1))+'% active speed':'Craft to equip · +8% active speed')+'</small>'+(!maxed?materialCosts(cost,(owned?'tool-upgrade:':'tool:')+id)+(owned?workshopVoucherButtonHtml('tool-upgrade:'+id):''):'')+'</div><div class="recipe-actions"><button type="button" '+action+' data-focus-key="'+(owned?'refine-tool-':'craft-tool-')+id+'" '+(maxed||!hasIngredients(cost)?'disabled':'')+'>'+(maxed?'Max':owned?'Refine':'Craft')+'</button></div></article>';
+  return '<article class="craft-tile compact-recipe"><div class="craft-tile-icon">'+artHTML(t.art)+'</div><div class="craft-tile-body"><strong>'+t.name+'</strong><small>'+(owned?'Refinement '+rank+' / '+TOOL_REFINEMENT.maximum+' · +'+Number(((TOOL_REFINEMENT.baseSpeed+rank*TOOL_REFINEMENT.speedStep)*100).toFixed(1))+'% active speed':'Craft to equip · +8% active speed')+'</small>'+(!maxed?materialCosts(cost,(owned?'tool-upgrade:':'tool:')+id)+(owned?workshopVoucherButtonHtml('tool-upgrade:'+id):''):'')+'</div><div class="recipe-actions"><button type="button" '+action+' data-focus-key="'+(owned?'refine-tool-':'craft-tool-')+id+'" '+(maxed||!hasIngredients(cost)?'disabled':'')+'>'+(maxed?'Max':owned?'Refine':'Craft')+'</button></div></article>';
  }).join('')+'</div>');
 }
 function jewelryRefinementHtml(id){

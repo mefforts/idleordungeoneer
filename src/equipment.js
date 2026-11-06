@@ -1,10 +1,6 @@
 /* Crafted armor sets and illustrated, independent equipment. */
-const ARMOR_STYLES={
-  melee:{label:'Melee',group:'blacksmithing',names:['Iron Armor','Steel Armor','Mithril Armor'],health:[35,65,95],perk:[4,7,10],costs:[{bars:10,cloth:2,gold:40},{steelBars:16,runicCloth:6,ancientFragments:4,gold:140},{mithrilBars:16,verdantCloth:6,enchantedFragments:4,gold:300}]},
-  ranged:{label:'Ranged',group:'woodworking',names:['Plain Ranged Leathers','Cured Ranged Leathers','Blue Ranged Leathers'],health:[24,45,66],perk:[4,6,8],costs:[{bars:4,cloth:10,logs:6,gold:40},{steelBars:6,willowLogs:14,runicCloth:16,gold:140},{mithrilBars:6,yewLogs:14,verdantCloth:16,gold:300}]},
-  magic:{label:'Mage',group:'warding',names:['Plain Linen Robes','Blue Wool Robes','Green Runewoven Robes'],health:[18,34,50],perk:[4,8,12],costs:[{bars:2,cloth:18,scraps:4,gold:40},{steelBars:4,runicCloth:28,cutGarnets:2,gold:150},{mithrilBars:4,verdantCloth:28,cutSapphires:2,gold:320}]}
-};
-const ARMOR_SETS=Object.fromEntries(Object.entries(ARMOR_STYLES).flatMap(([style,d])=>d.names.map((name,i)=>[style+'_'+(i+1),{id:style+'_'+(i+1),name,style,group:d.group,tier:i+1,level:[1,10,20][i],health:d.health[i],perk:d.perk[i],cost:d.costs[i],art:'armor-set-'+style+'_'+(i+1)}])));
+const ARMOR_STYLES=BALANCE_CONFIG.equipment.armorStyles;
+const ARMOR_SETS=Object.fromEntries(Object.entries(ARMOR_STYLES).flatMap(([style,d])=>d.names.map((name,i)=>[style+'_'+(i+1),{id:style+'_'+(i+1),name,style,group:d.group,tier:i+1,level:BALANCE_CONFIG.equipment.tiers[i+1].skillLevel,health:d.health[i],perk:d.perk[i],cost:d.costs[i],art:'armor-set-'+style+'_'+(i+1)}])));
 const WEAPON_LEVELS={sword:1,shield:2,polearm:6,greatsword:10,bow:2,staff:2};
 const WEAPON_PREFIXES=['Iron','Steel','Mithril'];
 const WEAPON_BASE_NAMES={sword:'Arming Sword',shield:'Sword & Shield',polearm:'Halberd',greatsword:'Greatsword',bow:'Hunting Bow',staff:'Focus Staff'};
@@ -20,7 +16,7 @@ function normalizeEquipment(){
   }
   const old=Array.isArray(data.ownedArmor)?data.ownedArmor:[],future=old.filter(id=>!ARMOR_SETS[id]||!equipmentTierUnlocked(ARMOR_SETS[id].tier));
   data.archivedArmor=[...new Set([...(data.archivedArmor||[]),...future])];
-  data.ownedArmor=[...new Set(old.map(id=>{const style=id.split('_')[0];return ARMOR_STYLES[style]?style+'_'+Math.max(1,...[1,2,3].filter(tier=>tier<=Number(id.split('_')[1])&&equipmentTierUnlocked(tier))):'';}).filter(id=>Object.hasOwn(ARMOR_SETS,id)))];
+  data.ownedArmor=[...new Set(old.map(id=>{const style=id.split('_')[0];return ARMOR_STYLES[style]?style+'_'+Math.max(1,...equipmentTiers().filter(tier=>tier<=Number(id.split('_')[1])&&equipmentTierUnlocked(tier))):'';}).filter(id=>Object.hasOwn(ARMOR_SETS,id)))];
   if(data.equippedArmor&&!data.ownedArmor.includes(data.equippedArmor)){const style=data.equippedArmor.split('_')[0];data.equippedArmor=data.ownedArmor.includes(style+'_2')?style+'_2':style+'_1';}
   if(!data.ownedArmor.includes(data.equippedArmor))data.equippedArmor='';
   data.equipmentVersion=1;
@@ -35,7 +31,7 @@ function projectCombatStyle(){
 }
 
 function weaponArt(id=data.weaponType){return 'weapon-art-'+id+'_'+weaponArtTier(id);}
-function weaponDisplayName(id=data.weaponType){return WEAPON_PREFIXES[weaponArtTier(id)-1]+(['bow','staff'].includes(id)?'-bound ':' ')+WEAPON_BASE_NAMES[id];}
+function weaponDisplayName(id=data.weaponType){return TIER_LIMITS[weaponArtTier(id)].name+(['bow','staff'].includes(id)?'-bound ':' ')+WEAPON_BASE_NAMES[id];}
 function weaponCraftLevel(id){return levelRange(data[DISCIPLINES[STYLE_DEFS[styleForWeapon(id)].group].xp]||0).lvl;}
 function armorRecipeCost(id){const a=ARMOR_SETS[id];return stationCost(a.cost,a.group);}
 function syncTrinketHealth(grantIncrease=false){

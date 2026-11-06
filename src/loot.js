@@ -1,5 +1,5 @@
 /* Actual reward receipts replace XP diamonds; skilling remains the supply source. */
-const MONSTER_LOOT={normal:{chance:.015,amount:1,cap:.06},elite:{chance:.08,amount:3,cap:.16},boss:{chance:.18,amount:6,cap:.28},voucher:.06,finalVoucher:.15};
+const MONSTER_LOOT=BALANCE_CONFIG.rewards.loot;
 const lootImages=new Map();
 function normalizeMonsterLoot(){
  normalizeSpecificVouchers();
@@ -25,7 +25,7 @@ function monsterMaterialDrops(enemy){
  if(enemy.boss&&data.floor>data.cleared&&!data.voucherRolls[rollKey]){
   data.voucherRolls[rollKey]=true;
   if(Math.random()<(enemy.bossIndex===2&&isZoneFinal()?MONSTER_LOOT.finalVoucher:MONSTER_LOOT.voucher)){
-   const tier=zoneNumber()>=4?'mithril':zoneNumber()===0?'iron':'steel',kinds=dropVoucherKinds(tier),kind=kinds[Math.floor(Math.random()*kinds.length)];drops.push({key:'voucher_'+tier+'_'+kind,amount:1});
+   const option=voucherDropOption();if(option)drops.push({key:'voucher_'+option.tier+'_'+option.kind,amount:1});
   }
  }
  return drops;
@@ -67,7 +67,7 @@ function workshopVoucherOffer(action){
  if(kind!==undefined)return null;
  if(type==='jewelry'&&TRINKETS[id])return {name:TRINKETS[id].name+' refinement',kind:'jewelry',tiers:['iron'],eligible:data.trinkets.includes(id)&&jewelryRank(id)<JEWELRY_REFINEMENT.maximum};
  if(type==='tool-upgrade'&&TOOL_DEFS[id])return {name:TOOL_DEFS[id].name+' refinement',kind:'tool-'+id,tiers:['iron'],eligible:!!data.tools[id]&&toolRank(id)<TOOL_REFINEMENT.maximum};
- if(type==='station'&&DISCIPLINES[id])return {name:DISCIPLINES[id].name+' station upgrade',kind:'station-'+id,tiers:['iron','steel','mithril'],eligible:stationRank(id)<5};
+ if(type==='station'&&DISCIPLINES[id])return {name:DISCIPLINES[id].name+' station upgrade',kind:'station-'+id,tiers:equipmentTiers().map(equipmentVoucherBank),eligible:stationRank(id)<BALANCE_CONFIG.production.station.maximum};
  return null;
 }
 function canRedeemWorkshopVoucher(action,tier){const offer=workshopVoucherOffer(action);return !!offer?.eligible&&offer.tiers.includes(tier)&&(data.specificVouchers?.[tier+'_'+offer.kind]||0)>0;}

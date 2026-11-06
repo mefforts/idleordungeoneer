@@ -1,12 +1,12 @@
 /* Mithril equipment opens after the Hollow Crypt, at matching skill level 20. */
-const MITHRIL_PROMOTION_COSTS={melee:{mithrilBars:12,yewLogs:6,enchantedFragments:4,cutSapphires:1,gold:250,zoneMaterials:2},ranged:{mithrilBars:6,yewLogs:18,verdantCloth:6,cutSapphires:1,gold:250,zoneMaterials:2},magic:{mithrilBars:4,verdantCloth:18,enchantedFragments:6,cutSapphires:2,gold:250,zoneMaterials:2}};
-function equipmentTierUnlocked(tier){return tier<=1||tier===2&&tier2Unlocked()||tier===3&&(data.cleared>=zoneEnd(2)||data.floor>=zoneStart(3));}
-function equipmentTierGate(tier){return tier===3?'Complete Zone 3':tier===2?'Zone 2':'Camp';}
+const MITHRIL_PROMOTION_COSTS=BALANCE_CONFIG.equipment.promotionCosts[3];
+function equipmentTierUnlocked(tier){const t=TIER_LIMITS[tier];return !!t&&(t.unlockAfterZone===0||data.cleared>=zoneEnd(t.unlockAfterZone-1)||data.floor>=zoneStart(t.unlockAfterZone));}
+function equipmentTierGate(tier){const t=TIER_LIMITS[tier];return !t?'Not available':t.unlockAfterZone?'Complete Zone '+t.unlockAfterZone:'Camp';}
 function ownedArmorTier(style){return Math.max(1,...(data.ownedArmor||[]).filter(id=>ARMOR_SETS[id]?.style===style&&equipmentTierUnlocked(ARMOR_SETS[id].tier)).map(id=>ARMOR_SETS[id].tier));}
 
 function trainingActivity(group){
  const actions=DISCIPLINES[group].actions.filter(key=>canUseSkill(key)),tier=Math.max(1,...actions.map(key=>SKILLS[key].tier||1));
  return actions.find(key=>(SKILLS[key].tier||1)===tier&&!SKILLS[key].cost)||actions.find(key=>(SKILLS[key].tier||1)===tier)||DISCIPLINES[group].actions[0];
 }
-function tierVoucherName(tier){return {iron:'Iron',steel:'Steel',mithril:'Mithril'}[tier]||'Upgrade';}
-function equipmentVoucherBank(tier){return ['iron','steel','mithril'][tier-1]||'iron';}
+function tierVoucherName(bank){const tier=equipmentTiers().find(t=>equipmentVoucherBank(t)===bank);return TIER_LIMITS[tier]?.name||'Upgrade';}
+function equipmentVoucherBank(tier){const t=TIER_LIMITS[tier];return t?.voucherBank||t?.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')||'iron';}

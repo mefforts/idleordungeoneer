@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.15.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.16.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This interface update adds material/voucher search, current → next refinement DPS, and separate scroll memory for menus and Skills sections. Material links and training routes choose the highest unlocked tier; purchases retain useful keyboard focus. Tier power, progression costs and enemy health retain their current calibration. [Exact current rules and measurements](BALANCE.md) · [Development guide](DEVELOPMENT.md).
+This update balances Zones 1–5 around Iron, Steel and Mithril: reachable combat-perk unlocks, stronger deeper-Zone rewards, armor reinforcement that mitigates percentage hits, usable vouchers and reassignable game-time points. Level-20 training is recalibrated around all three styles with rank-15 supporting jewelry. [Measured progression](PROGRESSION.md) · [Balance and extension guide](BALANCE_CONFIG.md) · [Exact current rules](BALANCE.md). Zones 6+ remain experimental continuation outside this balance target.
 
 ## Play, prepare, return
 
@@ -18,7 +18,7 @@ Delve for gold, Dungeon Sigils, essence and occasional materials. Gather and ref
 | Complete Zone 3 + matching skill 20 | Mithril eligibility: promote an owned Steel style without requiring full Steel refinement. Mithril is intended around Zones 4–5. |
 | Later milestones | Reach Zones 10, 20, 40… for later Dungeoneering levels and points. |
 
-Mithril has 10 weapon refinements. Melee uses blue metal, Ranged blue leathers and Mage green Runewoven robes. Speed, reach and reinforcement limits are 5 / 10 / 15 across Iron / Steel / Mithril; enchantment limits are 2 / 4 / 6. Equipment DPS ceilings are approximately 80 / 240 / 480 before proficiency, matching-skill training and conditional perks. Armor reinforcement applies within the worn set's tier; switching owned armor does not heal you.
+Mithril has 10 weapon refinements. Melee uses blue metal, Ranged blue leathers and Mage green Runewoven robes. Speed, reach and reinforcement limits are 5 / 10 / 15 across Iron / Steel / Mithril; enchantment limits are 2 / 4 / 6. Equipment DPS ceilings are approximately 80 / 240 / 480 before proficiency, matching-skill training and conditional perks. Each armor reinforcement adds 8 HP and 0.75 percentage points of damage reduction, within the worn set's tier; switching owned armor does not heal you. Vigor jewelry also grants mitigation proportional to its HP bonus.
 
 The Leech Ring starts at **0.5% lifesteal**, reaches **1.25% at refinement 15** and **3% at 50**. Each rank adds 0.05 percentage points. Other jewelry gains 1% of its base effect per rank. Lifesteal uses actual direct-hit health removed and grants no overkill healing. Changing owned jewelry preserves current HP; genuine crafting/refinement gains retain their health increase. [Jewelry preview](preview-jewelry-refinement-mobile.png).
 
@@ -33,11 +33,11 @@ The Leech Ring starts at **0.5% lifesteal**, reaches **1.25% at refinement 15** 
 | Zone materials | Seeds, cores, dust and shards combine for occasional upgrade costs and Long blessings. |
 | Specific upgrade vouchers | Pay for one matching rank on gear you own, a tool or a station. New gear and promotions still require materials. |
 
-The first Mastery point offers a meaningful choice: **1.25× Delving** or **2× Skilling**. Further Delving ranks add 0.25×; Skilling progresses 2×, 3×…10×, then 12×, 14×…24× and onward. Purchases unlock choices in the **Speed** menu; each path's selection persists.
+The first Mastery point offers a meaningful choice: **1.25× Delving** or **2× Skilling**. Further Delving ranks add 0.25×; Skilling progresses 2×, 3×…10×, then 12×, 14×…24× and onward. Purchases unlock choices in the **Speed** menu; each path's selection persists. **Reassign game time** in the Dungeon Shop returns the spent time points so you can change the allocation.
 
 Speed is present from the start. Delving freely offers **0.25× / 0.50× / 0.75× / 1×**. Skilling starts at **1×**, includes active work, online idle and offline idle, and never goes below 1×. Delving changes combat, enemy, ammunition and combat-buff clocks independently of Skilling.
 
-Combat perks use Sigils separately from Mastery points. Eight are available immediately, with more at Dungeoneering 3 / 5 / 8 / 12. Effects such as Battle Geometry, Echo Arts and Returning Power adapt to the equipped style while keeping their shared ranks. The shop's **Long blessings** section spends 60–100 Zone materials for five times a blessing's normal duration.
+Combat perks use Sigils separately from Mastery points. Eight are available immediately. Cold Verdict unlocks at Zone 2, Returning Power at Zone 3, Gravitation at Zone 4 and Mirrorcraft at Zone 5. Effects such as Battle Geometry, Echo Arts and Returning Power adapt to the equipped style while keeping their shared ranks. The shop's **Long blessings** section spends 60–100 Zone materials for five times a blessing's normal duration.
 
 Enchantment arcs trigger at **14% / 28% / 42% / 56% / 58% / 60%** across ranks 1–6. The last two Mithril ranks share the remaining chance below the 60% ceiling; Iron and Steel retain their prior values. Arcs need a second target and deal 50% of the triggering hit.
 
@@ -53,7 +53,7 @@ Colored discoveries give temporary active speed, from **+35% for 6 working secon
 
 Tools equip automatically, start at 8% active speed and gain up to ten refinements of +0.5 percentage points each. They do not speed up idle work. Stations have five ranks of 3% work speed and 2% ingredient conservation; fractional savings carry between paid crafts.
 
-Level 20 requires **32,166 XP** and targets the material work for roughly 80% of Iron/Steel upgrades **across all three combat styles**, including supporting jewelry, tools and stations. Older-tier XP tapers while material yields stay full. [Reproducible skill/material budget](SKILL_ECONOMY.md).
+Level 20 requires **32,166 XP** and targets the material work for roughly 80% of Iron/Steel upgrades **across all three combat styles**, including supporting jewelry at rank 15, tools and stations, with a modest delve-gold contribution. Older-tier XP tapers while material yields stay full. [Reproducible skill/material budget](SKILL_ECONOMY.md).
 
 ## Combat and readable threats
 

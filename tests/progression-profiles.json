@@ -1,0 +1,240 @@
+[
+  {
+    "name": "Zone 1 · progressing Iron",
+    "zone": 1,
+    "weapon": "sword",
+    "profile": {
+      "gearTier": 1,
+      "weaponRank": 2,
+      "speedRank": 2
+    },
+    "perks": {},
+    "armor": true
+  },
+  {
+    "name": "Zone 2 · progressing Steel",
+    "zone": 2,
+    "weapon": "sword",
+    "profile": {
+      "gearTier": 2,
+      "weaponRank": 6,
+      "speedRank": 7
+    },
+    "perks": {
+      "technique": 1,
+      "fire": 1,
+      "frost": 1,
+      "storm": 1,
+      "echo": 1
+    },
+    "armor": true,
+    "reach": 5,
+    "enchant": 2
+  },
+  {
+    "name": "Zone 3 · 80% Steel",
+    "zone": 3,
+    "weapon": "sword",
+    "profile": {
+      "gearTier": 2,
+      "weaponRank": 10,
+      "speedRank": 8
+    },
+    "perks": {
+      "technique": 2,
+      "fire": 2,
+      "frost": 1,
+      "storm": 1,
+      "ward": 2,
+      "echo": 1,
+      "disrupt": 1,
+      "shatter": 1,
+      "return": 1
+    },
+    "armor": true,
+    "reach": 8,
+    "enchant": 3,
+    "solveResolve": true
+  },
+  {
+    "name": "Zone 3 · 80% Steel Mage",
+    "zone": 3,
+    "weapon": "staff",
+    "profile": {
+      "gearTier": 2,
+      "weaponRank": 10,
+      "speedRank": 8
+    },
+    "perks": {
+      "technique": 2,
+      "fire": 2,
+      "frost": 1,
+      "storm": 1,
+      "ward": 2,
+      "echo": 1,
+      "disrupt": 1,
+      "shatter": 1,
+      "return": 1
+    },
+    "armor": true,
+    "reach": 8,
+    "enchant": 3,
+    "solveResolve": true
+  },
+  {
+    "name": "Zone 3 · 80% Steel Bow",
+    "zone": 3,
+    "weapon": "bow",
+    "profile": {
+      "gearTier": 2,
+      "weaponRank": 10,
+      "speedRank": 8
+    },
+    "perks": {
+      "technique": 2,
+      "fire": 2,
+      "frost": 1,
+      "storm": 1,
+      "ward": 2,
+      "echo": 1,
+      "disrupt": 1,
+      "shatter": 1,
+      "return": 1
+    },
+    "armor": true,
+    "reach": 8,
+    "enchant": 3,
+    "solveResolve": true
+  },
+  {
+    "name": "Zone 3 · 80% Steel Halberd",
+    "zone": 3,
+    "weapon": "polearm",
+    "profile": {
+      "gearTier": 2,
+      "weaponRank": 10,
+      "speedRank": 8
+    },
+    "perks": {
+      "technique": 2,
+      "fire": 2,
+      "frost": 1,
+      "storm": 1,
+      "ward": 2,
+      "echo": 1,
+      "disrupt": 1,
+      "shatter": 1,
+      "return": 1
+    },
+    "armor": true,
+    "reach": 8,
+    "enchant": 3,
+    "solveResolve": true
+  },
+  {
+    "name": "Zone 4 · new Mithril",
+    "zone": 4,
+    "weapon": "sword",
+    "profile": {
+      "gearTier": 3,
+      "weaponRank": 0,
+      "speedRank": 10
+    },
+    "perks": {
+      "technique": 2,
+      "fire": 3,
+      "frost": 1,
+      "storm": 2,
+      "ward": 2,
+      "echo": 2,
+      "disrupt": 1,
+      "shatter": 2,
+      "return": 2,
+      "vortex": 1
+    },
+    "armor": true,
+    "reach": 10,
+    "enchant": 4,
+    "solveResolve": true
+  },
+  {
+    "name": "Zone 4 · completed Steel",
+    "zone": 4,
+    "weapon": "sword",
+    "profile": {
+      "gearTier": 2,
+      "weaponRank": 12,
+      "speedRank": 10
+    },
+    "perks": {
+      "technique": 2,
+      "fire": 3,
+      "frost": 1,
+      "storm": 2,
+      "ward": 2,
+      "echo": 2,
+      "disrupt": 1,
+      "shatter": 2,
+      "return": 2,
+      "vortex": 1
+    },
+    "armor": true,
+    "reach": 10,
+    "enchant": 4,
+    "solveResolve": true
+  },
+  {
+    "name": "Zone 5 · middle Mithril",
+    "zone": 5,
+    "weapon": "sword",
+    "profile": {
+      "gearTier": 3,
+      "weaponRank": 5,
+      "speedRank": 12
+    },
+    "perks": {
+      "technique": 3,
+      "fire": 3,
+      "frost": 2,
+      "storm": 3,
+      "ward": 3,
+      "echo": 2,
+      "disrupt": 2,
+      "shatter": 2,
+      "return": 2,
+      "vortex": 1,
+      "prism": 2
+    },
+    "armor": true,
+    "reach": 12,
+    "enchant": 5,
+    "solveResolve": true
+  },
+  {
+    "name": "Zone 5 · middle Mithril Mage",
+    "zone": 5,
+    "weapon": "staff",
+    "profile": {
+      "gearTier": 3,
+      "weaponRank": 5,
+      "speedRank": 12
+    },
+    "perks": {
+      "technique": 3,
+      "fire": 3,
+      "frost": 2,
+      "storm": 3,
+      "ward": 3,
+      "echo": 2,
+      "disrupt": 2,
+      "shatter": 2,
+      "return": 2,
+      "vortex": 1,
+      "prism": 2
+    },
+    "armor": true,
+    "reach": 12,
+    "enchant": 5,
+    "solveResolve": true
+  }
+]

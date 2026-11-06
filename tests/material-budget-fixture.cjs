@@ -1,10 +1,10 @@
 // Independent material accounting; injected into isolated test/report responses.
 function materialBudgetFixture(){
- function budget(fraction=.8,options={}){
+ function budget(fraction=REFINEMENT_ECONOMY.targetFraction,options={}){
   const saved=data;
   try{
    data=defaults();data.floor=zoneStart(3);data.cleared=zoneEnd(2);normalizeProgression();
-   const ledger={},costs=[],stock={},work={},external={},xp={},seconds={};
+   const ledger={},costs=[],stock={gold:BALANCE_CONFIG.skills.reference.delveGoldCredit},work={},external={},xp={},seconds={};
    const add=(cost,label)=>{costs.push({label,cost:{...cost}});for(const [key,n]of Object.entries(cost))ledger[key]=(ledger[key]||0)+n;};
    for(const tier of [1,2]){
     data.ownedArmor=Object.keys(ARMOR_SETS).filter(id=>ARMOR_SETS[id].tier<=tier);
@@ -19,9 +19,9 @@ function materialBudgetFixture(){
      }
     }
    }
-   for(const [id,t]of Object.entries(TOOL_DEFS)){add(t.cost,id);for(let rank=0;rank<Math.round(TOOL_REFINEMENT.maximum*fraction);rank++){data.toolRefinements[id]=rank;add(toolRefinementBase(id),id+' '+(rank+1));}}
-   for(const group of Object.keys(DISCIPLINES))for(let rank=0;rank<Math.round(5*fraction);rank++){data.stationLevels[group]=rank;add(stationUpgradeCost(group),group+' station '+(rank+1));}data.stationLevels=Object.fromEntries(Object.keys(DISCIPLINES).map(id=>[id,0]));
-   for(const id of Object.keys(TRINKETS)){add(trinketCost(id),id);for(let rank=0;rank<Math.round(JEWELRY_REFINEMENT.maximum*fraction);rank++){data.trinketRefinements[id]=rank;add(jewelryRefinementBase(id),id+' '+(rank+1));}}
+   for(const [id,t]of Object.entries(TOOL_DEFS)){add(t.cost,id);for(let rank=0;rank<Math.round(TOOL_REFINEMENT.maximum*(fraction>=1?1:BALANCE_CONFIG.skills.reference.toolFraction));rank++){data.toolRefinements[id]=rank;add(toolRefinementBase(id),id+' '+(rank+1));}}
+   for(const group of Object.keys(DISCIPLINES))for(let rank=0;rank<Math.round(BALANCE_CONFIG.production.station.maximum*(fraction>=1?1:BALANCE_CONFIG.skills.reference.stationFraction));rank++){data.stationLevels[group]=rank;add(stationUpgradeCost(group),group+' station '+(rank+1));}data.stationLevels=Object.fromEntries(Object.keys(DISCIPLINES).map(id=>[id,0]));
+   for(const id of Object.keys(TRINKETS)){add(trinketCost(id),id);for(let rank=0;rank<(fraction>=1?JEWELRY_REFINEMENT.maximum:BALANCE_CONFIG.skills.reference.jewelryRanks);rank++){data.trinketRefinements[id]=rank;add(jewelryRefinementBase(id),id+' '+(rank+1));}}
    function ensure(resource,needed,depth=0){
     if(depth>12)throw Error('Material dependency cycle');
     if((stock[resource]||0)>=needed)return;
@@ -43,7 +43,7 @@ function materialBudgetFixture(){
     seconds[group]=(seconds[group]||0)+(options.idle?skill.seconds:ACTIVE_INTERVAL[key])*batches;
    }
    const training=Object.fromEntries(Object.keys(DISCIPLINES).map(group=>{const raw=xp[group]||{tier1:0,tier2:0},base=skillXpThreshold(10)+Math.max(0,raw.tier1-skillXpThreshold(10))*.1,unreduced=base+raw.tier2*trainingXpMultiplier(group,2),effective=unreduced<=skillXpThreshold(20)?unreduced:skillXpThreshold(20)+(unreduced-skillXpThreshold(20))*.01;return [group,{...raw,base,xp:effective,level:skillLevelAtXp(effective),percentOfLevel20:effective/skillXpThreshold(20),activeHours:(seconds[group]||0)/3600,calibratedRate:(skillXpThreshold(20)-base)/raw.tier2}];}));
-   return {fraction,scope:'All three combat styles; complete Iron, Steel targets, all eight jewelry pieces, three tools and five stations',ledger,work,external,training,targets:{weapon:Math.round(TIER_LIMITS[2].weapon*fraction),speed:Math.round(TIER_LIMITS[2].speed*fraction),reach:Math.round(TIER_LIMITS[2].reach*fraction),armor:Math.round(TIER_LIMITS[2].armor*fraction),enchant:Math.round(TIER_LIMITS[2].enchant*fraction),jewelry:Math.round(JEWELRY_REFINEMENT.maximum*fraction),tool:Math.round(TOOL_REFINEMENT.maximum*fraction),station:Math.round(5*fraction)},costs};
+   return {fraction,scope:'All three combat styles; complete Iron, Steel targets, eight jewelry pieces at the configured support rank, three tools and five stations',ledger,work,external,training,targets:{weapon:Math.round(TIER_LIMITS[2].weapon*fraction),speed:Math.round(TIER_LIMITS[2].speed*fraction),reach:Math.round(TIER_LIMITS[2].reach*fraction),armor:Math.round(TIER_LIMITS[2].armor*fraction),enchant:Math.round(TIER_LIMITS[2].enchant*fraction),jewelry:(fraction>=1?JEWELRY_REFINEMENT.maximum:BALANCE_CONFIG.skills.reference.jewelryRanks),tool:Math.round(TOOL_REFINEMENT.maximum*(fraction>=1?1:BALANCE_CONFIG.skills.reference.toolFraction)),station:Math.round(BALANCE_CONFIG.production.station.maximum*(fraction>=1?1:BALANCE_CONFIG.skills.reference.stationFraction))},costs};
   }finally{data=saved;}
  }
  window.__materialBudget={budget};

@@ -1,18 +1,18 @@
 /* Every voucher pays one named upgrade. Existing wildcard balances split once. */
-function voucherKinds(tier){return ['weapon','speed','reach','armor','enchant',...(tier==='iron'?['jewelry','tool-pickaxe','tool-hatchet','tool-mattock']:[]),'station-blacksmithing','station-woodworking','station-warding','station-scavenging','station-artisan'];}
+function voucherKinds(tier){return ['weapon','speed','reach','armor','enchant',...(tier===equipmentVoucherBank(1)?['jewelry',...Object.keys(TOOL_DEFS).map(id=>'tool-'+id)]:[]),...Object.keys(DISCIPLINES).map(id=>'station-'+id)];}
 function voucherKindName(kind){
  if(kind.startsWith('tool-'))return (TOOL_DEFS[kind.slice(5)]?.name||'Tool').replace(/^Iron /,'')+' refinement';
  if(kind.startsWith('station-'))return (DISCIPLINES[kind.slice(8)]?.name||'Station')+' station upgrade';
  return {weapon:'Weapon refinement',speed:'Attack speed',reach:'Weapon reach',armor:'Armor reinforcement',enchant:'Enchantment',jewelry:'Jewelry refinement'}[kind]||'Upgrade';
 }
-function validVoucherLootKey(key){const parts=String(key).split('_');return parts[0]==='voucher'&&['iron','steel','mithril'].includes(parts[1])&&(parts.length===2||parts.length===3&&voucherKinds(parts[1]).includes(parts[2]));}
+function validVoucherLootKey(key){const parts=String(key).split('_');return parts[0]==='voucher'&&equipmentTiers().some(t=>equipmentVoucherBank(t)===parts[1])&&(parts.length===2||parts.length===3&&voucherKinds(parts[1]).includes(parts[2]));}
 function voucherLootName(key){const [,tier,kind]=key.split('_');return (tierVoucherName(tier))+' '+(kind?voucherKindName(kind).toLowerCase():'legacy upgrade')+' voucher';}
 function splitLegacyVouchers(tier,amount){
  const kinds=voucherKinds(tier),count=Math.max(0,Math.min(1e12,Math.floor(Number(amount)||0))),whole=Math.floor(count/kinds.length),extra=count%kinds.length;
  return kinds.map((kind,index)=>({key:'voucher_'+tier+'_'+kind,amount:whole+(index<extra?1:0)})).filter(item=>item.amount>0);
 }
 function normalizeSpecificVouchers(){
- const old=data.specificVouchers||{};data.specificVouchers=Object.fromEntries(['iron','steel','mithril'].flatMap(tier=>voucherKinds(tier).map(kind=>{const key=tier+'_'+kind;return [key,Math.max(0,Math.min(1e12,Math.floor(Number(old[key])||0)))];})));
+ const old=data.specificVouchers||{};data.specificVouchers=Object.fromEntries(equipmentTiers().map(equipmentVoucherBank).flatMap(tier=>voucherKinds(tier).map(kind=>{const key=tier+'_'+kind;return [key,Math.max(0,Math.min(1e12,Math.floor(Number(old[key])||0)))];})));
  for(const tier of ['iron','steel','mithril'])for(const item of splitLegacyVouchers(tier,data.upgradeVouchers?.[tier]))data.specificVouchers[item.key.slice(8)]+=item.amount;
  data.upgradeVouchers={iron:0,steel:0};
  data.voucherIntroSeen=!!data.voucherIntroSeen;data.voucherGuideQueue=Array.isArray(data.voucherGuideQueue)?[...new Set(data.voucherGuideQueue.filter(key=>validVoucherLootKey('voucher_'+key)&&data.specificVouchers[key]>0))].slice(-32):[];
@@ -20,14 +20,22 @@ function normalizeSpecificVouchers(){
 function normalizeVoucherLootItems(items){return items.flatMap(item=>/^voucher_(iron|steel|mithril)$/.test(item.key)?splitLegacyVouchers(item.key.slice(8),item.amount):[item]);}
 function grantSpecificVoucherLoot(key,amount){for(const item of normalizeVoucherLootItems([{key,amount}]))if(validVoucherLootKey(item.key)){const id=item.key.slice(8);data.specificVouchers[id]=(data.specificVouchers[id]||0)+item.amount;if(item.amount>0){data.voucherGuideQueue=[...(data.voucherGuideQueue||[]).filter(key=>key!==id),id].slice(-32);refreshProgressionGuide();}}}
 function dropVoucherKinds(tier){
- const limit=TIER_LIMITS[tier==='iron'?1:tier==='steel'?2:3],styles=Object.keys(STYLE_DEFS).filter(style=>data.unlockedWeapons.some(id=>styleForWeapon(id)===style));
+ const limit=TIER_LIMITS[equipmentTiers().find(t=>equipmentVoucherBank(t)===tier)],styles=Object.keys(STYLE_DEFS).filter(style=>data.unlockedWeapons.some(id=>styleForWeapon(id)===style));
  const kinds=voucherKinds(tier).filter(kind=>{
   if(kind==='jewelry')return data.trinkets.some(id=>jewelryRank(id)<JEWELRY_REFINEMENT.maximum);
   if(kind.startsWith('tool-')){const id=kind.slice(5);return data.tools[id]&&toolRank(id)<TOOL_REFINEMENT.maximum;}
-  if(kind.startsWith('station-'))return stationRank(kind.slice(8))<5;
+  if(kind.startsWith('station-'))return stationRank(kind.slice(8))<BALANCE_CONFIG.production.station.maximum;
   return styles.some(style=>equipmentVoucherBank(kind==='armor'?ownedArmorTier(style):styleTier(style))===tier&&data.styles[style][kind]<limit[kind]&&(kind!=='armor'||data.ownedArmor.some(id=>ARMOR_SETS[id]?.style===style)));
- });return kinds.length?kinds:['weapon'];
+ });return kinds;
 }
 function voucherInventoryHtml(){
  const entries=Object.entries(data.specificVouchers||{}).filter(([,n])=>n>0);return entries.length?'<div class="specific-voucher-inventory">'+entries.map(([key,amount])=>'<div>'+artHTML('codex-upgrade_vouchers')+'<span>'+escapeHTML(voucherLootName('voucher_'+key))+'</span><b>'+uiCompact(amount)+'</b></div>').join('')+'</div>':'';
+}
+
+function voucherDropOption(){
+ const owned=Object.keys(STYLE_DEFS).filter(style=>data.unlockedWeapons.some(w=>styleForWeapon(w)===style)),highest=Math.max(1,...owned.map(style=>Math.max(styleTier(style),ownedArmorTier(style)))),pool=[],stations=new Set();
+ for(const rank of equipmentTiers().filter(t=>t<=highest).reverse()){
+  const tier=equipmentVoucherBank(rank);for(const kind of dropVoucherKinds(tier)){if(kind.startsWith('station-')){if(stations.has(kind))continue;stations.add(kind);}pool.push({tier,kind});}
+ }
+ return pool.length?pool[Math.floor(Math.random()*pool.length)]:null;
 }

@@ -1,15 +1,12 @@
 /* Training tiers slow old work without changing its material output. */
-function skillXpThreshold(level){
- level=Math.max(1,Math.min(100,Math.floor(Number(level)||1)));
- return level<=10?20*(level-1)*(level-1)+10*(level-1):Math.ceil(1710+10000*(Math.pow(1.15,level-10)-1));
-}
+function skillXpThreshold(level){const c=BALANCE_CONFIG.skills.xp;level=Math.max(1,Math.min(c.maximumLevel+1,Math.floor(Number(level)||1)));return level<=c.bandSize?c.earlyQuadratic*(level-1)*(level-1)+c.earlyLinear*(level-1):Math.ceil(c.bandBase+c.laterScale*(Math.pow(c.laterGrowth,level-c.bandSize)-1));}
 function skillLevelAtXp(xp){
- xp=Math.max(0,Number(xp)||0);let low=1,high=99;
+ xp=Math.max(0,Number(xp)||0);let low=1,high=BALANCE_CONFIG.skills.xp.maximumLevel;
  while(low<high){const mid=Math.ceil((low+high)/2);if(xp>=skillXpThreshold(mid))low=mid;else high=mid-1;}return low;
 }
 function skillLevelRange(xp){
  xp=Math.max(0,Number(xp)||0);const level=skillLevelAtXp(xp),before=skillXpThreshold(level),end=skillXpThreshold(level+1);
- return {lvl:level,cur:xp-before,needed:end-before,pct:level===99?100:Math.max(0,Math.min(100,(xp-before)/(end-before)*100))};
+ return {lvl:level,cur:xp-before,needed:end-before,pct:level===BALANCE_CONFIG.skills.xp.maximumLevel?100:Math.max(0,Math.min(100,(xp-before)/(end-before)*100))};
 }
 function normalizeSkillXpCurve(){
  if(data.skillXpCurveVersion===1)return;let retained=false;
@@ -21,15 +18,11 @@ function normalizeSkillXpCurve(){
  data.skillXpCurveVersion=1;
  if(retained){const history=data.noticeHistory=Array.isArray(data.noticeHistory)?data.noticeHistory:[];history.push({title:'Skill training updated',description:'Your earned skill levels and level progress are retained. Tier 1 trains to 10; tier 2 trains toward 20. Older-tier XP tapers sharply; material yields stay full.',time:Date.now()});data.noticeHistory=history.slice(-40);}
 }
-function trainingXpRate(tier,xp){
- const band=Math.floor(skillLevelAtXp(xp)/10);
- if(band<tier)return 1;
- return (tier===1?.1:.01)*Math.pow(.01,band-tier);
-}
+function trainingXpRate(tier,xp){const c=BALANCE_CONFIG.skills.xp,band=Math.floor(skillLevelAtXp(xp)/c.bandSize);return band<tier?1:(tier===1?c.firstOutdatedRate:c.outdatedRate)*Math.pow(c.outdatedRate,band-tier);}
 function scaledTrainingXp(amount,tier,xp){
  if(!Number.isFinite(amount)||amount<=0)return 0;let left=amount,total=0,current=xp;
  for(let i=0;left>1e-8&&i<12;i++){
-  const rate=trainingXpRate(tier,current),band=Math.floor(skillLevelAtXp(current)/10),boundary=skillXpThreshold(Math.min(100,(band+1)*10));
+  const rate=trainingXpRate(tier,current),band=Math.floor(skillLevelAtXp(current)/BALANCE_CONFIG.skills.xp.bandSize),boundary=skillXpThreshold(Math.min(BALANCE_CONFIG.skills.xp.maximumLevel+1,(band+1)*BALANCE_CONFIG.skills.xp.bandSize));
   const raw=boundary>current?Math.min(left,(boundary-current)/rate):left,gain=raw*rate;total+=gain;current+=gain;left-=raw;
  }
  return Math.round(total*1e6)/1e6;

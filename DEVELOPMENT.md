@@ -2,6 +2,10 @@
 
 The current player reference is [README.md](README.md), with exact rules in generated [BALANCE.md](BALANCE.md) and [balance-report.json](balance-report.json). Historical experiments and proposals are labeled separately. [AGENTS.md](AGENTS.md) governs reviewed commits, archive verification and publishing.
 
+## Balance ownership
+
+[BALANCE_CONFIG.md](BALANCE_CONFIG.md) maps the shared configuration, activity/asset catalogs and mechanic modules. `npm run check:balance` validates content before build; `npm run report:progression` measures configured Zone 1–5 gear profiles. Dungeon definitions supply independent layouts, unlocks, prices and Sigil wallets. Existing save locations remap through stored layout snapshots.
+
 ## Build ownership
 
 `npm run build` compiles the source modules, data, CSS and embedded art into the standalone root `index.html`. The current engine/template also lives in that file; do not discard it when building. `scripts/sync-systems.cjs` defines module order and validates the resulting JavaScript. A function has one current source definition; duplicate source definitions fail the build instead of silently letting a later patch win.

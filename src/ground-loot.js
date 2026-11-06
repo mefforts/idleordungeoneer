@@ -1,8 +1,8 @@
+const GROUND_LOOT_RESOURCES=new Set(BALANCE_CATALOG.resourceKeys);
 /* Rewards land before collection. Each floor retains its unclaimed spoils. */
-const GROUND_LOOT_RESOURCES=new Set(['gold','essence','ore','bars','logs','arrows','cloth','runes','scraps','silverOre','silverBars','opals','cutOpals','coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth','sigils','mithrilOre','mithrilBars','yewLogs','verdantCloth','enchantedSalvage','enchantedFragments','sapphires','cutSapphires']);
 function validGroundLootItem(item){return item&&typeof item.key==='string'&&Number.isSafeInteger(item.amount)&&item.amount>0&&(GROUND_LOOT_RESOURCES.has(item.key)||validVoucherLootKey(item.key)||/^loot_[0-3]$/.test(item.key));}
 function normalizeGroundLoot(){
- data.groundLootCaches=Object.fromEntries(Object.entries(data.groundLootCaches||{}).filter(([floor,drops])=>/^\d+$/.test(floor)&&Number(floor)>0&&Number(floor)<=zoneEnd(999)&&Array.isArray(drops)).map(([floor,drops])=>[floor,drops.filter(d=>d&&Number.isFinite(d.x)&&Number.isFinite(d.y)&&Array.isArray(d.items)).map(d=>({x:Math.max(-10000,Math.min(10000,d.x)),y:Math.max(-10000,Math.min(10000,d.y)),age:.4,items:normalizeVoucherLootItems(d.items.filter(validGroundLootItem).map(i=>({key:i.key,amount:Math.min(1e12,i.amount)})))})).filter(d=>d.items.length)]));
+ data.groundLootCaches=Object.fromEntries(Object.entries(data.groundLootCaches||{}).filter(([floor,drops])=>/^\d+$/.test(floor)&&Number(floor)>0&&Number.isSafeInteger(Number(floor))&&Array.isArray(drops)).map(([floor,drops])=>[floor,drops.filter(d=>d&&Number.isFinite(d.x)&&Number.isFinite(d.y)&&Array.isArray(d.items)).map(d=>({x:Math.max(-10000,Math.min(10000,d.x)),y:Math.max(-10000,Math.min(10000,d.y)),age:.4,items:normalizeVoucherLootItems(d.items.filter(validGroundLootItem).map(i=>({key:i.key,amount:Math.min(1e12,i.amount)})))})).filter(d=>d.items.length)]));
 }
 function checkpointGroundLoot(){
  if(typeof game==='undefined'||game.lootOwner!==data||!game.lootFloor)return;

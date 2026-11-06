@@ -1,0 +1,656 @@
+{
+  "schemaVersion": 1,
+  "referenceZones": 5,
+  "production": {
+    "idleRate": 0.25,
+    "offlineHours": 8,
+    "station": {
+      "maximum": 5,
+      "speedPerRank": 0.03,
+      "conservationPerRank": 0.02,
+      "costGrowth": 1.6
+    },
+    "tool": {
+      "baseSpeed": 0.08,
+      "maximum": 10,
+      "speedStep": 0.005
+    },
+    "activityOverrides": {
+      "scavenge": {
+        "goldGain": 3
+      },
+      "ancientScavenge": {
+        "goldGain": 6
+      },
+      "deepScavenge": {
+        "goldGain": 10
+      }
+    }
+  },
+  "skills": {
+    "trainingRates": {
+      "blacksmithing": 0.341338,
+      "woodworking": 1.087909,
+      "warding": 1.183481,
+      "scavenging": 0.7802220000000001,
+      "artisan": 0.081551
+    },
+    "xp": {
+      "earlyQuadratic": 20,
+      "earlyLinear": 10,
+      "bandSize": 10,
+      "bandBase": 1710,
+      "laterScale": 10000,
+      "laterGrowth": 1.15,
+      "firstOutdatedRate": 0.1,
+      "outdatedRate": 0.01,
+      "maximumLevel": 99
+    },
+    "reference": {
+      "jewelryRanks": 15,
+      "toolFraction": 0.8,
+      "stationFraction": 0.8,
+      "delveGoldCredit": 4000
+    }
+  },
+  "equipment": {
+    "tiers": {
+      "1": {
+        "name": "Iron",
+        "power": 80,
+        "dps": 100,
+        "weapon": 3,
+        "armor": 5,
+        "speed": 5,
+        "reach": 5,
+        "enchant": 2,
+        "skillLevel": 1,
+        "unlockAfterZone": 0,
+        "calibrationDps": 80
+      },
+      "2": {
+        "name": "Steel",
+        "power": 240,
+        "dps": 300,
+        "weapon": 12,
+        "armor": 10,
+        "speed": 10,
+        "reach": 10,
+        "enchant": 4,
+        "skillLevel": 10,
+        "unlockAfterZone": 1,
+        "calibrationDps": 160
+      },
+      "3": {
+        "name": "Mithril",
+        "floor": 300,
+        "power": 480,
+        "dps": 600,
+        "weapon": 10,
+        "armor": 15,
+        "speed": 15,
+        "reach": 15,
+        "enchant": 6,
+        "skillLevel": 20,
+        "unlockAfterZone": 3,
+        "calibrationDps": 240
+      }
+    },
+    "armorStyles": {
+      "melee": {
+        "label": "Melee",
+        "group": "blacksmithing",
+        "names": [
+          "Iron Armor",
+          "Steel Armor",
+          "Mithril Armor"
+        ],
+        "health": [
+          35,
+          65,
+          95
+        ],
+        "perk": [
+          4,
+          7,
+          10
+        ],
+        "costs": [
+          {
+            "bars": 10,
+            "cloth": 2,
+            "gold": 40
+          },
+          {
+            "steelBars": 16,
+            "runicCloth": 6,
+            "ancientFragments": 4,
+            "gold": 140
+          },
+          {
+            "mithrilBars": 16,
+            "verdantCloth": 6,
+            "enchantedFragments": 4,
+            "gold": 300
+          }
+        ]
+      },
+      "ranged": {
+        "label": "Ranged",
+        "group": "woodworking",
+        "names": [
+          "Plain Ranged Leathers",
+          "Cured Ranged Leathers",
+          "Blue Ranged Leathers"
+        ],
+        "health": [
+          24,
+          45,
+          66
+        ],
+        "perk": [
+          4,
+          6,
+          8
+        ],
+        "costs": [
+          {
+            "bars": 4,
+            "cloth": 10,
+            "logs": 6,
+            "gold": 40
+          },
+          {
+            "steelBars": 6,
+            "willowLogs": 14,
+            "runicCloth": 16,
+            "gold": 140
+          },
+          {
+            "mithrilBars": 6,
+            "yewLogs": 14,
+            "verdantCloth": 16,
+            "gold": 300
+          }
+        ]
+      },
+      "magic": {
+        "label": "Mage",
+        "group": "warding",
+        "names": [
+          "Plain Linen Robes",
+          "Blue Wool Robes",
+          "Green Runewoven Robes"
+        ],
+        "health": [
+          18,
+          34,
+          50
+        ],
+        "perk": [
+          4,
+          8,
+          12
+        ],
+        "costs": [
+          {
+            "bars": 2,
+            "cloth": 18,
+            "scraps": 4,
+            "gold": 40
+          },
+          {
+            "steelBars": 4,
+            "runicCloth": 28,
+            "cutGarnets": 2,
+            "gold": 150
+          },
+          {
+            "mithrilBars": 4,
+            "verdantCloth": 28,
+            "cutSapphires": 2,
+            "gold": 320
+          }
+        ]
+      }
+    },
+    "reinforcement": {
+      "healthPerRank": 8,
+      "guardPerRank": 0.75,
+      "vigorGuardPerHp": 0.001
+    },
+    "enchantment": {
+      "chances": [
+        0,
+        0.14,
+        0.28,
+        0.42,
+        0.56,
+        0.58,
+        0.6
+      ],
+      "arc": 0.5,
+      "range": 200
+    },
+    "jewelry": {
+      "maximum": 50,
+      "relativeStep": 0.01,
+      "leechStep": 0.0005,
+      "xp": 80
+    },
+    "promotionCosts": {
+      "2": {
+        "melee": {
+          "steelBars": 12,
+          "willowLogs": 6,
+          "ancientFragments": 4,
+          "cutGarnets": 1,
+          "gold": 100,
+          "zoneMaterials": 1
+        },
+        "ranged": {
+          "steelBars": 6,
+          "willowLogs": 18,
+          "runicCloth": 6,
+          "cutGarnets": 1,
+          "gold": 100,
+          "zoneMaterials": 1
+        },
+        "magic": {
+          "steelBars": 4,
+          "runicCloth": 18,
+          "ancientFragments": 6,
+          "cutGarnets": 2,
+          "gold": 100,
+          "zoneMaterials": 1
+        }
+      },
+      "3": {
+        "melee": {
+          "mithrilBars": 12,
+          "yewLogs": 6,
+          "enchantedFragments": 4,
+          "cutSapphires": 1,
+          "gold": 250,
+          "zoneMaterials": 2
+        },
+        "ranged": {
+          "mithrilBars": 6,
+          "yewLogs": 18,
+          "verdantCloth": 6,
+          "cutSapphires": 1,
+          "gold": 250,
+          "zoneMaterials": 2,
+          "enchantedFragments": 4
+        },
+        "magic": {
+          "mithrilBars": 4,
+          "verdantCloth": 18,
+          "enchantedFragments": 6,
+          "cutSapphires": 2,
+          "gold": 250,
+          "zoneMaterials": 2
+        }
+      }
+    },
+    "resources": {
+      "2": {
+        "metal": "steelBars",
+        "wood": "willowLogs",
+        "cloth": "runicCloth",
+        "fragments": "ancientFragments",
+        "gem": "cutGarnets"
+      },
+      "3": {
+        "metal": "mithrilBars",
+        "wood": "yewLogs",
+        "cloth": "verdantCloth",
+        "fragments": "enchantedFragments",
+        "gem": "cutSapphires"
+      }
+    },
+    "speedPerRank": 0.02,
+    "reachPerRank": 0.03,
+    "baseCriticalChance": 0.05,
+    "baseHealth": 120,
+    "baseWeaponDamage": 14
+  },
+  "refinement": {
+    "version": 1,
+    "steelGrowth": 1.48,
+    "otherGrowth": 1.6,
+    "mithrilGrowth": 1.45,
+    "targetFraction": 0.8,
+    "styleMaterialScale": {
+      "melee": 1,
+      "ranged": 2.5,
+      "magic": 2
+    }
+  },
+  "combat": {
+    "health": {
+      "elite": 1.75,
+      "rare": 1.5,
+      "boss": 1.5,
+      "bossElite": 1.5
+    },
+    "damage": {
+      "minimum": 0.125,
+      "projectile": 0.125,
+      "contact": 0.15,
+      "standard": 0.18,
+      "heavy": 0.25,
+      "major": 0.5,
+      "reflect": 0.15,
+      "dot": 0.025,
+      "dotInterval": 0.35,
+      "hitWindow": 0.47
+    },
+    "resolve": {
+      "perAlly": 0.1,
+      "maximum": 0.5,
+      "dashLockout": 10
+    },
+    "area": {
+      "common": 1.25
+    },
+    "maximumDamageReduction": 0.8
+  },
+  "rewards": {
+    "gold": {
+      "mob": 0,
+      "guardian": [
+        8,
+        12,
+        22
+      ],
+      "floor": [
+        15,
+        20,
+        30
+      ],
+      "overflow": 2
+    },
+    "sigils": {
+      "monsterChance": 0.003,
+      "eliteChance": 0.35,
+      "elite": 1,
+      "rare": 1,
+      "guardians": [
+        1,
+        1,
+        2
+      ],
+      "zoneFinalBonus": 3
+    },
+    "loot": {
+      "normal": {
+        "chance": 0.015,
+        "amount": 1,
+        "cap": 0.06
+      },
+      "elite": {
+        "chance": 0.08,
+        "amount": 3,
+        "cap": 0.16
+      },
+      "boss": {
+        "chance": 0.18,
+        "amount": 6,
+        "cap": 0.28
+      },
+      "voucher": 0.06,
+      "finalVoucher": 0.15
+    },
+    "perkCostGrowth": 2.8,
+    "perks": [
+      {
+        "id": "fire",
+        "name": "Ember Edge",
+        "max": 5,
+        "base": 6,
+        "level": 1,
+        "icon": "1-fire",
+        "description": "Every style ignites its target with a small burn."
+      },
+      {
+        "id": "frost",
+        "name": "Winter Thread",
+        "max": 3,
+        "base": 6,
+        "level": 1,
+        "icon": "0-frost",
+        "description": "Every style chills the enemies it hits."
+      },
+      {
+        "id": "storm",
+        "name": "Soul Conductor",
+        "max": 4,
+        "base": 8,
+        "level": 1,
+        "icon": "2-storm",
+        "description": "Hits can arc to another nearby enemy."
+      },
+      {
+        "id": "nova",
+        "name": "Fracture",
+        "max": 3,
+        "base": 8,
+        "level": 1,
+        "icon": "1-nova",
+        "description": "Critical hits splash nearby enemies."
+      },
+      {
+        "id": "ward",
+        "name": "Dungeon Ward",
+        "max": 4,
+        "base": 8,
+        "level": 1,
+        "icon": "3-ward",
+        "description": "A small ward reduces incoming damage throughout this Dungeon."
+      },
+      {
+        "id": "technique",
+        "name": "Battle Geometry",
+        "max": 3,
+        "base": 10,
+        "level": 1,
+        "icon": "0-cleave",
+        "adaptive": true
+      },
+      {
+        "id": "echo",
+        "name": "Echo Arts",
+        "max": 3,
+        "base": 12,
+        "level": 1,
+        "icon": "3-multishot",
+        "adaptive": true
+      },
+      {
+        "id": "disrupt",
+        "name": "Spellbreaker",
+        "max": 3,
+        "base": 10,
+        "level": 1,
+        "icon": "2-frost",
+        "description": "Hits can briefly disable enemy totems. One disruption can occur every eight seconds."
+      },
+      {
+        "id": "shatter",
+        "name": "Cold Verdict",
+        "max": 3,
+        "base": 14,
+        "level": 3,
+        "icon": "2-nova",
+        "description": "Defeating a chilled enemy releases a small damaging burst."
+      },
+      {
+        "id": "return",
+        "name": "Returning Power",
+        "max": 3,
+        "base": 18,
+        "level": 5,
+        "icon": "3-storm",
+        "adaptive": true
+      },
+      {
+        "id": "vortex",
+        "name": "Gravitation",
+        "max": 3,
+        "base": 22,
+        "level": 8,
+        "icon": "0-ward",
+        "description": "Kills draw nearby ordinary enemies together, setting up area attacks."
+      },
+      {
+        "id": "prism",
+        "name": "Mirrorcraft",
+        "max": 3,
+        "base": 26,
+        "level": 12,
+        "icon": "3-cleave",
+        "description": "Successful reflect wards return extra damage and briefly disrupt the caster’s totems."
+      }
+    ]
+  },
+  "mastery": {
+    "firstZones": [
+      2,
+      3
+    ],
+    "laterFirstZone": 10,
+    "laterZoneGrowth": 2,
+    "delveStep": 0.25,
+    "skillingLinearRanks": 9,
+    "skillingLaterStep": 2,
+    "legacyPerkDungeon": "deepwell"
+  },
+  "layout": {
+    "legacyCounts": [
+      5,
+      10,
+      20,
+      20
+    ],
+    "legacyTail": 20
+  },
+  "dungeons": [
+    {
+      "id": "deepwell",
+      "name": "The First Descent",
+      "firstZone": 0,
+      "perkUnlockZones": {
+        "shatter": 2,
+        "return": 3,
+        "vortex": 4,
+        "prism": 5
+      },
+      "zones": [
+        {
+          "id": "overgrowth",
+          "theme": 0,
+          "floors": 5,
+          "referenceTier": 1,
+          "health": {
+            "normal": 1,
+            "elite": 1.75,
+            "rare": 1,
+            "boss": 1.25,
+            "bossElite": 1.25
+          },
+          "goldMultiplier": 1,
+          "sigilMultiplier": 1,
+          "calibrationMinutes": 10
+        },
+        {
+          "id": "embervault",
+          "theme": 1,
+          "floors": 10,
+          "referenceTier": 2,
+          "health": {
+            "normal": 1,
+            "elite": 1.75,
+            "rare": 1,
+            "boss": 1.25,
+            "bossElite": 1.25
+          },
+          "goldMultiplier": 1,
+          "sigilMultiplier": 1,
+          "calibrationMinutes": 20
+        },
+        {
+          "id": "hollow-crypt",
+          "theme": 2,
+          "floors": 20,
+          "referenceTier": 2,
+          "health": {
+            "normal": 4,
+            "elite": 4,
+            "rare": 4,
+            "boss": 4,
+            "bossElite": 4
+          },
+          "goldMultiplier": 3,
+          "sigilMultiplier": 3,
+          "calibrationMinutes": 30
+        },
+        {
+          "id": "astral-rift",
+          "theme": 3,
+          "floors": 20,
+          "referenceTier": 2,
+          "health": {
+            "normal": 4.25,
+            "elite": 4.5,
+            "rare": 4.5,
+            "boss": 4.5,
+            "bossElite": 4.5
+          },
+          "goldMultiplier": 4,
+          "sigilMultiplier": 4,
+          "calibrationMinutes": 35
+        },
+        {
+          "id": "elder-overgrowth",
+          "theme": 0,
+          "floors": 20,
+          "referenceTier": 3,
+          "health": {
+            "normal": 4.5,
+            "elite": 5,
+            "rare": 5,
+            "boss": 5,
+            "bossElite": 5
+          },
+          "goldMultiplier": 5,
+          "sigilMultiplier": 5,
+          "calibrationMinutes": 36
+        }
+      ],
+      "continuation": {
+        "floors": 20,
+        "referenceTier": 3,
+        "healthGrowth": 1.08,
+        "rewardGrowth": 1.08,
+        "calibrationMinutes": 40
+      },
+      "themeCycle": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "perkOverrides": {}
+    }
+  ],
+  "encounters": {
+    "spawnBudgetFraction": 0.55,
+    "baseSwarmScale": 0.4,
+    "maximumSwarmScale": 2.5,
+    "swarmGrowth": 0.5,
+    "minimumWaveSize": 7,
+    "depthHealthGrowth": 1.14,
+    "postEarlyHealthStep": 1.25
+  }
+}

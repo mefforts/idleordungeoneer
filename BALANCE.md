@@ -1,19 +1,20 @@
 # Current game rules and balance
 
-Build **11.15.0**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Tier power, progression costs and encounter health retain their current calibration.
+Build **11.16.0**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Zones 1–5 use authored health and reward tuning. [BALANCE_CONFIG.md](BALANCE_CONFIG.md) describes configuration and expansion; [PROGRESSION.md](PROGRESSION.md) gives current gear-profile measurements.
 
 ## Progression and clocks
 
 Each floor contains three monster waves, two guardian packs and a final floor boss. A pack contains 4 / 5 / 6 special enemies in early / middle / deep floors. All current Zones belong to The First Descent.
 
-| Zone theme | Floors | Ordinary forms | Rare forms |
-| --- | --- | --- | --- |
-| The Overgrowth | 5 | 8 | 8 |
-| Embervault | 10 | 10 | 10 |
-| Hollow Crypt | 20 | 12 | 12 |
-| Astral Rift | 20 | 12 | 12 |
+| Zone | Theme | Floors | Ordinary forms | Rare forms |
+| --- | --- | --- | --- | --- |
+| 1 | The Overgrowth | 5 | 8 | 8 |
+| 2 | The Embervault | 10 | 10 | 10 |
+| 3 | The Hollow Crypt | 20 | 12 | 12 |
+| 4 | The Astral Rift | 20 | 12 | 12 |
+| 5 | The Overgrowth | 20 | 8 | 8 |
 
-Later Zones reuse biome themes with their own seeded layouts. Dungeoneering is milestone progression: kills do not grant new spendable levels. Historical combat XP remains in saves.
+Zones 6+ remain experimental continuation outside this balance target. Dungeoneering is milestone progression: kills do not grant new spendable levels. Historical combat XP remains in saves.
 
 | Dungeoneering level | Earn a point by |
 | --- | --- |
@@ -24,7 +25,7 @@ Later Zones reuse biome themes with their own seeded layouts. Dungeoneering is m
 | 5 | Reach Zone 40 |
 | 6 | Reach Zone 80 |
 
-Each new level grants one shared Mastery point. Time ranks cost 1 point each. Optional Mastery allocations use that same bank; refunding allocations retains permanent time ranks.
+Each new level grants one shared Mastery point. Time ranks cost 1 point each. Optional Mastery allocations use that same bank; refunding optional allocations retains time ranks. Reassign game time in the Dungeon Shop to return points spent on those ranks.
 
 | Rank | Delving | Skilling, including idle |
 | --- | --- | --- |
@@ -75,7 +76,7 @@ Enchantment trigger chances by rank are 14% / 28% / 42% / 56% / 58% / 60%. Every
 
 These are maximum equipment-only values at base proficiency. Full combat proficiency adds up to 3% damage, and matching crafting levels up to 5%. Mage equipment figures include matching robes. Mithril starts around 300 DPS with completed Steel speed training. Soft budgets of at least 100 / 300 / 600 DPS follow equipped tier; damage above a budget contributes at 25%. Live direct-DPS displays include temporary damage/speed bonuses, Rally and the greatsword’s low-health bonus. Additional targets, enemy defenses and elemental procs remain separate.
 
-Level 20 targets the work for about 80% of Iron/Steel upgrade paths across **all three styles**, including supporting jewelry, tools and stations. [SKILL_ECONOMY.md](SKILL_ECONOMY.md) gives the reproducible budget. Steel weapon materials grow 1.48× per rank; its other upgrade materials grow 1.6×. Steel/Mithril weapon refinement also consumes cut gems.
+Level 20 targets the work for about 80% of Iron/Steel upgrade paths across **all three styles**, including supporting jewelry at rank 15, tools and stations, with 4,000 delve gold credited. [SKILL_ECONOMY.md](SKILL_ECONOMY.md) gives the reproducible budget. Steel weapon materials grow 1.48× per rank; its other upgrade materials grow 1.6×. Steel/Mithril weapon refinement also consumes cut gems.
 
 | Level | Total skill XP |
 | --- | --- |
@@ -95,7 +96,7 @@ Tier-1 work grants 10% XP after level 10 and 0.1% after level 20; tier-2 work gr
 
 ## Jewelry, tools and stations
 
-Jewelry has 50 optional refinements. The Leech Ring starts at 0.5% lifesteal and adds 0.05 percentage points per rank: 1.25% at rank 15, and 3% at rank 50. Other pieces add 1% of their base effect per rank, up to 50% extra. Existing ranks receive these effects automatically. Equipping or removing owned jewelry preserves current HP; crafting/refinement can grant a genuine maximum-health increase.
+Jewelry has 50 optional refinements. The Leech Ring starts at 0.5% lifesteal and adds 0.05 percentage points per rank: 1.25% at rank 15, and 3% at rank 50. Other pieces add 1% of their base effect per rank, up to 50% extra. Existing ranks receive these effects automatically. Vigor also reduces damage by 0.1 percentage point per jewelry HP. Every armor reinforcement adds 8 HP and 0.75 percentage points of damage reduction, for every style. Equipping or removing owned jewelry preserves current HP; crafting/refinement can grant a genuine maximum-health increase.
 
 The first 15 Leech ranks cost 20 silver bars, 465 gold and 3 cut opals before station savings, excluding the ring craft. Each rank gives 80 base Artisan XP before training reductions. Lifesteal uses actual direct-hit health removed, caps overkill and never exceeds maximum player HP.
 
@@ -120,7 +121,7 @@ Discovery timers count real seconds of active work on that activity. Release, me
 
 ## Dungeon Shop and rewards
 
-| Combat perk | Dungeoneering | Maximum rank | First Sigil price |
+| Combat perk | Unlock | Maximum rank | First Sigil price |
 | --- | --- | --- | --- |
 | Ember Edge | Start | 5 | 6 |
 | Winter Thread | Start | 3 | 6 |
@@ -130,26 +131,30 @@ Discovery timers count real seconds of active work on that activity. Release, me
 | Battle Geometry | Start | 3 | 10 |
 | Echo Arts | Start | 3 | 12 |
 | Spellbreaker | Start | 3 | 10 |
-| Cold Verdict | 3 | 3 | 14 |
-| Returning Power | 5 | 3 | 18 |
-| Gravitation | 8 | 3 | 22 |
-| Mirrorcraft | 12 | 3 | 26 |
+| Cold Verdict | Zone 2 | 3 | 14 |
+| Returning Power | Zone 3 | 3 | 18 |
+| Gravitation | Zone 4 | 3 | 22 |
+| Mirrorcraft | Zone 5 | 3 | 26 |
 
-Eight perks are available immediately; later unlocks retain prior-save entitlements. Prices grow 2.8× per rank, rounded upward. Every purchase applies to Melee, Mage and Ranged in the Dungeon. Battle Geometry, Echo Arts and Returning Power adapt their effect to the equipped style; ranks remain shared.
+Eight perks are available immediately; reaching Zones 2 / 3 / 4 / 5 unlocks Cold Verdict / Returning Power / Gravitation / Mirrorcraft, while prior-save entitlements remain. Prices grow 2.8× per rank, rounded upward. Every purchase applies to Melee, Mage and Ranged in the Dungeon. Battle Geometry, Echo Arts and Returning Power adapt their effect to the equipped style; ranks remain shared.
 
 | Zone | Expected first-clear Sigils |
 | --- | --- |
 | 1 | 48.62 |
 | 2 | 98.39 |
-| 3 | 184.61 |
-| 4 | 186.58 |
+| 3 | 553.83 |
+| 4 | 746.3 |
+| 5 | 932.88 |
 
-Ordinary enemies have a 0.3% chance of one Sigil; elites, rares and Echoes use 35%. Guardians grant 1 / 1 / 2; a Zone-final overlord adds 3. Summons and totems grant no rewards or wave credit. Ordinary kills give no gold without Golden Hunt.
+Ordinary enemies have a 0.3% chance of one Sigil; elites, rares and Echoes use 35%. Guardians grant 1 / 1 / 2; a Zone-final overlord adds 3. Summons and totems grant no rewards or wave credit. Ordinary kills give no gold without Golden Hunt. Authored Zones 3 / 4 / 5 multiply gold by 3 / 4 / 5 and Sigil bundles by 3 / 4 / 5.
 
 | Zone | Guardian gold | Floor caches | Baseline before elites |
 | --- | --- | --- | --- |
 | 1 | 126 | 65 | 191 |
 | 2 | 189 | 104 | 293 |
+| 3 | 756 | 429 | 1185 |
+| 4 | 1260 | 728 | 1988 |
+| 5 | 1890 | 1105 | 2995 |
 
 | Enemy | Raw-material chance | Bundle | Maximum chance |
 | --- | --- | --- | --- |
@@ -161,7 +166,7 @@ Rare creatures use elite rewards. Material drops remain a supplement to skilling
 
 Gold, Sigils, essence, materials and vouchers land on the ground and credit on collection. Pickup radius draws them in after landing. Unclaimed ordinary loot persists through retry, reload and floor travel; floor completion gathers leftovers. Receipts and Inventory show collected items. Health motes follow the separate expiry rules below.
 
-Guardians roll a voucher once on first defeat: 6% normally, 15% for a Zone-final overlord. Each voucher names a rank upgrade on owned equipment, jewelry, a specific tool or a station. New gear and tier promotions require normal materials. Explicit redemption covers the complete matching rank cost and respects ownership, tier and caps. The first receipt introduces the voucher; later receipts link to it in Inventory → Materials.
+Guardians roll a voucher once on first defeat: 6% normally, 15% for a Zone-final overlord. Each voucher names a rank upgrade on owned equipment, jewelry, a specific tool or a station. Its tier follows owned eligible gear, including Mithril in Zone 4; an empty eligible pool produces no obsolete fallback. New gear and tier promotions require normal materials. Explicit redemption covers the complete matching rank cost and respects ownership, tier and caps. The first receipt introduces the voucher; later receipts link to it in Inventory → Materials.
 
 ## Blessings and healing
 
@@ -242,7 +247,7 @@ Rolling Furnace repeats bankshots, splitting cores or crossing pairs. Its physic
 
 Zone 2 has stronger ordinary incoming damage, frequent returning/growing stars and cleaves that leave fire. Its finale allows six known Echoes and three rares per wave. Zone 3 adds death echoes and Grave Pulse immediately, and carries a sharp HP step into later Zones.
 
-Current HP calibration preserves the general +75% regular-elite / +50% rare, boss and Echo experiment. Zones 1–2 add +75% regular-elite and +25% boss/Echo HP; ordinary, uncommon and rare HP there retain their base experiment. Zone 3 onward applies 4× ordinary and 6× special HP over the earlier calibration; special enemies do not inherit the ordinary factor. Uncommons have twice ordinary HP. Rare spawn chance is 3% with one per wave, except the Zone 2 finale at 10% and three.
+Current HP calibration preserves the general +75% regular-elite / +50% rare, boss and Echo experiment. Zones 1–2 add +75% regular-elite and +25% boss/Echo HP; ordinary, uncommon and rare HP there retain their base experiment. Authored Zones 3 / 4 / 5 apply 4× / 4.25× / 4.5× ordinary HP and 4× / 4.5× / 5× special HP over the earlier calibration; special enemies do not inherit the ordinary factor. Uncommons have twice ordinary HP. Rare spawn chance is 3% with one per wave, except the Zone 2 finale at 10% and three.
 
 ## Pacing evidence
 
@@ -250,20 +255,24 @@ Current HP calibration preserves the general +75% regular-elite / +50% rare, bos
 | --- | --- | --- |
 | 1 | 15.08 min | 80 |
 | 2 | 23.72 min | 240 |
-| 3 | 238.27 min | 240 |
-| 4 | 253.45 min | 240 |
-| 5 | 134.15 min | 480 |
+| 3 | 175.2 min | 240 |
+| 4 | 208.92 min | 240 |
+| 5 | 121.02 min | 480 |
 
-| Zone | Measured combat minutes | Rewarded defeats | Reference DPS |
+| Progression profile | Measured combat minutes | Equipment DPS | Sigils invested |
 | --- | --- | --- | --- |
-| 1 | 16.67 | 413 | 80 |
-| 2 | 27.92 | 648 | 240 |
-| 3 | 239.4 | 938 | 240 |
-| 4 | 259.89 | 1118 | 240 |
-| 9 | 167.6 | 1118 | 480 |
-| 15 | 170.18 | 1118 | 480 |
+| Zone 1 · progressing Iron | 22.14 | 56.22 | 0 |
+| Zone 2 · progressing Steel | 33.76 | 155.45 | 42 |
+| Zone 3 · 80% Steel | 138.62 | 207.39 | 160 |
+| Zone 3 · 80% Steel Mage | 110.97 | 208.68 | 160 |
+| Zone 3 · 80% Steel Bow | 115.57 | 207.39 | 160 |
+| Zone 3 · 80% Steel Halberd | 133.41 | 207.39 | 160 |
+| Zone 4 · new Mithril | 116.09 | 300 | 378 |
+| Zone 4 · completed Steel | 142.42 | 240 | 378 |
+| Zone 5 · middle Mithril | 100.09 | 383.92 | 727 |
+| Zone 5 · middle Mithril Mage | 72.37 | 390.9 | 727 |
 
-Benchmark build: **11.14.0**. Standalone SHA-256: `42ece3a905b7b57d784fd271dcd7b6ebd1e4250d0c996ccdc824f7a98d630355`.
+Benchmark build: **11.16.0**. Standalone SHA-256: `58ae23a16c89378531eb4dc0c971fd32a3706c77cfcd472297dca2169cebbbaf`. [Exact profiles and limits](PROGRESSION.md).
 
 These full-Zone simulations use actual spawning, attacks, movement, counters, guards, spires and phase transitions. Incoming damage is disabled and HP replenished to isolate pacing. They are not human survival trials or wall-clock completion promises. Menus, deaths, preparation and selected game speeds change actual play time. Short survival experiments remain separate raw evidence in balance-report.json; they do not establish current human difficulty.
 
@@ -273,4 +282,4 @@ Save migrations retain gear, materials, gold, earned levels, fractional skill pr
 
 Settings → Backup/Export and Restore move the same save between origins. Combat transient objects and healing motes clear appropriately; persistent ground loot and saved blessings retain their separate rules. The save key remains deepwell-prototype-v1.
 
-Run `npm run build`, `npm test`, `npm run report:skills` and `npm run report:balance`. Native iOS selection/callout behavior still requires a real-device check in addition to Chromium touch tests. [DEVELOPMENT.md](DEVELOPMENT.md) describes source ownership, validation and delivery. [SELECTED_MECHANICS.md](SELECTED_MECHANICS.md) covers the implemented themed library; [THEME_NEUTRAL_IDEAS.md](THEME_NEUTRAL_IDEAS.md) remains proposals only.
+Run `npm run build`, `npm test`, `npm run report:skills`, `npm run report:progression` and `npm run report:balance`. Native iOS selection/callout behavior still requires a real-device check in addition to Chromium touch tests. [DEVELOPMENT.md](DEVELOPMENT.md) describes source ownership, validation and delivery. [SELECTED_MECHANICS.md](SELECTED_MECHANICS.md) covers the implemented themed library; [THEME_NEUTRAL_IDEAS.md](THEME_NEUTRAL_IDEAS.md) remains proposals only.

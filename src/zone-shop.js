@@ -12,7 +12,7 @@ const SHOP_TRAINING=[0,.25,.43,.58,.72,.84,.93,1,1.035,1.08,1.14,1.22,1.32,1.45,
 const DUNGEONEERING_XP_STEP=1600;
 let shopZone=0,shopCategory='offense',shopSignature='',shopUiInstalled=false;
 
-function shopBudget(index=zoneNumber()){return index>=4?300:index===0?100:200;}
+function shopBudget(index=zoneNumber()){return TIER_LIMITS[zoneTuning(index).referenceTier].dps;}
 function zoneCurrency(){return {name:'Dungeon Sigils',art:'currency-rift'};}
 function zoneShopUnlocked(index=zoneNumber()){return Number.isInteger(index)&&index>=0&&index<=9999;}
 function zoneShopFor(index=zoneNumber()){return dungeonShopFor(index);}
@@ -68,11 +68,11 @@ function waveDamageFactor(){return 1;}
 function waveHasteFactor(){return 1+.015*waveRank('haste');}
 function waveReachFactor(){return 1+.12*(combatStyle()==='melee'?dungeonRank('technique'):0);}
 function waveSwiftFactor(){return 1+.02*waveRank('swift');}
-function waveCritChance(){return .05+.015*waveRank('crit');}
+function waveCritChance(){return BALANCE_CONFIG.equipment.baseCriticalChance+.015*waveRank('crit');}
 function waveVitality(){return 5*waveRank('vitality');}
 function zoneCombatProfile(id=data.weaponType,options={}){
  const index=options.zone??zoneNumber(),ranks=options.ranks||dungeonShopFor(index).ranks,style=styleForWeapon(id),w=WEAPON_TYPES[id],s=data.styles[style],stats=styleStats(style),rank=options.rank??s.weapon,speed=options.speed??stats.speedPercent,percent=options.percent??stats.damagePercent;
- const gearDamage=weaponDamageBase(id,rank)*w.power*(1+percent/100),gearCooldown=w.cooldown/(1+speed/100),gear=gearDamage/gearCooldown*1.05,crit=.05,extra=effectiveDungeonRank('multishot',style,ranks),raw=gear*(1+.15*extra),budget=Math.max(shopBudget(index),TIER_LIMITS[styleTier(style)].dps),dps=raw<=budget?raw:budget+(raw-budget)*.25,factor=raw?dps/raw:1;
+ const gearDamage=weaponDamageBase(id,rank)*w.power*(1+percent/100),gearCooldown=w.cooldown/(1+speed/100),gear=gearDamage/gearCooldown*(1+BALANCE_CONFIG.equipment.baseCriticalChance),crit=BALANCE_CONFIG.equipment.baseCriticalChance,extra=effectiveDungeonRank('multishot',style,ranks),raw=gear*(1+.15*extra),budget=Math.max(shopBudget(index),TIER_LIMITS[styleTier(style)].dps),dps=raw<=budget?raw:budget+(raw-budget)*.25,factor=raw?dps/raw:1;
  return {dps,raw,core:gear,gear,training:0,budget,crit,extra,cooldown:gearCooldown,damage:gearDamage*factor,softFactor:factor};
 }
 function weaponReach(id=data.weaponType){
@@ -88,9 +88,9 @@ function weaponHitDamage(base,id=data.weaponType){
 function weaponDps(id=data.weaponType,options={}){
  const style=styleForWeapon(id),w=WEAPON_TYPES[id],stats=styleStats(style);
  if(options.ceiling||options.equipmentOnly){
-  const rank=options.ceiling?styleUpgradeCap(style,'weapon'):data.styles[style].weapon+(options.next?1:0),speed=options.ceiling?styleUpgradeCap(style,'speed')*2:stats.speedPercent;
-  const percent=options.ceiling?(style==='magic'?(styleTier(style)*4):0)+(options.dedicated?8:0):stats.damagePercent;
-  return weaponDamageBase(id,rank)*w.power*(1+percent/100)*(1+speed/100)/w.cooldown*1.05;
+  const rank=options.ceiling?styleUpgradeCap(style,'weapon'):data.styles[style].weapon+(options.next?1:0),speed=options.ceiling?styleUpgradeCap(style,'speed')*BALANCE_CONFIG.equipment.speedPerRank*100:stats.speedPercent;
+  const percent=options.ceiling?(style==='magic'?(BALANCE_CONFIG.equipment.armorStyles.magic.perk[styleTier(style)-1]||0):0)+(options.dedicated?8:0):stats.damagePercent;
+  return weaponDamageBase(id,rank)*w.power*(1+percent/100)*(1+speed/100)/w.cooldown*(1+BALANCE_CONFIG.equipment.baseCriticalChance);
  }
  const dps=zoneCombatProfile(id,{rank:data.styles[style].weapon+(options.next?1:0)}).dps;
  return options.run?weaponHitDamage(dps,id)*eliteBoonValue('damage')*eliteBoonValue('attackSpeed'):dps;
@@ -102,7 +102,7 @@ function grantZoneCurrency(amount,index=zoneNumber()){
  const node=$('zoneCurrencyHud');if(node){node.classList.remove('currency-gain');requestAnimationFrame(()=>node.classList.add('currency-gain'));}return amount;
 }
 function buyZoneUpgrade(id,index=shopZone){
- const p=dungeonPerk(id),b=dungeonShopFor(index),cost=dungeonPerkCost(id,b.ranks[id]||0);if(!p||!dungeonPerkUnlocked(p)||cost===null||b.currency<cost)return false;
+ const p=dungeonPerk(id,index),b=dungeonShopFor(index),cost=dungeonPerkCost(id,b.ranks[id]||0,index);if(!p||!dungeonPerkUnlocked(p,index)||cost===null||b.currency<cost)return false;
  const previous=b.ranks[id]||0;b.currency-=cost;b.ranks[id]=previous+1;if(id==='fire'&&previous&&dungeonForZone(index).id===dungeonForZone().id)for(const enemy of game.enemies)if(enemy.burn>0){enemy.burnDps*=b.ranks[id]/previous;enemy.burn+=.1;}codexDiscover('dungeon_perk_'+id);game.upgrades={...dungeonShopFor().ranks};shopSignature='';save();refreshUI();return true;
 }
 function zoneSnapshot(){const p=dungeonProgress();return {index:zoneNumber(),upgrades:{...zoneShopFor().ranks},level:p.level,xp:p.xp,required:p.required,pending:0};}
@@ -166,25 +166,25 @@ function clearFloor(){
  $('nextFloor').onclick=startFloor;$('clearZoneShop').onclick=()=>openZoneShop(clearedZone);if($('selectIdleTask'))$('selectIdleTask').onclick=openIdleHub;refreshUI();
  if(idle)toast('Idle unlocked',clearedZone===0&&floor===1?'Your second idle slot unlocks when you reach Zone 2.':'Two tasks can now run together.');
 }
-function expectedAttacks(hp,damage,crit=.05){const n=Math.max(1,Math.ceil(hp/damage-1e-9));let previous=0,current=1;for(let i=2;i<=n;i++){const next=1+(1-crit)*current+crit*previous;previous=current;current=next;}return current;}
+function expectedAttacks(hp,damage,crit=BALANCE_CONFIG.equipment.baseCriticalChance){const n=Math.max(1,Math.ceil(hp/damage-1e-9));let previous=0,current=1;for(let i=2;i<=n;i++){const next=1+(1-crit)*current+crit*previous;previous=current;current=next;}return current;}
 function zoneBalance(index=zoneNumber()){
  index=Math.max(0,Math.floor(Number(index)||0));if(ZONE_BALANCE_CACHE.has(index))return ZONE_BALANCE_CACHE.get(index);
- const minutes=index===0?10:index===1?20:index===2?30:Math.min(40,35+index-3),floors=zoneFloorCount(index),gearTier=index>=4?3:index===0?1:2,weaponRank=TIER_LIMITS[gearTier].weapon,powerRank=gearTier*10,speedRank=gearTier*5;
- const base=14/.88*1.05,first=80/1.1,second=160/1.2,third=240/1.3,gear=(powerRank<=10?base+(first-base)*powerRank/10:powerRank<=20?first+(second-first)*(powerRank-10)/10:second+(third-second)*(powerRank-20)/10)*(1+speedRank*.02);
- const core=gear,crit=.05,cooldown=.88/(1+speedRank*.02),raw=core*(1+crit)/1.05,dps=raw<=shopBudget(index)?raw:shopBudget(index)+(raw-shopBudget(index))*.25,hit=dps*cooldown/(1+crit);
- const counts=[SWARM_TARGETS[0],SWARM_TARGETS[2],SWARM_TARGETS[4]].map(n=>Math.max(7,Math.round(n*.4*Math.min(2.5,1+index*.5)*3/floors))),targets=[counts[0],0,counts[1],0,counts[2],0],swarmCount=counts.reduce((a,b)=>a+b,0)*floors;
- const model={index,minutes,seconds:minutes*60,floors,weaponRank,speedRank,proficiency:1,gearTier,shopRanks:{},crit,hit,cooldown,dps,targets,swarmCount,escortCount:interludeEscortCount(index),spawnSeconds:minutes*60*.55/swarmCount,hpScale:1};
+ const tuning=zoneTuning(index),local=index-balanceDungeon(index).firstZone,pace=BALANCE_CONFIG.encounters,minutes=tuning.calibrationMinutes,floors=zoneFloorCount(index),gearTier=zoneTuning(index).referenceTier,weaponRank=TIER_LIMITS[gearTier].weapon,powerRank=gearTier*10,speedRank=TIER_LIMITS[gearTier].speed;
+ const gear=TIER_LIMITS[gearTier].calibrationDps;
+ const core=gear,crit=BALANCE_CONFIG.equipment.baseCriticalChance,cooldown=.88/(1+speedRank*BALANCE_CONFIG.equipment.speedPerRank),raw=core*(1+crit)/(1+BALANCE_CONFIG.equipment.baseCriticalChance),dps=raw<=shopBudget(index)?raw:shopBudget(index)+(raw-shopBudget(index))*.25,hit=dps*cooldown/(1+crit);
+ const counts=[SWARM_TARGETS[0],SWARM_TARGETS[2],SWARM_TARGETS[4]].map(n=>Math.max(pace.minimumWaveSize,Math.round(n*pace.baseSwarmScale*Math.min(pace.maximumSwarmScale,1+local*pace.swarmGrowth)*3/floors))),targets=[counts[0],0,counts[1],0,counts[2],0],swarmCount=counts.reduce((a,b)=>a+b,0)*floors;
+ const model={index,minutes,seconds:minutes*60,floors,weaponRank,speedRank,proficiency:1,gearTier,shopRanks:{},crit,hit,cooldown,dps,targets,swarmCount,escortCount:interludeEscortCount(index),spawnSeconds:minutes*60*pace.spawnBudgetFraction/swarmCount,hpScale:1};
  // Keep the previous health calibration; stronger equipment shortens fights.
  const forecast=(scale,health=false,referenceHit=hit,packs=false)=>{let seconds=floors*6*.72;for(let floor=0;floor<floors;floor++)for(let phase=0;phase<6;phase++){
-  const boss=phase%2===1,progress=2*floor/Math.max(1,floors-1),baseHp=boss?[160,230,360][Math.floor(phase/2)]*(phase===5?(floor===floors-1?3.2:1.75):1):30+phase*4,hp=baseHp*Math.pow(1.14,progress)*scale;
-  if(boss){seconds+=expectedAttacks(hp*(health?ENCOUNTER_HEALTH.boss*regionalEncounterHealthMultiplier({boss:true},index):1),referenceHit,crit)*cooldown+1.5;if(packs&&phase<5){const extra=(30+phase*4)*Math.pow(1.14,progress)*scale*2.8*(health?ENCOUNTER_HEALTH.bossElite*regionalEncounterHealthMultiplier({bossElite:true},index):1);seconds+=(interludePackSize(index,floor+1)-1)*expectedAttacks(extra,referenceHit,crit)*cooldown;}}
+  const boss=phase%2===1,progress=2*floor/Math.max(1,floors-1),baseHp=boss?[160,230,360][Math.floor(phase/2)]*(phase===5?(floor===floors-1?3.2:1.75):1):30+phase*4,hp=baseHp*Math.pow(pace.depthHealthGrowth,progress)*scale;
+  if(boss){seconds+=expectedAttacks(hp*(health?ENCOUNTER_HEALTH.boss*regionalEncounterHealthMultiplier({boss:true},index):1),referenceHit,crit)*cooldown+1.5;if(packs&&phase<5){const extra=(30+phase*4)*Math.pow(pace.depthHealthGrowth,progress)*scale*2.8*(health?ENCOUNTER_HEALTH.bossElite*regionalEncounterHealthMultiplier({bossElite:true},index):1);seconds+=(interludePackSize(index,floor+1)-1)*expectedAttacks(extra,referenceHit,crit)*cooldown;}}
   else{const echoes=index===1&&floor===floors-1?6:floor===0?(phase===0?0:1):zoneVisualBand(index,floor+1),eligible=Math.max(0,targets[phase]-3-echoes),rare=expectedRareCount(eligible,rareEliteSpawnChance(index,floor+1),rareEliteQuota(index,floor+1)),regular=Math.max(0,targets[phase]-echoes-rare),uncommon=packs?Math.min(regular,Math.max(0,targets[phase]-4-echoes-rare)*UNCOMMON_ENEMIES.chance):0;let attacks=0;
    for(let sample=0;sample<21;sample++)attacks+=((regular-uncommon)*expectedAttacks(hp*(.9+sample*.01)*(health?regionalEncounterHealthMultiplier({},index):1),referenceHit,crit)+uncommon*expectedAttacks(hp*(.9+sample*.01)*UNCOMMON_ENEMIES.health*(health?regionalEncounterHealthMultiplier({},index):1),referenceHit,crit)+echoes*expectedAttacks(hp*(.9+sample*.01)*2.8*(health?ENCOUNTER_HEALTH.bossElite*regionalEncounterHealthMultiplier({bossElite:true},index):1),referenceHit,crit)+rare*expectedAttacks(hp*(.9+sample*.01)*3.5*(health?ENCOUNTER_HEALTH.rare*regionalEncounterHealthMultiplier({champion:true},index):1),referenceHit,crit))/21;
    seconds+=Math.max(attacks*cooldown,(targets[phase]-1)*model.spawnSeconds+1.5);
   }
  }return seconds;};
  let lo=.001,hi=1;while(forecast(hi)<model.seconds)hi*=2;for(let n=0;n<38;n++){const mid=(lo+hi)/2;if(forecast(mid)<model.seconds)lo=mid;else hi=mid;}
- model.hpScale=Math.max((lo+hi)/2,index>=2?zoneBalance(1).hpScale*Math.pow(1.14,2)*1.25:0);model.previousTargetSeconds=model.seconds;model.dps=TIER_LIMITS[gearTier].power;model.hit=model.dps*cooldown/(1+crit);model.baseForecastSeconds=forecast(model.hpScale,false,model.hit,true);model.forecastSeconds=forecast(model.hpScale,true,model.hit,true);model.seconds=Math.ceil(model.forecastSeconds);model.minutes=Math.ceil(model.seconds/60);ZONE_BALANCE_CACHE.set(index,model);return model;
+ model.hpScale=Math.max((lo+hi)/2,local>=2?zoneBalance(balanceDungeon(index).firstZone+Math.min(1,balanceDungeon(index).zones.length-1)).hpScale*Math.pow(pace.depthHealthGrowth,2)*pace.postEarlyHealthStep:0);model.previousTargetSeconds=model.seconds;model.dps=TIER_LIMITS[gearTier].power;model.hit=model.dps*cooldown/(1+crit);model.baseForecastSeconds=forecast(model.hpScale,false,model.hit,true);model.forecastSeconds=forecast(model.hpScale,true,model.hit,true);model.seconds=Math.ceil(model.forecastSeconds);model.minutes=Math.ceil(model.seconds/60);ZONE_BALANCE_CACHE.set(index,model);return model;
 }
 
 function investMastery(branch){

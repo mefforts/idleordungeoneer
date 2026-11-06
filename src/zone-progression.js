@@ -1,14 +1,14 @@
 /* Three authored equipment tiers. Combat power is finite; skill dedication adds
    a small, explicit bonus rather than another unbounded damage multiplier. */
-const TIER_LIMITS={1:{name:'Iron',power:80,dps:100,weapon:3,armor:5,speed:5,reach:5,enchant:2},2:{name:'Steel',power:240,dps:300,weapon:12,armor:10,speed:10,reach:10,enchant:4},3:{name:'Mithril',floor:300,power:480,dps:600,weapon:10,armor:15,speed:15,reach:15,enchant:6}};
-const ENCHANTMENT=Object.freeze({chances:Object.freeze([0,.14,.28,.42,.56,.58,.60]),arc:.5,range:200});
-const TIER_RESOURCES=['coal','steelBars','willowLogs','ancientSalvage','ancientFragments','garnets','cutGarnets','runicCloth','mithrilOre','mithrilBars','yewLogs','verdantCloth','enchantedSalvage','enchantedFragments','sapphires','cutSapphires'];
-const TIER_PROMOTION_COSTS={melee:{steelBars:12,willowLogs:6,ancientFragments:4,cutGarnets:1,gold:100,zoneMaterials:1},ranged:{steelBars:6,willowLogs:18,runicCloth:6,cutGarnets:1,gold:100,zoneMaterials:1},magic:{steelBars:4,runicCloth:18,ancientFragments:6,cutGarnets:2,gold:100,zoneMaterials:1}};
+const TIER_LIMITS=BALANCE_CONFIG.equipment.tiers;
+const ENCHANTMENT=BALANCE_CONFIG.equipment.enchantment;
+const TIER_RESOURCES=BALANCE_CATALOG.tierResourceKeys;
+const TIER_PROMOTION_COSTS=BALANCE_CONFIG.equipment.promotionCosts[2];
 const WEAPON_RIGS={sword:{height:57,grip:[.49,.85]},shield:{height:33,grip:[.5,.5]},polearm:{height:104,grip:[.19,.79]},greatsword:{height:76,grip:[.5,.84]},bow:{height:54,grip:[.16,.5],flip:true},staff:{height:80,grip:[.5,.78]}};
 let workshopTier=1,tierProgressionInstalled=false,zone2CampImage=null;
 function enchantmentChance(rank){return ENCHANTMENT.chances[Math.max(0,Math.min(ENCHANTMENT.chances.length-1,Math.floor(Number(rank)||0)))];}
 function tier2Unlocked(){return data.cleared>=zoneEnd(0)||data.floor>=zoneStart(1);}
-function styleTier(id=combatStyle()){return Math.max(1,...[2,3].filter(tier=>tier<=Number(data.styles?.[id]?.tier)&&equipmentTierUnlocked(tier))); }
+function styleTier(id=combatStyle()){return Math.max(1,...equipmentTiers().filter(tier=>tier<=Number(data.styles?.[id]?.tier)&&equipmentTierUnlocked(tier))); }
 function styleUpgradeCap(id,kind){
  const tier=kind==='armor'?ownedArmorTier(id):styleTier(id);
  return TIER_LIMITS[tier][kind]||0;
@@ -34,20 +34,20 @@ function styleStats(id=combatStyle()){
  const proficiencyPercent=(level-1)*3/49,craftsmanshipPercent=Math.min(5,Math.max(0,skillLevel-10)*.1),weapon=id===combatStyle()?data.weaponType:s.lastWeapon;
  return {id,name:STYLE_DEFS[id].name,level,skillLevel,tier:styleTier(id),baseDamage:weaponDamageBase(WEAPON_TYPES[weapon]?weapon:STYLE_DEFS[id].weapon),
   damagePercent:proficiencyPercent+craftsmanshipPercent+(id==='magic'?armor.magic:0),proficiencyPercent,craftsmanshipPercent,
-  speedPercent:s.speed*2,reachPercent:s.reach*3,armorHealth:armor.health,guardPercent:armor.guard,movePercent:armor.move};
+  speedPercent:Number((s.speed*BALANCE_CONFIG.equipment.speedPerRank*100).toFixed(6)),reachPercent:Number((s.reach*BALANCE_CONFIG.equipment.reachPerRank*100).toFixed(6)),armorHealth:armor.health,guardPercent:armor.guard,movePercent:armor.move};
 }
 function earnStyleXp(amount,id=combatStyle()){
  const before=styleStats(id).level;data.styles[id].xp+=amount;
  if(styleStats(id).level>before)toast(STYLE_DEFS[id].name+' proficiency '+styleStats(id).level,'Combat proficiency adds up to 3% damage. Dedicated skilling adds up to another 5%.');
 }
 function armorStats(){
- const set=armorLoadout(),rank=set?Math.min(TIER_LIMITS[set.tier].armor,data.styles[set.style].armor):0;
- return {set,rank,health:set?set.health+rank*8:0,guard:set?.style==='melee'?set.perk+rank*.25:0,move:set?.style==='ranged'?set.perk:0,magic:set?.style==='magic'?set.perk:0};
+ const set=armorLoadout(),rank=set?Math.min(TIER_LIMITS[set.tier].armor,data.styles[set.style].armor):0,r=BALANCE_CONFIG.equipment.reinforcement;
+ return {set,rank,health:set?set.health+rank*r.healthPerRank:0,guard:set?(set.style==='melee'?set.perk:0)+rank*r.guardPerRank:0,move:set?.style==='ranged'?set.perk:0,magic:set?.style==='magic'?set.perk:0};
 }
 function weaponArtTier(id=data.weaponType){return styleTier(styleForWeapon(id));}
 function describeEquipment(d){
  const a=ARMOR_SETS[d.equippedArmor],s=d.styles?.[styleForWeapon(d.weaponType)]||{};
- return {armor:a||null,style:a?.style||'travel',tier:a?.tier||0,weaponTier:Math.max(1,Math.min(3,Number(s.tier)||1))};
+ return {armor:a||null,style:a?.style||'travel',tier:a?.tier||0,weaponTier:Math.max(1,Math.min(maximumEquipmentTier(),Number(s.tier)||1))};
 }
 
 
@@ -65,7 +65,7 @@ function paintEquipmentWeapon(c,d,type,pose={x:0,y:0,angle:0}){
  c.drawImage(a.image,x,y,w,h,-rig.grip[0]*width,-rig.grip[1]*height,width,height);c.restore();return true;
 }
 function promoteStyle(id,voucher){
- if(!STYLE_DEFS[id]||styleTier(id)>=3)return false;const p=promotionDetails(id);
+ if(!STYLE_DEFS[id]||styleTier(id)>=maximumEquipmentTier())return false;const p=promotionDetails(id);
  if(!equipmentTierUnlocked(p.tier)){toast(p.name+' locked',equipmentTierGate(p.tier));return false;}
  if(data.styles[id].weapon<p.rank||weaponCraftLevel(STYLE_DEFS[id].weapon)<p.level){toast('Finish your '+TIER_LIMITS[p.tier-1].name+' training',(p.rank?'Refinement '+p.rank+' and ':'')+DISCIPLINES[STYLE_DEFS[id].group].name+' level '+p.level+'.');return false;}
  if(!(voucher===undefined?spendAtStation(p.cost,STYLE_DEFS[id].group):spendUpgradeVoucher('promotion:'+id,voucher)))return false;
@@ -88,8 +88,8 @@ function craftStyleUpgrade(id,kind,voucher){
  toast(STYLE_DEFS[id].name+' '+{weapon:'refinement',armor:'reinforcement',enchant:'enchantment',speed:'attack speed',reach:'reach'}[kind]+' '+s[kind]+' / '+cap,'Permanent '+STYLE_DEFS[id].name+' progression · '+TIER_LIMITS[styleTier(id)].name+' tier');
  save();refreshUI();renderDisciplineDrawer();return true;
 }
-function canUseSkill(key){const s=SKILLS[key];if(!s)return false;const tier=s.tier||1;return equipmentTierUnlocked(tier)&&(!(tier>1||['silverMine','silverSmelt'].includes(key))||disciplineLevel(disciplineFor(key))>=(tier>1?(tier-1)*10:10));}
-function skillLockReason(key){if(canUseSkill(key))return 'Available';const s=SKILLS[key],tier=s?.tier||1,group=DISCIPLINES[disciplineFor(key)],level=tier>1?(tier-1)*10:10;return [!equipmentTierUnlocked(tier)?equipmentTierGate(tier):'',disciplineLevel(disciplineFor(key))<level?group.name+' level '+level:''].filter(Boolean).join(' · ');}
+function canUseSkill(key){const s=SKILLS[key];if(!s)return false;const tier=s.tier||1,required=s.requiredLevel||(['silverMine','silverSmelt'].includes(key)?10:equipmentTierSkillLevel(tier));return equipmentTierUnlocked(tier)&&disciplineLevel(disciplineFor(key))>=required;}
+function skillLockReason(key){if(canUseSkill(key))return 'Available';const s=SKILLS[key],tier=s?.tier||1,group=DISCIPLINES[disciplineFor(key)],level=s?.requiredLevel||(['silverMine','silverSmelt'].includes(key)?10:equipmentTierSkillLevel(tier));return [!equipmentTierUnlocked(tier)?equipmentTierGate(tier):'',disciplineLevel(disciplineFor(key))<level?group.name+' level '+level:''].filter(Boolean).join(' · ');}
 
 
 
@@ -112,7 +112,7 @@ function goalDetails(action){
   const target=Math.max(1,Math.min(100000,Math.floor(Number(quantity)||30)));
   return {name:(id==='arrows'?'Arrows':'Runes')+' · '+(target*AMMUNITION_SECONDS)+'s supply',art:RESOURCE_ART[id],cost:{[id]:target},target,group:id==='arrows'?'woodworking':'warding',view:'refine',done:(data[id]||0)>=target};
  }
- if(type==='promotion'&&STYLE_DEFS[id]){const p=promotionDetails(id);return {name:STYLE_DEFS[id].name+' '+p.name+' promotion',art:'codex-'+(p.tier===3?'unlock_mithril':'unlock_steel'),cost:stationCost(p.cost||{},STYLE_DEFS[id].group),baseCost:p.cost||{},group:STYLE_DEFS[id].group,view:'equipment',done:styleTier(id)>=3};}
+ if(type==='promotion'&&STYLE_DEFS[id]){const p=promotionDetails(id);return {name:STYLE_DEFS[id].name+' '+p.name+' promotion',art:'codex-'+(p.tier===3?'unlock_mithril':'unlock_steel'),cost:stationCost(p.cost||{},STYLE_DEFS[id].group),baseCost:p.cost||{},group:STYLE_DEFS[id].group,view:'equipment',done:styleTier(id)>=maximumEquipmentTier()};}
  if(type==='armor'&&ARMOR_SETS[id]){const a=ARMOR_SETS[id];return {name:a.name,art:a.art,cost:armorRecipeCost(id),baseCost:a.cost,group:a.group,view:'equipment',done:data.ownedArmor.includes(id)};}
  return legacyGoalDetails(action);
 }

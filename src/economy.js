@@ -1,10 +1,10 @@
 /* Delve rewards follow the resource-bound pace of equipment crafting. */
-const DELVE_GOLD={mob:0,guardian:[8,12,22],floor:[15,20,30],overflow:2};
+const DELVE_GOLD=BALANCE_CONFIG.rewards.gold;
 function delveGoldReward(kind,floor=data.floor,index=0){
- const zone=Math.min(20,zoneForFloor(floor)),count=zoneFloorCount(zone),stage=floorStage(floor),band=zoneVisualBand(zone,stage)-1;
- if(kind==='guardian')return Math.round(DELVE_GOLD.guardian[index]*(1+zone*.5))*3/count;
- if(kind==='floor'){const rewards=DELVE_GOLD.floor.map(amount=>Math.round(amount*(1+zone*.6))),budget=rewards.reduce((sum,n)=>sum+n,0),weight=Array.from({length:count},(_,i)=>rewards[zoneVisualBand(zone,i+1)-1]).reduce((sum,n)=>sum+n,0);return rewards[band]*budget/weight;}
- if(kind==='overflow')return DELVE_GOLD.overflow;return kind==='elite'?2*(1+zone*.4):0;
+ const zone=zoneForFloor(floor),count=zoneFloorCount(zone),stage=floorStage(floor),band=zoneVisualBand(zone,stage)-1;
+ if(kind==='guardian')return Math.round(DELVE_GOLD.guardian[index]*(1+(zone-balanceDungeon(zone).firstZone)*.5))*3/count*zoneTuning(zone).goldMultiplier;
+ if(kind==='floor'){const rewards=DELVE_GOLD.floor.map(amount=>Math.round(amount*(1+(zone-balanceDungeon(zone).firstZone)*.6))),budget=rewards.reduce((sum,n)=>sum+n,0),weight=Array.from({length:count},(_,i)=>rewards[zoneVisualBand(zone,i+1)-1]).reduce((sum,n)=>sum+n,0);return rewards[band]*budget/weight*zoneTuning(zone).goldMultiplier;}
+ if(kind==='overflow')return DELVE_GOLD.overflow;return kind==='elite'?2*(1+(zone-balanceDungeon(zone).firstZone)*.4)*zoneTuning(zone).goldMultiplier:0;
 }
 
 function grantDelveGold(amount){
