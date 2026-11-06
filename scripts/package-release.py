@@ -8,7 +8,7 @@ root = Path(__file__).resolve().parents[1]
 version = json.loads((root / 'package.json').read_text())['version']
 html = (root / 'index.html').read_bytes()
 assert b'<html' in html and len(html) > 1_000_000, 'Build the standalone game first'
-assert not any(key in html for key in [b'__arenaTest', b'__balanceProgress', b'test-expansion']), 'Response-only fixtures must not ship'
+assert not any(key in html for key in [b'__arenaTest', b'__balanceProgress', b'__mechanicBible', b'test-expansion']), 'Response-only fixtures must not ship'
 instructions = f'''Idle or Dungeoneer — v{version}
 
 Extract the entire folder, then open index.html in a modern browser.

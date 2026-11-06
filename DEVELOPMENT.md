@@ -30,6 +30,7 @@ Prefer changing the owning `src/` module. Do not edit only the compiled copy of 
 | Themed mechanics, effects and siphons | `src/themed-encounters.js`, `src/themed-encounter-art.js`, `src/ability-effects.js`, `src/siphon-tethers.js` |
 | Hit geometry, damage and enemy health | `src/player-hitbox.js`, `src/encounter-damage.js`, `src/encounter-health.js` |
 | Elite tasks, positioning and released attacks | `src/elite-behaviors.js`, `src/enemy-positioning.js`, `src/released-attacks.js` |
+| Mechanic contracts, overlap and tactical rewards | `src/mechanic-contracts.js`, `combat.mechanics` in `src/balance-config.json`, [MECHANICS_BIBLE.md](MECHANICS_BIBLE.md) |
 | Dashes and travelling mechanics | `src/dash-counters.js`, `src/travelling-mechanics.js`, `src/zone-challenge.js` |
 | Offscreen warnings, floor travel and defeat navigation | `src/offscreen-threats.js`, `src/delve-travel.js`, `src/delve-update.js` |
 | Combat engine and rendering | `src/dungeoneering.js`, `src/mechanic-presentation.js` |
@@ -50,7 +51,7 @@ npm run report:skills
 npm run report:balance
 ```
 
-Use system Chromium or set `CHROMIUM_PATH`; install Playwright Chromium only if needed. Browser suites cover progression, actual paid production and combat, saves/migrations, native gesture suppression, touch/keyboard navigation, encounters, appearance and all-zone pacing. Runtime fixtures are injected into isolated browser responses and must never be embedded in the public standalone.
+Use system Chromium or set `CHROMIUM_PATH`; install Playwright Chromium only if needed. `tests/mechanic-bible.cjs` covers every ability contract, grouped released-threat limits, recovery, anti-chain stagger, optional opportunities, dash interrupts and four viewport sizes. Browser suites cover progression, actual paid production and combat, saves/migrations, native gesture suppression, touch/keyboard navigation, encounters, appearance and all-zone pacing. Runtime fixtures are injected into isolated browser responses and must never be embedded in the public standalone.
 
 `tests/current-experience.cjs` exercises the current guide/menu loop, named guardian libraries, tier/tool details, loot receipts and focus restoration. `tests/equipment-edge-cases.cjs` covers health-preserving jewelry swaps, live stat caches, body-range ammunition and current weapon previews. `tests/animation-balance.cjs` exercises all work release/resume transitions, real keyboard/touch cancellation, empty-ammo poses, in-flight enchantment ownership and paid enchantment gains. `tests/ux-flow.cjs` covers tier-aware source links, paid DPS previews, repeated keyboard purchases, voucher focus, menu scroll memory, live material search and small-screen fitting. Existing economy, jewelry, input and encounter suites retain their precise rules. Rendering and input tests should not be run with heavy simultaneous browser workloads; timing assertions use real input.
 
@@ -64,4 +65,4 @@ For iOS Safari/in-app review, hold gameplay for at least five seconds, drag over
 
 The existing `art:*` and `review:*` commands in `package.json` export art and capture the actual renderer. Most motion reviews accept `-- --stills`; recording needs Playwright video support and FFmpeg. Source work atlases live in `assets/skilling/`; actor, navigation and encounter assets retain their source catalogs in `assets/` and `src/*-art.*`.
 
-Use the closest existing review for a change rather than regenerating every preview. Preserve reduced-motion states, clear teal openings, violet friendly fire and yellow interrupt targets. Shared equipment silhouettes and articulated hands must remain joined across combat, work, Inventory and Appearance. [CHARACTER_ART.md](CHARACTER_ART.md) describes attachment and animation checks.
+Use the closest existing review for a change rather than regenerating every preview. Preserve reduced-motion states, clear teal openings, purple tactical damage and yellow interrupt targets. Shared equipment silhouettes and articulated hands must remain joined across combat, work, Inventory and Appearance. [CHARACTER_ART.md](CHARACTER_ART.md) describes attachment and animation checks.

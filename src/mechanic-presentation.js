@@ -72,7 +72,7 @@ function paintPulseCrest(shape,theme,progress,active){
  ctx.restore();ctx.save();ctx.strokeStyle=theme.color;ctx.lineWidth=2.3;ctx.beginPath();ctx.arc(shape.x,shape.y,shape.r,0,Math.PI*2);ctx.stroke();if(inner){ctx.strokeStyle=theme.hot+'c0';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(shape.x,shape.y,inner,0,Math.PI*2);ctx.stroke();}ctx.restore();
 }
 function paintCounterReadiness(){
- for(const owner of game.enemies){if(owner.charge||owner.cast?.siphon)paintInterruptMark(owner.x,owner.y+12,32,owner.cast?owner.cast.windup/owner.cast.total:1);}
+ for(const owner of game.enemies){if(resolveEnemy(owner)&&(owner.charge||owner.cast?.siphon||['charge','eruptionTrail'].includes(owner.cast?.type)))paintInterruptMark(owner.x,owner.y+12,32,owner.cast?owner.cast.windup/owner.cast.total:1);}
  const p=game.player,remaining=(p.refundFlashUntil||0)-game.frame;if(remaining<=0)return;
  const theme=combatTheme('safe'),r=12;ctx.save();ctx.globalAlpha=Math.min(1,remaining/.2);ctx.strokeStyle=theme.hot;ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y-64,r,.3,Math.PI*1.8);ctx.stroke();themedArrow(p.x+Math.cos(.3)*r,p.y-64+Math.sin(.3)*r,.3-Math.PI/2,theme.color,6);ctx.restore();
 }

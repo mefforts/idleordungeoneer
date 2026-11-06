@@ -1,4 +1,11 @@
 const assert=require('node:assert/strict');
+function mechanicCatalog(){
+ const fs=require('node:fs'),path=require('node:path'),{parse}=require('acorn');
+ const initializer=(file,name)=>{const tree=parse(fs.readFileSync(path.join(__dirname,'../src/'+file),'utf8'),{ecmaVersion:'latest'});return tree.body.flatMap(node=>node.declarations||[]).find(node=>node.id.name===name)?.init;};
+ const core=initializer('mechanic-contracts.js','MECHANIC_CORE'),expanded=initializer('combat-expansion.js','EXPANDED_ABILITIES'),themed=initializer('themed-encounters.js','THEMED_MECHANICS').arguments[0].callee.object;
+ const themedIds=new Set(themed.elements.map(row=>row.elements[0].value));
+ return {themed:themedIds,all:new Set([...core.elements.map(node=>node.value),...expanded.properties.map(node=>node.key.name||node.key.value),...themedIds,'siege'])};
+}
 function validateBalance(c,game){
  const positive=(n,label)=>assert.ok(Number.isFinite(n)&&n>0,label+' must be positive and finite');
  const integer=(n,label,min=0)=>assert.ok(Number.isSafeInteger(n)&&n>=min,label+' must be an integer >= '+min);
@@ -21,6 +28,15 @@ function validateBalance(c,game){
  const zoneIds=new Set();for(const z of d.zones){assert.ok(z.id&&!zoneIds.has(z.id),'Zone IDs must be unique within a dungeon');zoneIds.add(z.id);integer(z.floors,'Floor count',1);positive(z.calibrationMinutes,'Zone calibration minutes');integer(z.theme,'Theme');assert.ok(z.theme<game.BIOMES.length,'Missing biome assets');assert.ok(c.equipment.tiers[z.referenceTier],'Missing reference tier');for(const k of ['normal','elite','rare','boss','bossElite'])positive(z.health[k],'Zone health '+k);positive(z.goldMultiplier,'Gold multiplier');positive(z.sigilMultiplier,'Sigil multiplier');}for(const n of Object.values(d.perkUnlockZones))integer(n,'Perk unlock Zone',1);integer(d.continuation.floors,'Continuation floors',1);positive(d.continuation.calibrationMinutes,'Continuation calibration minutes');positive(d.continuation.healthGrowth,'Continuation health growth');positive(d.continuation.rewardGrowth,'Continuation reward growth');assert.ok(c.equipment.tiers[d.continuation.referenceTier]);}
  for(const n of Object.values(c.skills.trainingRates))positive(n,'Training multiplier');assert.ok(c.refinement.targetFraction>0&&c.refinement.targetFraction<=1);integer(c.skills.reference.jewelryRanks,'Reference jewelry ranks');assert.ok(c.skills.reference.jewelryRanks<=c.equipment.jewelry.maximum);positive(c.rewards.perkCostGrowth,'Perk cost growth');
  for(const section of [c.combat.damage])for(const [k,n]of Object.entries(section))positive(n,'Combat '+k);
+ const mechanics=c.combat.mechanics;assert.ok(mechanics,'Missing mechanic contracts');integer(mechanics.maximumThreats,'Mechanic overlap cap',1);positive(mechanics.pressureMargin,'Mechanic pressure margin');positive(mechanics.reservationSeconds,'Mechanic reservation timeout');
+ const catalog=mechanicCatalog(),assigned=new Set();for(const [name,family]of Object.entries(mechanics.families)){positive(family.minimumWarning,'Warning '+name);assert.equal(typeof family.exclusive,'boolean','Exclusive flag '+name);for(const id of family.abilities){assert.ok(catalog.all.has(id),'Unknown mechanic contract '+id);assert.ok(!assigned.has(id),'Duplicate mechanic contract '+id);assigned.add(id);}}
+ for(const id of catalog.all)assert.ok(assigned.has(id)||catalog.themed.has(id),'Missing mechanic contract '+id);
+ for(const name of ['projectile','aimed','arena','reflect','channel','support','themed','siege'])assert.ok(mechanics.families[name],'Missing mechanic family '+name);
+ for(const name of ['danger','friendly','interrupt','reflect','safe','shield'])for(const field of ['color','hot','dark'])assert.match(mechanics.palette[name]?.[field]||'',/^#[0-9a-f]{6}$/i,'Mechanic palette '+name);
+ assert.equal(new Set(Object.values(mechanics.palette).map(theme=>theme.color)).size,Object.keys(mechanics.palette).length,'Mechanic colors must be distinct');
+ for(const [key,value]of Object.entries(mechanics.recovery))positive(value,'Mechanic recovery '+key);
+ for(const [key,value]of Object.entries(mechanics.friendlyFire)){positive(value,'Friendly fire '+key);if(['ordinary','elite','boss'].includes(key))assert.ok(value<1,'Friendly fire cannot instantly kill '+key);}
+ assert.ok(mechanics.friendlyFire.staggerRecovery>mechanics.friendlyFire.stagger,'Friendly fire must leave a stagger recovery window');for(const [key,value]of Object.entries(mechanics.opportunity))positive(value,'Opportunity '+key);
  return true;
 }
 module.exports={validateBalance};

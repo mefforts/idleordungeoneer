@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.16.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.17.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This update balances Zones 1–5 around Iron, Steel and Mithril: reachable combat-perk unlocks, stronger deeper-Zone rewards, armor reinforcement that mitigates percentage hits, usable vouchers and reassignable game-time points. Level-20 training is recalibrated around all three styles with rank-15 supporting jewelry. [Measured progression](PROGRESSION.md) · [Balance and extension guide](BALANCE_CONFIG.md) · [Exact current rules](BALANCE.md). Zones 6+ remain experimental continuation outside this balance target.
+This update establishes a shared [mechanics bible](MECHANICS_BIBLE.md): clearer danger and optional opportunities, bounded encounter overlap, longer cast recovery, meaningful purple damage/staggers and per-ability variations. Zones 1–5 retain their equipment and progression balance; Zones 6+ remain experimental. [Measured progression](PROGRESSION.md) · [Balance and extension guide](BALANCE_CONFIG.md) · [Exact current rules](BALANCE.md).
 
 ## Play, prepare, return
 
@@ -60,15 +60,15 @@ Level 20 requires **32,166 XP** and targets the material work for roughly 80% of
 | Signal | Meaning |
 | --- | --- |
 | Red | Hurts you. |
-| Violet | Hurts you and other monsters. |
+| Purple | Damages you and monsters; can stagger special enemies. |
 | Teal | Protected opening or benefit. |
 | Gold / white | Reflect interaction. |
-| Yellow brackets | Interruptible target or cut point. |
+| Yellow brackets | Optional interruptible target or cut point. |
 | Blue | Shield; remove its source or guards. |
 
-Warnings and visible effects use the same geometry. Detailed rules live in the Codex; brief combat reminders fade and recur. The player damage capsule spans chest to feet, excluding head and outstretched arms. Teal protected openings protect that full damage body.
+Warnings and visible effects use the same geometry. Released offensive attacks share a two-group encounter budget; large mechanics reserve it and leave a brief recovery window. Most warnings last at least 1.5 seconds. Standard eruptions and beams deal one burst per impact; fire and siphons use their separate damage ticks. Emitted purple attacks can hit their caster after clearing the launch point; remote eruptions can hit them directly. Purple hits stagger special enemies briefly, with a three-second stagger recovery. Detailed rules live in the Codex; brief combat reminders fade and recur. The player damage capsule spans chest to feet, excluding head and outstretched arms. Teal protected openings protect that full damage body.
 
-Dash-throughs briefly stagger elites, rares, bosses and guardian Echoes without damage. Successful mechanic counters immediately reset dash; an ordinary body stagger retains its cooldown. Reflect variants use a reachable gold center, jaw opening or underfoot rune requiring exit and return. Ignoring a reflect costs 15% maximum HP before defenses.
+Dash-throughs briefly stagger elites, rares, bosses and guardian Echoes without damage. Yellow-bracketed charge windups can be interrupted before launch. Ember Catch offers six seconds to catch a yellow ember for a purple blast or leave the red detonation; it is optional. Successful mechanic counters immediately reset dash; an ordinary body stagger retains its cooldown. Reflect variants use a reachable gold center, jaw opening or underfoot rune requiring exit and return. Ignoring a reflect costs 15% maximum HP before defenses.
 
 Special enemies reserve separate positions, guard support and channel tasks such as Ascendance, Rare Awakening, Living Conduit and Siege Channel. Stuns, focused direct hits and appropriate counters interrupt them. Warband Resolve makes special enemies tougher together; the shield percentage communicates their shared protection. Ordinary wounded creatures can retreat toward healing support.
 

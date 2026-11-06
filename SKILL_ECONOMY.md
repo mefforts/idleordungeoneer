@@ -1,6 +1,6 @@
 # Skill and refinement material budget
 
-Build 11.16.0. Level 20 remains **32,166 XP**. The reference includes **all three combat styles**, rather than a single loadout.
+Build 11.17.0. Level 20 remains **32,166 XP**. The reference includes **all three combat styles**, rather than a single loadout.
 
 Iron weapons have **3 refinements**, Steel **12**, and Mithril **10**, counted within each weapon tier. Other upgrade paths retain their existing caps. Weapon damage ceilings are **80 / 240 / 480 equipment DPS**. Mithril starts around **300 DPS** with completed Steel speed training. Tier-aware soft caps preserve these gains, with enemy health and rewards following the authored Zone tuning. Steel weapon materials grow by **1.48× per rank**; other Steel upgrade materials grow by **1.6×**. Gold grows more gently. Steel and Mithril weapon refinements use cut garnets and sapphires as abrasives, giving Artisan a material role in the long upgrade paths.
 

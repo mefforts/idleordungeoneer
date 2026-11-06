@@ -47,7 +47,7 @@ function ricochetPoints(owner){
 }
 function resolveEliteSpecial(enemy,cast,damage){
  if(cast.type==='charge'){
-  const distance=enemyChargeLength(cast);enemy.charge={angle:cast.angle,remaining:distance,hitPlayer:false,enemyHits:new Set()};return true;
+  const distance=enemyChargeLength(cast);enemy.charge={attack:cast,angle:cast.angle,remaining:distance,hitPlayer:false,enemyHits:cast.enemyHits};return true;
  }
  if(cast.type==='shield'){
   const target=cast.shieldTarget;if(target&&shieldTargetAlive(target)&&!target.shieldLink&&target.cast?.type!=='shield'&&!shieldRecipient(enemy)&&!shieldRecipient(target))enemy.shieldLink={target,life:8};return true;

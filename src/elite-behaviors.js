@@ -1,5 +1,5 @@
 /* Elite intentions are transient; ordinary waves and equipment keep their budgets. */
-const ELITE_TASKS={initial:6,cooldown:15,travelSeconds:12,interruptHits:3,interruptHealth:.12,interruptStun:.8,cap:[1,1,2],promotions:[1,1,2],ascend:{seconds:12,healRate:.0035,healCap:.04,duration:14,damage:1.35,tempo:1.25},empower:{seconds:14},conduit:{first:2.8,interval:5.5,warning:1.2},siege:{first:1,interval:2.8,warning:1.2,projectile:.125,mark:.18}};
+const ELITE_TASKS={initial:6,cooldown:15,travelSeconds:12,interruptHits:3,interruptHealth:.12,interruptStun:.8,cap:[1,1,2],promotions:[1,1,2],ascend:{seconds:12,healRate:.0035,healCap:.04,duration:14,damage:1.35,tempo:1.25},empower:{seconds:14},conduit:{first:2.8,interval:5.5,warning:1.2},siege:{first:1,interval:2.8,warning:1.4,projectile:.125,mark:.18}};
 const ELITE_TASK_NAMES={ascend:'Ascendance',empower:'Rare Awakening',conduit:'Living Conduit',siege:'Siege Channel'};
 function eliteBehaviorEligible(e){return !!e&&e.hp>0&&e.elite&&!e.boss&&!e.summoned&&!e.uncommon&&!e.totem&&e.speed>0;}
 function eliteTaskCap(){return ELITE_TASKS.cap[Math.min(2,zoneNumber())];}
@@ -43,7 +43,7 @@ function startEliteTask(owner,kind){
 }
 function clearEliteTask(owner){const task=owner.eliteTask;if(task?.target)game.eliteRecruits?.delete(task.target);owner.eliteTask=null;}
 function finishEliteTask(owner){
- clearEliteTask(owner);if(owner.eliteBehavior)owner.eliteBehavior.nextTaskAt=game.frame+ELITE_TASKS.cooldown+(owner.eliteBehavior.slot%3);owner.castCooldown=Math.max(owner.castCooldown||0,1.2);
+ clearEliteTask(owner);if(owner.eliteBehavior)owner.eliteBehavior.nextTaskAt=game.frame+ELITE_TASKS.cooldown+(owner.eliteBehavior.slot%3);owner.castCooldown=Math.max(owner.castCooldown||0,mechanicRecovery(owner));
 }
 function interruptEliteTask(owner,reason='stun'){
  if(!owner.eliteTask)return false;finishEliteTask(owner);owner.stagger=Math.max(owner.stagger||0,ELITE_TASKS.interruptStun);burst(owner.x,owner.y-18,14,combatTheme('safe').color);if(reason==='dash')refundCounterDash();return true;
@@ -88,12 +88,12 @@ function tickEliteTasks(dt){
 }
 function tickEliteSiege(owner,task,dt){
  const config=ELITE_TASKS.siege;
- if(task.pending){task.warn-=dt;if(task.warn>0)return;const q=task.pending,attack={},damage=hostileDamage(owner,task.variant==='marks'?config.mark:config.projectile);
+ if(task.pending){task.warn-=dt;if(task.warn>0)return;const q=task.pending,attack=task.attackGroup||{},damage=hostileDamage(owner,task.variant==='marks'?config.mark:config.projectile);
   if(task.variant==='marks')game.hazards.push({...q,type:'ground',owner,attack,biome:owner.biome,language:'danger',r:52,life:.4,total:.4,age:0,singleHit:true,damage});
   else for(const offset of [-.2,0,.2]){const angle=q.angle+offset;game.hostileShots.push({x:owner.x,y:owner.y-22,vx:Math.cos(angle)*175,vy:Math.sin(angle)*175,rad:7,life:6,age:0,owner,attack,biome:owner.biome,language:'danger',damage,abilityType:'volley'});}
   task.pending=null;task.spawnClock=config.interval;return;
  }
- task.spawnClock-=dt;if(task.spawnClock<=0){const p=game.player;task.pending={x:p.x,y:p.y,angle:Math.atan2(p.y-owner.y+22,p.x-owner.x)};task.warn=config.warning;}
+ task.spawnClock-=dt;if(task.spawnClock<=0&&canStartMechanic(owner,'siege')){const p=game.player;task.attackGroup={};task.pending={x:p.x,y:p.y,angle:Math.atan2(p.y-owner.y+22,p.x-owner.x)};task.warn=config.warning;}
 }
 function eliteBehaviorStep(enemy,dx,dy,step){
  const task=enemy.eliteTask,source=game.eliteRecruits?.get(enemy),recruit=source?.eliteTask?.target===enemy?source.eliteTask.recruit:null;

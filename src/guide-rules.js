@@ -25,7 +25,7 @@ function gettingStartedGuideHtml(){
   ['Upgrade vouchers','Pay for one named rank on owned equipment, a tool or a station. New gear and promotions still require materials.']]))+
  codexHeading('Time and controls',codexParagraph('Speed is available from the start. Delving offers 0.25×, 0.50×, 0.75× and 1×; Mastery adds faster choices. Skilling starts at 1×, includes active work and idling, and has its own speed selection. Idle produces at 25% of the base active rate, with up to eight real hours of offline work.'))+
  codexParagraph('Hold a work scene, its work button or Space. Skills opens the current discipline; Gather, Refine or Source swaps directly to related work. Recipe ingredients link to their source, and bookmarks track a preparation route.')+
- codexHeading('Combat',codexParagraph('Red hurts you; violet also hurts monsters; teal marks a protected opening or benefit; gold marks a reflect; yellow brackets mark an interruptible target. Move with a drag or WASD/arrows. Dash with Space, Dash or a double tap while moving. Dash-throughs briefly stun special enemies; successful mechanic counters reset dash.'))+
+ codexHeading('Combat',codexParagraph('Red hurts you; purple also hurts monsters; teal marks a protected opening or benefit; gold marks a reflect; yellow brackets mark an interruptible target. Move with a drag or WASD/arrows. Dash with Space, Dash or a double tap while moving. Dash-throughs briefly stun special enemies; successful mechanic counters reset dash.'))+
  codexParagraph(releasedAttackGuideText())+
  codexHeading('Your save',codexParagraph('Progress saves on this device. Settings → Backup/Export downloads your progress; Restore loads that backup. Use it when moving between browsers, downloads and the online game.'));
 }

@@ -354,7 +354,144 @@
     "area": {
       "common": 1.25
     },
-    "maximumDamageReduction": 0.8
+    "maximumDamageReduction": 0.8,
+    "mechanics": {
+      "maximumThreats": 2,
+      "pressureMargin": 90,
+      "recovery": {
+        "elite": 4.2,
+        "boss": 3.4,
+        "finalBoss": 2.9,
+        "uncommon": 4.5,
+        "encounter": 1.25,
+        "counter": 0.8
+      },
+      "friendlyFire": {
+        "ordinary": 0.35,
+        "elite": 0.14,
+        "boss": 0.04,
+        "stagger": 0.55,
+        "staggerRecovery": 3
+      },
+      "palette": {
+        "interrupt": {
+          "color": "#ffe16b",
+          "hot": "#fff7c7",
+          "dark": "#54421e"
+        },
+        "danger": {
+          "color": "#f16d68",
+          "hot": "#ffe2d8",
+          "dark": "#52272a"
+        },
+        "friendly": {
+          "color": "#c887ff",
+          "hot": "#f3ddff",
+          "dark": "#432756"
+        },
+        "reflect": {
+          "color": "#edcb76",
+          "hot": "#fff5d5",
+          "dark": "#51452c"
+        },
+        "safe": {
+          "color": "#6ce0bc",
+          "hot": "#d4fff0",
+          "dark": "#214940"
+        },
+        "shield": {
+          "color": "#79bdff",
+          "hot": "#e4f3ff",
+          "dark": "#233e63"
+        }
+      },
+      "families": {
+        "projectile": {
+          "abilities": [
+            "volley",
+            "ricochet",
+            "bloom",
+            "return",
+            "spiral",
+            "orbit"
+          ],
+          "minimumWarning": 1.5,
+          "exclusive": false
+        },
+        "aimed": {
+          "abilities": [
+            "cleave",
+            "charge",
+            "ground",
+            "beam",
+            "crossfire",
+            "pincer",
+            "eruptionTrail",
+            "minefield",
+            "nova"
+          ],
+          "minimumWarning": 1.5,
+          "exclusive": false
+        },
+        "arena": {
+          "abilities": [
+            "ringchain",
+            "sunder",
+            "gauntlet",
+            "donut",
+            "gravePulse"
+          ],
+          "minimumWarning": 1.8,
+          "exclusive": true
+        },
+        "reflect": {
+          "abilities": [
+            "reflect",
+            "reversal"
+          ],
+          "minimumWarning": 3,
+          "exclusive": true
+        },
+        "channel": {
+          "abilities": [
+            "tether"
+          ],
+          "minimumWarning": 12,
+          "exclusive": true
+        },
+        "support": {
+          "abilities": [
+            "mend",
+            "fury",
+            "shield",
+            "summon",
+            "eliteSummon",
+            "bastion"
+          ],
+          "minimumWarning": 1.6,
+          "exclusive": false,
+          "support": true
+        },
+        "themed": {
+          "abilities": [],
+          "minimumWarning": 1.8,
+          "exclusive": true
+        },
+        "siege": {
+          "abilities": [
+            "siege"
+          ],
+          "minimumWarning": 1.4,
+          "exclusive": false
+        }
+      },
+      "opportunity": {
+        "emberCatchSeconds": 6,
+        "emberBlastRadius": 145,
+        "emberFailRadius": 80
+      },
+      "reservationSeconds": 10
+    }
   },
   "rewards": {
     "gold": {
@@ -510,7 +647,7 @@
         "base": 26,
         "level": 12,
         "icon": "3-cleave",
-        "description": "Successful reflect wards return extra damage and briefly disrupt the caster’s totems."
+        "description": "Successful reflect wards return extra damage and briefly disrupt the caster\u2019s totems."
       }
     ]
   },

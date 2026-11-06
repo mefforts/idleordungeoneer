@@ -3,7 +3,7 @@ const WALKING_HEDGE={speed:245,runningFactor:1.3,width:26,gap:100,lead:220,inter
 const ROLLING_FURNACE={speed:230,radius:24,interval:.95,maximum:3,splitAngle:.48};
 function travellingWaveCount(owner){return Math.min(3,Math.max(zoneVisualBand(),1+(owner.combatPhase||0)));}
 function setupWalkingHedge(e){
- const p=game.player,horizontal=e.serial%2===0,normal=q=>horizontal?q.y:q.x,across=q=>horizontal?q.x:q.y,speed=Math.max(WALKING_HEDGE.speed,playerMoveSpeed()*WALKING_HEDGE.runningFactor),count=Math.max(2,travellingWaveCount(e.owner)),waves=[];
+ const p=game.player,horizontal=(e.variation??e.serial)%2===0,normal=q=>horizontal?q.y:q.x,across=q=>horizontal?q.x:q.y,speed=Math.max(WALKING_HEDGE.speed,playerMoveSpeed()*WALKING_HEDGE.runningFactor),count=Math.max(2,travellingWaveCount(e.owner)),waves=[];
  const point=(n,t)=>horizontal?{x:t,y:n}:{x:n,y:t},center=across(p),a=e.arena,low=horizontal?a.left:a.top,high=horizontal?a.right:a.bottom;
  for(let i=0;i<count;i++){
   const prefer=center+[0,66,-36][i];let gap=null;
@@ -47,7 +47,7 @@ function tickWalkingHedge(e,dt,from){
  if(e.hedge.waves.every(w=>w.retired))e.done=true;
 }
 function setupRollingFurnace(e){
- const r=ROLLING_FURNACE.radius,a=e.arena,start={x:clamp(e.origin.x,a.left+r,a.right-r),y:clamp(e.origin.y,a.top+r,a.bottom-r)},band=zoneVisualBand(),variant=band===1?'train':['train','split','cross'][e.serial%Math.min(3,band)],count=variant==='split'?1:Math.min(3,Math.max(2,travellingWaveCount(e.owner)));
+ const r=ROLLING_FURNACE.radius,a=e.arena,start={x:clamp(e.origin.x,a.left+r,a.right-r),y:clamp(e.origin.y,a.top+r,a.bottom-r)},band=zoneVisualBand(),variant=band===1?'train':['train','split','cross'][(e.variation??e.serial)%Math.min(3,band)],count=variant==='split'?1:Math.min(3,Math.max(2,travellingWaveCount(e.owner)));
  e.furnace={variant,rollers:Array.from({length:count},(_,i)=>({index:i,start:{...start},delay:i*ROLLING_FURNACE.interval,angle:e.angle+(variant==='cross'?(i%2?.32:-.32):(i-(count-1)/2)*.12),retired:false,hits:new Set()}))};e.persistent=true;return true;
 }
 function furnacePath(e,roller){
@@ -87,7 +87,7 @@ function tickRollingFurnace(e,dt,from){
   if(e.furnace.variant==='split'&&oldAge<splitAt&&e.age>=splitAt)shapes.push({...furnacePart(e,roller,splitAt-1e-8,0),lastAt:splitAt});
   for(const shot of shapes){const contains=actor=>furnaceSweptContains(e,roller,shot,actor,actor===game.player?from:actor,oldAge,e.age);
    if(contains(game.player)&&!e.playerHits.has(shot.key)){hurtEncounter(e.owner,shot,e.damage*shot.factor);e.playerHits.set(shot.key,Infinity);}
-   const attack={enemyHits:roller.hits};damageMonstersInAttack(e.owner,attack,contains);
+   const attack=roller.friendlyAttack||(roller.friendlyAttack={enemyHits:roller.hits});damageMonstersInAttack(e.owner,attack,contains);
   }
   if(e.age>=splitAt&&shapes.filter(q=>q.lastAt===undefined).every(furnacePartPassed))roller.retired=true;
  }

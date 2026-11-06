@@ -10,7 +10,7 @@ function setupSiphonTether(owner,cast){
 }
 function finishSiphonTether(owner,cast,solved){
  if(cast.resolved)return;
- cast.siphon.solved=solved;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?2.5:3.1;
+ cast.siphon.solved=solved;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=mechanicRecovery(owner);
  if(solved){refundCounterDash();const q=cast.siphon.cut||game.player;burst(q.x,q.y,14,combatTheme('safe').color);}
 }
 function tickSiphonTether(owner,cast,dt,playerFrom,dashing){

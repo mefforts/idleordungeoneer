@@ -21,7 +21,7 @@ function tickGraveEchoes(dt){
 }
 function paintGraveEchoes(){
  for(const e of game.graveEchoes||[]){const charging=e.age<.85,ending=e.age>=3.3,theme=combatTheme('danger'),time=reducedMotion()?0:game.frame;
-  ctx.save();ctx.translate(e.x,e.y);const radius=charging?18+e.age*12:ending?48:18;glow(0,0,radius+9,'#c3a2ef38');ctx.strokeStyle=charging||ending?theme.color:'#bba1e8';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(0,6,radius,radius*.45,0,0,Math.PI*2);ctx.stroke();
+  ctx.save();ctx.translate(e.x,e.y);const radius=charging?18+e.age*12:ending?48:18;glow(0,0,radius+9,theme.color+'38');ctx.strokeStyle=theme.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(0,6,radius,radius*.45,0,0,Math.PI*2);ctx.stroke();
   ctx.save();ctx.translate(0,charging?-5:-17+Math.sin(time*3)*2);poly([-11,8,-12,-3,-8,-12,0,-16,8,-12,12,-3,11,8,5,5,0,10,-5,5],'#c8bdded9','#5e4b80',1.3);ellipse(-4,-4,2,3,'#39234f');ellipse(4,-4,2,3,'#39234f');line(-3,3,3,3,1,'#78618f');ctx.restore();ctx.restore();
   if(charging)encounterTip('SOUL AWAKENING',e.x,e.y-34,'#e0c7f3',9,e,'awakening','echo');
  }
@@ -32,7 +32,7 @@ function addEmberCleave(enemy,cast,damage){
 }
 function addGravePulses(enemy,cast,damage){
  const count=cast.pulseCount??travellingWaveCount(enemy),openingSpeed=Math.max(GRAVE_PULSE.speed*GRAVE_PULSE.openingSpeedFactor,playerMoveSpeed()*GRAVE_PULSE.runningFactor),firstInterval=Math.max(GRAVE_PULSE.interval,GRAVE_PULSE.minimumSpacing/openingSpeed);
- for(let i=0;i<count;i++)game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:i===0?openingSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:i*firstInterval,sequenceIndex:i,sequenceCount:count,enemyHits:i===0?cast.enemyHits:new Set()});
+ for(let i=0;i<count;i++)game.hazards.push({type:'expanded',shape:'ring',abilityType:'gravePulse',attackGroup:cast.enemyHits||cast,x:cast.origin.x,y:cast.origin.y,inner:0,r:GRAVE_PULSE.width,wave:true,waveSpeed:i===0?openingSpeed:Math.max(GRAVE_PULSE.speed,playerMoveSpeed()*GRAVE_PULSE.runningFactor),owner:enemy,biome:enemy.biome,language:'friendly',damage:damage*.85,life:1,total:1,age:0,delay:i*firstInterval,sequenceIndex:i,sequenceCount:count,enemyHits:i===0?cast.enemyHits:new Set()});
 }
 function advanceGravePulse(h,dt){
  h.waveSpeed=Math.max(h.waveSpeed,playerMoveSpeed()*GRAVE_PULSE.runningFactor);

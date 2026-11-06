@@ -71,7 +71,7 @@ function encounterFixture(){
   },
   nodeBudget(){
    const t=node('mend'),a=owner(1,true),b=owner(1,true);a.x=-90;b.x=90;a.phaseQueue=['mend'];b.phaseQueue=['mend','shield'];
-   const first=beginBossCast(a),second=beginBossCast(b),secondType=b.cast?.type;tickBossSpecial(a,1.5);tickBossSpecial(b,1.5);const count=game.totems.length;
+   const first=beginBossCast(a),second=beginBossCast(b),secondType=b.cast?.type;tickBossSpecial(a,(a.cast?.total||0)+.01);tickBossSpecial(b,(b.cast?.total||0)+.01);const count=game.totems.length;
    tickEncounterObjects(60);const remaining=game.totems.length,targets=combatTargets().filter(e=>e.totem).length;damageTotem(game.totems[0],1e9);const afterDamage=game.totems.length;onKill(game.totems.find(node=>node.owner.elite).owner);return {first,second,secondType,count,remaining,targets,afterDamage,afterCasterDeath:game.totems.length};
   },
   dual(){fresh(0,3);const e=owner(2);const a=cast(e,'fury');tickBossSpecial(e,a.total+.01);const b=cast(e,'mend');tickBossSpecial(e,b.total+.01);const types=game.totems.map(t=>t.type);e.phaseQueue=['fury','sunder'];const next=beginBossCast(e);return {types,next,attack:e.cast?.type,count:game.totems.length};},

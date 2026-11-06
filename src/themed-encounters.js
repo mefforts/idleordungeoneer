@@ -18,7 +18,7 @@ const THEMED_MECHANICS=Object.fromEntries([
  ['moltenDroplets',17,1,'Molten Droplets',2,4.4,'droplet','Splash marks include the smaller bursts',2],
  ['slagAnchors',18,1,'Slag Anchors',2.1,14,'anchor','Dash through an anchor to tear the fire curtain',2],
  ['backdraft',19,1,'Backdraft',1.9,4.4,'vent','Your older footprints ignite first',3],
- ['emberCatch',20,1,'Ember Catch',2.1,4.2,'droplet','Touch the gold ember to return a violet blast',2],
+ ['emberCatch',20,1,'Ember Catch',2.1,6,'droplet','Optional: catch the yellow ember for a purple blast, or leave its marked detonation',2],
  ['boneLoom',21,2,'Bone Loom',2.1,4.6,'rib','Thread the wide corridor between the ribs',1],
  ['soulLantern',22,2,'Soul Lantern',2,14,'lantern','Intercept healing souls or dash through the lantern',1],
  ['coffinPress',23,2,'Coffin Press',2.1,3.8,'coffin','Leave through the open ends',1],
@@ -122,8 +122,8 @@ function themedPoint(arena,x,y,r=18,beneficial=false){
 }
 function themedPath(){const history=game.themedHistory||[],points=history.filter(p=>p.time>=game.frame-2.2);return points.length>2?points.filter((_,i)=>i%2===0).map(({x,y})=>({x,y})):[{x:game.player.x-120,y:game.player.y},{x:game.player.x,y:game.player.y}];}
 function setupThemedCast(owner,cast){
- const def=themedAbility(cast.type),a=expandedArena(),p=game.player,w=a.right-a.left,h=a.bottom-a.top,cx=clamp(p.x,a.left+45,a.right-45),cy=clamp(p.y,a.top+60,a.bottom-60),kind=themedKind(owner,cast.type),serial=(owner.mechanicIndex||0)+(owner.visualType||0);
- const event={type:cast.type,owner,kind,arena:a,origin:{...cast.origin},target:{x:cx,y:cy},age:0,total:def.duration,damage:bossAttackDamage(owner,cast.type),enemyHits:new Set(),playerHits:new Map(),state:{},points:[],path:themedPath(),angle:cast.angle,serial};
+ const def=themedAbility(cast.type),a=expandedArena(),p=game.player,w=a.right-a.left,h=a.bottom-a.top,cx=clamp(p.x,a.left+45,a.right-45),cy=clamp(p.y,a.top+60,a.bottom-60),kind=themedKind(owner,cast.type),serial=(owner.mechanicIndex||0)+(owner.visualType||0),variation=mechanicVariant(owner,cast.type);
+ const event={type:cast.type,owner,kind,arena:a,origin:{...cast.origin},target:{x:cx,y:cy},age:0,total:cast.type==='emberCatch'?MECHANIC_RULES.opportunity.emberCatchSeconds:def.duration,damage:bossAttackDamage(owner,cast.type),enemyHits:cast.enemyHits,playerHits:new Map(),state:{},points:[],path:themedPath(),angle:cast.angle,serial,variation};
  const point=(x,y,r=18,benefit=false)=>themedPoint(a,x,y,r,benefit),count=cast.type==='borrowedBreath'?3:cast.type==='returningSigil'?2:0;
  if(['coolingIslands','borrowedBreath','returningSigil','emberCatch','collapsingNova'].includes(cast.type)){
   const offsets=count===3?[[-65,0],[45,-65],[55,65]]:count===2?[[-70,-70],[70,70]]:[[-55,40],[55,-40],[0,95]];
@@ -161,7 +161,7 @@ function resolveThemedCast(owner,cast){
 }
 function tickThemedWindup(owner,cast,dt){
  if(cast.type==='burrowingBriar'&&cast.windup>.65)cast.themed.target={x:game.player.x,y:game.player.y};
- cast.windup-=dt;if(cast.windup<=0){owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?2.5:3.1;}
+ cast.windup-=dt;if(cast.windup<=0){owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=mechanicRecovery(owner);}
 }
 function themedField(shape,extra={}){return {...shape,start:0,end:1,key:'impact',factor:.8,...extra};}
 function themedCircle(x,y,r,extra={}){return themedField({shape:'circle',x,y,r},extra);}
@@ -174,9 +174,9 @@ function themedFields(e,age=e.age){
  case 'burrowingBriar':circle(t.x,t.y,57,{start:.08,end:.65,art:'root'});break;
  case 'rootGates':for(let i=0;i<2;i++)fields.push(themedGate(a,true,t.y+(i-.5)*110,clamp(e.opening.x+(i?48:-48),a.left+48,a.right-48),96,{start:i*1.7,end:i*1.7+2,key:'gate'+i,art:'root'}));break;
  case 'walkingHedge':fields.push(...walkingHedgeFields(e,age));break;
- case 'seedChain':for(let i=0;i<3;i++)circle(clamp(t.x+(i-1)*65,a.left+35,a.right-35),t.y+(i%2?65:-35),49,{start:i*1.15,end:i*1.15+.55,key:'seed'+i,factor:.6,art:'pod',reveal:i?i*1.15-.85:-10});break;
+ case 'seedChain':for(let i=0;i<3;i++){const index=e.variation%2?2-i:i;circle(clamp(t.x+(index-1)*65,a.left+35,a.right-35),t.y+(index%2?65:-35),49,{start:i*1.15,end:i*1.15+.55,key:'seed'+i,factor:.6,art:'pod',order:i+1,reveal:i?i*1.15-.85:-10});}break;
  case 'fallingCanopy':for(let i=0;i<3;i++)segment({x:t.x-70,y:t.y+(i-1)*80},{x:t.x+70,y:t.y+(i-1)*80},32,{start:i*1.1,end:i*1.1+.55,key:'branch'+i,factor:1,art:'branch'});break;
- case 'forgeHammers':for(let i=0;i<2;i++)circle(clamp(t.x+(i?62:-62),a.left+38,a.right-38),t.y,54,{start:i*1.65,end:i*1.65+.65,key:'hammer'+i,factor:1,art:'hammer'});break;
+ case 'forgeHammers':for(let i=0;i<2;i++)circle(clamp(t.x+((e.variation%2?1-i:i)?62:-62),a.left+38,a.right-38),t.y,54,{start:i*1.65,end:i*1.65+.65,key:'hammer'+i,factor:1,art:'hammer',order:i+1});break;
  case 'furnaceVents':for(let i=0;i<3;i++)circle(a.left+w*(i+.5)/3,t.y+(i%2?45:-45),40,{start:i*1.2,end:i*1.2+.9,key:'vent'+i,dot:.035,art:'vent',order:i+1});break;
  case 'coolingIslands':{
   const phase=Math.floor(Math.max(0,age)/2.1)%e.points.length,change=age%2.1>1.35;const refuges=[e.points[phase%e.points.length]];if(change)refuges.push(e.points[(phase+1)%e.points.length]);fields.push(themedField({shape:'flood',arena:a,refuges,r:49},{end:e.total,key:'lava'+phase,dot:.025,art:'stone'}));break;}
@@ -214,7 +214,7 @@ function themedHit(e,key,contains,factor=.8,cooldown=0){
  if(THEMED_MECHANICS[e.type].language==='friendly')damageMonstersInAttack(e.owner,e,contains);
 }
 function themedCounter(e,point,fraction=.12){
- if(e.done)return;refundCounterDash();e.solved=true;e.done=true;const owner=e.owner,amount=owner.maxHp*fraction;owner.hp-=amount;owner.stagger=Math.max(owner.stagger||0,1.2);owner.lastDamageStyle=combatStyle();burst(point.x,point.y,16,combatTheme('reflect').color);game.counterEffects.push({...point,inner:26,r:42,tx:owner.x,ty:owner.y-22,reflected:true,life:.75,total:.75,biome:e.kind});if(owner.hp<=0)onKill(owner);
+ if(e.done)return;refundCounterDash();e.solved=true;e.done=true;const owner=e.owner,amount=owner.maxHp*fraction,opportunity=e.type==='emberCatch';owner.hp-=amount;owner.stagger=Math.max(owner.stagger||0,1.2);owner.lastDamageStyle=combatStyle();burst(point.x,point.y,16,combatTheme(opportunity?'friendly':'reflect').color);game.counterEffects.push({...point,type:opportunity?'opportunityBlast':undefined,inner:26,r:opportunity?MECHANIC_RULES.opportunity.emberBlastRadius:42,tx:owner.x,ty:owner.y-22,reflected:true,life:.75,total:.75,biome:e.kind});if(owner.hp<=0)onKill(owner);
 }
 function themedCounterContact(e,point,from,dt,start=0,end=e.total){
  const old=e.age-dt;if(e.age<start||old>=end)return false;
@@ -252,7 +252,7 @@ function tickThemedEvent(e,dt,from,dashing){
   for(let i=0;i<12;i++){if(i%4===3)continue;const q={x:e.origin.x+Math.cos(e.angle)*(i+1)*28,y:e.origin.y+Math.sin(e.angle)*(i+1)*28};if(age>=i*.13+1&&age<i*.13+3)tickCombatDot(e,'stitch'+i,actor=>actor===game.player?playerCircleContains(q.x,q.y,18):Math.hypot(actor.x-q.x,actor.y-q.y)<18,.02);}
   break;}
  case 'slagAnchors':for(let i=0;i<2;i++){const q=e.points[i];if(!s['anchor'+i]&&dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<36){s['anchor'+i]=true;e.solved=true;refundCounterDash();burst(q.x,q.y,16,'#ffb471');}}if(s.anchor0&&s.anchor1)e.done=true;break;
- case 'emberCatch':{const q=e.points[0];if(themedCounterContact(e,q,from,dt)){damageMonstersInAttack(e.owner,e,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<145);themedCounter(e,q,.10);}else if(age>=e.total-.05){hurtEncounter(e.owner,e,p.maxHp*ENCOUNTER_DAMAGE.reflect/incomingDamageScale());e.done=true;}break;}
+ case 'emberCatch':{const q=e.points[0];if(themedCounterContact(e,q,from,dt)){damageMonstersInAttack(e.owner,e,actor=>Math.hypot(actor.x-q.x,actor.y-q.y)<MECHANIC_RULES.opportunity.emberBlastRadius);themedCounter(e,q,.10);}else if(age>=e.total){const u=dt?clamp((e.total-oldAge)/dt,0,1):1,at={x:from.x+(p.x-from.x)*u,y:from.y+(p.y-from.y)*u};if(playerCircleContains(q.x,q.y,MECHANIC_RULES.opportunity.emberFailRadius,at))hurtEncounter(e.owner,e,e.damage);burst(q.x,q.y,16,combatTheme('danger').color);game.counterEffects.push({...q,type:'emberDetonation',r:MECHANIC_RULES.opportunity.emberFailRadius,life:.4,total:.4});e.done=true;}break;}
  case 'soulLantern':{
   const q=e.points[0],recipient=supportTotemRecipient({owner:e.owner,x:q.x,y:q.y});if(dashing&&segmentDistance(q.x,q.y,from.x,from.y,p.x,p.y)<37){e.solved=e.done=true;refundCounterDash();burst(q.x,q.y,12,'#70e4a2');break;}
   if(!recipient)break;const launched=Math.floor(age/1.15);for(let i=0;i<=launched;i++){const progress=(age-i*1.15)/1.5;if(progress<0||progress>1.1||s['soul'+i])continue;const soul={x:q.x+(recipient.x-q.x)*Math.min(1,progress),y:q.y+(recipient.y-q.y)*Math.min(1,progress)};if(Math.hypot(p.x-soul.x,p.y-soul.y)<24){s['soul'+i]=true;e.solved=true;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.0035);}else if(progress>=1){s['soul'+i]=true;recipient.hp=Math.min(recipient.maxHp,recipient.hp+recipient.maxHp*.004);}}
@@ -277,7 +277,7 @@ function themedPortalShot(e,age){const first={x:e.arena.left+45,y:e.target.y-70}
 function themedPull(point,amount,radius=Infinity){const p=game.player,dx=point.x-p.x,dy=point.y-p.y,d=Math.hypot(dx,dy);if(d>radius||d<1)return;p.x+=dx/d*Math.min(amount,d);p.y+=dy/d*Math.min(amount,d);resolveWorldCollisions(p);}
 function tickThemedMechanics(dt,from=game.player,dashing=false){
  const p=game.player,history=game.themedHistory||(game.themedHistory=[]);if(!history.length||game.frame-history[history.length-1].time>=.09){history.push({x:p.x,y:p.y,time:game.frame});if(history.length>32)history.shift();}
- for(const owner of game.enemies){const e=owner.cast?.themed;if(e&&snapThemedLink(e,from,dashing)){owner.cast=null;owner.castCooldown=owner.boss?2.5:3.1;}}
+ for(const owner of game.enemies){const e=owner.cast?.themed;if(e&&snapThemedLink(e,from,dashing)){owner.cast=null;owner.castCooldown=mechanicRecovery(owner);}}
  game.themedEvents=(game.themedEvents||[]).filter(e=>{if(e.done||!encounterSourceActive(e.owner)||game.status!=='running')return false;e.age+=dt;tickThemedEvent(e,dt,from,dashing);return !e.done&&(e.persistent||e.age<e.total)&&game.status==='running'&&game.transition<=0;});
 }
 function themedShieldMultiplier(enemy,from=game.player){const e=(game.themedEvents||[]).find(e=>e.type==='turningBulwark'&&e.owner===enemy&&!e.done);if(!e)return 1;const angle=e.angle+e.age*.5,delta=Math.atan2(from.y-enemy.y,from.x-enemy.x)-angle;return Math.abs(Math.atan2(Math.sin(delta),Math.cos(delta)))<1.05?.3:1;}

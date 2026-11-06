@@ -355,7 +355,144 @@
       "area": {
         "common": 1.25
       },
-      "maximumDamageReduction": 0.8
+      "maximumDamageReduction": 0.8,
+      "mechanics": {
+        "maximumThreats": 2,
+        "pressureMargin": 90,
+        "recovery": {
+          "elite": 4.2,
+          "boss": 3.4,
+          "finalBoss": 2.9,
+          "uncommon": 4.5,
+          "encounter": 1.25,
+          "counter": 0.8
+        },
+        "friendlyFire": {
+          "ordinary": 0.35,
+          "elite": 0.14,
+          "boss": 0.04,
+          "stagger": 0.55,
+          "staggerRecovery": 3
+        },
+        "palette": {
+          "interrupt": {
+            "color": "#ffe16b",
+            "hot": "#fff7c7",
+            "dark": "#54421e"
+          },
+          "danger": {
+            "color": "#f16d68",
+            "hot": "#ffe2d8",
+            "dark": "#52272a"
+          },
+          "friendly": {
+            "color": "#c887ff",
+            "hot": "#f3ddff",
+            "dark": "#432756"
+          },
+          "reflect": {
+            "color": "#edcb76",
+            "hot": "#fff5d5",
+            "dark": "#51452c"
+          },
+          "safe": {
+            "color": "#6ce0bc",
+            "hot": "#d4fff0",
+            "dark": "#214940"
+          },
+          "shield": {
+            "color": "#79bdff",
+            "hot": "#e4f3ff",
+            "dark": "#233e63"
+          }
+        },
+        "families": {
+          "projectile": {
+            "abilities": [
+              "volley",
+              "ricochet",
+              "bloom",
+              "return",
+              "spiral",
+              "orbit"
+            ],
+            "minimumWarning": 1.5,
+            "exclusive": false
+          },
+          "aimed": {
+            "abilities": [
+              "cleave",
+              "charge",
+              "ground",
+              "beam",
+              "crossfire",
+              "pincer",
+              "eruptionTrail",
+              "minefield",
+              "nova"
+            ],
+            "minimumWarning": 1.5,
+            "exclusive": false
+          },
+          "arena": {
+            "abilities": [
+              "ringchain",
+              "sunder",
+              "gauntlet",
+              "donut",
+              "gravePulse"
+            ],
+            "minimumWarning": 1.8,
+            "exclusive": true
+          },
+          "reflect": {
+            "abilities": [
+              "reflect",
+              "reversal"
+            ],
+            "minimumWarning": 3,
+            "exclusive": true
+          },
+          "channel": {
+            "abilities": [
+              "tether"
+            ],
+            "minimumWarning": 12,
+            "exclusive": true
+          },
+          "support": {
+            "abilities": [
+              "mend",
+              "fury",
+              "shield",
+              "summon",
+              "eliteSummon",
+              "bastion"
+            ],
+            "minimumWarning": 1.6,
+            "exclusive": false,
+            "support": true
+          },
+          "themed": {
+            "abilities": [],
+            "minimumWarning": 1.8,
+            "exclusive": true
+          },
+          "siege": {
+            "abilities": [
+              "siege"
+            ],
+            "minimumWarning": 1.4,
+            "exclusive": false
+          }
+        },
+        "opportunity": {
+          "emberCatchSeconds": 6,
+          "emberBlastRadius": 145,
+          "emberFailRadius": 80
+        },
+        "reservationSeconds": 10
+      }
     },
     "rewards": {
       "gold": {
@@ -2295,6 +2432,143 @@
     ]
   },
   "encounters": {
+    "mechanicBible": {
+      "maximumThreats": 2,
+      "pressureMargin": 90,
+      "recovery": {
+        "elite": 4.2,
+        "boss": 3.4,
+        "finalBoss": 2.9,
+        "uncommon": 4.5,
+        "encounter": 1.25,
+        "counter": 0.8
+      },
+      "friendlyFire": {
+        "ordinary": 0.35,
+        "elite": 0.14,
+        "boss": 0.04,
+        "stagger": 0.55,
+        "staggerRecovery": 3
+      },
+      "palette": {
+        "interrupt": {
+          "color": "#ffe16b",
+          "hot": "#fff7c7",
+          "dark": "#54421e"
+        },
+        "danger": {
+          "color": "#f16d68",
+          "hot": "#ffe2d8",
+          "dark": "#52272a"
+        },
+        "friendly": {
+          "color": "#c887ff",
+          "hot": "#f3ddff",
+          "dark": "#432756"
+        },
+        "reflect": {
+          "color": "#edcb76",
+          "hot": "#fff5d5",
+          "dark": "#51452c"
+        },
+        "safe": {
+          "color": "#6ce0bc",
+          "hot": "#d4fff0",
+          "dark": "#214940"
+        },
+        "shield": {
+          "color": "#79bdff",
+          "hot": "#e4f3ff",
+          "dark": "#233e63"
+        }
+      },
+      "families": {
+        "projectile": {
+          "abilities": [
+            "volley",
+            "ricochet",
+            "bloom",
+            "return",
+            "spiral",
+            "orbit"
+          ],
+          "minimumWarning": 1.5,
+          "exclusive": false
+        },
+        "aimed": {
+          "abilities": [
+            "cleave",
+            "charge",
+            "ground",
+            "beam",
+            "crossfire",
+            "pincer",
+            "eruptionTrail",
+            "minefield",
+            "nova"
+          ],
+          "minimumWarning": 1.5,
+          "exclusive": false
+        },
+        "arena": {
+          "abilities": [
+            "ringchain",
+            "sunder",
+            "gauntlet",
+            "donut",
+            "gravePulse"
+          ],
+          "minimumWarning": 1.8,
+          "exclusive": true
+        },
+        "reflect": {
+          "abilities": [
+            "reflect",
+            "reversal"
+          ],
+          "minimumWarning": 3,
+          "exclusive": true
+        },
+        "channel": {
+          "abilities": [
+            "tether"
+          ],
+          "minimumWarning": 12,
+          "exclusive": true
+        },
+        "support": {
+          "abilities": [
+            "mend",
+            "fury",
+            "shield",
+            "summon",
+            "eliteSummon",
+            "bastion"
+          ],
+          "minimumWarning": 1.6,
+          "exclusive": false,
+          "support": true
+        },
+        "themed": {
+          "abilities": [],
+          "minimumWarning": 1.8,
+          "exclusive": true
+        },
+        "siege": {
+          "abilities": [
+            "siege"
+          ],
+          "minimumWarning": 1.4,
+          "exclusive": false
+        }
+      },
+      "opportunity": {
+        "emberCatchSeconds": 6,
+        "emberBlastRadius": 145,
+        "emberFailRadius": 80
+      },
+      "reservationSeconds": 10
+    },
     "offscreenThreats": {
       "radius": 0.34,
       "maximumRadius": 180,
@@ -2417,7 +2691,7 @@
       "siege": {
         "first": 1,
         "interval": 2.8,
-        "warning": 1.2,
+        "warning": 1.4,
         "projectile": 0.125,
         "mark": 0.18
       },
@@ -2538,7 +2812,7 @@
       "ringchain": {
         "name": "Rebounding Barrage",
         "seconds": 1.6,
-        "hint": "Three rings · gaps rotate · violet shots rebound"
+        "hint": "Three rings · gaps rotate · purple shots rebound"
       },
       "bloom": {
         "name": "Growing Stars",
@@ -2553,7 +2827,7 @@
       "crossfire": {
         "name": "Crossfire",
         "seconds": 1.5,
-        "hint": "Violet cross · lure enemies into the lanes"
+        "hint": "Purple cross · lure enemies into the lanes"
       },
       "spiral": {
         "name": "Spiral Barrage",
@@ -2583,7 +2857,7 @@
       "pincer": {
         "name": "Closing Jaws",
         "seconds": 1.8,
-        "hint": "Two violet sweeps · use the gap"
+        "hint": "Two purple sweeps · use the gap"
       },
       "summon": {
         "name": "Calling Spire",
@@ -2613,7 +2887,7 @@
       "tether": {
         "name": "Siphon Tether",
         "seconds": 4,
-        "hint": "Dash away from the caster or through the teal knot"
+        "hint": "Dash away from the caster or through the yellow knot"
       },
       "orbit": {
         "name": "Orbital Blades",
@@ -2623,7 +2897,7 @@
       "eruptionTrail": {
         "name": "Ruinous Rush",
         "seconds": 1.5,
-        "hint": "Violet charge leaves a burning trail"
+        "hint": "Purple charge leaves a burning trail"
       }
     },
     "selected": {
@@ -2885,9 +3159,9 @@
         "biome": 1,
         "name": "Ember Catch",
         "seconds": 2.1,
-        "duration": 4.2,
+        "duration": 6,
         "art": "droplet",
-        "guide": "Touch the gold ember to return a violet blast",
+        "guide": "Optional: catch the yellow ember for a purple blast, or leave its marked detonation",
         "band": 2,
         "lifetime": "timed",
         "language": "friendly",
@@ -3248,8 +3522,10 @@
     ],
     "friendlyFire": {
       "ordinary": 0.35,
-      "elite": 0.12,
-      "boss": 0.025
+      "elite": 0.14,
+      "boss": 0.04,
+      "stagger": 0.55,
+      "staggerRecovery": 3
     },
     "summons": {
       "maximum": 8,
@@ -4157,13 +4433,13 @@
       "group": "artisan"
     }
   ],
-  "version": "11.16.0",
+  "version": "11.17.0",
   "simulated": [],
   "pacingBuild": "No matching reference run",
   "pacingHtmlSha256": null,
   "progression": {
-    "version": "11.16.0",
-    "htmlSha256": "58ae23a16c89378531eb4dc0c971fd32a3706c77cfcd472297dca2169cebbbaf",
+    "version": "11.17.0",
+    "htmlSha256": "d565301c2879a6267a2ab9b2a838d83fcfa505ba85d45c8e1a31fb0b9feb0717",
     "seed": 20261106,
     "method": "Independent fixed-gear profiles in the real combat runtime. Incoming damage is disabled and HP replenished; timed blessings are skipped. Automated movement, reflect/channel counters and optional protection-breaking dashes. Combat time excludes deaths, preparation and menu decisions; this is not a human survival test.",
     "cases": [
@@ -4183,7 +4459,7 @@
         },
         "zone": 1,
         "weapon": "sword",
-        "seconds": 1328.5999999999863,
+        "seconds": 1289.8000000000043,
         "kills": 413,
         "referenceDps": 80,
         "targetSeconds": 905,
@@ -4193,7 +4469,7 @@
         "weaponRank": 2,
         "speedRank": 2,
         "floors": 5,
-        "sigils": 53,
+        "sigils": 46,
         "goldEarned": 335,
         "essence": 36,
         "arrowsUsed": 0,
@@ -4223,7 +4499,7 @@
         },
         "zone": 2,
         "weapon": "sword",
-        "seconds": 2025.4399999999769,
+        "seconds": 1928.039999999985,
         "kills": 648,
         "referenceDps": 240,
         "targetSeconds": 1423,
@@ -4233,8 +4509,8 @@
         "weaponRank": 6,
         "speedRank": 7,
         "floors": 10,
-        "sigils": 98,
-        "goldEarned": 729,
+        "sigils": 99,
+        "goldEarned": 727,
         "essence": 110,
         "arrowsUsed": 0,
         "runesUsed": 0
@@ -4268,7 +4544,7 @@
         },
         "zone": 3,
         "weapon": "sword",
-        "seconds": 8317.040000001218,
+        "seconds": 8015.840000001135,
         "kills": 938,
         "referenceDps": 240,
         "targetSeconds": 10512,
@@ -4278,8 +4554,8 @@
         "weaponRank": 10,
         "speedRank": 8,
         "floors": 20,
-        "sigils": 576,
-        "goldEarned": 4263,
+        "sigils": 537,
+        "goldEarned": 4273,
         "essence": 370,
         "arrowsUsed": 0,
         "runesUsed": 0
@@ -4313,7 +4589,7 @@
         },
         "zone": 3,
         "weapon": "staff",
-        "seconds": 6658.000000000455,
+        "seconds": 6385.1600000003145,
         "kills": 938,
         "referenceDps": 240,
         "targetSeconds": 10512,
@@ -4323,11 +4599,11 @@
         "weaponRank": 10,
         "speedRank": 8,
         "floors": 20,
-        "sigils": 549,
-        "goldEarned": 4263,
+        "sigils": 537,
+        "goldEarned": 4284,
         "essence": 370,
         "arrowsUsed": 0,
-        "runesUsed": 582
+        "runesUsed": 559
       },
       {
         "name": "Zone 3 · 80% Steel Bow",
@@ -4358,7 +4634,7 @@
         },
         "zone": 3,
         "weapon": "bow",
-        "seconds": 6933.960000000595,
+        "seconds": 6559.560000000402,
         "kills": 938,
         "referenceDps": 240,
         "targetSeconds": 10512,
@@ -4368,10 +4644,10 @@
         "weaponRank": 10,
         "speedRank": 8,
         "floors": 20,
-        "sigils": 543,
+        "sigils": 519,
         "goldEarned": 4252,
         "essence": 370,
-        "arrowsUsed": 617,
+        "arrowsUsed": 580,
         "runesUsed": 0
       },
       {
@@ -4403,7 +4679,7 @@
         },
         "zone": 3,
         "weapon": "polearm",
-        "seconds": 8004.68000000107,
+        "seconds": 7469.0000000008695,
         "kills": 938,
         "referenceDps": 240,
         "targetSeconds": 10512,
@@ -4413,8 +4689,8 @@
         "weaponRank": 10,
         "speedRank": 8,
         "floors": 20,
-        "sigils": 519,
-        "goldEarned": 4263,
+        "sigils": 528,
+        "goldEarned": 4273,
         "essence": 370,
         "arrowsUsed": 0,
         "runesUsed": 0
@@ -4449,7 +4725,7 @@
         },
         "zone": 4,
         "weapon": "sword",
-        "seconds": 6965.28000000061,
+        "seconds": 6577.280000000423,
         "kills": 1118,
         "referenceDps": 240,
         "targetSeconds": 12535,
@@ -4459,8 +4735,8 @@
         "weaponRank": 0,
         "speedRank": 10,
         "floors": 20,
-        "sigils": 772,
-        "goldEarned": 7039,
+        "sigils": 708,
+        "goldEarned": 6986,
         "essence": 570,
         "arrowsUsed": 0,
         "runesUsed": 0
@@ -4495,7 +4771,7 @@
         },
         "zone": 4,
         "weapon": "sword",
-        "seconds": 8544.960000001225,
+        "seconds": 8022.8400000010415,
         "kills": 1118,
         "referenceDps": 240,
         "targetSeconds": 12535,
@@ -4505,8 +4781,8 @@
         "weaponRank": 12,
         "speedRank": 10,
         "floors": 20,
-        "sigils": 728,
-        "goldEarned": 7092,
+        "sigils": 700,
+        "goldEarned": 7144,
         "essence": 570,
         "arrowsUsed": 0,
         "runesUsed": 0
@@ -4542,7 +4818,7 @@
         },
         "zone": 5,
         "weapon": "sword",
-        "seconds": 6005.600000000155,
+        "seconds": 5807.600000000123,
         "kills": 1118,
         "referenceDps": 480,
         "targetSeconds": 7261,
@@ -4552,8 +4828,8 @@
         "weaponRank": 5,
         "speedRank": 12,
         "floors": 20,
-        "sigils": 850,
-        "goldEarned": 10665,
+        "sigils": 890,
+        "goldEarned": 10535,
         "essence": 770,
         "arrowsUsed": 0,
         "runesUsed": 0
@@ -4589,7 +4865,7 @@
         },
         "zone": 5,
         "weapon": "staff",
-        "seconds": 4342.079999999883,
+        "seconds": 4257.55999999988,
         "kills": 1118,
         "referenceDps": 480,
         "targetSeconds": 7261,
@@ -4599,11 +4875,11 @@
         "weaponRank": 5,
         "speedRank": 12,
         "floors": 20,
-        "sigils": 925,
-        "goldEarned": 10405,
+        "sigils": 910,
+        "goldEarned": 10587,
         "essence": 770,
         "arrowsUsed": 0,
-        "runesUsed": 409
+        "runesUsed": 403
       }
     ],
     "errors": []
@@ -4694,7 +4970,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 5.94,
+        "seconds": 6.22,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
@@ -4712,7 +4988,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 5.94,
+        "seconds": 6.22,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
@@ -4730,12 +5006,12 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 19.26,
+        "seconds": 18.26,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 108,
-        "hits": 2,
-        "damageTaken": 36,
+        "remainingHp": 74,
+        "hits": 4,
+        "damageTaken": 70,
         "reflections": 0
       },
       {
@@ -4748,12 +5024,12 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 19.26,
+        "seconds": 18.26,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 108,
-        "hits": 2,
-        "damageTaken": 36,
+        "remainingHp": 70,
+        "hits": 4,
+        "damageTaken": 74,
         "reflections": 0
       },
       {
@@ -4766,7 +5042,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 5.94,
+        "seconds": 6.22,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
@@ -4784,7 +5060,7 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 5.94,
+        "seconds": 6.22,
         "status": "dead",
         "bossDefeated": false,
         "remainingHp": 0,
@@ -4802,12 +5078,12 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 19.26,
+        "seconds": 18.3,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 108,
-        "hits": 2,
-        "damageTaken": 36,
+        "remainingHp": 90,
+        "hits": 3,
+        "damageTaken": 54,
         "reflections": 0
       },
       {
@@ -4820,12 +5096,12 @@
           "speed": 2
         },
         "maxHp": 144,
-        "seconds": 19.26,
+        "seconds": 18.3,
         "status": "running",
         "bossDefeated": true,
-        "remainingHp": 108,
-        "hits": 2,
-        "damageTaken": 36,
+        "remainingHp": 90,
+        "hits": 3,
+        "damageTaken": 54,
         "reflections": 0
       }
     ],
@@ -4879,8 +5155,7 @@
         "echoes": 0,
         "casts": [
           "bloom",
-          "ground",
-          "beam"
+          "ground"
         ]
       },
       {
@@ -4919,27 +5194,26 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 86.1,
-        "seconds": 103.48,
+        "remainingHp": 96.2,
+        "seconds": 123.14,
         "status": "running",
         "phase": 2,
         "clearedOpeningGuardian": true,
-        "hits": 7,
-        "damage": 148.3,
+        "hits": 4,
+        "damage": 115.5,
         "echoes": 0,
         "casts": [
           "ground",
           "beam",
           "bloom",
           "cinderStitch",
-          "fury",
           "volley",
-          "coolingIslands",
-          "reflect",
-          "emberCatch",
+          "rollingFurnace",
+          "forgeHammers",
+          "turningBulwark",
           "rallyThread",
-          "crossfire",
-          "summon"
+          "fury",
+          "shield"
         ]
       },
       {
@@ -4953,23 +5227,29 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 0,
-        "seconds": 63.68,
-        "status": "dead",
-        "phase": 1,
-        "clearedOpeningGuardian": false,
-        "hits": 6,
-        "damage": 189,
+        "remainingHp": 44.8,
+        "seconds": 97.18,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 5,
+        "damage": 144.2,
         "echoes": 0,
         "casts": [
           "bloom",
           "ground",
           "beam",
-          "cinderStitch",
-          "volley",
+          "fury",
           "forgeHammers",
+          "shield",
+          "coolingIslands",
+          "crossfire",
           "emberCatch",
-          "crossfire"
+          "cleave",
+          "summon",
+          "furnaceVents",
+          "cinderStitch",
+          "volley"
         ]
       },
       {
@@ -4983,25 +5263,25 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 0,
-        "seconds": 78.24,
-        "status": "dead",
-        "phase": 1,
-        "clearedOpeningGuardian": false,
-        "hits": 14,
-        "damage": 189,
+        "remainingHp": 22.7,
+        "seconds": 109.68,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 6,
+        "damage": 166.3,
         "echoes": 0,
         "casts": [
           "beam",
           "ground",
           "bloom",
           "cinderStitch",
-          "fury",
           "volley",
-          "coolingIslands",
-          "reflect",
+          "fury",
           "emberCatch",
-          "moltenDroplets"
+          "reflect",
+          "crossfire",
+          "summon"
         ]
       },
       {
@@ -5082,32 +5362,29 @@
           "speed": 5
         },
         "maxHp": 189,
-        "remainingHp": 0,
-        "seconds": 140.38,
-        "status": "dead",
-        "phase": 1,
-        "clearedOpeningGuardian": false,
-        "hits": 6,
-        "damage": 199.5,
-        "echoes": 7,
+        "remainingHp": 123.1,
+        "seconds": 203.06,
+        "status": "running",
+        "phase": 2,
+        "clearedOpeningGuardian": true,
+        "hits": 3,
+        "damage": 110.6,
+        "echoes": 10,
         "casts": [
           "ground",
+          "ricochet",
           "soulLantern",
           "mend",
-          "coffinPress",
-          "ricochet",
-          "turningBulwark",
-          "gravePulse",
-          "beam",
           "boneLoom",
-          "fury",
+          "gravePulse",
           "reflect",
+          "beam",
           "crossfire",
+          "turningBulwark",
           "hauntedFootsteps",
           "cleave",
-          "charge",
-          "summon",
-          "volley"
+          "shield",
+          "summon"
         ]
       },
       {
@@ -5122,27 +5399,31 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 149.02,
+        "seconds": 196.7,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
-        "hits": 6,
-        "damage": 189,
+        "hits": 7,
+        "damage": 194.8,
         "echoes": 7,
         "casts": [
           "beam",
           "fury",
           "reflect",
           "ricochet",
-          "bloom",
           "gravePulse",
           "ground",
           "boneLoom",
-          "hauntedFootsteps",
           "crossfire",
-          "volley",
-          "charge",
-          "summon"
+          "soulLantern",
+          "mend",
+          "hauntedFootsteps",
+          "coffinPress",
+          "shield",
+          "turningBulwark",
+          "summon",
+          "cleave",
+          "tether"
         ]
       },
       {
@@ -5157,7 +5438,7 @@
         },
         "maxHp": 189,
         "remainingHp": 0,
-        "seconds": 80.44,
+        "seconds": 148.04,
         "status": "dead",
         "phase": 1,
         "clearedOpeningGuardian": false,
@@ -5170,10 +5451,14 @@
           "reflect",
           "ground",
           "beam",
-          "fury",
           "crossfire",
+          "coffinPress",
+          "fury",
           "hauntedFootsteps",
-          "volley"
+          "summon",
+          "ricochet",
+          "bloom",
+          "cleave"
         ]
       }
     ]

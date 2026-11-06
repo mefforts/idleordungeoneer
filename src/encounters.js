@@ -7,11 +7,11 @@ function encounterImage(kind,type){
  return encounterImages.get(key);
 }
 function clearEncounterState(){
- game.themedEvents=[];game.themedHistory=[];game.hazards=[];game.releasedWards=[];
+ game.mechanicDirector=null;game.themedEvents=[];game.themedHistory=[];game.hazards=[];game.releasedWards=[];
  game.eliteRecruits=new Map();game.elitePromotionCount=0;game.enemyPositionSerial=0;game.dashSweep=null;
  game.phaseCleanupPending=false;game.graveEchoes=[];game.totems=[];game.counterEffects=[];game.counterRequest=null;game.reflectCooldown=0;game.disruptReadyAt=0;game.bossBursts=[];
  if(game.player){game.player.hitInvuln=0;game.player.rallyTime=0;game.player.mending=false;game.player.dotDamage=0;game.player.dotDisplayAt=0;game.player.dotWindowAt=-1;game.player.dotWindowSpent=0;game.player.dashGuard=0;game.player.refundedDashSerial=null;game.player.refundFlashUntil=0;}
- for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.enemyPosition=null;e.healingRetreat=null;e.retreatReadyAt=0;e.ascendance=0;e.stunnedByDash=null;e.resolveDisabledUntil=0;}
+ for(const e of game.enemies||[]){e.furyLinked=false;e.cast=null;e.stagger=0;e.charge=null;e.shieldLink=null;e.guardIds=[];e.phaseQueue=[];e.eliteTask=null;e.eliteBehavior=null;e.enemyPosition=null;e.healingRetreat=null;e.retreatReadyAt=0;e.ascendance=0;e.stunnedByDash=null;e.resolveDisabledUntil=0;e.friendlyStaggerReadyAt=0;e.mechanicCounts={};}
 }
 function clearOwnerMechanics(owner){
  if(isReflectCast(owner.cast)&&!owner.cast.resolved)(game.releasedWards||(game.releasedWards=[])).push({owner,cast:owner.cast});
@@ -74,6 +74,7 @@ function beginBossCast(e){
  let shieldTarget=null,banks=null;if(type==='shield'){shieldTarget=shieldingTarget(e);if(!shieldTarget)type='ricochet';}if(type==='ricochet'){banks=ricochetPoints(e);if(!banks)type='volley';}
  if(e.uncommon&&Math.hypot(game.player.x-e.x,game.player.y-e.y)>550)return false;
  if(type==='charge'&&Math.hypot(game.player.x-e.x,game.player.y-e.y)>340)return false;
+ if(!canStartMechanic(e,type))return false;
  const active=game.enemies.filter(other=>other.cast),reflect=active.some(other=>['reflect','reversal'].includes(other.cast.type)),major=['sunder','gauntlet','donut','bastion','tether'];
  if(type==='tether'&&!canBeginSiphonCast())return false;
  if(type==='gravePulse'&&!gravePulseCanCast())return false;
@@ -89,9 +90,9 @@ function beginBossCast(e){
  const support=['mend','fury'].includes(type),pending=active.filter(other=>['mend','fury'].includes(other.cast.type)).length;
  if(support&&((game.totems||[]).filter(t=>!t.destructible).length+pending>=2||(game.totems||[]).some(t=>t.owner===e&&t.type===type))){if(e.phaseQueue?.[0]===type)e.phaseQueue.shift();e.mechanicIndex=(e.mechanicIndex||0)+1;return beginBossCast(e);}
  if(['summon','eliteSummon'].includes(type)&&((game.totems||[]).filter(t=>t.destructible).length>=2||(game.totems||[]).some(t=>t.owner===e&&t.destructible))){if(e.phaseQueue?.[0]===type)e.phaseQueue.shift();e.mechanicIndex=(e.mechanicIndex||0)+1;return beginBossCast(e);}
- if(type==='bastion'&&game.enemies.filter(g=>g.summoned&&g.elite).length>=3){if(e.phaseQueue?.[0]===type)e.phaseQueue.shift();type='crossfire';}
+ if(type==='bastion'&&game.enemies.filter(g=>g.summoned&&g.elite).length>=3){if(e.phaseQueue?.[0]===type)e.phaseQueue.shift();type='crossfire';if(!canStartMechanic(e,type))return false;}
  const needsPoint=['reflect','reversal','mend','fury'].includes(type),point=needsPoint?(isReflectCast({type})&&reflectVariantFor(e)==='rebound'?{...encounterFoot(game.player),r:54}:encounterPoint(e,isReflectCast({type})?'reflect':type)):null;
- if(needsPoint&&!point){if(game.counterRequest===e)game.counterRequest=null;return false;}
+ if(needsPoint&&!point){releaseMechanicReservation(e);if(game.counterRequest===e)game.counterRequest=null;return false;}
  const duration=['reflect','reversal'].includes(type)?1.9:support?1.4:type==='volley'?1.15:type==='ground'?1.5:type==='cleave'||type==='charge'?1.1:type==='ricochet'?1.15:type==='shield'?1.2:1.7;
  const origin={x:e.x,y:e.y},cast={type,label:type==='cleave'?['Briar Sweep','Slag Sweep','Grave Sweep','Rift Sweep'][e.biome??biomeIndex()]:specialAttackName(type,e.biome??biomeIndex())||theme[type],windup:duration,total:duration,origin,angle:Math.atan2(game.player.y-e.y,game.player.x-e.x),targets:[],point,reach:(e.champion?145:170)*ENCOUNTER_AREA.common,halfAngle:Math.PI/3,beamWidth:48*ENCOUNTER_AREA.common,enemyHits:new Set(),shieldTarget,ricochetPoints:banks,target:{x:game.player.x,y:game.player.y}};
  if(['reflect','reversal'].includes(type)){cast.point.inner=34;game.counterRequest=null;}
@@ -99,14 +100,14 @@ function beginBossCast(e){
   const count=e.elite||e.uncommon?1:e.bossIndex===2?4:2;cast.targets.push({x:game.player.x,y:game.player.y,r:(e.uncommon?34:e.boss&&isZoneFinal()?54:44)*ENCOUNTER_AREA.common});
   for(let i=1;i<count;i++){const a=i*Math.PI*2/count+(e.mechanicIndex||0)*.75;cast.targets.push({x:game.player.x+Math.cos(a)*105,y:game.player.y+Math.sin(a)*105,r:44*ENCOUNTER_AREA.common});}
  }
- if(expandedCastSetup(e,cast)===false){if(themedAbility(type)&&!e.phaseQueue?.length)e.mechanicIndex=(e.mechanicIndex||0)+1;return false;}if(isReflectCast(cast))configureReflectWard(e,cast);
+ if(expandedCastSetup(e,cast)===false){releaseMechanicReservation(e);if(themedAbility(type)&&!e.phaseQueue?.length)e.mechanicIndex=(e.mechanicIndex||0)+1;return false;}if(isReflectCast(cast))configureReflectWard(e,cast);
  if(['summon','eliteSummon'].includes(type)&&!cast.point)return false;
  if(type==='bastion'&&!cast.guards.length)return false;
  if(e.phaseQueue?.[0]===type)e.phaseQueue.shift();else e.mechanicIndex=(e.mechanicIndex||0)+1;
- e.cast=cast;if(themedAbility(type))codexDiscover('mechanic_'+type);codexDiscover('combat_language');if(!data.combatLanguageTipSeen){data.combatLanguageTipSeen=true;toast('Read the warnings','Red hurts you. Violet also hurts enemies. Gold centers reflect. Yellow marks interrupts. Teal marks openings and benefits. Blue marks shields. See the Codex for more.');}e.mechanicsUsed=e.mechanicsUsed||[];if(!e.mechanicsUsed.includes(type))e.mechanicsUsed.push(type);return true;
+ noteMechanicCast(e,cast);e.cast=cast;if(themedAbility(type))codexDiscover('mechanic_'+type);codexDiscover('combat_language');if(!data.combatLanguageTipSeen){data.combatLanguageTipSeen=true;toast('Read the warnings','Red is dangerous. Purple can damage and stagger monsters. Gold centers reflect. Yellow brackets mark optional interrupts. Teal marks openings and benefits. Blue marks shields. See the Codex for more.');}e.mechanicsUsed=e.mechanicsUsed||[];if(!e.mechanicsUsed.includes(type))e.mechanicsUsed.push(type);return true;
 }
 function resolveBossCast(e,cast){
- const theme=e.biome??biomeIndex(),damage=bossAttackDamage(e,cast.type);if(cast.resolved)return;cast.resolved=true;
+ const theme=e.biome??biomeIndex(),damage=bossAttackDamage(e,cast.type);if(cast.resolved)return;cast.resolved=true;e.castCooldown=mechanicRecovery(e);
  if(e.uncommon){resolveUncommonAttack(e,cast);return;}
  if(resolveExpandedCast(e,cast,damage)||resolveEliteSpecial(e,cast,damage))return;
  if(isReflectCast(cast)){resolveReflectWard(e,cast);return;}
@@ -118,8 +119,8 @@ function resolveBossCast(e,cast){
  if(cast.type==='volley'){
   const count=e.bossIndex===2?18:10,offset=(e.mechanicIndex||0)*.39;
   for(let i=0;i<count;i++){if(i%5===0)continue;const a=i*Math.PI*2/count+offset,speed=e.elite?145:e.bossIndex===2?182:158;game.hostileShots.push({x:cast.origin.x,y:cast.origin.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,rad:e.bossIndex===2?8:6,life:5,biome:theme,damage,owner:e,attack:cast,language:'danger'});}
- }else if(cast.type==='ground')for(const target of cast.targets)(game.hazards||(game.hazards=[])).push({...target,type:'ground',language:'friendly',owner:e,enemyHits:cast.enemyHits,biome:theme,life:1.6,total:1.6,damage,age:0});
- else (game.hazards||(game.hazards=[])).push({type:'beam',language:'friendly',owner:e,enemyHits:cast.enemyHits,x:cast.origin.x,y:cast.origin.y,angle:cast.angle,width:cast.beamWidth,length:540,life:.55,total:.55,biome:theme,damage:damage*1.3,age:0});
+ }else if(cast.type==='ground')for(const target of cast.targets)(game.hazards||(game.hazards=[])).push({...target,type:'ground',singleHit:true,language:'friendly',owner:e,enemyHits:cast.enemyHits,biome:theme,life:1.6,total:1.6,damage,age:0});
+ else (game.hazards||(game.hazards=[])).push({type:'beam',singleHit:true,language:'friendly',owner:e,enemyHits:cast.enemyHits,x:cast.origin.x,y:cast.origin.y,angle:cast.angle,width:cast.beamWidth,length:540,life:.55,total:.55,biome:theme,damage:damage*1.3,age:0});
 }
 function tickBossSpecial(e,dt,playerFrom=encounterFoot(game.player),dashing=game.player.dashTime>0){
  if(e.boss){
@@ -132,8 +133,8 @@ function tickBossSpecial(e,dt,playerFrom=encounterFoot(game.player),dashing=game
  if(e.cast?.siphon){tickSiphonTether(e,e.cast,dt,playerFrom,dashing);return;}
  if(isReflectCast(e.cast)){tickReflectWard(e,e.cast,dt,playerFrom);return;}
  if(e.cast?.themed){tickThemedWindup(e,e.cast,dt);return;}
- if(e.cast){e.cast.windup-=dt;if(e.cast.windup<=0){const cast=e.cast;e.cast=null;resolveBossCast(e,cast);e.castCooldown=e.boss?(e.combatPhase>=2?1.8:2.5):3.1;}return;}
- e.castCooldown=(e.castCooldown??2)-dt*(e.ascendance>0?ELITE_TASKS.ascend.tempo:1);if(e.castCooldown<=0&&!beginBossCast(e))e.castCooldown=.2;
+ if(e.cast){e.cast.windup-=dt;if(e.cast.windup<=0){const cast=e.cast;e.cast=null;resolveBossCast(e,cast);e.castCooldown=mechanicRecovery(e);}return;}
+ e.castCooldown=(e.castCooldown??2)-dt*(e.ascendance>0?ELITE_TASKS.ascend.tempo:1);if(e.castCooldown<=0&&!beginBossCast(e))e.castCooldown=.35+(e.visualType||e.bossIndex||0)%4*.08;
 }
 function totemInterception(t){
  const recipient=supportTotemRecipient(t);if(!recipient)return false;const totem=encounterFoot(t),caster=encounterFoot(recipient),player=encounterFoot(game.player);
@@ -202,7 +203,7 @@ function paintEncounterGround(){
  paintAbilityGroundArt();paintThemedGround();paintReleasedWards();
  paintEliteTaskGround();
  for(const e of game.enemies)if(['reflect','reversal'].includes(e.cast?.type))paintReflectWard(e.cast.point,clamp(1-e.cast.windup/e.cast.total,0,1),e.biome);
- for(const fx of game.counterEffects||[]){ctx.save();ctx.globalAlpha=fx.life/fx.total;if(fx.type==='cleave')paintEnemyCleave(fx.cast,combatTheme('friendly'),1,true);else if(fx.type==='ricochet')for(const point of fx.points)paintRicochetBank(point,DUNGEON_THEMES[fx.biome]);else paintReflectWard(fx,1,fx.biome,true);ctx.restore();}
+ for(const fx of game.counterEffects||[]){ctx.save();ctx.globalAlpha=fx.life/fx.total;if(fx.type==='cleave')paintEnemyCleave(fx.cast,combatTheme('friendly'),1,true);else if(fx.type==='ricochet')for(const point of fx.points)paintRicochetBank(point,DUNGEON_THEMES[fx.biome]);else if(fx.type==='emberDetonation'){paintWarningCircle(fx.x,fx.y,fx.r,1,combatTheme('danger'),true);paintEmberFlame(fx.x,fx.y,48,0);}else if(fx.type==='opportunityBlast'){const progress=1-fx.life/fx.total;paintExpandedShape({shape:'ring',x:fx.x,y:fx.y,inner:32,r:fx.r*(.4+.6*progress)},combatTheme('friendly'),progress,true);paintWarningCircle(fx.x,fx.y,32,progress,combatTheme('safe'));paintAbilityEmblem('mirror',fx.x,fx.y,17,combatTheme('safe'));}else paintReflectWard(fx,1,fx.biome,true);ctx.restore();}
 }
 function paintTotem(t){
  if(t.destructible){paintSummonTotem(t);return;}
@@ -222,7 +223,7 @@ function paintEncounterLinks(){
   encounterTip(label,t.x,t.y-62,theme.hot,10,t,label,'stream');
  }
  for(const e of game.enemies){
-  paintEnemyResolve(e);
+  paintEnemyResolve(e);paintMechanicRecovery(e);
   paintEliteTaskAir(e);
   if(e.cast?.type==='tether')paintAbilityTether(e,e.cast);
   if(['reflect','reversal'].includes(e.cast?.type)){

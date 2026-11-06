@@ -1,8 +1,8 @@
 # Selected encounter mechanics
 
-The 39 selected mechanics below are implemented. Original proposal numbers remain stable; the in-game Codex provides current counterplay. Combat uses illustrated objects, trajectories, openings and timer arcs, with brief fading reminders.
+The 39 selected mechanics below are implemented and follow [MECHANICS_BIBLE.md](MECHANICS_BIBLE.md). Original proposal numbers remain stable; the in-game Codex provides current counterplay. Combat uses illustrated objects, trajectories, openings and timer arcs, with brief fading reminders.
 
-Red hurts the player; violet also hurts monsters; teal marks protected openings or benefits; gold marks reflects; yellow brackets mark interruptible targets; blue marks shields. Released independent hazards outlive their caster, while living channels and effects bound to a living pair stop with their source. Support totems can retarget living allies.
+Red hurts the player; purple also hurts monsters; teal marks protected openings or benefits; gold marks reflects; yellow brackets mark interruptible targets; blue marks shields. Released independent hazards outlive their caster, while living channels and effects bound to a living pair stop with their source. Support totems can retarget living allies.
 
 Rally Thread, Orbit Transfer and Briar Leash use separated pairs/anchors with a clear crossing. Linked enemies preserve that space while their mechanic is active. Warband Resolve makes groups tougher together; stunned enemies lose the protection and stop providing it. Elites, rares and Echoes can pursue Ascendance, Rare Awakening, Living Conduit or Siege Channel instead of clumping around the player.
 
@@ -28,7 +28,7 @@ Walking Hedge sends persistent trains with offset openings and no dash refund. G
 | 17 | Molten Droplets | Embervault | Splash marks include the smaller bursts |
 | 18 | Slag Anchors | Embervault | Dash through an anchor to tear the fire curtain |
 | 19 | Backdraft | Embervault | Your older footprints ignite first |
-| 20 | Ember Catch | Embervault | Touch the gold ember to return a violet blast |
+| 20 | Ember Catch | Embervault | Optional: catch the yellow ember for a purple blast, or leave its marked detonation |
 | 21 | Bone Loom | Hollow Crypt | Thread the wide corridor between the ribs |
 | 22 | Soul Lantern | Hollow Crypt | Intercept healing souls or dash through the lantern |
 | 23 | Coffin Press | Hollow Crypt | Leave through the open ends |
@@ -64,4 +64,4 @@ Each Grave Pulse ring keeps expanding; later sequences require the refund from e
 
 [Fifty new theme-neutral variations](THEME_NEUTRAL_IDEAS.md) are proposals only. Unselected original ideas are not added to live rotations.
 
-Validation covers 51 browser suites. Controlled combat tests cover all 39 selected mechanics, 156 themed effect assets, seven travelling-attack props, three additional Codex medallions, proportional damage, capped DoTs, pack completion, uncommon spawn limits, real-terrain phone/landscape placements, timed/swept counters and transient-state cleanup. The encounter-tuning suite adds Resolve stacking and stun windows, actual terrain-crossing dashes, minimum link separation, larger attack boundaries and both siphon variants. Full invulnerable combat benchmarks clear Zones 1–4 and later reference Zones; three-seed 150-DPS pressure comparisons use real health, damage and loot. These automated controllers are not human playtests. Exact results and limits are in [BALANCE.md](BALANCE.md).
+Validation covers the shared contracts, grouped pressure budgets, surviving released threats, recovery clocks, bounded purple staggers, optional Ember Catch, swept dash interrupts, alternating variations, real-terrain placements and all existing encounter regression suites. Full-zone pacing uses an invulnerable controller; these are not human survival tests. Current measurements and limitations are in [BALANCE.md](BALANCE.md) and [PROGRESSION.md](PROGRESSION.md).

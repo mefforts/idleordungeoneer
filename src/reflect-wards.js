@@ -28,9 +28,9 @@ function tickReflectWard(owner,cast,dt,from=encounterFoot(game.player)){
  cast.windup=Math.max(0,left-dt);
  const entry=point.armed?reflectEntryFraction(from,end,point):null;
  if(reflectJawContact(point,from,entry===null?end:{x:from.x+(end.x-from.x)*entry,y:from.y+(end.y-from.y)*entry})&&game.frame>=(cast.wallReadyAt||0)){cast.wallReadyAt=game.frame+.65;hurtEncounter(owner,cast,game.player.maxHp*REFLECT_WARDS.wallDamage/incomingDamageScale());if(game.status!=='running')return;}
- if(entry!==null){cast.reflected=true;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?(owner.combatPhase>=2?1.8:2.5):3.1;return;}
+ if(entry!==null){cast.reflected=true;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=mechanicRecovery(owner);return;}
  if(!point.armed&&Math.hypot(end.x-point.x,end.y-point.y)>point.inner+14){point.armed=true;cast.hint='Return to the gold rune · touch it before time runs out';}
- if(cast.windup<=0){cast.expired=true;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=owner.boss?(owner.combatPhase>=2?1.8:2.5):3.1;}
+ if(cast.windup<=0){cast.expired=true;owner.cast=null;resolveBossCast(owner,cast);owner.castCooldown=mechanicRecovery(owner);}
 }
 function resolveReflectWard(owner,cast){
  const point=cast.point,p=encounterFoot(game.player),reflected=cast.reflected===true||!cast.expired&&point.armed&&Math.hypot(p.x-point.x,p.y-point.y)<=point.inner,kind=owner.biome??biomeIndex();

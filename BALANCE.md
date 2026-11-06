@@ -1,6 +1,6 @@
 # Current game rules and balance
 
-Build **11.16.0**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Zones 1–5 use authored health and reward tuning. [BALANCE_CONFIG.md](BALANCE_CONFIG.md) describes configuration and expansion; [PROGRESSION.md](PROGRESSION.md) gives current gear-profile measurements.
+Build **11.17.0**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Zones 1–5 use authored health and reward tuning. [BALANCE_CONFIG.md](BALANCE_CONFIG.md) describes configuration and expansion; [PROGRESSION.md](PROGRESSION.md) gives current gear-profile measurements.
 
 ## Progression and clocks
 
@@ -196,21 +196,25 @@ Intercepted healing restores 0.35% maximum HP/second, bounded by a 15% player-he
 | Signal | Meaning |
 | --- | --- |
 | Red | Hurts the player |
-| Violet | Hurts player and other monsters |
+| Purple | Tactical damage to player and monsters; can stagger special enemies |
 | Teal | Protected opening or benefit |
 | Gold / white | Reflect interaction |
-| Yellow brackets | Interruptible target or cut point |
+| Yellow brackets | Optional interruptible target or cut point |
 | Blue | Shield; remove its source or guards |
 
 Warnings, visible artwork and damage geometry share their shapes. Mechanic labels never write a refuge instruction in an expanding pulse center. Details live in the Codex; brief combat reminders fade and recur. Decorative motion pauses with combat and respects reduced motion.
 
 Player damage uses a stable chest-to-feet capsule with 12-unit radius; head, hats, arms and equipment do not alter it. Movement, pickups and beneficial/counter interactions keep ground-anchor checks. Teal protected openings protect the full damage body.
 
-Direct special-enemy hits have a 12.5% maximum-health floor before defenses. Projectiles start at 12.5%, heavy hits around 25%, major failures up to 50%, and failed reflects 15%. Independent mechanics can hit together; one projectile spread shares a 0.47-second window. Dash/spawn protection and normal defenses remain. Uncommons use smaller 6% shots / 8% marks / 10% charges.
+Direct special-enemy hits have a 12.5% maximum-health floor before defenses. Projectiles start at 12.5%, heavy hits around 25%, major failures up to 50%, and failed reflects 15%. Independent mechanics can hit together; one projectile spread shares a 0.47-second window. Standard eruptions and beams deal one burst per impact rather than repeating through their visual aftermath. Dash/spawn protection and normal defenses remain. Uncommons use smaller 6% shots / 8% marks / 10% charges.
 
 Lingering damage uses small rapid ticks. Fire defaults to 2.5% per 0.35 combat seconds; overlapping DoTs share a 5% base cap per interval. Dash protection prevents these ticks; ordinary hit immunity does not erase fire pressure. Leaving resets a field’s first-tick delay.
 
-Violet friendly fire hits another ordinary / elite / boss for 35% / 12% / 2.5% maximum HP before shields, once per cast. The caster is immune. Enemy attacks do not trigger player lifesteal, enchantment or weapon procs.
+Purple attacks deal 35% / 14% / 4% ordinary / elite / boss maximum HP before shields, once per attack. An emitted attack can hit its caster after first clearing its launch point; remote ground eruptions can hit the caster directly. Special enemies stagger for 0.55s, with 3s before another friendly-fire stagger. Enemy attacks do not trigger player lifesteal, enchantment or weapon procs.
+
+The [mechanics bible](MECHANICS_BIBLE.md) defines shared color, counter and encounter rules. At most 2 offensive attack groups can be active, including nearby released attacks. Large arena attacks, reflects, siphons and themed mechanics reserve the encounter. Support remains bounded separately. Exclusive mechanics leave 1.25s of recovery after ending. Ordinary warnings last at least 1.5s; elite recovery is 4.2s and full-boss recovery 3.4s (2.9s in the final phase). Successful dash counters provide 0.8s before another offensive cast. All these clocks use Delving time.
+
+Ember Catch is optional: 6s to touch the yellow ember for a 145-unit purple blast, or leave its 80-unit red detonation. Walking catches retain dash cooldown; catches during a dash refund it. Seed chains, hammer leads and marching lanes alternate their displayed order. Furnace variants advance per successful use instead of depending on unrelated casts.
 
 ## Special enemies, tasks and support
 
@@ -261,18 +265,18 @@ Current HP calibration preserves the general +75% regular-elite / +50% rare, bos
 
 | Progression profile | Measured combat minutes | Equipment DPS | Sigils invested |
 | --- | --- | --- | --- |
-| Zone 1 · progressing Iron | 22.14 | 56.22 | 0 |
-| Zone 2 · progressing Steel | 33.76 | 155.45 | 42 |
-| Zone 3 · 80% Steel | 138.62 | 207.39 | 160 |
-| Zone 3 · 80% Steel Mage | 110.97 | 208.68 | 160 |
-| Zone 3 · 80% Steel Bow | 115.57 | 207.39 | 160 |
-| Zone 3 · 80% Steel Halberd | 133.41 | 207.39 | 160 |
-| Zone 4 · new Mithril | 116.09 | 300 | 378 |
-| Zone 4 · completed Steel | 142.42 | 240 | 378 |
-| Zone 5 · middle Mithril | 100.09 | 383.92 | 727 |
-| Zone 5 · middle Mithril Mage | 72.37 | 390.9 | 727 |
+| Zone 1 · progressing Iron | 21.5 | 56.22 | 0 |
+| Zone 2 · progressing Steel | 32.13 | 155.45 | 42 |
+| Zone 3 · 80% Steel | 133.6 | 207.39 | 160 |
+| Zone 3 · 80% Steel Mage | 106.42 | 208.68 | 160 |
+| Zone 3 · 80% Steel Bow | 109.33 | 207.39 | 160 |
+| Zone 3 · 80% Steel Halberd | 124.48 | 207.39 | 160 |
+| Zone 4 · new Mithril | 109.62 | 300 | 378 |
+| Zone 4 · completed Steel | 133.71 | 240 | 378 |
+| Zone 5 · middle Mithril | 96.79 | 383.92 | 727 |
+| Zone 5 · middle Mithril Mage | 70.96 | 390.9 | 727 |
 
-Benchmark build: **11.16.0**. Standalone SHA-256: `58ae23a16c89378531eb4dc0c971fd32a3706c77cfcd472297dca2169cebbbaf`. [Exact profiles and limits](PROGRESSION.md).
+Benchmark build: **11.17.0**. Standalone SHA-256: `d565301c2879a6267a2ab9b2a838d83fcfa505ba85d45c8e1a31fb0b9feb0717`. [Exact profiles and limits](PROGRESSION.md).
 
 These full-Zone simulations use actual spawning, attacks, movement, counters, guards, spires and phase transitions. Incoming damage is disabled and HP replenished to isolate pacing. They are not human survival trials or wall-clock completion promises. Menus, deaths, preparation and selected game speeds change actual play time. Short survival experiments remain separate raw evidence in balance-report.json; they do not establish current human difficulty.
 
