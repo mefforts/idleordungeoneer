@@ -1,5 +1,6 @@
 /* Touch movement, full-sized navigation art and material inventory. */
 let arenaTouch=null,mobileInstalled=false,touchNavigationClick=null,arenaDashTaps=new Map(),lastArenaDashTap=null;
+let materialInventoryQuery='',materialInventoryOwner=null;
 function installGameplaySelectionGuard(){
  const stage=$('stageWrap');
  // Menus and native editing/copy controls keep their browser behavior. New
@@ -115,20 +116,43 @@ function inventoryRows(){
 }
 function renderMaterialInventory(){
  const host=$('loadoutMaterials');if(!host)return;
+ if(materialInventoryOwner!==data){materialInventoryOwner=data;materialInventoryQuery='';host.dataset.state='';host.dataset.structure='';const input=$('materialSearch');if(input)input.value='';}
  const rows=inventoryRows(),signature=JSON.stringify([rows,data.gold,data.essence,data.lootHistory]);if(host.dataset.state===signature)return;host.dataset.state=signature;
- const structure=JSON.stringify([rows.map(({count,...row})=>row),data.lootHistory]);
- if(host.dataset.structure===structure){
-  for(const row of rows){const button=host.querySelector('[data-inventory-key="'+row.key+'"]');button.querySelector('small').textContent=format(row.count);button.setAttribute('aria-label',row.name+' · '+format(row.count)+(row.key.startsWith('voucher_')?' · View voucher':row.source?' · View source':' · Read in Codex'));}
-  for(const key of ['gold','essence']){const el=host.querySelector('[data-inventory-currency="'+key+'"]');el.querySelector('b').textContent=uiCompact(data[key]);el.setAttribute('aria-label',format(data[key])+' '+RESOURCE_LABEL[key]);}
-  return;
+ if(!$('materialSearch')){
+  host.innerHTML='<div class="inventory-currencies">'+[['gold','coins'],['essence','essence']].map(([key,art])=>'<span data-inventory-currency="'+key+'">'+artHTML(art)+'<b></b></span>').join('')+'</div><div class="inventory-search" role="search" aria-label="Inventory materials">'+uiIcon('search')+'<label for="materialSearch" class="sr-only">Search materials and vouchers</label><input id="materialSearch" type="search" placeholder="Search materials & vouchers" autocomplete="off" spellcheck="false" data-focus-key="material-search"><button type="button" id="materialSearchClear" class="hidden" aria-label="Clear material search">Clear</button></div><p id="materialSearchStatus" class="inventory-search-status" role="status" aria-live="polite" aria-atomic="true"></p><div id="materialInventoryRows"></div><p id="materialSearchEmpty" class="inventory-search-empty hidden">No matching materials or vouchers. Try another name or clear your search.</p><div id="materialLootHistory"></div>';
+  $('materialSearch').addEventListener('input',e=>{materialInventoryQuery=e.target.value;applyMaterialInventorySearch();});
+  $('materialSearch').addEventListener('keydown',e=>{if(e.key==='Escape'&&e.target.value){e.preventDefault();e.stopPropagation();clearMaterialInventorySearch(true);}});
+  $('materialSearchClear').onclick=()=>clearMaterialInventorySearch(true);bindTouchNavigation($('materialSearchClear'));
  }
- host.dataset.structure=structure;
- host.innerHTML='<div class="inventory-currencies">'+[['gold','coins'],['essence','essence']].map(([key,art])=>'<span data-inventory-currency="'+key+'" aria-label="'+format(data[key])+' '+RESOURCE_LABEL[key]+'">'+artHTML(art)+'<b>'+uiCompact(data[key])+'</b></span>').join('')+'</div>'+(rows.length?'<div class="inventory-materials">'+rows.map(row=>'<button type="button" class="inventory-material" data-inventory-key="'+row.key+'" '+(row.key.startsWith('voucher_')?'data-open-voucher="'+row.key.slice(8)+'"':row.source?'data-source="'+row.source+'"':'data-codex-entry="'+row.codex+'"')+' aria-label="'+escapeHTML(row.name+' · '+format(row.count)+(row.key.startsWith('voucher_')?' · View voucher':row.source?' · View source':' · Read in Codex'))+'">'+artHTML(row.art)+'<span><b>'+row.name+'</b><small>'+format(row.count)+'</small></span>'+uiIcon(row.source?'chevron':'book')+'</button>').join('')+'</div>':'<div class="empty-loadout">'+uiIcon('bag')+'<p>No materials</p><button type="button" class="inventory-skills">Skills '+uiIcon('arrow')+'</button></div>');
- host.insertAdjacentHTML('beforeend',lootHistoryHtml());
- host.querySelectorAll('[data-source]').forEach(button=>button.onclick=()=>goToSource(button.dataset.source));
- host.querySelectorAll('[data-open-voucher]').forEach(button=>button.onclick=()=>openVoucherGuide(button.dataset.openVoucher));
- host.querySelector('.inventory-skills')?.addEventListener('click',()=>openDrawer('skills'));
- host.querySelectorAll('button').forEach(bindTouchNavigation);
+ const body=$('materialInventoryRows'),structure=JSON.stringify(rows.map(({count,...row})=>row)),focus=document.activeElement?.closest('[data-inventory-key]')?.dataset.inventoryKey;
+ if(host.dataset.structure!==structure){
+  body.innerHTML=rows.length?'<div class="inventory-materials">'+rows.map(row=>'<button type="button" class="inventory-material" data-inventory-key="'+row.key+'" data-focus-key="inventory-'+row.key+'" '+(row.key.startsWith('voucher_')?'data-open-voucher="'+row.key.slice(8)+'"':row.source?'data-source="'+row.source+'"':'data-codex-entry="'+row.codex+'"')+'>'+artHTML(row.art)+'<span><b>'+escapeHTML(row.name)+'</b><small></small></span>'+uiIcon(row.source?'chevron':'book')+'</button>').join('')+'</div>':'<div class="empty-loadout">'+uiIcon('bag')+'<p>No materials</p><button type="button" class="inventory-skills">Skills '+uiIcon('arrow')+'</button></div>';
+  host.dataset.structure=structure;
+  body.querySelectorAll('[data-source]').forEach(button=>button.onclick=()=>goToSource(button.dataset.source));
+  body.querySelectorAll('[data-open-voucher]').forEach(button=>button.onclick=()=>openVoucherGuide(button.dataset.openVoucher));
+  body.querySelector('.inventory-skills')?.addEventListener('click',()=>openDrawer('skills'));body.querySelectorAll('button').forEach(bindTouchNavigation);
+ }
+ for(const row of rows){const button=body.querySelector('[data-inventory-key="'+row.key+'"]');button.querySelector('small').textContent=format(row.count);button.setAttribute('aria-label',row.name+' · '+format(row.count)+(row.key.startsWith('voucher_')?' · View voucher':row.source?' · View source':' · Read in Codex'));}
+ for(const key of ['gold','essence']){const el=host.querySelector('[data-inventory-currency="'+key+'"]');el.querySelector('b').textContent=uiCompact(data[key]);el.setAttribute('aria-label',format(data[key])+' '+RESOURCE_LABEL[key]);}
+ const history=$('materialLootHistory'),historyState=JSON.stringify(data.lootHistory||[]);
+ if(history.dataset.state!==historyState){const open=history.querySelector('details')?.open;history.innerHTML=lootHistoryHtml();if(open&&history.querySelector('details'))history.querySelector('details').open=true;history.dataset.state=historyState;}
+ applyMaterialInventorySearch();
+ if(focus&&document.activeElement===document.body){const target=body.querySelector('[data-inventory-key="'+focus+'"]');(target&&!target.classList.contains('hidden')?target:$('materialSearch')).focus({preventScroll:true});}
+}
+function applyMaterialInventorySearch(){
+ const input=$('materialSearch');if(!input)return;
+ const tokens=materialInventoryQuery.trim().toLowerCase().split(/\s+/).filter(Boolean),cards=[...$('materialInventoryRows').querySelectorAll('[data-inventory-key]')];let shown=0;
+ for(const card of cards){const name=card.querySelector('b').textContent.toLowerCase(),visible=tokens.every(token=>name.includes(token));card.classList.toggle('hidden',!visible);if(visible)shown++;}
+ $('materialSearchClear').classList.toggle('hidden',!materialInventoryQuery);$('materialSearchEmpty').classList.toggle('hidden',!tokens.length||shown>0);$('materialLootHistory').classList.toggle('hidden',!!tokens.length);
+ $('materialInventoryRows').querySelector('.empty-loadout')?.classList.toggle('hidden',!!tokens.length);
+ const message=tokens.length?shown+' of '+cards.length+' items':cards.length+' '+(cards.length===1?'item':'items'),status=$('materialSearchStatus');if(status.textContent!==message)status.textContent=message;
+}
+function clearMaterialInventorySearch(focus=false){
+ materialInventoryQuery='';if($('materialSearch'))$('materialSearch').value='';applyMaterialInventorySearch();if(focus)$('materialSearch')?.focus({preventScroll:true});
+}
+function revealInventoryItem(key){
+ renderMaterialInventory();const row=$('loadoutMaterials')?.querySelector('[data-inventory-key="'+key+'"]');if(!row)return false;
+ if(row.classList.contains('hidden'))clearMaterialInventorySearch();row.scrollIntoView({block:'center'});row.focus({preventScroll:true});return true;
 }
 function updatePauseHud(){
  const running=game.scene==='combat'&&game.status==='running',manuallyPaused=running&&!!game.manualPaused;

@@ -1,5 +1,6 @@
 /* Player-facing presentation. Rules and progression remain in their systems. */
 const UI_GLYPHS={
+ search:'M10.5 3a7.5 7.5 0 1 0 0 15a7.5 7.5 0 0 0 0-15Zm5.3 12.8L21 21',
  arrow:'M5 12h14m-6-6 6 6-6 6',back:'M19 12H5m6-6-6 6 6 6',chevron:'m9 5 7 7-7 7',close:'m6 6 12 12M18 6 6 18',check:'m5 12 4 4L19 6',
  book:'M4 4h6l2 2 2-2h6v15h-6l-2 2-2-2H4V4Zm8 2v15',info:'M12 10v7m0-11v1',lock:'M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5V10Zm7 4v3',
  idle:'M12 4a8 8 0 1 1-8 8 8 8 0 0 1 8-8Zm0 3v5l3 2',stop:'M7 7h10v10H7z',play:'m8 5 11 7-11 7V5Z',track:'M7 3h10v18l-5-4-5 4V3Z',
@@ -55,6 +56,10 @@ function recipeCard(icon,name,desc,cost,action,label,owned=false,selected=false,
   name={weapon:'Refinement',armor:'Reinforcement',speed:'Attack speed',reach:'Reach',enchant:'Enchantment'}[kind];
   effect='<span class="recipe-rank">'+s[kind]+' / '+cap+'</span>'+(maxed?'':kind==='armor'?'<span>'+uiIcon('heart')+' +8</span>':kind==='speed'?'<span>'+uiIcon('speed')+' +2%</span>':kind==='reach'?'<span>'+uiIcon('reach')+' +3%</span>':'');
   if(kind==='enchant')effect+='<span>'+Math.round(enchantmentChance(s.enchant)*100)+'%'+(maxed?'':' → '+Math.round(enchantmentChance(s.enchant+1)*100)+'%')+' arc chance</span>';
+  if(kind==='weapon'){
+   const weapon=combatStyle()===style?data.weaponType:Object.hasOwn(WEAPON_TYPES,s.lastWeapon)&&styleForWeapon(s.lastWeapon)===style?s.lastWeapon:STYLE_DEFS[style].weapon,current=weaponDps(weapon,{equipmentOnly:true}).toFixed(1),next=maxed?'':weaponDps(weapon,{equipmentOnly:true,next:true}).toFixed(1);
+   effect+='<span class="refinement-dps" aria-label="Equipment damage per second: '+current+(maxed?'':' to '+next)+'">'+current+(maxed?'':' → '+next)+' DPS</span>';
+  }
  }
  else if(jewel)effect='<span>'+jewelryValueText(jewel[1])+'</span>';else if(tool)effect='<span>'+uiIcon('speed')+' +8%</span>';else if(weapon)effect='<span>'+weaponDps(weapon[1]).toFixed(1)+' DPS</span>';
  return '<article class="craft-tile compact-recipe '+(ready||owned?'can-make':'needs-material')+' '+(selected?'is-equipped':'')+'"><div class="craft-tile-icon">'+artHTML(idIcon||'anvil')+'</div><div class="craft-tile-body"><div class="recipe-title"><strong>'+escapeHTML(name)+'</strong>'+codexLink(codex,name+' details')+'</div><div class="recipe-effects">'+effect+'</div>'+(weapon?'<small class="weapon-role">'+weaponRole(weapon[1])+(!owned&&['bow','staff'].includes(weapon[1])?' · Starts below the sword in single-target damage.':'')+'</small>':'')+(!owned&&!maxed?materialCosts(cost,goal):'')+(!owned&&!selected?workshopVoucherButtonHtml(goal):'')+'</div><div class="recipe-actions"><button type="button" class="craft-tile-action" data-focus-key="craft-'+goal+'" '+action+' '+(locked||selected||!owned&&!ready?'disabled':'')+' aria-label="'+escapeHTML((selected?'Equipped: ':owned?'Equip ':upgrade?'Upgrade ':'Craft ')+name)+'">'+text+'</button>'+(!owned&&!maxed&&goal?trackRecipeButton(goal,name):'')+'</div></article>';
@@ -123,8 +128,10 @@ function installEquipmentSurface(){
  bindTouchNavigation($('equipmentCodex'));surface.querySelectorAll('[data-equipment-tab]').forEach(b=>b.onclick=()=>{equipmentTab=b.dataset.equipmentTab;renderEquipmentTab();});renderEquipmentTab();
 }
 function renderEquipmentTab(){
+ const scroll=drawerKind==='gear'?drawerPageScroll(drawerPageKey('gear')):null;
  document.querySelectorAll('[data-equipment-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.equipmentTab===equipmentTab)));
  for(const [id,node]of [['weapons','loadoutWeapons'],['armor','loadoutArmor'],['jewelry','loadoutJewelry'],['materials','loadoutMaterials']])$(node)?.classList.toggle('hidden',id!==equipmentTab);
+ if(scroll!==null)$('gameDrawer').scrollTop=scroll;
 }
 
 function intro(){

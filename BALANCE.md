@@ -1,6 +1,6 @@
 # Current game rules and balance
 
-Build **11.14.2**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Tier power, progression costs and encounter health retain their current calibration.
+Build **11.15.0**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Tier power, progression costs and encounter health retain their current calibration.
 
 ## Progression and clocks
 

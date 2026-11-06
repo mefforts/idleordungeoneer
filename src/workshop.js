@@ -34,10 +34,10 @@ function produce(key,active=false){
  recordWorkshopReward(key,amount,gold,found);codexDiscover('discipline_'+disciplineFor(key));codexDiscover('resource_'+skill.resource);codexDiscover('skill_'+key);return amount;
 }
 function goToSource(resource){
- if(resource==='gold'){enterActivity('scavenge');return;}
+ if(resource==='gold'){enterActivity(preparationActivity(resource));return;}
  if(resource==='zoneMaterials'){closeDrawer(false);setScene('combat',false);openDelveTravel();toast('Zone materials','Verdant Seeds, Ember Cores, Grave Dust and Rift Shards each pay for one. Any combination works; earlier Zone materials are used first.');return;}
  if(resource==='essence'){closeDrawer();setScene('combat',true);toast('Defeat a guardian for essence');return;}
- const key=RESOURCE_SOURCE[resource];if(!key)return;workshopTier=SKILLS[key].tier||1;
+ const key=preparationActivity(resource);if(!key)return;workshopTier=SKILLS[key].tier||1;
  if(!canUseSkill(key)){openWorkshop(disciplineFor(key),SKILLS[key].cost?'refine':'gather');toast('Resource locked',skillLockReason(key));return;}
  enterActivity(key);
 }

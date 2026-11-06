@@ -4,6 +4,9 @@ function equipmentTierUnlocked(tier){return tier<=1||tier===2&&tier2Unlocked()||
 function equipmentTierGate(tier){return tier===3?'Complete Zone 3':tier===2?'Zone 2':'Camp';}
 function ownedArmorTier(style){return Math.max(1,...(data.ownedArmor||[]).filter(id=>ARMOR_SETS[id]?.style===style&&equipmentTierUnlocked(ARMOR_SETS[id].tier)).map(id=>ARMOR_SETS[id].tier));}
 
-function trainingActivity(group){const tier=disciplineLevel(group)>=10?2:1;return DISCIPLINES[group].actions.find(key=>(SKILLS[key].tier||1)===tier&&!SKILLS[key].cost)||DISCIPLINES[group].actions.find(key=>(SKILLS[key].tier||1)===tier)||DISCIPLINES[group].actions[0];}
+function trainingActivity(group){
+ const actions=DISCIPLINES[group].actions.filter(key=>canUseSkill(key)),tier=Math.max(1,...actions.map(key=>SKILLS[key].tier||1));
+ return actions.find(key=>(SKILLS[key].tier||1)===tier&&!SKILLS[key].cost)||actions.find(key=>(SKILLS[key].tier||1)===tier)||DISCIPLINES[group].actions[0];
+}
 function tierVoucherName(tier){return {iron:'Iron',steel:'Steel',mithril:'Mithril'}[tier]||'Upgrade';}
 function equipmentVoucherBank(tier){return ['iron','steel','mithril'][tier-1]||'iron';}

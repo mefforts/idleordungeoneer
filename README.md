@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.14.2.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.15.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This animation and balance pass smooths skilling release/resume, prevents empty-ammo attack flashes and keeps flying shots tied to their firing style’s enchantment. Every enchantment rank now improves its trigger chance, shown before purchase. Tier power, progression costs and enemy health retain their current calibration. [Exact current rules and measurements](BALANCE.md) · [Development guide](DEVELOPMENT.md).
+This interface update adds material/voucher search, current → next refinement DPS, and separate scroll memory for menus and Skills sections. Material links and training routes choose the highest unlocked tier; purchases retain useful keyboard focus. Tier power, progression costs and enemy health retain their current calibration. [Exact current rules and measurements](BALANCE.md) · [Development guide](DEVELOPMENT.md).
 
 ## Play, prepare, return
 
@@ -45,7 +45,7 @@ Enchantment arcs trigger at **14% / 28% / 42% / 56% / 58% / 60%** across ranks 1
 
 Each discipline has **Gather, Refine and Equipment** tabs. All three material tiers remain visible before unlock. Tier-2 activities need Zone 2 access and matching level 10; tier 3 needs Zone 3 completion and matching level 20. Silver mining/smelting also needs Smithing level 10. Active, idle and offline production enforce the same gates.
 
-Hold a work scene, its work button or Space. The **Skills** shortcut opens the current discipline; **Gather / Refine / Source** swaps directly to related work. Ingredient chips visit their source and recipe bookmarks track a preparation route.
+Hold a work scene, its work button or Space. The **Skills** shortcut opens the current discipline; **Gather / Refine / Source** swaps directly to related work. Ingredient chips visit their source and recipe bookmarks track a preparation route. Gold, arrow and rune links prefer the highest unlocked activity; training routes also respect current skill and Zone gates.
 
 Colored discoveries give temporary active speed, from **+35% for 6 working seconds** to **double speed for 15**. The strongest applies; equal pickups refresh it and stronger pickups improve it. A weaker gathering pickup gives 1–5 items. A weaker refining pickup completes up to five normal batches, paying available ingredients and stopping when stock runs out. Timers count real seconds of work and pause on release, missing ingredients, menus or backgrounding. They survive reload but do not accelerate idle/offline production. Animation tempo is capped; higher speeds add bounded effects. Releasing, cancelling or resuming a hold keeps the work pose continuous. [Work transition review](preview-work-release.png).
 
@@ -91,6 +91,8 @@ The first upgrade voucher introduces its purpose and eligible owned upgrades. La
 ## Interface, controls and saves
 
 Seven curved-label medallions provide **Delve, Inventory, Skills, Shop, Settings, Pause / Play and Speed**. Settings → Navigation chooses the rail side/order. Inventory contains weapons, armor, jewelry, materials and **Codex**. Codex → **Guides** stays readable independently of discovery; its Getting started page explains the current loop and currencies. [Guides on phone](preview-current-guides-mobile.png) · [Getting started](preview-current-guide-mobile.png). Recipe and item books return to the menu and focus you left. Settings → Messages retains recent notices.
+
+Inventory tabs, Skills sections and the Dungeon Shop remember their scroll positions while you play. Weapon refinement cards show current → next equipment DPS before spending. **Inventory → Materials** searches material and voucher names, including multiword searches; live counts keep the field and cursor intact. Clear or the first Escape clears the search; another Escape closes Inventory. Voucher links reveal their item even when a filter would hide it. [Material search](preview-material-search-mobile.png) · [Refinement preview](preview-refinement-preview-mobile.png).
 
 | Action | Controls |
 | --- | --- |

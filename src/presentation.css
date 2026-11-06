@@ -77,3 +77,14 @@ body.codex-modal-open .stage-wrap,body.mastery-modal-open .stage-wrap{z-index:20
 #quickCodex{display:none!important}
 
 .loadout-tabs{gap:5px}.loadout-tabs>button{min-width:0;flex-basis:0;flex-direction:column;gap:4px;min-height:50px;padding:7px 2px;font-size:10px}
+
+/* Inventory search stays mounted as stock and loot receipts update. */
+.inventory-search{display:flex;align-items:center;gap:8px;margin:15px 0 6px;padding:5px 9px;border:1px solid #b7a16b66;background:#18262788;min-width:0}
+.inventory-search>.ui-glyph{width:18px;height:18px;flex:0 0 18px;color:#d6c49e}
+.player-ui .inventory-search input{width:100%;min-width:0;min-height:44px;flex:1;border:0;background:transparent;color:#f0e2c3;font:16px system-ui;outline-offset:1px}
+.inventory-search input::placeholder{color:#b6ac98;opacity:1}
+.inventory-search input::-webkit-search-cancel-button{display:none}
+.player-ui .inventory-search button{flex:0 0 auto;min-width:44px;min-height:44px;padding:7px;font:11px system-ui}
+.inventory-search-status{margin:6px 0 12px;color:#c4b89f;font:11px/1.5 system-ui}
+.inventory-search-empty{padding:16px 8px;color:#d5c7ac;font:13px/1.7 system-ui}
+.player-ui .craft-tile .recipe-effects>.refinement-dps{font-size:12px;line-height:1.5;font-variant-numeric:tabular-nums;color:#d9e3bd}

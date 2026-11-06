@@ -1,4 +1,17 @@
 /* Quiet, player-invoked shopping; combat never opens this drawer itself. */
+let drawerPagePositions=new Map(),drawerPageOwner=null;
+function drawerPageKey(kind=drawerKind){
+ return kind==='skills'?'skills:'+workshopGroup+':'+workshopView:kind==='gear'?'gear:'+equipmentTab:kind==='shop'?'shop:'+dungeonShopView:kind;
+}
+function rememberDrawerPage(){
+ if(drawerPageOwner!==data){drawerPagePositions.clear();drawerPageOwner=data;}
+ const page=$('gameDrawer')?.dataset.page;if(drawerKind&&page)drawerPagePositions.set(page,$('gameDrawer').scrollTop);
+}
+function drawerPageScroll(key,restore=false){
+ rememberDrawerPage();const drawer=$('gameDrawer'),previous=drawer.dataset.page;
+ const scroll=previous===key&&!restore?drawer.scrollTop:drawerPagePositions.get(key)||0;
+ drawer.dataset.page=key;return scroll;
+}
 function installZoneShopPin(){
  if(shopUiInstalled)return;shopUiInstalled=true;
  const button=document.createElement('button');button.type='button';button.id='quickShop';button.className='hud-icon';button.setAttribute('aria-label','Dungeon Shop');button.dataset.tooltip='Dungeon Shop';button.innerHTML=artHTML('zone-shop')+'<span class="nav-label">Dungeon Shop</span>';document.querySelector('.hud-actions').append(button);button.onclick=()=>drawerKind==='shop'?closeDrawer():openZoneShop();
@@ -14,6 +27,7 @@ function openZoneShop(index=zoneNumber()){
 }
 function openDrawer(kind){
  if(eliteRewardOpen())return false;
+ const pageScroll=drawerPageScroll(drawerPageKey(kind),!drawerKind);$('gameDrawer').scrollTop=pageScroll;
  resetArenaTouch(true);clearSkillBonuses();if(!$('skillQuickPicker').classList.contains('hidden'))closeSkillPicker();closeResourcePicker();drawerFocus=drawerKind?drawerFocus:document.activeElement;hideOverlay();drawerKind=kind;
  game.menuPaused=true;game.holdSkill=null;game.keys={};game.mouseMove.active=false;game.joystick.x=game.joystick.y=0;
  $('app').classList.add('drawer-open');$('gameDrawer').setAttribute('aria-hidden','false');updatePauseHud();
@@ -21,9 +35,10 @@ function openDrawer(kind){
  $('consolidatedSkills').classList.toggle('hidden',kind!=='skills');$('settingsView').classList.toggle('hidden',kind!=='settings');$('zoneShopView')?.classList.toggle('hidden',kind!=='shop');$('delveTravelView')?.classList.toggle('hidden',kind!=='delve');$('combatPanel').classList.toggle('panel-active',kind==='gear');
  for(const key of SKILL_KEYS)$(key+'Panel').classList.remove('panel-active');$('idleManager').classList.toggle('hidden',kind!=='skills');
  if(kind==='skills')renderDisciplineDrawer();else if(kind==='gear')renderArmory();else if(kind==='settings')renderSettingsDrawer();else if(kind==='shop')renderZoneShop();else if(kind==='delve')renderDelveTravel();
- $('drawerClose').focus({preventScroll:true});refreshPolishUI();
+ $('gameDrawer').scrollTop=pageScroll;$('drawerClose').focus({preventScroll:true});refreshPolishUI();
 }
 function closeDrawer(resumeSkill=true){
+ rememberDrawerPage();
  game.pendingIdleSkill='';const old=drawerKind,open=!!old;$('app').classList.remove('drawer-open');$('gameDrawer').setAttribute('aria-hidden','true');drawerKind='';game.menuPaused=!!game.manualPaused;game.holdSkill=null;game.keys={};updatePauseHud();save();
  if(open&&resumeSkill&&data.skillAutoReturn&&SKILLS[data.lastSkill])setScene(data.lastSkill,false);
  if(open&&drawerFocus?.isConnected)drawerFocus.focus({preventScroll:true});
@@ -32,14 +47,14 @@ function closeDrawer(resumeSkill=true){
 function shopCategoryFor(id){return ['might','haste','crit','cleave','reach','multishot','pierce','storm','fire','frost','nova'].includes(id)?'offense':['ward','vitality','regen'].includes(id)?'defense':'utility';}
 
 function renderZoneShop(){
- if(drawerKind!=='shop')return;const host=$('zoneShopView'),scroll=$('gameDrawer').scrollTop,focus=document.activeElement?.closest('[data-focus-key]')?.dataset.focusKey,b=dungeonShopFor(shopZone),dungeon=dungeonForZone(shopZone),progress=dungeonProgress(),style=STYLE_DEFS[combatStyle()].name;
- const perks=zoneAbilities(shopZone),available=perks.filter(dungeonPerkUnlocked),locked=perks.filter(p=>!dungeonPerkUnlocked(p));
+ if(drawerKind!=='shop')return;const host=$('zoneShopView'),focus=document.activeElement?.closest('[data-focus-key]')?.dataset.focusKey,b=dungeonShopFor(shopZone),dungeon=dungeonForZone(shopZone),progress=dungeonProgress(),style=STYLE_DEFS[combatStyle()].name;
+ const pageScroll=drawerPageScroll(drawerPageKey('shop')),perks=zoneAbilities(shopZone),available=perks.filter(dungeonPerkUnlocked),locked=perks.filter(p=>!dungeonPerkUnlocked(p));
  host.innerHTML='<nav class="dungeon-shop-tabs" aria-label="Dungeon Shop section">'+[['abilities','Abilities'],['blessings','Long blessings']].map(([id,name])=>'<button type="button" data-dungeon-shop-view="'+id+'" aria-pressed="'+(dungeonShopView===id)+'">'+name+'</button>').join('')+'</nav>'+ (dungeonShopView==='blessings'?blessingShopHtml():'<header class="zone-shop-heading"><div><h3>Dungeon Shop</h3><small>'+dungeon.name+' · all Zones</small></div>'+codexLink('zone_shop','Dungeon Shop guide')+'</header>'+gameTimeShopHtml()+'<div class="zone-wallet" aria-label="'+escapeHTML(formatDungeonCurrency(b.currency)+' Dungeon Sigils')+'">'+artHTML(zoneCurrency().art)+'<strong>'+formatDungeonCurrency(b.currency)+'</strong><span>Dungeon Sigils</span></div><div class="dungeon-style-notice"><b>'+style+' equipped</b><span>Some perks change their effect when you switch between Melee, Mage and Ranged. Purchased ranks stay with you.</span></div><div class="zone-upgrade-list">'+available.map(shopCard).join('')+'</div>'+(locked.length?'<h4 class="dungeon-unlocks-title">More abilities through Dungeoneering</h4><div class="zone-upgrade-list dungeon-locked-list">'+locked.map(shopCard).join('')+'</div>':''));
  host.querySelectorAll('[data-dungeon-shop-view]').forEach(b=>b.onclick=()=>{dungeonShopView=b.dataset.dungeonShopView;renderZoneShop();});host.querySelectorAll('[data-buy-blessing]').forEach(b=>b.onclick=()=>buyLongBlessing(b.dataset.buyBlessing));
  host.querySelectorAll('[data-buy-time]').forEach(button=>button.onclick=()=>buyTimeUpgrade(button.dataset.buyTime));
- host.querySelectorAll('[data-buy-zone]').forEach(button=>button.onclick=()=>buyZoneUpgrade(button.dataset.buyZone,shopZone));$('gameDrawer').scrollTop=scroll;
+ host.querySelectorAll('[data-buy-zone]').forEach(button=>button.onclick=()=>buyZoneUpgrade(button.dataset.buyZone,shopZone));
  if(focus){const next=host.querySelector('[data-focus-key="'+focus+'"]'),target=next?.disabled?next.closest('article'):next;if(target){if(target!==next)target.tabIndex=-1;target.focus({preventScroll:true});}}
- shopSignature=zoneShopSignature();
+ $('gameDrawer').scrollTop=pageScroll;shopSignature=zoneShopSignature();
 }
 function zoneShopSignature(){return JSON.stringify([dungeonShopView,data.zoneMaterials,(data.eliteBoons||[]).length,shopZone,dungeonShopFor(shopZone),dungeonProgress().level,data.weaponType,masteryFor(),data.timeRates]);}
 function refreshProgressionHud(){
