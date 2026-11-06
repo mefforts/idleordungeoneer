@@ -57,7 +57,7 @@ function paintReflectWardArt(point,progress,kind,active=false){
   ctx.strokeStyle=armed?theme.color:safe.color;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.stroke();for(let i=0;i<4;i++){const a=i*Math.PI/2+(reducedMotion()?0:time*.16);paintAbilityCrystal(Math.cos(a)*(r-5),Math.sin(a)*(r-5),8,m,a);}
  }
  if(image.complete&&image.naturalWidth){ctx.globalAlpha=armed?.9:.45;ctx.drawImage(image,-inner,-inner,inner*2,inner*2);ctx.globalAlpha=1;}
- ctx.strokeStyle=armed?theme.hot:safe.color;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,inner+3,0,Math.PI*2);ctx.stroke();ctx.strokeStyle=theme.hot;ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,r+5,-Math.PI/2,-Math.PI/2+Math.PI*2*progress);ctx.stroke();
+ ctx.beginPath();ctx.arc(0,0,inner+3,0,Math.PI*2);ctx.strokeStyle=MECHANIC_INK.keyline;ctx.lineWidth=6;ctx.stroke();ctx.strokeStyle=armed?theme.hot:safe.color;ctx.lineWidth=2.5;ctx.stroke();paintAbilityClock(0,0,r+5,1-progress,theme);
  if(!armed)for(const side of [-1,1]){line(side*(inner-8),0,side*(inner+9),0,2,safe.hot);line(side*(inner+9),0,side*(inner+3),-5,2,safe.hot);line(side*(inner+9),0,side*(inner+3),5,2,safe.hot);}
  ctx.restore();
 }

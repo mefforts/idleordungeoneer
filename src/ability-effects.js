@@ -45,14 +45,19 @@ function paintAbilityEruption(x,y,size,kind,rise,theme){
  for(let i=0;i<4;i++){const a=i*Math.PI/2+.3;line(Math.cos(a)*5,Math.sin(a)*3,Math.cos(a)*23,Math.sin(a)*10,1.5,theme.color+'b0');}
  ctx.scale(1,.2+.8*clamp(rise,0,1));ctx.lineJoin='round';
  if(kind===0){
-  for(let i=0;i<3;i++){const d=(i-1)*11;ctx.beginPath();ctx.moveTo(d*.6,0);ctx.bezierCurveTo(d-10,-10,d+10,-17,d,-35+i*5);ctx.lineTo(d+3,-21+i*3);ctx.strokeStyle=m.dark;ctx.lineWidth=8;ctx.stroke();ctx.strokeStyle=m.base;ctx.lineWidth=5;ctx.stroke();line(d,-21+i*3,d+3,-29+i*3,1.2,m.light);poly([d,-24+i*3,d+12,-29+i*3,d+8,-19+i*3],m.accent,m.dark,.8);}
+  paintRuinBramble(0,0,20,1,Math.sin(x*.07+y*.11));
  }else if(kind===1){
-  poly([-17,0,-20,-12,-9,-27,5,-20,16,-8,13,1],m.base,m.dark,2);poly([-9,-25,-4,-9,13,-6,5,-18],m.light);
-  poly([-9,-4,-12,-18,-6,-31,-2,-20,4,-45,7,-25,14,-32,12,-12,6,-4],m.accent,m.dark,1.2);poly([-4,-6,-5,-19,2,-32,2,-19,7,-22,5,-7],m.edge);
+  for(const side of [-1,1]){poly([side*6,1,side*20,-2,side*17,-10,side*8,-13],m.base,m.dark,1.3);line(side*9,-10,side*16,-6,1,m.light);}
+  paintEmberFlame(0,0,23,Math.sin(x+y));
+  paintEmberFlame(-11,1,11,1);paintEmberFlame(12,0,13,3);
  }else if(kind===2){
   poly([-12,0,-13,-15,-8,-22,7,-21,13,-13,10,0],m.base,m.dark,1.8);
-  for(let i=0;i<4;i++){const x=(i-1.5)*6,top=-29-Math.sin(i)*8;line(x,-11,x-2,top,6,m.dark);line(x,-11,x-2,top,3.5,m.light);disc(x-1,top+8,2.2,m.base);}
-  line(-10,-7,-19,-17,6,m.dark);line(-10,-7,-19,-17,3.5,m.light);line(-7,-8,7,-8,1,m.dark);
+  for(let i=0;i<4;i++){
+   const x=(i-1.5)*6,top=-30-Math.sin(i)*8,bend=x+(i-1.5)*3;
+   for(const [ax,ay,bx,by]of [[x,-14,bend,-27],[bend,-27,bend+1,top-7],[bend+1,top-7,bend-3,top-10]]){line(ax,ay,bx,by,5.8,m.dark);line(ax,ay,bx,by,3.4,m.light);disc(ax,ay,2,m.base);}
+  }
+  line(-9,-7,-19,-15,6,m.dark);line(-9,-7,-19,-15,3.5,m.light);line(-19,-15,-17,-24,5,m.dark);line(-19,-15,-17,-24,3,m.light);line(-7,-8,7,-8,1,m.dark);
+  for(let i=0;i<3;i++)line((i-1)*5,-4,(i-1)*5-2,-17,1,m.light);
  }else{
   paintAbilityCrystal(-10,0,12,m,-.32);paintAbilityCrystal(8,1,13,m,.25);paintAbilityCrystal(0,0,19,m,0);
  }
@@ -88,7 +93,8 @@ function paintAbilityField(shape,type,kind,theme,progress=1,active=false){
  if(shape.shape==='rect'){const r=shape.rect;ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);}
  else if(shape.shape==='cone'){ctx.moveTo(shape.origin.x,shape.origin.y);ctx.arc(shape.origin.x,shape.origin.y,shape.reach,shape.angle-shape.halfAngle,shape.angle+shape.halfAngle);ctx.closePath();}
  else{ctx.arc(shape.x,shape.y,shape.r,0,Math.PI*2);if(shape.inner)ctx.arc(shape.x,shape.y,shape.inner,0,Math.PI*2,true);}
- ctx.clip();ctx.globalAlpha*=active?.92:.64;const rise=active?.42+.58*Math.sin(clamp(progress,0,1)*Math.PI):.12+progress*.18;
+ ctx.clip();ctx.globalAlpha*=active?.96:.46;const rise=active?.58+.42*Math.sin(clamp(progress,0,1)*Math.PI):.08+progress*.18;
+ if(['circle','ring'].includes(shape.shape))paintAbilityScars(shape.x,shape.y,shape.r,kind,theme,progress,active);
  if(type==='emberCleave'&&shape.shape==='cone'){
   let index=0;for(const radius of [38,78,118,155])for(let i=0;i<5;i++){const a=shape.angle-shape.halfAngle+(i+.5)*shape.halfAngle*2/5;paintEmberFlame(shape.origin.x+Math.cos(a)*radius,shape.origin.y+Math.sin(a)*radius,14+(index%3)*2,index++);}
  }else if(shape.shape==='rect'){
@@ -141,7 +147,8 @@ function paintRuinQuarter(rect,kind,theme,progress,active){
 }
 function paintAbilityBeam(origin,angle,length,width,kind,theme,progress,active=false){
  const m=abilityMaterial(kind),time=abilityEffectTime();ctx.save();ctx.translate(origin.x,origin.y);ctx.rotate(angle);ctx.beginPath();ctx.rect(0,-width/2,length,width);ctx.clip();ctx.lineJoin='round';ctx.lineCap='round';
- ctx.globalAlpha*=active?.95:.5;const end=active?length:length*progress;
+ ctx.globalAlpha*=active?.95:.32;const end=active?length:length*progress;
+ if(active){const haze=ctx.createLinearGradient(0,-width/2,0,width/2);haze.addColorStop(0,theme.color+'00');haze.addColorStop(.5,theme.color+'55');haze.addColorStop(1,theme.color+'00');ctx.fillStyle=haze;ctx.fillRect(0,-width/2,length,width);}
  for(let strand=-1;strand<=1;strand++){
   ctx.beginPath();ctx.moveTo(0,strand*width*.17);for(let x=10;x<=end;x+=10)ctx.lineTo(x,strand*width*.17+Math.sin(x*.055-time*7+strand)*width*.09);
   ctx.strokeStyle=m.dark;ctx.lineWidth=active?(kind===1?16:11):4;ctx.stroke();ctx.strokeStyle=kind===1?(strand===0?m.edge:m.accent):strand===0?m.light:m.accent;ctx.lineWidth=active?(kind===1?11:6):2;ctx.stroke();
@@ -151,7 +158,7 @@ function paintAbilityBeam(origin,angle,length,width,kind,theme,progress,active=f
 }
 function paintAbilityGroundArt(){
  for(const enemy of game.enemies){
-  if(enemy.charge){const theme=combatTheme('friendly'),m=abilityMaterial(enemy.biome),half=enemyChargeHalfWidth(enemy);ctx.save();ctx.translate(enemy.x,enemy.y);ctx.rotate(enemy.charge.angle);glow(0,0,half*1.5,theme.color+'30');for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(-45,side*half*.6);ctx.quadraticCurveTo(-15,side*half,12,side*half*.6);ctx.strokeStyle=m.accent+'c0';ctx.lineWidth=3;ctx.stroke();}ctx.restore();}
+  if(enemy.charge)paintChargeWake(enemy);
   const c=enemy.cast;if(!c)continue;const kind=enemy.biome??biomeIndex(),theme=combatTheme(castLanguage(c.type)),p=clamp(1-c.windup/c.total,0,1);
   for(const shape of c.shapes||[])if(c.type!=='tether')paintAbilityField(shape,c.type,kind,theme,p);
   if(c.type==='ground')for(const target of c.targets)paintAbilityField({...target,shape:'circle'},'ground',kind,theme,p);
@@ -179,7 +186,7 @@ function paintAbilityGroundArt(){
 }
 function paintAbilityProjectile(s){
  const kind=s.biome??biomeIndex(),m=abilityMaterial(kind),theme=combatTheme(s.language||'danger'),angle=Math.atan2(s.vy,s.vx),r=s.rad||6,time=abilityEffectTime(),blade=!s.growing&&(s.boomerang||s.orbit||['return','orbit'].includes(s.abilityType));
- glow(s.x,s.y,Math.max(15,r*2.5),theme.color+'55');if(s.language==='friendly'){ctx.save();ctx.strokeStyle=theme.color;ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(s.x,s.y,r+2,0,Math.PI*2);ctx.stroke();ctx.restore();}ctx.save();ctx.translate(s.x,s.y);ctx.rotate(angle);ctx.lineJoin='round';
+ glow(s.x,s.y,Math.max(15,r*2.5),theme.color+'45');ctx.save();ctx.translate(s.x,s.y);ctx.rotate(angle);ctx.lineJoin='round';
  if(!s.preview){line(-r*2.7,0,-r*.6,0,Math.max(2,r*.5),theme.color+'80');line(-r*1.7,0,-r*.6,0,1.2,theme.hot+'b0');}
  if(blade)paintAbilityBlade(0,0,r*1.1,s.preview?0:time*(s.returning?-4:4),theme,kind);
  else if(s.growing||s.abilityType==='bloom'){
@@ -193,7 +200,7 @@ function paintAbilityProjectile(s){
  }else if(kind===2){
   ctx.scale(r/6,r/6);ellipse(0,-1,6,5,m.light);quad(-4,1,7,5,m.base);disc(2,-2,1.6,m.dark);disc(-2,-2,1.6,m.dark);line(-2,3,-2,5,.8,m.dark);line(1,3,1,5,.8,m.dark);poly([-6,0,-11,-4,-8,1,-12,5,-6,3],m.accent);
  }else paintAbilityCrystal(0,r*.8,r*.85,m,Math.PI/2);
- ctx.restore();
+ ctx.restore();paintProjectileSignal(s.x,s.y,r,theme,s.preview);
 }
 function paintAbilityTotemCrest(t){
  const theme=totemSignal(t),foot=encounterFoot(t);ctx.save();if(t.disabled)ctx.globalAlpha*=.4;

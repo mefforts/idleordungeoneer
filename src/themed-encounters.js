@@ -154,7 +154,7 @@ function setupThemedCast(owner,cast){
  }
  if(cast.type==='burrowingBriar')event.target={x:p.x,y:p.y};
  if(cast.type==='clingingSeeds')event.state.attachedAt=null;
- cast.total=cast.windup=cast.total===undefined?def.seconds:Math.max(cast.total,def.seconds);cast.label=def.name;cast.hint='';cast.shapes=[];cast.arena=a;cast.themed=event;return true;
+ cast.total=cast.windup=cast.total===undefined?def.seconds:Math.max(cast.total,def.seconds);event.warningTotal=cast.total;cast.label=def.name;cast.hint='';cast.shapes=[];cast.arena=a;cast.themed=event;return true;
 }
 function resolveThemedCast(owner,cast){
  const event=cast.themed;if(!event)return false;if(event.done||event.partner&&(!game.enemies.includes(event.partner)||event.partner.hp<=0))return true;event.age=0;event.damage=bossAttackDamage(owner,cast.type);(game.themedEvents||(game.themedEvents=[])).push(event);return true;

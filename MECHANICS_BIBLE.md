@@ -1,6 +1,6 @@
 # Combat mechanics bible
 
-This is the design contract for current and future dungeons. Build 11.17.0 applies its first shared runtime pass. Exact tunable values live in `combat.mechanics` in [src/balance-config.json](src/balance-config.json); [src/mechanic-contracts.js](src/mechanic-contracts.js) enforces encounter pressure, recovery and tactical rewards. Individual modules own geometry and theme. [SELECTED_MECHANICS.md](SELECTED_MECHANICS.md) lists the implemented abilities.
+This is the design contract for current and future dungeons. Build 11.18.0 adds a shared presentation pass to the runtime contract. Exact tunable values live in `combat.mechanics` in [src/balance-config.json](src/balance-config.json); [src/mechanic-contracts.js](src/mechanic-contracts.js) enforces encounter pressure, recovery and tactical rewards. Individual modules own geometry and theme. [SELECTED_MECHANICS.md](SELECTED_MECHANICS.md) lists the implemented abilities.
 
 ## The experience
 
@@ -26,6 +26,20 @@ Yellow is an overlay on an opportunity, not a promise that an enemy is harmless.
 Gold reflect deadlines remain punishable at 15% base maximum health before defenses. This is distinct from an optional yellow pickup. Ember Catch is yellow: catch it for a purple return with a teal protected catch core, or leave its red local explosion. It must not deal unavoidable map-wide damage for declining.
 
 Actual renderer examples: [optional Ember Catch](preview-mechanic-ember-mobile.png) · [interruptible charge](preview-mechanic-charge-mobile.png).
+
+## Shared presentation standard
+
+[src/ability-conveyance.js](src/ability-conveyance.js) owns the reusable footprint, clock, lane, projectile and charge painters. `MECHANIC_INK` controls the shared contrast and stroke weights. Owning ability modules supply the actual geometry and time; the presentation layer never changes health, random sequences, movement, target locks or ability clocks.
+
+- Warning footprints have a dark contrast keyline, a semantic rim and restrained interior art. The real cast progress fills the clock and buildup; a paused cast freezes it.
+- Later strikes use dotted, subdued footprints and smaller props until their turn approaches. Their clocks continue from the cast into their release delay, without resetting. Reveal gates still hide attacks that have not been announced.
+- Active attacks use a solid edge and fuller material art: flame, roots, bone, metal or crystal. Directed beams, themed beam segments and charge routes include the rounded ends of their swept collision. A warning lane is an intention, not a promise of damage along the full route after a charge has moved away.
+- Red projectiles have a broken danger rim. Purple projectiles add opposed directional marks, so their tactical role also has a shape cue. Support streams keep their payload symbols and colors.
+- Yellow brackets and a backed deadline identify the actual interrupt/cut point. Danger clocks fill toward impact; yellow opportunity and gold reflect clocks drain toward expiry. A gold return arc and teal burst confirm a successful reflect. Teal openings have clear endcaps; moving pulse centers never gain a teal refuge.
+- Reduced motion suppresses ornamental flicker/spin and drifting fragments. Real warning progress, moving fronts, projectile travel and deadlines remain visible. Particle counts stay bounded and use the combat clock.
+- Preserve the uncluttered quadrant treatment: floor color, physical eruptions and the teal opening sigil, without cross-arena lines. Shared defense uses its shield percentage, without a second feet ring; totem streams do not add a ring to the player's torso.
+
+Review with `npm run review:conveyance` (add `-- --motion` for the motion reel) and `npm run review:abilities -- --stills`. [Lifecycle contact sheet](preview-ability-conveyance.png) · [Motion reel](preview-ability-conveyance.mp4) · [Phone warning](preview-ability-warning-mobile.png) · [Desktop activity](preview-ability-cage-desktop.png). The isolated `ability-conveyance` suite checks real cast progress, distinct stages, geometry, render purity, reduced motion and phone/landscape/desktop layouts.
 
 ## Every ability has a complete lifecycle
 

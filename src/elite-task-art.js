@@ -1,18 +1,18 @@
 /* Purpose props, channel arcs and teal dash cues keep intentions readable. */
 function eliteTaskSymbol(kind){return kind==='ascend'?'damage':kind==='empower'?'mirror':kind==='siege'?'cross':'portal';}
 function paintEliteTaskGround(){
- const gold=combatTheme('interrupt'),teal=combatTheme('safe'),time=abilityEffectTime();
+ const gold=combatTheme('interrupt'),time=abilityEffectTime();
  for(const owner of game.enemies){const task=owner.eliteTask;if(!task)continue;const kind=owner.biome??biomeIndex(),q=task.phase==='travel'?task.point:owner;
   ctx.save();const cycle=task.kind==='siege'?ELITE_TASKS.siege:ELITE_TASKS.conduit,progress=task.phase==='travel'?1:task.total?1-task.age/task.total:task.pending?task.warn/cycle.warning:task.spawnClock/cycle.interval;
   ellipse(q.x,q.y+14,43,15,'#10191e66');themedArc(q.x,q.y+12,39,clamp(progress,0,1),gold.color,2.5);paintAbilityEmblem(eliteTaskSymbol(task.kind),q.x,q.y+13,13,gold);
-  for(const side of [-1,1])themedArrow(owner.x+side*51,owner.y+12,side<0?0:Math.PI,teal.hot,9);
+  for(const side of [-1,1])themedArrow(owner.x+side*51,owner.y+12,side<0?0:Math.PI,gold.hot,9);
   if(task.phase==='travel'){ctx.setLineDash([4,7]);themedLine(owner,task.point,1.5,gold.color+'88');ctx.setLineDash([]);}
   else{
    const prop=task.kind==='conduit'?['root','vent','rib','prism'][kind]:task.kind==='ascend'?['sapling','droplet','lantern','star'][kind]:'prism';
    for(let i=0;i<3;i++){const angle=i*Math.PI*2/3+(reducedMotion()?0:time*.35),x=owner.x+Math.cos(angle)*34,y=owner.y+15+Math.sin(angle)*12;themedSprite(prop,kind,x,y,task.kind==='conduit'?42:28,0,.85);}
    if(task.pending&&task.kind==='siege'){
     const red=combatTheme('danger'),point=task.pending;
-    if(task.variant==='marks'){themedArc(point.x,point.y,52,1,red.hot,2);themedArc(point.x,point.y,46,1-task.warn/cycle.warning,red.color,4);themedSprite(['root','vent','rib','prism'][kind],kind,point.x,point.y+12,48,0,.65);}
+    if(task.variant==='marks'){paintWarningCircle(point.x,point.y,52,1-task.warn/cycle.warning,red);themedSprite(['root','vent','rib','prism'][kind],kind,point.x,point.y+12,48,0,.5);}
     else for(const offset of [-.2,0,.2]){const angle=point.angle+offset;themedLine({x:owner.x,y:owner.y-22},{x:owner.x+Math.cos(angle)*210,y:owner.y-22+Math.sin(angle)*210},2,red.color+'b0');themedArrow(owner.x+Math.cos(angle)*90,owner.y-22+Math.sin(angle)*90,angle,red.hot,8);}
    }else if(task.pending){themedSprite('portal',kind,task.pending.x,task.pending.y+15,56);themedArc(task.pending.x,task.pending.y,26,1-task.warn/cycle.warning,gold.color,2);themedSprite('wisp',kind,task.pending.x,task.pending.y-12,28,0,.6);}
   }

@@ -80,8 +80,7 @@ function paintRicochetBank(point,theme,alpha=1){
 }
 function paintEliteSpecialWarning(enemy,cast,theme,progress){
  if(cast.type==='charge'){
-  const x=cast.origin.x,y=cast.origin.y,length=enemyChargeLength(cast),dx=Math.cos(cast.angle),dy=Math.sin(cast.angle),half=enemyChargeHalfWidth(enemy);
-  ctx.save();ctx.fillStyle=theme.color+'1c';ctx.strokeStyle=theme.color;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x-dy*half,y+dx*half);ctx.lineTo(x+dx*length-dy*half,y+dy*length+dx*half);ctx.lineTo(x+dx*length+dy*half,y+dy*length-dx*half);ctx.lineTo(x+dy*half,y-dx*half);ctx.closePath();ctx.fill();ctx.stroke();line(x,y,x+dx*length*progress,y+dy*length*progress,2.5,theme.hot);ctx.restore();paintWarningCircle(cast.target.x,cast.target.y,18,progress,theme);return true;
+  paintAbilityLane(cast.origin,cast.angle,enemyChargeLength(cast),enemyChargeHalfWidth(enemy)*2,theme,progress);return true;
  }
  if(cast.type==='ricochet'){
   let previous=cast.origin;for(const point of cast.ricochetPoints||[]){line(previous.x,previous.y,point.x,point.y,1,theme.color+'80');paintRicochetBank(point,theme,.65);previous=point;}return true;

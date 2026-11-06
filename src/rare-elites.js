@@ -121,7 +121,7 @@ function damageMonstersInAttack(owner,shape,contains){
  }
 }
 function paintEnemyCleave(cast,theme,progress=1,active=false){
- ctx.save();ctx.translate(cast.origin.x,cast.origin.y);ctx.rotate(cast.angle);ctx.fillStyle=theme.color+(active?'45':'19');ctx.strokeStyle=theme.color;ctx.lineWidth=active?3:2;ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,cast.reach,-cast.halfAngle,cast.halfAngle);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle=theme.hot;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,cast.reach+4,-cast.halfAngle,-cast.halfAngle+cast.halfAngle*2*progress);ctx.stroke();ctx.restore();
+ paintAbilityFootprint({...cast,shape:'cone'},theme,progress,active);
 }
 
 function eliteRewardOpen(){return !!eliteRewardId&&!$('overlay').classList.contains('hidden')&&$('overlayCard').classList.contains('elite-reward-overlay');}

@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.17.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.18.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This update establishes a shared [mechanics bible](MECHANICS_BIBLE.md): clearer danger and optional opportunities, bounded encounter overlap, longer cast recovery, meaningful purple damage/staggers and per-ability variations. Zones 1–5 retain their equipment and progression balance; Zones 6+ remain experimental. [Measured progression](PROGRESSION.md) · [Balance and extension guide](BALANCE_CONFIG.md) · [Exact current rules](BALANCE.md).
+This update improves ability appearances and communication: clearer buildup, stronger danger footprints, subdued later strikes, more distinct projectiles and refined flame, root, bone, hammer and astral effects. The [visual lifecycle review](preview-ability-conveyance.png) shows buildup through activity. Combat timing, damage and progression retain the [mechanics bible](MECHANICS_BIBLE.md) rules; Zones 1–5 remain the balance target. [Measured progression](PROGRESSION.md) · [Balance and extension guide](BALANCE_CONFIG.md) · [Exact current rules](BALANCE.md).
 
 ## Play, prepare, return
 

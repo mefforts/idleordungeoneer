@@ -13,22 +13,22 @@ function paintSequencePips(owner,count,progress=0,color=combatTheme('danger').co
 function paintInterruptMark(x,y,r=22,progress=1){
  const theme=combatTheme('interrupt');ctx.save();ctx.lineCap='round';
  for(const side of [-1,1]){ctx.strokeStyle=theme.dark;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x+side*(r-7),y-r*.42);ctx.lineTo(x+side*r,y-r*.42);ctx.lineTo(x+side*r,y+r*.42);ctx.lineTo(x+side*(r-7),y+r*.42);ctx.stroke();ctx.strokeStyle=theme.color;ctx.lineWidth=2.5;ctx.stroke();}
- mechanicSprite('interrupt',x,y,19);if(progress<1)themedArc(x,y,r+6,progress,theme.color,1.5);ctx.restore();
+ mechanicSprite('interrupt',x,y,19);if(progress<1)paintAbilityClock(x,y,r+6,progress,theme);ctx.restore();
 }
 function paintWalkingHedge(e,f,warning){
  const view=mechanicView(),lo=f.horizontal?view.left:view.top,hi=f.horizontal?view.right:view.bottom,normalLo=f.horizontal?view.top:view.left,normalHi=f.horizontal?view.bottom:view.right,theme=combatTheme('danger'),teal=combatTheme('safe'),q=n=>f.horizontal?{x:n,y:f.at}:{x:f.at,y:n};
  if(f.at<normalLo-40||f.at>normalHi+40)return;
- ctx.save();ctx.globalAlpha*=warning?.62:1;ctx.lineCap='round';
+ ctx.save();ctx.globalAlpha*=warning?.5:1;ctx.lineCap='round';
  for(const [start,end]of [[lo,Math.min(hi,f.gap-f.gapWidth/2)],[Math.max(lo,f.gap+f.gapWidth/2),hi]]){
   if(end<=start)continue;const a=q(start),b=q(end);themedLine(a,b,15,'#17251b77');themedLine(a,b,5,theme.color+'48');
   ctx.save();ctx.beginPath();if(f.horizontal)ctx.rect(start,f.at-70,end-start,96);else ctx.rect(f.at-26,start,96,end-start);ctx.clip();
   for(let t=Math.floor(start/38)*38;t<end+38;t+=38){const p=q(t),shift=reducedMotion()?0:Math.sin(game.frame*3+t)*1.2;ctx.save();ctx.translate(p.x,p.y);ctx.rotate((f.horizontal?0:Math.PI/2)+Math.sin(t*.73)*.1);const variation=(Math.sin(t*.73)+1)/2;ctx.scale(variation>.5?1:-1,1.45+variation*.55);mechanicSprite('hedge',0,-7+shift,64+variation*12,0);ctx.restore();}
   ctx.restore();
-  const edge=f.horizontal?{x:0,y:f.width/2}:{x:f.width/2,y:0};line(a.x+edge.x,a.y+edge.y,b.x+edge.x,b.y+edge.y,2,theme.color);line(a.x-edge.x,a.y-edge.y,b.x-edge.x,b.y-edge.y,1,theme.color+'99');
+  const edge=f.horizontal?{x:0,y:f.width/2}:{x:f.width/2,y:0};for(const side of [-1,1]){line(a.x+edge.x*side,a.y+edge.y*side,b.x+edge.x*side,b.y+edge.y*side,5,MECHANIC_INK.keyline);line(a.x+edge.x*side,a.y+edge.y*side,b.x+edge.x*side,b.y+edge.y*side,side===1?2.5:1.5,theme.color);}
   for(let t=start+35;t<end;t+=100){const p=q(t);themedArrow(p.x,p.y,f.horizontal?Math.PI/2:0,theme.hot,5);}
  }
  const center=q(f.gap),ends=[q(f.gap-f.gapWidth/2),q(f.gap+f.gapWidth/2)],normal=f.horizontal?{x:0,y:1}:{x:1,y:0};
- for(const p of ends){line(p.x-normal.x*18,p.y-normal.y*18,p.x+normal.x*18,p.y+normal.y*18,3,teal.color);disc(p.x,p.y,3,teal.hot);}
+ for(const p of ends){line(p.x-normal.x*18,p.y-normal.y*18,p.x+normal.x*18,p.y+normal.y*18,6,MECHANIC_INK.keyline);line(p.x-normal.x*18,p.y-normal.y*18,p.x+normal.x*18,p.y+normal.y*18,3,teal.color);disc(p.x,p.y,3,teal.hot);}
  for(const d of [-12,7])themedArrow(center.x-normal.x*d,center.y-normal.y*d,f.horizontal?-Math.PI/2:Math.PI,teal.hot,8);
  for(let i=0;i<=f.waveIndex;i++)disc(center.x+(f.horizontal?(i-f.waveIndex/2)*7:16),center.y+(f.horizontal?-21:(i-f.waveIndex/2)*7),2,teal.color);
  ctx.restore();

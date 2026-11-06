@@ -24,12 +24,12 @@ function themedProjectileShapes(e,age=e.age){
 function paintThemedField(e,f,warning=false){
  if(e.type==='walkingHedge')return paintWalkingHedge(e,f,warning);
  const active=!warning&&e.age>=f.start&&e.age<=f.end;if(!active&&e.age>f.end||f.reveal!==undefined&&e.age<f.reveal)return;
- const language=THEMED_MECHANICS[e.type].language,theme=combatTheme(language),color=theme.color,time=abilityEffectTime(),age=warning?-1:e.age,progress=active?1:clamp(1-(f.start-age)/(THEMED_MECHANICS[e.type].seconds+f.start),0,1),alpha=active?1:.5;
+ const language=THEMED_MECHANICS[e.type].language,theme=combatTheme(language),color=theme.color,time=abilityEffectTime(),cue=themedFieldCue(e,f,warning),progress=cue.progress,alpha=cue.alpha;
  ctx.save();ctx.globalAlpha*=alpha;ctx.lineCap='round';ctx.lineJoin='round';
  if(f.shape==='circle'){
-  ctx.fillStyle=color+(active?'14':'0a');ctx.strokeStyle=color;ctx.lineWidth=active?3:1.8;ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fill();ctx.stroke();
-  themedArc(f.x,f.y,f.r+4,progress,theme.hot,1.5);
-  const until=f.start-e.age,fall=active?0:clamp(until/.8,0,1)*65,scale=active?1.06:.8;
+  paintAbilityFootprint(f,theme,progress,active,cue.pending);
+  if(active)paintAbilityScars(f.x,f.y,f.r,e.kind,theme,1,true);
+  const until=f.start-e.age,fall=active?0:clamp(until/.8,0,1)*65,scale=active?1.06:.65+.2*progress;
   if(['hammer','branch','droplet','comet'].includes(f.art)){ellipse(f.x,f.y,f.r*.6,f.r*.18,'#11131b60');themedSprite(f.art,e.kind,f.x,f.y-fall,f.r*1.55*scale,f.art==='branch'?.2:0);}
   else if(f.art==='vent'){themedSprite('vent',e.kind,f.x,f.y+13,f.r*1.65);if(active)for(let i=0;i<3;i++)paintEmberFlame(f.x+(i-1)*13,f.y,23+(i%2)*10,i);}
   else if(f.art==='sporeCloud'){glow(f.x,f.y,f.r,theme.color+'28');for(let i=0;i<5;i++)disc(f.x+Math.sin(time+i)*16,f.y+Math.cos(time*1.3+i)*13,5,'#c7d1a755');}
@@ -39,24 +39,24 @@ function paintThemedField(e,f,warning=false){
   else if(f.art!=='clock')themedSprite(f.art||THEMED_MECHANICS[e.type].art,e.kind,f.x,f.y+15,active?65:43);
  }else if(f.shape==='segment'){
   const angle=Math.atan2(f.b.y-f.a.y,f.b.x-f.a.x),length=Math.hypot(f.b.x-f.a.x,f.b.y-f.a.y),count=Math.min(14,Math.max(1,Math.ceil(length/32)));
-  themedLine(f.a,f.b,f.width+3,theme.dark+'88');themedLine(f.a,f.b,f.width,color+(active?'45':'18'));themedLine(f.a,f.b,1.5,active?theme.hot:color);themedArrow(f.b.x,f.b.y,angle,theme.hot,7);
+  paintAbilityFootprint(f,theme,progress,active,cue.pending);themedArrow(f.b.x,f.b.y,angle,theme.hot,7);
   if(f.art==='prism'){themedLine(f.a,f.b,active?7:1,theme.hot);if(active)themedLine(f.a,f.b,2,'#fff9ed');}
   else if(f.art==='clock'){themedLine(f.a,f.b,11,'#393440');themedLine(f.a,f.b,7,'#e3d8b8');for(let i=0;i<3;i++){const t=(i+.5)/3;disc(f.a.x+(f.b.x-f.a.x)*t,f.a.y+(f.b.y-f.a.y)*t,4,'#f4ead5');}}
   else if(f.art!=='rift')for(let i=0;i<count;i++){const u=(i+.5)/count,x=f.a.x+(f.b.x-f.a.x)*u,y=f.a.y+(f.b.y-f.a.y)*u;if(f.art==='flame'){if(active)paintEmberFlame(x,y,22,i);else {disc(x,y,4,'#ffb878');line(x-7,y,x+7,y,1,color);}}else themedSprite(f.art,e.kind,x,y-(active?0:25*(1-progress)),f.art==='branch'?65:36,angle+(f.art==='branch'?0:Math.PI/2));}
   if(f.art==='rift'){themedLine(f.a,f.b,13,'#1b1c30');themedLine(f.a,f.b,4,'#d1b1ec');}
  }else if(f.shape==='gate'){
   const lo=f.horizontal?f.arena.left:f.arena.top,hi=f.horizontal?f.arena.right:f.arena.bottom,coordinate=n=>f.horizontal?{x:n,y:f.at}:{x:f.at,y:n};
-  for(const [left,right]of [[lo,f.gap-f.gapWidth/2],[f.gap+f.gapWidth/2,hi]]){themedLine(coordinate(left),coordinate(right),f.width,color+'30');themedLine(coordinate(left),coordinate(right),2,color);for(let n=left+14;n<right-10;n+=28){const q=coordinate(n);themedSprite(f.art,e.kind,q.x,q.y+9,42,f.horizontal?0:Math.PI/2);}}
-  const q=coordinate(f.gap);themedArrow(q.x,q.y,f.horizontal?-Math.PI/2:0,combatTheme('safe').hot,10);themedArc(q.x,q.y,15,.75,combatTheme('safe').color,2);
+  for(const [left,right]of [[lo,f.gap-f.gapWidth/2],[f.gap+f.gapWidth/2,hi]]){const a=coordinate(left),b=coordinate(right),half=f.width/2,rect=f.horizontal?{left:a.x,right:b.x,top:a.y-half,bottom:b.y+half}:{left:a.x-half,right:b.x+half,top:a.y,bottom:b.y};paintAbilityFootprint({shape:'rect',rect},theme,progress,active,cue.pending);for(let n=left+14;n<right-10;n+=28){const q=coordinate(n);themedSprite(f.art,e.kind,q.x,q.y+9,42,f.horizontal?0:Math.PI/2);}}
+  const q=coordinate(f.gap),teal=combatTheme('safe');for(const end of [f.gap-f.gapWidth/2,f.gap+f.gapWidth/2]){const p=coordinate(end),dx=f.horizontal?0:18,dy=f.horizontal?18:0;line(p.x-dx,p.y-dy,p.x+dx,p.y+dy,6,MECHANIC_INK.keyline);line(p.x-dx,p.y-dy,p.x+dx,p.y+dy,3,teal.color);}themedArrow(q.x,q.y,f.horizontal?-Math.PI/2:0,teal.hot,10);
  }else if(f.shape==='rect'){
-  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.strokeRect(f.rect.left,f.rect.top,f.rect.right-f.rect.left,f.rect.bottom-f.rect.top);themedSprite('coffin',e.kind,(f.rect.left+f.rect.right)/2,f.rect.bottom,100,e.serial%2?.1:-.1);
+  paintAbilityFootprint(f,theme,progress,active,cue.pending);themedSprite('coffin',e.kind,(f.rect.left+f.rect.right)/2,f.rect.bottom,100,e.serial%2?.1:-.1);
   for(const y of [f.rect.top-16,f.rect.bottom+16])themedArrow((f.rect.left+f.rect.right)/2,y,y<f.rect.top?-Math.PI/2:Math.PI/2,combatTheme('safe').color,8);
  }else if(f.shape==='arc'){
   ctx.strokeStyle=color;ctx.lineWidth=f.width;ctx.beginPath();ctx.arc(f.x,f.y,f.r,f.gap+f.gapHalf,f.gap+Math.PI*2-f.gapHalf);ctx.stroke();
   for(let i=0;i<14;i++){const angle=f.gap+f.gapHalf+(Math.PI*2-f.gapHalf*2)*(i+.5)/14;themedSprite('rib',e.kind,f.x+Math.cos(angle)*f.r,f.y+Math.sin(angle)*f.r,34,angle+Math.PI/2);}
   themedArrow(f.x+Math.cos(f.gap)*(f.r+12),f.y+Math.sin(f.gap)*(f.r+12),f.gap,combatTheme('safe').hot,10);
  }else if(f.shape==='triangle'){
-  const [a,b,c]=f.points;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(c.x,c.y);ctx.closePath();ctx.fillStyle=color+(active?'24':'0c');ctx.strokeStyle=color;ctx.lineWidth=active?5:1.5;ctx.fill();ctx.stroke();
+  const [a,b,c]=f.points;paintAbilityFootprint(f,theme,progress,active,cue.pending);
   for(const q of f.points){themedSprite('star',e.kind,q.x,q.y+14,48,active?time*.3:0);themedArc(q.x,q.y,23,progress,theme.hot);}
   if(active)for(let i=0;i<8;i++){const u=(i%4+.5)/4,v=(Math.floor(i/4)+.5)/3;if(u+v<1)themedSprite('star',e.kind,a.x+(b.x-a.x)*u+(c.x-a.x)*v,a.y+(b.y-a.y)*u+(c.y-a.y)*v,18,time*.2);}
  }else if(f.shape==='flood'){
@@ -109,7 +109,7 @@ function paintThemedSpecial(e,warning=false){
 function paintThemedAir(){for(const e of game.themedEvents||[]){if(e.done)continue;if(e.type==='clingingSeeds'&&e.state.attachedAt!==null){const p=game.player;for(let i=0;i<3;i++)themedSprite('seed',e.kind,p.x+(i-1)*19,p.y-28+(reducedMotion()?0:Math.sin(abilityEffectTime()*2+i)*3),20,i*.6,1,true);themedArc(p.x,p.y-12,32,1-(e.age-e.state.attachedAt)/3.5,combatTheme('danger').hot,2);}
  if(e.type==='soulLantern'){const q=e.points[0],recipient=supportTotemRecipient({owner:e.owner,x:q.x,y:q.y});if(!recipient)continue;for(let i=0;i<=Math.floor(e.age/1.15);i++){const u=(e.age-i*1.15)/1.5;if(u>=0&&u<=1&&!e.state['soul'+i])themedSprite('wisp',e.kind,q.x+(recipient.x-q.x)*u,q.y+(recipient.y-q.y)*u,23,0,.85,true);}}
  if(e.type==='rollingFurnace'){paintRollingFurnaceAir(e);continue;}
- const theme=combatTheme(THEMED_MECHANICS[e.type].language),previousShots=new Map(themedProjectileShapes(e,Math.max(0,e.age-.10)).map(q=>[q.key,q]));for(const q of themedProjectileShapes(e)){const previous=previousShots.get(q.key);if(previous&&previous.portal===q.portal){line(previous.x,previous.y,q.x,q.y,q.r*.9,theme.color+'55');line(previous.x,previous.y,q.x,q.y,1.3,theme.hot+'99');}glow(q.x,q.y,q.r*2.4,theme.color+'30');themedSprite(q.art,e.kind,q.x,q.y,q.r*2.7,(q.angle||e.angle)+(reducedMotion()?0:e.age*(q.art==='boulder'?2:1)),1,true);}}}
+ const theme=combatTheme(THEMED_MECHANICS[e.type].language),previousShots=new Map(themedProjectileShapes(e,Math.max(0,e.age-.10)).map(q=>[q.key,q]));for(const q of themedProjectileShapes(e)){const previous=previousShots.get(q.key);if(previous&&previous.portal===q.portal){line(previous.x,previous.y,q.x,q.y,q.r*.9,theme.color+'55');line(previous.x,previous.y,q.x,q.y,1.3,theme.hot+'99');}glow(q.x,q.y,q.r*2.4,theme.color+'30');themedSprite(q.art,e.kind,q.x,q.y,q.r*2.7,(q.angle||e.angle)+(reducedMotion()?0:e.age*(q.art==='boulder'?2:1)),1,true);paintProjectileSignal(q.x,q.y,q.r,theme);}}}
 function paintThemedEvent(e,warning=false){ctx.save();for(const field of themedFields(e,warning?0:e.age))paintThemedField(e,field,warning);paintThemedSpecial(e,warning);ctx.restore();}
-function paintThemedWarning(owner,cast){if(!cast.themed)return false;paintThemedEvent({...cast.themed,age:-cast.windup},true);return true;}
+function paintThemedWarning(owner,cast){if(!cast.themed)return false;paintThemedEvent({...cast.themed,age:-cast.windup,warningTotal:cast.total},true);return true;}
 function paintThemedGround(){for(const event of game.themedEvents||[])if(!event.done)paintThemedEvent(event);}

@@ -217,11 +217,11 @@ function paintExpandedShape(shape,theme,progress=1,active=false){
    }
   }
  }else if(shape.shape==='rect'){
-  const r=shape.rect;quad(r.left,r.top,r.right-r.left,r.bottom-r.top,theme.color+(active?'1c':'22'),theme.color,2);const step=28;if(!active){ctx.save();ctx.beginPath();ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);ctx.clip();for(let x=r.left-(r.bottom-r.top);x<r.right;x+=step)line(x,r.top,x+r.bottom-r.top,r.bottom,1,theme.color+'55');ctx.restore();}
-  if(shape.order)encounterLabel(String(shape.order),(r.left+r.right)/2,(r.top+r.bottom)/2,theme.hot,20);
+  paintAbilityFootprint(shape,theme,progress,active);
+  if(shape.order)encounterLabel(String(shape.order),(shape.rect.left+shape.rect.right)/2,(shape.rect.top+shape.rect.bottom)/2,theme.hot,20);
  }else if(shape.shape==='circle')paintWarningCircle(shape.x,shape.y,shape.r,progress,theme,active);
  else if(shape.shape==='ring'){
-  ctx.save();ctx.beginPath();ctx.arc(shape.x,shape.y,shape.r,0,Math.PI*2);if(shape.inner)ctx.arc(shape.x,shape.y,shape.inner,0,Math.PI*2,true);ctx.fillStyle=theme.color+(active?'1c':'22');ctx.fill();ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.stroke();ctx.restore();
+  paintAbilityFootprint(shape,theme,progress,active);
   if(shape.refuge&&shape.inner){
    const teal=combatTheme('safe'),r=Math.min(22,shape.inner*.28);paintWarningCircle(shape.x,shape.y,shape.inner,progress,teal);
    ctx.save();ctx.strokeStyle=teal.hot;ctx.lineWidth=2;for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(shape.x,shape.y,r,i*Math.PI/2+.2,(i+1)*Math.PI/2-.2);ctx.stroke();}poly([shape.x,shape.y-10,shape.x+7,shape.y,shape.x,shape.y+10,shape.x-7,shape.y],teal.color+'30',teal.hot,1.5);ctx.restore();

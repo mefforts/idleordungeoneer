@@ -34,17 +34,41 @@ SHAPES={
 'stone': '<path d="M-45-10L-52-32L-30-57L10-65L41-43L50-16L25 1L-17 4Z" fill="url(#body)" stroke="{dark}" stroke-width="3"/><path d="M-45-30L-28-51L9-58L34-39L9-21L-19-17Z" fill="{light}" stroke="{base}" stroke-width="2"/><path d="M-13-20L-4-40L18-43M4-39L10-55" fill="none" stroke="{edge}" stroke-width="2"/>',
 'needle': '<path d="M-49-22L36-89L44-82L-40-13Z" fill="url(#body)" stroke="{dark}" stroke-width="3"/><path d="M-43-22L39-85" stroke="{edge}" stroke-width="2"/><ellipse cx="31" cy="-79" rx="3" ry="7" transform="rotate(48 31 -79)" fill="{dark}"/><path d="M34-80Q49-104 18-106Q-5-106-16-82" fill="none" stroke="{light}" stroke-width="3"/>'
 }
+# Focal props retain a readable silhouette at phone size: a forged head with a
+# bound haft, and a faceted astral core instead of flat colored tokens.
+SHAPES['hammer'] = (
+ '<path d="M-6 4L-10-63L7-65L11 3Z" fill="#654935" stroke="{dark}" stroke-width="3"/>'
+ '<path d="M-7-47L8-52M-6-35L9-40M-5-23L10-28M-4-11L10-16" stroke="#c4a074" stroke-width="4"/>'
+ '<path d="M-10-60L10-63L11-53L-9-50Z M-6-3L11-5L13 3L-5 6Z" fill="{light}" stroke="{dark}" stroke-width="2"/>'
+ '<path d="M-48-94L-26-109L44-99L51-69L29-53L-44-64Z" fill="url(#body)" stroke="{dark}" stroke-width="4"/>'
+ '<path d="M-47-94L25-84L44-99L-26-109Z" fill="{edge}" stroke="{dark}" stroke-width="2"/>'
+ '<path d="M25-84L29-53L51-69L44-99Z" fill="{base}" stroke="{dark}" stroke-width="2"/>'
+ '<path d="M-40-86L18-78L21-61L-38-70Z" fill="{dark}" stroke="{light}" stroke-width="2"/>'
+ '<path d="M-33-100L-28-67L-18-65L-22-98Z M9-93L14-61L23-59L18-91Z" fill="{light}" stroke="{dark}" stroke-width="2"/>'
+ '<path d="M-9-87L3-78L-3-67L-15-76Z" fill="{accent}" stroke="{edge}" stroke-width="2"/>'
+ '<path d="M-8-82L-2-77L-5-73L-11-77Z" fill="{edge}"/>'
+ '<path d="M-39-91L-31-90M-28-105L28-97M31-81L43-88" stroke="{edge}" stroke-width="2"/>'
+ '<circle cx="-31" cy="-73" r="2" fill="{edge}"/><circle cx="16" cy="-66" r="2" fill="{edge}"/>'
+)
+SHAPES['star'] += (
+ '<circle cx="0" cy="-49" r="19" fill="{dark}" stroke="{light}" stroke-width="3"/>'
+ '<path d="M0-67L13-49L0-31L-13-49Z" fill="{accent}" stroke="{edge}" stroke-width="2"/>'
+ '<path d="M0-64L0-49L11-49Z" fill="{edge}"/><path d="M0-49L0-34L-10-49Z" fill="{base}"/>'
+ '<path d="M0-99L4-82M40-76L28-66M44-27L29-31M0-1L-4-17M-44-27L-29-31M-40-76L-28-66" stroke="{edge}" stroke-width="2"/>'
+)
 SHAPES['thorns']=SHAPES['root']+'<path d="M-19-44L-50-34L-30-56M20-38L51-25L33-51M0-63L26-96L6-84" fill="{edge}" stroke="{dark}" stroke-width="2"/>'
 art={}
 for name,shape in SHAPES.items():
  for kind,palette in enumerate(PALETTES):
   base,light,edge,dark,accent=palette
+  if name=='hammer' and kind==1:base,light,edge,accent='#51505a','#c0b69f','#fff0c7','#ff9847'
   body=shape.format(base=base,light=light,edge=edge,dark=dark,accent=accent)
   svg=f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -116 128 136"><defs><linearGradient id="body" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="{light}"/><stop offset=".5" stop-color="{base}"/><stop offset="1" stop-color="{dark}"/></linearGradient></defs><ellipse cx="0" cy="4" rx="40" ry="9" fill="#101421" opacity=".28"/>{body}</svg>'
   key=f'{name}-{kind}';(OUT/(key+'.svg')).write_text(svg+'\n');art[key]='data:image/svg+xml;base64,'+base64.b64encode(svg.encode()).decode()
 # Collection medallions combine the physical prop with its movement/counter motif.
 for ident,number,theme,name,seconds,duration,prop in re.findall(r"\['(\w+)',(\d+),(-?\d+),'([^']+)',([\d.]+),([\d.]+),'(\w+)'",(ROOT/'src/themed-encounters.js').read_text()):
  kind=max(0,int(theme));number=int(number);base,light,edge,dark,accent=PALETTES[kind]
+ if prop=='hammer' and kind==1:base,light,edge,accent='#51505a','#c0b69f','#fff0c7','#ff9847'
  body=SHAPES[prop].format(base=base,light=light,edge=edge,dark=dark,accent=accent)
  sequential=number in [2,4,10,12,13,17,21,27,29,40]
  if sequential:body=''.join(f'<g transform="translate({x},{y}) scale(.58)">{body}</g>' for x,y in [(-27,0),(0,-18),(27,0)])

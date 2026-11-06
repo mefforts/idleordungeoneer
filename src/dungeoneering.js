@@ -56,10 +56,7 @@ function tickDungeonHazards(dt,playerFrom=game.player){
  });
 }
 function paintWarningCircle(x,y,r,progress,theme,active=false){
-  ctx.save();ctx.fillStyle=theme.color+(active?'16':'18');ctx.strokeStyle=theme.color;ctx.lineWidth=active?3:2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
-  ctx.strokeStyle=theme.hot;ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,r+5,-Math.PI/2,-Math.PI/2+Math.PI*2*progress);ctx.stroke();
-  for(let i=0;i<6;i++){const a=i*Math.PI/3;line(x+Math.cos(a)*(r-7),y+Math.sin(a)*(r-7),x+Math.cos(a)*(r-2),y+Math.sin(a)*(r-2),1.5,theme.hot);}
-  ctx.restore();
+ paintAbilityFootprint({shape:'circle',x,y,r},theme,progress,active);
 }
 function paintThreatTelegraphs(){
  paintCombatBanks();
@@ -70,7 +67,7 @@ function paintThreatTelegraphs(){
   else if(cast.type==='cleave')paintEnemyCleave(cast,theme,progress);
   else if(cast.type==='ground')for(const t of cast.targets)paintWarningCircle(t.x,t.y,t.r,progress,theme);
   else if(cast.type==='beam'){
-   const dx=Math.cos(cast.angle),dy=Math.sin(cast.angle),x=cast.origin.x,y=cast.origin.y,half=cast.beamWidth/2;ctx.save();ctx.fillStyle=theme.color+'25';ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-dy*half,y+dx*half);ctx.lineTo(x+dx*540-dy*half,y+dy*540+dx*half);ctx.lineTo(x+dx*540+dy*half,y+dy*540-dx*half);ctx.lineTo(x+dy*half,y-dx*half);ctx.closePath();ctx.fill();ctx.stroke();line(x,y,x+dx*540*progress,y+dy*540*progress,2.5,theme.hot);ctx.restore();
+   paintAbilityLane(cast.origin,cast.angle,540,cast.beamWidth,theme,progress);
   }else if(cast.type==='volley'){
    paintWarningCircle(cast.origin.x,cast.origin.y,e.rad+27,progress,theme);const count=e.bossIndex===2?18:10,offset=(e.mechanicIndex||0)*.39;for(let i=0;i<count;i++){if(i%5===0)continue;const a=i*Math.PI*2/count+offset;line(cast.origin.x+Math.cos(a)*40,cast.origin.y+Math.sin(a)*40,cast.origin.x+Math.cos(a)*135,cast.origin.y+Math.sin(a)*135,1.2,theme.color+'88');}
   }
@@ -80,7 +77,7 @@ function paintThreatTelegraphs(){
  for(const h of game.hazards||[]){const theme=combatTheme(h.language||'friendly');
   if(h.type==='expanded'){paintExpandedShape(h,theme,h.delay>0?.3:h.life/h.total,h.delay<=0);continue;}
   if(h.type==='ground')paintWarningCircle(h.x,h.y,h.r,h.life/h.total,theme,true);
-  else{line(h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length,h.width,theme.color+'25');line(h.x,h.y,h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length,1.5,theme.hot+'90');}
+  else paintAbilityLane(h,h.angle,h.length,h.width,theme,h.life/h.total,true);
  }
 }
 function paintDungeonProjectile(s){

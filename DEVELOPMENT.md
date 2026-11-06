@@ -33,7 +33,7 @@ Prefer changing the owning `src/` module. Do not edit only the compiled copy of 
 | Mechanic contracts, overlap and tactical rewards | `src/mechanic-contracts.js`, `combat.mechanics` in `src/balance-config.json`, [MECHANICS_BIBLE.md](MECHANICS_BIBLE.md) |
 | Dashes and travelling mechanics | `src/dash-counters.js`, `src/travelling-mechanics.js`, `src/zone-challenge.js` |
 | Offscreen warnings, floor travel and defeat navigation | `src/offscreen-threats.js`, `src/delve-travel.js`, `src/delve-update.js` |
-| Combat engine and rendering | `src/dungeoneering.js`, `src/mechanic-presentation.js` |
+| Combat engine and rendering | `src/dungeoneering.js`, `src/mechanic-presentation.js`, `src/ability-conveyance.js` |
 | Ammunition and healing motes | `src/ammunition.js`, `src/restoration.js` |
 | Navigation, menus, touch and tooltips | `src/presentation.js`, `src/arena.js`, `src/mobile.js` |
 | Codex and shared current explanations | `src/codex.js`, `src/guide-rules.js`, `src/progression-guidance.js` |
@@ -51,7 +51,9 @@ npm run report:skills
 npm run report:balance
 ```
 
-Use system Chromium or set `CHROMIUM_PATH`; install Playwright Chromium only if needed. `tests/mechanic-bible.cjs` covers every ability contract, grouped released-threat limits, recovery, anti-chain stagger, optional opportunities, dash interrupts and four viewport sizes. Browser suites cover progression, actual paid production and combat, saves/migrations, native gesture suppression, touch/keyboard navigation, encounters, appearance and all-zone pacing. Runtime fixtures are injected into isolated browser responses and must never be embedded in the public standalone.
+Use system Chromium or set `CHROMIUM_PATH`; install Playwright Chromium only if needed. `tests/ability-conveyance.cjs` checks cast-clock buildup, later-strike emphasis, distinct lifecycle stages, exact visual footprints, random/state purity and reduced-motion/layout behavior. `npm run review:conveyance` captures the actual renderer through buildup, commitment and activity.
+
+`tests/mechanic-bible.cjs` covers every ability contract, grouped released-threat limits, recovery, anti-chain stagger, optional opportunities, dash interrupts and four viewport sizes. Browser suites cover progression, actual paid production and combat, saves/migrations, native gesture suppression, touch/keyboard navigation, encounters, appearance and all-zone pacing. Runtime fixtures are injected into isolated browser responses and must never be embedded in the public standalone.
 
 `tests/current-experience.cjs` exercises the current guide/menu loop, named guardian libraries, tier/tool details, loot receipts and focus restoration. `tests/equipment-edge-cases.cjs` covers health-preserving jewelry swaps, live stat caches, body-range ammunition and current weapon previews. `tests/animation-balance.cjs` exercises all work release/resume transitions, real keyboard/touch cancellation, empty-ammo poses, in-flight enchantment ownership and paid enchantment gains. `tests/ux-flow.cjs` covers tier-aware source links, paid DPS previews, repeated keyboard purchases, voucher focus, menu scroll memory, live material search and small-screen fitting. Existing economy, jewelry, input and encounter suites retain their precise rules. Rendering and input tests should not be run with heavy simultaneous browser workloads; timing assertions use real input.
 

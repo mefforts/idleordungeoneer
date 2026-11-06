@@ -234,6 +234,6 @@ function paintEncounterLinks(){
   }
   if(e.stagger>0)encounterLabel('STAGGERED',e.x,e.y-e.rad-24,DUNGEON_THEMES[e.biome].hot);
  }
- for(const fx of game.counterEffects||[])if(fx.reflected){ctx.save();ctx.globalAlpha=fx.life/fx.total;line(fx.x,fx.y,fx.tx,fx.ty,8,DUNGEON_THEMES[fx.biome].color+'60');line(fx.x,fx.y,fx.tx,fx.ty,2.5,DUNGEON_THEMES[fx.biome].hot);ctx.restore();}
+ for(const fx of game.counterEffects||[])if(fx.reflected)paintReflectReturn(fx);
  const p=game.player;if(p.mending||p.rallyTime>0)encounterLabel(p.mending?'+ HP':'+10% DMG',p.x,p.y+39,(p.mending?TOTEM_SIGNALS.mend:TOTEM_SIGNALS.fury).hot);
 }
