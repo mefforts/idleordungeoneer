@@ -1,0 +1,123 @@
+{
+  "frame": {
+    "width": 112,
+    "height": 124,
+    "anchorY": 0.9032258064516129
+  },
+  "themes": [
+    "overgrowth",
+    "embervault",
+    "hollow-crypt",
+    "astral-rift"
+  ],
+  "families": {
+    "mend": {
+      "role": "support",
+      "variants": [
+        {
+          "name": "shrine",
+          "coreY": -62
+        },
+        {
+          "name": "lantern",
+          "coreY": -62
+        },
+        {
+          "name": "altar",
+          "coreY": -54
+        }
+      ]
+    },
+    "fury": {
+      "role": "support",
+      "variants": [
+        {
+          "name": "shrine",
+          "coreY": -62
+        },
+        {
+          "name": "lantern",
+          "coreY": -62
+        },
+        {
+          "name": "altar",
+          "coreY": -54
+        }
+      ]
+    },
+    "ascend": {
+      "role": "instrument",
+      "variants": [
+        {
+          "name": "ascend"
+        }
+      ]
+    },
+    "empower": {
+      "role": "instrument",
+      "variants": [
+        {
+          "name": "empower"
+        }
+      ]
+    },
+    "conduit": {
+      "role": "instrument",
+      "variants": [
+        {
+          "name": "conduit"
+        }
+      ]
+    },
+    "siege": {
+      "role": "instrument",
+      "variants": [
+        {
+          "name": "siege"
+        }
+      ]
+    }
+  },
+  "files": [
+    "mend-0-0.svg",
+    "mend-0-1.svg",
+    "mend-0-2.svg",
+    "mend-1-0.svg",
+    "mend-1-1.svg",
+    "mend-1-2.svg",
+    "mend-2-0.svg",
+    "mend-2-1.svg",
+    "mend-2-2.svg",
+    "mend-3-0.svg",
+    "mend-3-1.svg",
+    "mend-3-2.svg",
+    "fury-0-0.svg",
+    "fury-0-1.svg",
+    "fury-0-2.svg",
+    "fury-1-0.svg",
+    "fury-1-1.svg",
+    "fury-1-2.svg",
+    "fury-2-0.svg",
+    "fury-2-1.svg",
+    "fury-2-2.svg",
+    "fury-3-0.svg",
+    "fury-3-1.svg",
+    "fury-3-2.svg",
+    "ascend-0-0.svg",
+    "ascend-1-0.svg",
+    "ascend-2-0.svg",
+    "ascend-3-0.svg",
+    "empower-0-0.svg",
+    "empower-1-0.svg",
+    "empower-2-0.svg",
+    "empower-3-0.svg",
+    "conduit-0-0.svg",
+    "conduit-1-0.svg",
+    "conduit-2-0.svg",
+    "conduit-3-0.svg",
+    "siege-0-0.svg",
+    "siege-1-0.svg",
+    "siege-2-0.svg",
+    "siege-3-0.svg"
+  ]
+}

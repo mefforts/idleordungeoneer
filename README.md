@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.20.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.21.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This update brings common combat effects up to the illustrated material standard: 40 cached sprites for missiles, returning blades, growing stars, rebounding rings, mines, eruptions, shields and summoning structures. Spires have theme-specific bodies, physical crowns, damage cracks and distinct charged/disabled presentation; neutral spires show one fading bump reminder. [Combat artwork](preview-combat-materials.png) · [Spire states](preview-summon-states.png) · [Motion review](preview-combat-materials.mp4). Combat timing, hit geometry and progression retain the [mechanics bible](MECHANICS_BIBLE.md) rules. [Measured progression](PROGRESSION.md) · [Exact current rules](BALANCE.md).
+This update expands the support library with 40 illustrations: three healing/damage totem silhouettes in four material traditions, plus distinct instruments for Ascendance, Rare Awakening, Living Conduit and Siege Channel. Disabled totems quiet down, Awakening carries crowns toward its recruit, and channel props disappear on interruption. [New asset library](preview-support-library.png) · [Elite instruments](preview-elite-instruments.png) · [Motion review](preview-support-library.mp4) · [Authoring guide](ASSET_LIBRARY.md). Combat rules and progression remain intact. [Measured progression](PROGRESSION.md) · [Exact current rules](BALANCE.md).
 
 ## Play, prepare, return
 

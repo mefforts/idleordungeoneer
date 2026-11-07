@@ -207,8 +207,10 @@ function paintEncounterGround(){
 }
 function paintTotem(t){
  if(t.destructible){paintSummonTotem(t);return;}
- const theme=DUNGEON_THEMES[t.biome],image=encounterImage(t.biome,t.type),height=64,width=height*image.naturalWidth/Math.max(1,image.naturalHeight),foot=encounterFoot(t);
+ const foot=encounterFoot(t);
  ellipse(t.x,foot.y,23,7,'#090f1360');
+ if(paintSupportTotemArt(t,foot))return;
+ const theme=DUNGEON_THEMES[t.biome],image=encounterImage(t.biome,t.type),height=64,width=height*image.naturalWidth/Math.max(1,image.naturalHeight);
  if(image.complete&&image.naturalWidth)ctx.drawImage(image,t.x-width/2,foot.y-height,width,height);
  else {disc(t.x,foot.y-28,15,theme.dark);encounterLabel(t.type==='mend'?'+':'ϟ',t.x,foot.y-24,theme.hot,22);}
  paintAbilityTotemCrest(t);

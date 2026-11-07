@@ -1,6 +1,6 @@
 # Current game rules and balance
 
-Build **11.20.0**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Zones 1–5 use authored health and reward tuning. [BALANCE_CONFIG.md](BALANCE_CONFIG.md) describes configuration and expansion; [PROGRESSION.md](PROGRESSION.md) gives current gear-profile measurements.
+Build **11.21.0**. Generated from the standalone game by `npm run report:balance`. [README](README.md) covers play and controls; [balance-report.json](balance-report.json) contains exact prices, formulas and measured results. Zones 1–5 use authored health and reward tuning. [BALANCE_CONFIG.md](BALANCE_CONFIG.md) describes configuration and expansion; [PROGRESSION.md](PROGRESSION.md) gives current gear-profile measurements.
 
 ## Progression and clocks
 
@@ -276,7 +276,7 @@ Current HP calibration preserves the general +75% regular-elite / +50% rare, bos
 | Zone 5 · middle Mithril | 96.79 | 383.92 | 727 |
 | Zone 5 · middle Mithril Mage | 70.96 | 390.9 | 727 |
 
-Benchmark build: **11.20.0**. Standalone SHA-256: `fcd49e6dfd3b6cee2a2e11af4b252ecb39c5c92139c4c1d372d795a12d80192e`. [Exact profiles and limits](PROGRESSION.md).
+Benchmark build: **11.21.0**. Standalone SHA-256: `c3b6a126238934753b13cea34e9c0c8dec325b68201671cfd850460381f367a1`. [Exact profiles and limits](PROGRESSION.md).
 
 These full-Zone simulations use actual spawning, attacks, movement, counters, guards, spires and phase transitions. Incoming damage is disabled and HP replenished to isolate pacing. They are not human survival trials or wall-clock completion promises. Menus, deaths, preparation and selected game speeds change actual play time. Short survival experiments remain separate raw evidence in balance-report.json; they do not establish current human difficulty.
 

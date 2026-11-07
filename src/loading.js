@@ -8,5 +8,6 @@ function finishGameLoading(){
  for(const image of Object.values(equipmentImages||{}))images.add(image);
  for(const image of DeepwellAvatar.images())images.add(image);
  for(const image of combatFxImages.values())images.add(image);
+ for(const image of supportArtImages.values())images.add(image);
  Promise.allSettled([...images].map(image=>image.decode())).then(()=>{render();loading.ready();}).catch(()=>loading.fail());
 }

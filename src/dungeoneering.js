@@ -25,7 +25,7 @@ function noteMovementTap(x,y,source,time=performance.now()){
   return false;
 }
 function installDungeoneeringUI(){
-  dungeoneeringInstalled=true;installThemedEncounters();installCombatFxArt();
+  dungeoneeringInstalled=true;installThemedEncounters();installCombatFxArt();installSupportArt();
   $('bossHud').insertAdjacentHTML('beforeend','<small id="bossMechanicHint"></small>');
   $('dashButton').setAttribute('aria-label','Dash: double tap while moving on touch, Space, or this button');$('dashButton').title='Double tap while moving on touch · Space to dash';
   document.addEventListener('keydown',e=>{
