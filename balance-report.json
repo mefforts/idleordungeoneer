@@ -4433,13 +4433,13 @@
       "group": "artisan"
     }
   ],
-  "version": "11.19.0",
+  "version": "11.20.0",
   "simulated": [],
   "pacingBuild": "No matching reference run",
   "pacingHtmlSha256": null,
   "progression": {
-    "version": "11.19.0",
-    "htmlSha256": "8d331d9902ebdd4bd0603cd7d3ae89ebef3598782be0ceabd92e7f30a5b531d7",
+    "version": "11.20.0",
+    "htmlSha256": "fcd49e6dfd3b6cee2a2e11af4b252ecb39c5c92139c4c1d372d795a12d80192e",
     "seed": 20261106,
     "method": "Independent fixed-gear profiles in the real combat runtime. Incoming damage is disabled and HP replenished; timed blessings are skipped. Automated movement, reflect/channel counters and optional protection-breaking dashes. Combat time excludes deaths, preparation and menu decisions; this is not a human survival test.",
     "cases": [

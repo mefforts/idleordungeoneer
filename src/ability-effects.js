@@ -41,42 +41,23 @@ function paintAbilityCrystal(x,y,size,material,lean=0){
  poly([0,-37,8,-22,6,-2,0,-8],material.light);poly([-8,-22,0,-37,0,-8,-6,-2],material.accent);line(0,-33,0,-10,1.2,material.edge);ctx.restore();
 }
 function paintAbilityEruption(x,y,size,kind,rise,theme){
- const m=abilityMaterial(kind);ctx.save();ctx.translate(x,y);ctx.scale(size/20,size/20);ellipse(0,0,19,6,m.dark+'a0');
- for(let i=0;i<4;i++){const a=i*Math.PI/2+.3;line(Math.cos(a)*5,Math.sin(a)*3,Math.cos(a)*23,Math.sin(a)*10,1.5,theme.color+'b0');}
- ctx.scale(1,.2+.8*clamp(rise,0,1));ctx.lineJoin='round';
- if(kind===0){
-  paintRuinBramble(0,0,20,1,Math.sin(x*.07+y*.11));
- }else if(kind===1){
-  for(const side of [-1,1]){poly([side*6,1,side*20,-2,side*17,-10,side*8,-13],m.base,m.dark,1.3);line(side*9,-10,side*16,-6,1,m.light);}
-  paintEmberFlame(0,0,23,Math.sin(x+y));
-  paintEmberFlame(-11,1,11,1);paintEmberFlame(12,0,13,3);
- }else if(kind===2){
-  poly([-12,0,-13,-15,-8,-22,7,-21,13,-13,10,0],m.base,m.dark,1.8);
-  for(let i=0;i<4;i++){
-   const x=(i-1.5)*6,top=-30-Math.sin(i)*8,bend=x+(i-1.5)*3;
-   for(const [ax,ay,bx,by]of [[x,-14,bend,-27],[bend,-27,bend+1,top-7],[bend+1,top-7,bend-3,top-10]]){line(ax,ay,bx,by,5.8,m.dark);line(ax,ay,bx,by,3.4,m.light);disc(ax,ay,2,m.base);}
-  }
-  line(-9,-7,-19,-15,6,m.dark);line(-9,-7,-19,-15,3.5,m.light);line(-19,-15,-17,-24,5,m.dark);line(-19,-15,-17,-24,3,m.light);line(-7,-8,7,-8,1,m.dark);
-  for(let i=0;i<3;i++)line((i-1)*5,-4,(i-1)*5-2,-17,1,m.light);
- }else{
-  paintAbilityCrystal(-10,0,12,m,-.32);paintAbilityCrystal(8,1,13,m,.25);paintAbilityCrystal(0,0,19,m,0);
- }
- ctx.restore();
+ const m=abilityMaterial(kind),height=.2+.8*clamp(rise,0,1);ellipse(x,y,size*.8,size*.22,m.dark+'70');
+ if(!paintCombatFxSprite('eruption',kind,x,y,size*2,0,1,height))paintAbilityCrystal(x,y,size,m);
 }
 function paintAbilityBlade(x,y,size,angle,theme,kind=0){
- const m=abilityMaterial(kind);ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.scale(size/12,size/12);ctx.lineJoin='round';
- poly([14,0,5,-6,-5,-5,-9,-1,-3,0,-9,1,-5,5,5,6],m.light,m.dark,1.4);poly([13,0,-4,0,-7,3,4,4],m.base);line(-3,-2,7,-2,.9,m.edge);line(-5,-6,-5,6,1.8,'#c3a36c');disc(-6,0,2,theme.color);ctx.restore();
+ if(paintCombatFxSprite('blade',kind,x,y,size*2,angle))return;
+ ctx.save();ctx.translate(x,y);ctx.rotate(angle);poly([size,0,0,-size*.5,-size,0,0,size*.5],theme.color,theme.dark,1.5);ctx.restore();
 }
-function paintAbilityPortal(point,progress,theme,royal=false){
- const time=abilityEffectTime(),r=25;ctx.save();ctx.translate(point.x,point.y);ctx.globalAlpha*=.55+.45*progress;
- ellipse(0,0,r,9,theme.dark+'d0');ctx.strokeStyle=theme.color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,r,9,0,0,Math.PI*2);ctx.stroke();
- for(let i=0;i<3;i++){const a=i*2.09+time*.9;paintAbilityCrystal(Math.cos(a)*22,Math.sin(a)*7,9,{...ABILITY_MATERIALS[3],accent:theme.color},Math.cos(a)*.3);}
- paintAbilityEmblem('portal',0,-15,13,theme);
- if(royal)poly([-10,-32,-12,-43,-4,-39,0,-47,5,-39,12,-43,10,-32],'#dab77b','#493b39',1.2);ctx.restore();
+function paintAbilityPortal(point,progress,theme,royal=false,kind=biomeIndex()){
+ ctx.save();ctx.globalAlpha*=.55+.45*progress;
+ if(!paintCombatFxSprite('portal',kind,point.x,point.y,60))ellipse(point.x,point.y,25,9,theme.dark+'d0');
+ paintAbilityEmblem('portal',point.x,point.y-12,9,theme);
+ if(royal)paintCombatFxSprite('crown',kind,point.x,point.y-34,24);
+ ctx.restore();
 }
 function paintAbilityMine(x,y,kind,theme,progress){
- const m=abilityMaterial(kind);ctx.save();ctx.translate(x,y);ellipse(0,1,16,5,m.dark+'c0');ctx.translate(0,-4-Math.sin(abilityEffectTime()*2)*2);ctx.scale(.65+.35*progress,.65+.35*progress);
- poly([-12,-4,-7,-16,6,-18,14,-7,10,5,-3,9,-13,3],m.base,m.dark,2);poly([-7,-14,6,-16,11,-7,-2,-5],m.light);poly([-6,-4,0,-11,7,-5,1,3],theme.color,m.dark,1);line(-4,-3,1,-8,1.3,theme.hot);ctx.restore();
+ const time=abilityEffectTime();ctx.save();ctx.translate(x,y-4-Math.sin(time*2)*2);const width=34*(.65+.35*progress);
+ if(!paintCombatFxSprite('mine',kind,0,-7,width))disc(0,-7,12,theme.color);ctx.restore();
 }
 function paintEmberFlame(x,y,size,phase){
  const flicker=reducedMotion()?0:Math.sin(abilityEffectTime()*8+phase)*2;
@@ -153,7 +134,7 @@ function paintAbilityBeam(origin,angle,length,width,kind,theme,progress,active=f
   ctx.beginPath();ctx.moveTo(0,strand*width*.17);for(let x=10;x<=end;x+=10)ctx.lineTo(x,strand*width*.17+Math.sin(x*.055-time*7+strand)*width*.09);
   ctx.strokeStyle=m.dark;ctx.lineWidth=active?(kind===1?16:11):4;ctx.stroke();ctx.strokeStyle=kind===1?(strand===0?m.edge:m.accent):strand===0?m.light:m.accent;ctx.lineWidth=active?(kind===1?11:6):2;ctx.stroke();
  }
- for(let x=28;x<end;x+=48){const y=Math.sin(x*.08-time*4)*width*.23;if(kind===0)poly([x-8,y,x+3,y-7,x+11,y,x+3,y+4],m.accent,m.dark,1);else if(kind===1)poly([x-9,y+5,x-2,y-10,x+3,y-1,x+14,y-7,x+6,y+7],m.accent,m.dark,1);else if(kind===2){disc(x,y,6,m.light);ellipse(x+2,y-1,1.2,1.8,m.dark);line(x-6,y,x-18,y+4,2,m.accent);}else paintAbilityCrystal(x,y,8,m,Math.PI/2);}
+ for(let x=28;x<end;x+=48){const y=Math.sin(x*.08-time*4)*width*.23;paintCombatFxSprite('missile',kind,x,y,14,0,.9);}
  ctx.restore();
 }
 function paintAbilityGroundArt(){
@@ -167,7 +148,7 @@ function paintAbilityGroundArt(){
   if(c.type==='shield'&&c.shieldTarget)paintAbilityShield(c.shieldTarget.x,c.shieldTarget.y-25,17,combatTheme('shield'));
   if(c.type==='ricochet')for(const point of c.ricochetPoints||[])paintAbilityEmblem('mirror',point.x,point.y,12,theme);
   if(c.type==='mend'||c.type==='fury'){const signal=totemSignal(c);paintAbilityEmblem(signal.symbol,c.point.x,c.point.y-7,13,signal);}
-  if(c.type==='summon'||c.type==='eliteSummon')paintAbilityPortal(c.point,p,TOTEM_SIGNALS.summon,c.type==='eliteSummon');
+  if(c.type==='summon'||c.type==='eliteSummon')paintAbilityPortal(c.point,p,TOTEM_SIGNALS.summon,c.type==='eliteSummon',kind);
   if(c.type==='bastion')for(const point of c.guards||[])paintAbilityEmblem('shield',point.x,point.y-8,18,combatTheme('shield'));
   if(['volley','ringchain','spiral','bloom','return','orbit'].includes(c.type)){
    const count=c.type==='volley'?(enemy.bossIndex===2?18:10):['spiral','orbit'].includes(c.type)?8:16,offset=(enemy.mechanicIndex||0)*(c.type==='volley'?.39:.28),radius=enemy.rad+35;
@@ -185,21 +166,10 @@ function paintAbilityGroundArt(){
  for(const fx of game.counterEffects||[])if(fx.type==='cleave')paintAbilityField({...fx.cast,shape:'cone'},'cleave',fx.biome,combatTheme('friendly'),fx.life/fx.total,true);
 }
 function paintAbilityProjectile(s){
- const kind=s.biome??biomeIndex(),m=abilityMaterial(kind),theme=combatTheme(s.language||'danger'),angle=Math.atan2(s.vy,s.vx),r=s.rad||6,time=abilityEffectTime(),blade=!s.growing&&(s.boomerang||s.orbit||['return','orbit'].includes(s.abilityType));
- glow(s.x,s.y,Math.max(15,r*2.5),theme.color+'45');ctx.save();ctx.translate(s.x,s.y);ctx.rotate(angle);ctx.lineJoin='round';
- if(!s.preview){line(-r*2.7,0,-r*.6,0,Math.max(2,r*.5),theme.color+'80');line(-r*1.7,0,-r*.6,0,1.2,theme.hot+'b0');}
- if(blade)paintAbilityBlade(0,0,r*1.1,s.preview?0:time*(s.returning?-4:4),theme,kind);
- else if(s.growing||s.abilityType==='bloom'){
-  ctx.rotate(time*.65);const points=[];for(let i=0;i<12;i++){const a=i*Math.PI/6,d=i%2?r*.52:r*1.23;points.push(Math.cos(a)*d,Math.sin(a)*d);}poly(points,m.light,m.dark,1.1);for(let i=0;i<6;i++){const a=i*Math.PI/3;poly([0,0,Math.cos(a)*r*1.2,Math.sin(a)*r*1.2,Math.cos(a+.52)*r*.5,Math.sin(a+.52)*r*.5],i%2?m.base:m.accent);}disc(0,0,r*.2,theme.hot);
- }else if(s.abilityType==='ringchain'||s.bounce>0){
-  ctx.rotate(time*1.6);ctx.strokeStyle=m.dark;ctx.lineWidth=r*.65;ctx.beginPath();ctx.arc(0,0,r*.8,0,Math.PI*2);ctx.stroke();ctx.strokeStyle=m.light;ctx.lineWidth=r*.37;ctx.stroke();for(let i=0;i<4;i++){const a=i*Math.PI/2;poly([Math.cos(a)*r*.7,Math.sin(a)*r*.7,Math.cos(a+.24)*r*1.3,Math.sin(a+.24)*r*1.3,Math.cos(a+.5)*r*.75,Math.sin(a+.5)*r*.75],m.accent,m.dark,.6);}
- }else if(kind===0){
-  ctx.scale(r/6,r/6);poly([9,0,0,-4,-7,-3,-4,0,-7,3,0,4],m.base,m.dark,1);poly([8,0,-1,-2,-3,0],m.light);poly([-2,-1,-5,-7,2,-3],m.accent,m.dark,.6);
- }else if(kind===1){
-  ctx.scale(r/6,r/6);poly([8,0,3,-6,-4,-5,-7,1,-2,6,5,4],m.base,m.dark,1.3);poly([-2,-4,3,-4,5,0,0,3,-4,1],m.accent);line(-1,-2,3,0,1.3,m.edge);
- }else if(kind===2){
-  ctx.scale(r/6,r/6);ellipse(0,-1,6,5,m.light);quad(-4,1,7,5,m.base);disc(2,-2,1.6,m.dark);disc(-2,-2,1.6,m.dark);line(-2,3,-2,5,.8,m.dark);line(1,3,1,5,.8,m.dark);poly([-6,0,-11,-4,-8,1,-12,5,-6,3],m.accent);
- }else paintAbilityCrystal(0,r*.8,r*.85,m,Math.PI/2);
+ const kind=s.biome??biomeIndex(),theme=combatTheme(s.language||'danger'),angle=Math.atan2(s.vy,s.vx),r=s.rad||6,time=abilityEffectTime(),blade=!s.growing&&(s.boomerang||s.orbit||['return','orbit'].includes(s.abilityType)),family=blade?'blade':s.growing||s.abilityType==='bloom'?'star':s.abilityType==='ringchain'||s.bounce>0?'ring':'missile',spin=blade?(s.preview?0:time*(s.returning?-4:4)):family==='star'?time*.65:family==='ring'?time*1.6:0;
+ ctx.save();if(s.preview)ctx.globalAlpha*=.55;glow(s.x,s.y,Math.max(15,r*2.5),theme.color+'40');ctx.translate(s.x,s.y);ctx.rotate(angle);
+ if(!s.preview){line(-r*2.8,0,-r*.6,0,Math.max(2,r*.7),theme.dark+'a0');line(-r*2.5,0,-r*.6,0,Math.max(1.5,r*.3),theme.color+'b0');line(-r*1.6,0,-r*.6,0,1,theme.hot+'c0');}
+ if(!paintCombatFxSprite(family,kind,0,0,r*(family==='star'?2.25:2.1),spin))disc(0,0,r,abilityMaterial(kind).light,theme.color,1.5);
  ctx.restore();paintProjectileSignal(s.x,s.y,r,theme,s.preview);
 }
 function paintAbilityTotemCrest(t){
@@ -230,5 +200,5 @@ function paintAbilityTether(enemy,cast){
  ctx.restore();
 }
 function paintAbilityShield(x,y,size,theme){
- ctx.save();ctx.globalAlpha*=.9;glow(x,y,size*1.7,theme.color+'35');paintAbilityEmblem('shield',x,y,size,theme);ctx.restore();
+ ctx.save();ctx.globalAlpha*=.9;glow(x,y,size*1.7,theme.color+'35');if(theme.color!==combatTheme('shield').color||!paintCombatFxSprite('shield',biomeIndex(),x,y,size*2))paintAbilityEmblem('shield',x,y,size,theme);ctx.restore();
 }

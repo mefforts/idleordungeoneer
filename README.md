@@ -2,9 +2,9 @@
 
 **[Play in your browser](https://mefforts.github.io/idleordungeoneer/)** · **[Download the latest ZIP](https://github.com/mefforts/idleordungeoneer/raw/refs/heads/main/downloads/Idle_or_Dungeoneer_Latest.zip)**
 
-**Current build: 11.19.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
+**Current build: 11.20.0.** A standalone fantasy RPG about delving, gathering and crafting. Extract the ZIP and open `index.html` in a modern browser. The game, artwork and environments are embedded; the download needs no installation or internet connection.
 
-This update redraws 24 ability-prop families across four material palettes: layered nature growths, forged machinery, carved crypt relics and spirits, and faceted astral constructs. Planted props breathe, spirits hover, lenses turn about a stable center, and impacts add bounded debris and spore mist. [Artwork studies](preview-ability-artwork.png) · [Mechanic gallery](preview-themed-mechanics.png) · [Motion reel](preview-ability-artwork.mp4). Combat timing, damage and progression retain the [mechanics bible](MECHANICS_BIBLE.md) rules; Zones 1–5 remain the balance target. [Measured progression](PROGRESSION.md) · [Exact current rules](BALANCE.md).
+This update brings common combat effects up to the illustrated material standard: 40 cached sprites for missiles, returning blades, growing stars, rebounding rings, mines, eruptions, shields and summoning structures. Spires have theme-specific bodies, physical crowns, damage cracks and distinct charged/disabled presentation; neutral spires show one fading bump reminder. [Combat artwork](preview-combat-materials.png) · [Spire states](preview-summon-states.png) · [Motion review](preview-combat-materials.mp4). Combat timing, hit geometry and progression retain the [mechanics bible](MECHANICS_BIBLE.md) rules. [Measured progression](PROGRESSION.md) · [Exact current rules](BALANCE.md).
 
 ## Play, prepare, return
 

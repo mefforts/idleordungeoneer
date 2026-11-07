@@ -65,6 +65,8 @@ For iOS Safari/in-app review, hold gameplay for at least five seconds, drag over
 
 ## Art and reviews
 
+Common combat sprites live in `assets/effects/combat/`, authored by `scripts/export-combat-fx.py`. Run `npm run art:combat-fx` after changing their shapes or palettes, then build. `src/combat-fx-art.js` owns cached drawing, explicit ground/projectile anchors and physical spire states; `src/ability-effects.js` owns their standard-attack composition. `npm run review:combat-materials -- --motion` captures the asset atlas, spire states and a scripted motion reel. `tests/combat-materials.cjs` covers startup readiness, cached drawing, image anchors, fallback visibility, clock/reduced-motion behavior, unchanged bump counts and disabled-state quieting.
+
 `scripts/effect_artwork.py` owns the current illustrated material props; `scripts/export-themed-effects.py` builds the four palettes, matching Codex medallions and embedded image catalog. `src/ability-artwork.js` owns bounded decorative poses and field details. Gameplay geometry and deadlines remain in the mechanic modules. `npm run review:artwork -- --motion` captures the prop studies, phone examples and scripted motion reel. `tests/ability-artwork.cjs` checks cached-image rendering, stable rotation/projectile anchors, reduced motion, clipped openings, render purity and viewport fitting.
 
 The existing `art:*` and `review:*` commands in `package.json` export art and capture the actual renderer. Most motion reviews accept `-- --stills`; recording needs Playwright video support and FFmpeg. Source work atlases live in `assets/skilling/`; actor, navigation and encounter assets retain their source catalogs in `assets/` and `src/*-art.*`.
